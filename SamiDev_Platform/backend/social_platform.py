@@ -240,8 +240,8 @@ class MemoryEntry:
 class PlatformService:
     """Account/social layer inspired by Poly Arena's project-level social architecture.
 
-    Production data uses the same Redis cluster as the game gateways, so all gateway
-    replicas see one account/session/friends namespace. Memory mode exists for local tests.
+    The production PostgreSQL service persists accounts/social data while shared
+    Redis handles short-lived authentication and presence. Memory mode is for tests.
     """
 
     def __init__(self, redis_client: Any | None = None):
@@ -570,6 +570,7 @@ class PlatformService:
         if self.r is not None:
             event_id = secrets.token_urlsafe(10)
             script = r'''
+            -- samidev:daily-match-reward
             if redis.call('EXISTS', KEYS[1]) == 0 then return {-2,0,0} end
             local current = tonumber(redis.call('HGET', KEYS[1], 'coins') or '0')
             local used = tonumber(redis.call('GET', KEYS[2]) or '0')
@@ -1073,6 +1074,7 @@ class PlatformService:
         ttl = max(60, int(((day + 1) * 86_400_000 - now_ms()) / 1000) + 120)
         if self.r is not None:
             script = """
+            -- samidev:grant-reputation
             local used = tonumber(redis.call('GET', KEYS[1]) or '0')
             if used >= tonumber(ARGV[1]) then return {-1, used, tonumber(redis.call('HGET', KEYS[3], 'reputation') or '0')} end
             if redis.call('EXISTS', KEYS[2]) == 1 then return {-2, used, tonumber(redis.call('HGET', KEYS[3], 'reputation') or '0')} end
@@ -1120,6 +1122,7 @@ class PlatformService:
             # Claim the rating and mutate reputation atomically. A dislike removes
             # one point, but reputation never drops below zero.
             script = """
+            -- samidev:match-rating
             if redis.call('EXISTS', KEYS[1]) == 1 then return {-1, tonumber(redis.call('HGET', KEYS[2], 'reputation') or '0')} end
             redis.call('SET', KEYS[1], ARGV[1], 'EX', ARGV[2])
             local rep = tonumber(redis.call('HGET', KEYS[2], 'reputation') or '0')

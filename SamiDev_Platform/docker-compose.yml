@@ -15,6 +15,21 @@ x-gamehost: &gamehost
     retries: 30
 
 services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${SAMIDEV_POSTGRES_USER:-samidev}
+      POSTGRES_DB: ${SAMIDEV_POSTGRES_DB:-samidev}
+      POSTGRES_PASSWORD: ${SAMIDEV_POSTGRES_PASSWORD:?SAMIDEV_POSTGRES_PASSWORD is required}
+    volumes:
+      - samidev_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 3s
+      timeout: 2s
+      retries: 30
+
   redis:
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
@@ -39,8 +54,17 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8088/health', timeout=5).read()"]
+      interval: 5s
+      timeout: 6s
+      retries: 20
+      start_period: 10s
     environment:
       SAMIDEV_STORE: redis
+      SAMIDEV_PLATFORM_STORE: postgres
+      SAMIDEV_DATABASE_URL: ${SAMIDEV_DATABASE_URL:?SAMIDEV_DATABASE_URL is required}
+      SAMIDEV_DATABASE_POOL_SIZE: ${SAMIDEV_DATABASE_POOL_SIZE:-10}
       SAMIDEV_REDIS_URL: ${SAMIDEV_REDIS_URL:-redis://redis:6379/0}
       SAMIDEV_GAMEHOST_URLS: http://gamehost1:8091,http://gamehost2:8091,http://gamehost3:8091
       SAMIDEV_GAMEHOST_SERVICE_KEY: ${SAMIDEV_GAMEHOST_SERVICE_KEY:?SAMIDEV_GAMEHOST_SERVICE_KEY is required}
@@ -64,6 +88,8 @@ services:
       SAMIDEV_MAX_MSG_RATE: "90"
       SAMIDEV_RATE_BURST: "150"
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
       gamehost1:
@@ -77,6 +103,9 @@ services:
     <<: *gateway
     environment:
       SAMIDEV_STORE: redis
+      SAMIDEV_PLATFORM_STORE: postgres
+      SAMIDEV_DATABASE_URL: ${SAMIDEV_DATABASE_URL:?SAMIDEV_DATABASE_URL is required}
+      SAMIDEV_DATABASE_POOL_SIZE: ${SAMIDEV_DATABASE_POOL_SIZE:-10}
       SAMIDEV_REDIS_URL: ${SAMIDEV_REDIS_URL:-redis://redis:6379/0}
       SAMIDEV_GAMEHOST_URLS: http://gamehost1:8091,http://gamehost2:8091,http://gamehost3:8091
       SAMIDEV_GAMEHOST_SERVICE_KEY: ${SAMIDEV_GAMEHOST_SERVICE_KEY:?SAMIDEV_GAMEHOST_SERVICE_KEY is required}
@@ -104,6 +133,9 @@ services:
     <<: *gateway
     environment:
       SAMIDEV_STORE: redis
+      SAMIDEV_PLATFORM_STORE: postgres
+      SAMIDEV_DATABASE_URL: ${SAMIDEV_DATABASE_URL:?SAMIDEV_DATABASE_URL is required}
+      SAMIDEV_DATABASE_POOL_SIZE: ${SAMIDEV_DATABASE_POOL_SIZE:-10}
       SAMIDEV_REDIS_URL: ${SAMIDEV_REDIS_URL:-redis://redis:6379/0}
       SAMIDEV_GAMEHOST_URLS: http://gamehost1:8091,http://gamehost2:8091,http://gamehost3:8091
       SAMIDEV_GAMEHOST_SERVICE_KEY: ${SAMIDEV_GAMEHOST_SERVICE_KEY:?SAMIDEV_GAMEHOST_SERVICE_KEY is required}
@@ -136,9 +168,13 @@ services:
       - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./game:/usr/share/nginx/html:ro
     depends_on:
-      - gateway1
-      - gateway2
-      - gateway3
+      gateway1:
+        condition: service_healthy
+      gateway2:
+        condition: service_healthy
+      gateway3:
+        condition: service_healthy
 
 volumes:
+  samidev_postgres:
   samidev_redis:

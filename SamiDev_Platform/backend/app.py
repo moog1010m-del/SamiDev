@@ -29,6 +29,8 @@ GAME_CATALOG = {gid: {**info, "mainJsSha256": hashlib.sha256((GAME_ROOT / info["
 NODE_ID = os.getenv("SAMIDEV_NODE_ID") or f"node-{secrets.token_hex(4)}"
 STORE_MODE = os.getenv("SAMIDEV_STORE", "memory").lower()
 REDIS_URL = os.getenv("SAMIDEV_REDIS_URL", "redis://redis:6379/0")
+PLATFORM_STORE = os.getenv("SAMIDEV_PLATFORM_STORE", "postgres" if os.getenv("SAMIDEV_PRODUCTION") == "1" else STORE_MODE).lower()
+DATABASE_URL = os.getenv("SAMIDEV_DATABASE_URL", "")
 MAX_WS_MESSAGE = int(os.getenv("SAMIDEV_MAX_WS_MESSAGE", "65536"))
 MAX_HTTP_BODY = max(MAX_WS_MESSAGE, int(os.getenv("SAMIDEV_MAX_HTTP_BODY", str(512 * 1024))))
 MAX_MSG_RATE = float(os.getenv("SAMIDEV_MAX_MSG_RATE", "90"))
@@ -93,8 +95,21 @@ class Conn:
 
 class SamiDevRealtime:
     def __init__(self) -> None:
+        if STORE_MODE not in {"memory", "redis"}:
+            raise RuntimeError("SAMIDEV_STORE must be memory or redis")
+        if PLATFORM_STORE not in {"memory", "redis", "postgres"}:
+            raise RuntimeError("SAMIDEV_PLATFORM_STORE must be memory, redis or postgres")
+        if PLATFORM_STORE in {"redis", "postgres"} and STORE_MODE != "redis":
+            raise RuntimeError("Shared platform storage requires SAMIDEV_STORE=redis")
+        if STORE_MODE == "redis" and PLATFORM_STORE == "memory":
+            raise RuntimeError("Shared gateways cannot use in-memory accounts")
         self.store = RedisStore(REDIS_URL) if STORE_MODE == "redis" else MemoryStore()
-        self.platform = PlatformService(getattr(self.store, "r", None))
+        if PLATFORM_STORE == "postgres":
+            from postgres_platform import PostgresPlatformService
+            self.platform = PostgresPlatformService(DATABASE_URL, self.store.r,
+                max_connections=int(os.getenv("SAMIDEV_DATABASE_POOL_SIZE", "10")))
+        else:
+            self.platform = PlatformService(getattr(self.store, "r", None))
         self.platform_http = PlatformHttp(self.platform, self.store, trust_proxy=TRUST_PROXY, trust_forwarded_https=TRUST_FORWARDED_HTTPS)
         self.gamehost = GameHostClient()
         self.metrics = Metrics()
@@ -113,13 +128,22 @@ class SamiDevRealtime:
                 raise RuntimeError("Production requires a private SAMIDEV_GAMEHOST_SERVICE_KEY of at least 32 characters")
             if STORE_MODE != "redis":
                 raise RuntimeError("SAMIDEV_PRODUCTION=1 requires SAMIDEV_STORE=redis")
+            if PLATFORM_STORE != "postgres":
+                raise RuntimeError("SAMIDEV_PRODUCTION=1 requires SAMIDEV_PLATFORM_STORE=postgres")
             if not ALLOWED_ORIGINS or "*" in ALLOWED_ORIGINS:
                 raise RuntimeError("SAMIDEV_ALLOWED_ORIGINS must be explicit in production")
-        await self.platform.start()
-        await self.gamehost.start(self._on_gamehost_event)
-        if getattr(self.store, "distributed", False):
-            await self.store.ping()
-            self.listener_task = asyncio.create_task(self._listen_remote(), name="samidev-redis-listener")
+        try:
+            if getattr(self.store, "distributed", False):
+                await self.store.ping()
+            await self.platform.start()
+            await self.gamehost.start(self._on_gamehost_event)
+            if getattr(self.store, "distributed", False):
+                self.listener_task = asyncio.create_task(self._listen_remote(), name="samidev-redis-listener")
+        except BaseException:
+            await self.gamehost.close()
+            if PLATFORM_STORE == "postgres": await self.platform.close()
+            if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
+            raise
         self.auth_task = asyncio.create_task(self._auth_sweeper(), name="samidev-auth")
         self.sweeper_task = asyncio.create_task(self._sweeper(), name="samidev-sweeper")
         print(f"[SamiDev Realtime] node={NODE_ID} store={STORE_MODE}")
@@ -128,9 +152,12 @@ class SamiDevRealtime:
         for task in (self.listener_task, self.sweeper_task, self.auth_task):
             if task:
                 task.cancel()
+        await asyncio.gather(*(t for t in (self.listener_task, self.sweeper_task, self.auth_task) if t), return_exceptions=True)
         for c in list(self.connections.values()):
             await c.ws.close(code=1001, message=b"server shutdown")
         await self.gamehost.close()
+        if PLATFORM_STORE == "postgres": await self.platform.close()
+        if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
 
     async def connection_authorized(self, c: Conn) -> bool:
         if not c.account_id: return not REQUIRE_GAME_AUTH
@@ -964,9 +991,16 @@ class SamiDevRealtime:
     async def health(self, request: web.Request) -> web.Response:
         redis_ok = True
         if getattr(self.store, "distributed", False):
-            try: redis_ok = await self.store.ping()
+            try: redis_ok = await asyncio.wait_for(self.store.ping(), timeout=3)
             except Exception: redis_ok = False
-        return web.json_response({"ok": redis_ok, "service": "SamiDev Realtime", "release": UI_BUILD["release"], "buildId": UI_BUILD["buildId"]})
+        database_ok = True
+        if PLATFORM_STORE == "postgres":
+            try: database_ok = await asyncio.wait_for(self.platform.r.ping(), timeout=3)
+            except Exception: database_ok = False
+        healthy = redis_ok and database_ok
+        return web.json_response({"ok": healthy, "service": "SamiDev Realtime", "release": UI_BUILD["release"], "buildId": UI_BUILD["buildId"],
+            "storage": {"realtime": STORE_MODE, "platform": PLATFORM_STORE},
+            "dependencies": {"redis": redis_ok, "database": database_ok}}, status=200 if healthy else 503)
 
     async def metrics_endpoint(self, request: web.Request) -> web.Response:
         m = self.metrics

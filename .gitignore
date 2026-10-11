@@ -61,5 +61,8 @@ Thumbs.db
 .vscode/
 
 # Logs & temporary runtime files
+.env
+.env.*
+!.env.example
 *.log
 *.tmp
