@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title-16">
+<title id="title-16">SamiDev · وميض · المستوى 16</title>
+<defs><linearGradient id="metal-16" x2=".7" y2="1"><stop stop-color="#f5d2ac"/><stop offset=".48" stop-color="#957358"/><stop offset="1" stop-color="#f5d2ac"/></linearGradient><radialGradient id="core-16"><stop stop-color="#224349"/><stop offset="1" stop-color="#08181f"/></radialGradient></defs>
+<path d="M80 10 L137 45 L146 104 L80 148 L14 104 L23 45Z" fill="#08191e" stroke="#957358" stroke-width="2"/>
+<path d="M80 17 L130 48 L139 100 L80 140 L21 100 L30 48Z" fill="none" stroke="#f5d2ac" opacity=".32"/>
+<polygon points="80.00,22.00 98.81,52.11 133.26,60.70 110.43,87.89 112.92,123.30 80.00,110.00 47.08,123.30 49.57,87.89 26.74,60.70 61.19,52.11" fill="url(#metal-16)" stroke="#f5d2ac" stroke-width="1.7"/>
+<path d="M80 28 L83 53 L80 48 L77 53Z" fill="white" opacity=".65"/>
+<circle cx="80" cy="78" r="28" fill="url(#core-16)" stroke="#f5d2ac" stroke-width="2"/>
+<circle cx="80" cy="78" r="23" fill="none" stroke="#957358" opacity=".65"/>
+<text x="80" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="850" fill="#f5d2ac">16</text>
+<circle cx="131.50" cy="110.69" r="2.5" fill="#f5d2ac"/><circle cx="123.94" cy="120.31" r="2.5" fill="#f5d2ac"/><circle cx="114.60" cy="128.24" r="2.5" fill="#f5d2ac"/><circle cx="103.87" cy="134.13" r="2.5" fill="#f5d2ac"/><circle cx="92.18" cy="137.77" r="2.5" fill="#f5d2ac"/><circle cx="80.00" cy="139.00" r="2.5" fill="#f5d2ac"/><path d="M74 134 L80 126 L86 134 L80 140Z" fill="#f5d2ac"/>
+</svg>

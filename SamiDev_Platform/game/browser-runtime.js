@@ -23,7 +23,7 @@
     frameRequested: true, nextHandle: 1,
     textures: new Map(), buffers: new Map(), framebuffers: new Map(), renderbuffers: new Map(),
     activePointers: new Map(), localHost: {hotseat:true, moves:[], alarms:new Map(), currentSeat:0, lastTurnKey:'', started:false},
-    network: {online:false, roomId:null, roster:[], cosmetics:{}, seat:null, spectator:false, snapshotBusy:false, queuedSnapshot:null, finished:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityCheckTimer:null},
+    network: {online:false, waiting:false, roomId:null, roster:[], cosmetics:{}, seat:null, spectator:false, snapshotBusy:false, queuedSnapshot:null, finished:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityCheckTimer:null},
     surface: {w:0, h:0, menuY:0, initialized:false},
     performance: {mobile:mobileDevice, pixelRatio:1, frames:0, coalescedMoves:0},
   };
@@ -285,7 +285,17 @@
   }
 
   const timers=new Map(); let timerId=1;
-  const setHostTimer=(fn,ms,repeat=false)=>{ const id=timerId++; const real=repeat?setInterval(fn,ms):setTimeout(()=>{timers.delete(id);fn();},ms); timers.set(id,{real,repeat}); return id; };
+  const setHostTimer=(fn,ms,repeat=false)=>{
+    const id=timerId++;
+    // The native carrom renderer schedules its first-play tutorial on sync.
+    // Postpone that presentation callback until the waiting scene is released.
+    const tutorial=isCarrom&&!repeat&&String(fn).includes('openTutorial');
+    const run=()=>{
+      if(tutorial&&state.network.waiting){const timer=timers.get(id);if(timer)timer.real=setTimeout(run,100);return;}
+      timers.delete(id);fn();
+    };
+    const real=repeat?setInterval(fn,ms):setTimeout(run,ms);timers.set(id,{real,repeat});return id;
+  };
   const clearHostTimer=(id)=>{ const t=timers.get(id); if(!t)return; t.repeat?clearInterval(t.real):clearTimeout(t.real); timers.delete(id); };
 
   const hostBridge = {
@@ -297,7 +307,7 @@
     saveLocalState:(x)=>{ hostBridge.saved_local_state=x||{}; saveJsonStorage(`samidev.${currentGame.id}.saved_local_state`,hostBridge.saved_local_state); }, saveGamePreferences:(x)=>{hostBridge.game_preferences=x||{}; saveJsonStorage(`samidev.${currentGame.id}.game_preferences`,hostBridge.game_preferences);},
     setTimer:setHostTimer, clearTimer:clearHostTimer, requestRender:()=>{state.frameRequested=true;},
     addMenuButton:(id,label)=>{ (state.menuButtons||(state.menuButtons=[])).push({id,label}); }, requestKeyboard:()=>{}, showGameOver:()=>console.log('[web-host] Game over'), showItemPurchase:()=>{}, showProfile:(seat)=>{ try { const player=(window.SamiDevNetwork?.state?.roster||[]).find(p=>p&&Number(p.seat)===Number(seat)); if(window.SamiDevMobile?.postMessage&&player?.accountId){window.SamiDevMobile.postMessage(JSON.stringify({type:'open_player_profile',userId:player.accountId}));}else{window.SamiDevPlayerProfileUI?.openSeat?.(seat);} } catch (e) { console.warn('[SamiDev Profile] native profile open failed', e); } }, track:()=>{},
-    getInventory:()=>[], [HOST_PLAYER_ID_METHOD]:(seat)=> { const r=state.network.roster?.find?.(x=>x&&x.seat===seat); return Number.isInteger(seat)&&seat>=0?(r?.name||`Player ${seat+1}`):null; },
+    getInventory:()=>[], [HOST_PLAYER_ID_METHOD]:(seat)=> { const r=state.network.roster?.find?.(x=>x&&x.seat===seat); return Number.isInteger(seat)&&seat>=0?(r?.name||(state.network.waiting?null:`Player ${seat+1}`)):null; },
     haptic:{isVibrationSupported:()=>typeof navigator!=='undefined'&&typeof navigator.vibrate==='function',vibrate:(ms=20)=>{try{navigator.vibrate?.(ms);}catch(_){}},vibratePattern:(p)=>{try{navigator.vibrate?.(p);}catch(_){}}},
     shop:{getCatalog:()=>Promise.resolve([])},
     net:{sendMessage:()=>{}, onMessage:()=>{}},
@@ -321,13 +331,14 @@
     alarm:{set:(ms,id)=>scheduleLogicAlarm(ms,id)},
     session:{changeTurn:(turn,msg)=>{ try{ state.gameLogic?.changeTurn?.(turn,msg); }catch(e){console.warn('changeTurn',e);} },gameOver:(...a)=>console.log('[web-host] gameOver',...a)},
     sendMove:(move)=>{
+      if(state.network.waiting)return false;
       if(isPool && state.network.online && move?.__info!==undefined){
         // Native animation reports are presentation-only. Never send client results.
         setTimeout(()=>waitUntilWorldSettles(state.gameLogic,20000).then(()=>window.SamiDevNetwork?.requestResync?.()),100);
         return true;
       }
       return state.network.online?window.SamiDevNetwork?.sendMove?.(move):ackLocalMove(move);
-    }, resetSynchronizationStream:()=>state.network.online?window.SamiDevNetwork?.requestResync?.():localResync(),
+    }, resetSynchronizationStream:()=>state.network.waiting?false:state.network.online?window.SamiDevNetwork?.requestResync?.():localResync(),
     setGameLogic:(logic)=>{ state.gameLogic=logic; window.__gameLogic=logic; window.SamiDevCardAudio?.bindLocal(logic); }
   };
   window[HOST_GLOBAL]=hostBridge;
@@ -1087,6 +1098,30 @@
     return state.gameLogic;
   }
 
+  let renderLoopStarted=false;
+  function ensureRenderLoop(){if(!renderLoopStarted){renderLoopStarted=true;requestAnimationFrame(loop);}}
+  async function prepareWaitingScene(message){
+    const logic=await prepareAssetsAndLogic();
+    const network=window.SamiDevNetwork.state;
+    state.network.roomId=network.roomId;
+    state.network.seat=Number(network.seat);
+    state.network.roster=network.roster||message.roster||[];
+    state.network.capacity=Number(network.capacity)||message.capacity;
+    applyCosmetics(message);
+    const nativeSettings=cloneMove(message.settings||network.settings);delete nativeSettings.gameId;
+    const seats=logic.initialize(nativeSettings,state.network.seat);
+    installLocalHost(logic,true);
+    logic._initialSync=true;
+    // No players enter, no input is installed and no ready/move is sent while
+    // waiting. This is the very same native scene used when the match starts.
+    state.surfaceCreated?.();
+    await ensureInitialSurface();
+    refreshNativeAvatars();
+    ensureRenderLoop();
+    window.SamiDevWaitingRoom?.sceneReady();
+    return {logic,seats,settings:nativeSettings};
+  }
+
   window.__startSamiDevGame = async function() {
     try {
       const qs=new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
@@ -1095,13 +1130,29 @@
       let startData=null;
       let settings;
       let localSeat=0;
+      let waitingScenePromise=null,waitingScene=null;
 
       if(online){
         state.network.online=true;
         state.localHost.hotseat=false;
         if(!window.SamiDevNetwork) throw new Error('SamiDev Network غير متوفر');
+        state.network.waiting=true;
         window.SamiDevWaitingRoom?.show();
-        startData=await window.SamiDevNetwork.connectFromLocation(text=>{ if(window.SamiDevWaitingRoom){window.SamiDevWaitingRoom.progress(text);}else{status.style.display='block';status.textContent=text;} });
+        const preview=message=>{
+          if(!waitingScenePromise){
+            waitingScenePromise=prepareWaitingScene(message);
+            waitingScenePromise.catch(error=>window.SamiDevWaitingRoom?.fail(error.message));
+          }else{
+            state.network.roster=message.roster||state.network.roster;
+            applyCosmetics(message);refreshNativeAvatars();state.frameRequested=true;
+          }
+        };
+        const offAssignment=window.SamiDevNetwork.on('assignment',preview);
+        const offRoom=window.SamiDevNetwork.on('room_state',preview);
+        try{
+          startData=await window.SamiDevNetwork.connectFromLocation(text=>{ if(window.SamiDevWaitingRoom){window.SamiDevWaitingRoom.progress(text);}else{status.style.display='block';status.textContent=text;} });
+          if(waitingScenePromise)waitingScene=await waitingScenePromise;
+        }finally{offAssignment?.();offRoom?.();}
         settings=startData.settings;
         localSeat=Number(startData.seat);
         if(!Number.isInteger(localSeat)) localSeat=-1;
@@ -1134,12 +1185,14 @@
         };
       }
       const nativeSettings=cloneMove(settings); delete nativeSettings.gameId;
-      const seats=logic.initialize(nativeSettings,localSeat);
-      installLocalHost(logic, online);
+      if(waitingScene && JSON.stringify(waitingScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
+      const seats=waitingScene?waitingScene.seats:logic.initialize(nativeSettings,localSeat);
+      state.network.waiting=false;
+      if(!waitingScene)installLocalHost(logic, online);
       logic._initialSync=true;
       try { if(!isPool) for(let seat=0;seat<seats;seat++) logic.enter?.(seat); } catch(e){console.warn('enter',e);}
 
-      state.surfaceCreated?.();
+      if(!waitingScene)state.surfaceCreated?.();
       await ensureInitialSurface();
       if(isPool && !online) for(let seat=0;seat<seats;seat++) logic.enter?.(seat);
       if(!state.network.spectator) installInputBridge();
@@ -1180,7 +1233,7 @@
       status.style.display='none';
       state.localHost.started=true;
       window.SamiDevWaitingRoom?.ready();
-      requestAnimationFrame(loop);
+      ensureRenderLoop();
     } catch(e) {
       console.error(e);
       status.style.display='block';

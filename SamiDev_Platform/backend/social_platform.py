@@ -266,10 +266,56 @@ class PlatformService:
         self.mem_store_ledger: dict[str, list[dict[str, Any]]] = {}
         self.mem_daily_match_counts: dict[tuple[str, str], int] = {}
         self.mem_match_reward_claims: set[tuple[str, str]] = set()
+        self.mem_game_stats: dict[str, dict[str, dict[str, int]]] = {}
+        self.mem_game_results: set[tuple[str, str]] = set()
 
     def k_user(self, uid: str) -> str: return f"{PREFIX}:user:{uid}"
     def k_username(self, username_lower: str) -> str: return f"{PREFIX}:username:{username_lower}"
     def k_users(self) -> str: return f"{PREFIX}:users"
+    def k_game_stats(self, uid: str, game: str) -> str: return f"{PREFIX}:game-stats:{uid}:{game}"
+    def k_game_result(self, uid: str, match: str) -> str: return f"{PREFIX}:game-result:{uid}:{match}"
+
+    async def record_game_result(self, uid: str, game: str, match: str, *, won: bool, drawn: bool = False) -> bool:
+        from games import GAMES
+        if game not in GAMES or not match or len(match) > 128:
+            raise PlatformError('BAD_MATCH_RESULT', 'نتيجة المباراة غير صالحة')
+        if won and drawn:
+            raise PlatformError('BAD_MATCH_RESULT', 'نتيجة المباراة غير صالحة')
+        if self.r is not None:
+            # Development Redis mode. PostgreSQL overrides this with an SQL
+            # result ledger and counters committed in one database transaction.
+            script = '''
+            if redis.call('EXISTS', KEYS[1]) == 0 then return 0 end
+            if redis.call('SET', KEYS[3], '1', 'NX') == false then return 0 end
+            redis.call('HINCRBY', KEYS[2], 'played', 1)
+            if ARGV[1] == '1' then
+              redis.call('HINCRBY', KEYS[2], 'wins', 1)
+              redis.call('HINCRBY', KEYS[1], 'wins', 1)
+            end
+            if ARGV[2] == '1' then redis.call('HINCRBY', KEYS[2], 'draws', 1) end
+            return 1
+            '''
+            return bool(await self.r.eval(script, 3, self.k_user(uid), self.k_game_stats(uid, game), self.k_game_result(uid, match), '1' if won else '0', '1' if drawn else '0'))
+        async with self.lock:
+            user = self.mem_users.get(uid)
+            if not user or (uid, match) in self.mem_game_results: return False
+            self.mem_game_results.add((uid, match))
+            stats = self.mem_game_stats.setdefault(uid, {}).setdefault(game, {'wins': 0, 'played': 0, 'draws': 0})
+            stats['played'] += 1
+            if won:
+                stats['wins'] += 1
+                user['wins'] = str(int(user.get('wins') or 0) + 1)
+            if drawn: stats['draws'] += 1
+            return True
+
+    async def game_statistics(self, uid: str) -> list[dict[str, Any]]:
+        from games import GAMES
+        from progression import statistics
+        result = []
+        for game in GAMES:
+            raw = await self.r.hgetall(self.k_game_stats(uid, game)) if self.r is not None else self.mem_game_stats.get(uid, {}).get(game, {})
+            result.append(statistics(game, raw))
+        return result
     def k_session(self, token: str) -> str: return f"{PREFIX}:session:{token}"
     def k_ticket(self, token: str) -> str: return f"{PREFIX}:ticket:{token}"
     def k_friends(self, uid: str) -> str: return f"{PREFIX}:friends:{uid}"
@@ -1034,12 +1080,18 @@ class PlatformService:
         else:
             owned = set(self.mem_inventory.get(target_id, set()))
         out["showcaseItems"] = [
-            {"id": item_id, "name": item["name"], "asset": item.get("asset", ""), "gameId": item.get("gameId", "")}
+            {"id": item_id, "name": item["name"], "asset": item.get("asset", ""), "gameId": item.get("gameId", ""), "quantity": 1, "category": item.get("category", "")}
             for item_id, item in STORE_CATALOG.items()
-            if item_id in owned or item.get("availableToAll") is True
+            if item_id in owned
         ]
-        # Match totals per game are not persisted in V37; never invent them.
-        out["gameStatistics"] = []
+        stars = max(0, min(5, int(target.get('starsCount') or 0)))
+        if stars:
+            item = STORE_CATALOG['profile_star']
+            out['showcaseItems'].append(dict(id='profile_star', name=item['name'], asset=item['asset'], gameId='', quantity=stars, category='profile'))
+        out['ownedItemCount'] = sum(x['quantity'] for x in out['showcaseItems'])
+        out['gameStatistics'] = await self.game_statistics(target_id)
+        out['statisticsHistory'] = 'tracked_matches_only'
+        out['legacyWins'] = max(0, out['wins'] - sum(x['wins'] for x in out['gameStatistics']))
 
         if self.r is not None:
             equipped_badge = str(await self.r.hget(self.k_equipped(target_id), "name_badge") or "")
@@ -1360,7 +1412,9 @@ class PlatformHttp:
 
     async def me(self, request: web.Request) -> web.Response:
         user = await self._user(request)
-        return web.json_response({"ok": True, "user": public_user(user, include_avatar=True)})
+        profile = await self.platform.public_profile(str(user['id']), str(user['id']))
+        profile['avatarData'] = str(user.get('avatarData') or '')
+        return web.json_response({"ok": True, "user": profile})
 
     async def store_state(self, request: web.Request) -> web.Response:
         user = await self._user(request)

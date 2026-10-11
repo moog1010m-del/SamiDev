@@ -58,6 +58,26 @@ class PostgresPlatformService(PlatformService):
         async with self.r.transaction([self.k_user(uid), self.k_inventory(uid), self.k_store_ledger(uid)]):
             return await super().buy_store_item(uid, item_id)
 
+    async def record_game_result(self, uid, game, match, *, won, drawn=False):
+        from games import GAMES
+        if game not in GAMES or not match or len(match) > 128 or (won and drawn):
+            raise PlatformError('BAD_MATCH_RESULT', 'نتيجة المباراة غير صالحة')
+        user_key, stats_key = self.k_user(uid), self.k_game_stats(uid, game)
+        legacy_claim = self.k_game_result(uid, match)
+        async with self.r.transaction([user_key, stats_key, legacy_claim]) as conn:
+            if not await self.r.exists(user_key): return False
+            if await self.r.exists(legacy_claim): return False
+            inserted = await conn.fetchval('''INSERT INTO samidev_match_results(account_key,match_id,game_id,outcome)
+                VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING RETURNING true''',
+                user_key, match, game, 'win' if won else 'draw' if drawn else 'loss')
+            if not inserted: return False
+            await self.r.hincrby(stats_key, 'played', 1)
+            if won:
+                await self.r.hincrby(stats_key, 'wins', 1)
+                await self.r.hincrby(user_key, 'wins', 1)
+            if drawn: await self.r.hincrby(stats_key, 'draws', 1)
+            return True
+
     async def equip_store_item(self, uid, item_id):
         async with self.r.transaction([self.k_user(uid), self.k_inventory(uid), self.k_equipped(uid)]):
             return await super().equip_store_item(uid, item_id)

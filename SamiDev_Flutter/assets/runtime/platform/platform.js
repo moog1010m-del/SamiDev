@@ -112,7 +112,18 @@
     $$('#page-profile .profile-stars .profile-sprite-star').forEach((el,i)=>{
       el.classList.toggle('dim',i>=userStars);
     });
+    if(Array.isArray(user.showcaseItems))window.SamiDevProfileDetails?.render($('#own-profile-details'),user,{own:true});
+    else refreshOwnProfile();
     const admin=['admin','moderator'].includes(user.role); $('#admin-nav').classList.toggle('hidden',!admin); $('#admin-bottom').classList.toggle('hidden',!admin);
+  }
+  let ownProfileRequest=0;
+  async function refreshOwnProfile(){
+    const id=state.user?.id;if(!id)return;const request=++ownProfileRequest;
+    try{const data=await api('/api/public-profile/'+encodeURIComponent(id));
+      if(request!==ownProfileRequest||state.user?.id!==id)return;
+      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins});
+      window.SamiDevProfileDetails?.render($('#own-profile-details'),data.user,{own:true});
+    }catch(_){const node=$('#own-profile-details');if(node&&!node.children.length)node.textContent='تعذر تحميل المقتنيات والإحصاءات. افتح الملف مجددًا للمحاولة.';}
   }
   async function avatarDataFromFile(file){
     if(!file||!String(file.type||'').startsWith('image/'))throw new Error('اختر ملف صورة صالح');
@@ -383,6 +394,7 @@
       const result=await api('/api/store/buy',{method:'POST',body:JSON.stringify({itemId})});
       toast(`تم شراء ${itemName} بنجاح!`);
       await loadStore();
+      refreshOwnProfile();
       if(result.starsCount!==undefined&&state.user){
         state.user.starsCount=result.starsCount;
         setUser(state.user);
@@ -418,6 +430,7 @@
       if(state.activeCommunity)loadCommunityState(); else loadCommunities();
     }
     if(page==='friends')loadFriends();
+    if(page==='profile')refreshOwnProfile();
     if(page==='store')loadStore();
     if(page==='admin')loadAdmin();
   }
@@ -586,19 +599,7 @@
     $('#community-profile-report').disabled=self;$('#community-profile-actions').classList.toggle('self',self);
     let extra=$('#sd-public-extra');
     if(!extra){extra=document.createElement('section');extra.id='sd-public-extra';extra.className='sd-public-extra';$('#community-profile-actions').insertAdjacentElement('afterend',extra);}
-    const items=Array.isArray(user.showcaseItems)?user.showcaseItems:[];
-    const safe=x=>/^\/(?:images|games)\/[a-zA-Z0-9_./-]+$/.test(String(x||''))?x:'';
-    extra.innerHTML=`<div class="sd-public-toggle-wrap"><button type="button" class="sd-public-toggle-btn" data-action="toggle-public-extra"><span>عرض الملف كاملاً</span><span class="sd-public-toggle-arrow">▼</span></button></div><div class="sd-public-full-content" hidden><h3>عناصر اللاعب</h3><div class="sd-public-items">${items.map(x=>`<div><img src="${escapeHtml(safe(x.asset))}" alt="" loading="lazy"><span>${escapeHtml(x.name)}</span></div>`).join('')||'<p>لا توجد عناصر للعرض</p>'}</div>${items.length>3?'<button type="button" class="sd-public-more">عرض كل العناصر</button>':''}<h3>الألعاب</h3>${[['pool','بلياردو'],['carrom','كيرم'],['tablesoccer','فوتبول'],['crazy8','أونو']].map(([id,name])=>{const g=(user.gameStatistics||[]).find(x=>x.gameId===id);return `<div class="sd-public-game"><b>${name}</b><span>المباريات: ${g?formatProfileStat(g.played):'—'}</span><span>الفوز: ${g?formatProfileStat(g.wins):'—'}</span></div>`}).join('')}<p class="sd-public-hint">تظهر الأرقام عند توفر سجل مباريات موثوق لكل لعبة.</p></div>`;
-    extra.querySelector('[data-action="toggle-public-extra"]')?.addEventListener('click',e=>{
-      const full=extra.querySelector('.sd-public-full-content');
-      if(!full)return;
-      const isHidden=full.hidden;
-      full.hidden=!isHidden;
-      const btn=e.currentTarget;
-      btn.querySelector('span:first-child').textContent=isHidden?'عرض مختصر':'عرض الملف كاملاً';
-      btn.querySelector('.sd-public-toggle-arrow').textContent=isHidden?'▲':'▼';
-    });
-    extra.querySelector('.sd-public-more')?.addEventListener('click',e=>{extra.querySelector('.sd-public-items').classList.toggle('expanded');e.currentTarget.textContent=extra.querySelector('.sd-public-items').classList.contains('expanded')?'عرض أقل':'عرض كل العناصر';});
+    window.SamiDevProfileDetails?.render(extra,user,{own:self});
     $('#community-profile-loading').classList.add('hidden');
   }
   async function openCommunityProfile(userId){

@@ -105,6 +105,7 @@
   }
 
   function relationButton(user) {
+    if(user.relation==='self')return '<button class="sdpp-action friend" type="button" disabled>ملفك الشخصي</button>';
     if(user.relation==='friend')return `<button class="sdpp-action friend" type="button" disabled>${icon('friend')}<span>صديق</span></button>`;
     if(user.relation==='outgoing')return `<button class="sdpp-action friend" type="button" disabled>${icon('friend')}<span>تم إرسال الطلب</span></button>`;
     if(user.relation==='incoming')return `<button class="sdpp-action friend" type="button" data-action="friend">${icon('friend')}<span>قبول الصداقة</span></button>`;
@@ -123,17 +124,14 @@
   }
 
   function showcaseMarkup(user){
-    const items=Array.isArray(user.showcaseItems)?user.showcaseItems:[];
-    const safeAsset=x=>/^\/(?:images|games)\/[a-zA-Z0-9_./-]+$/.test(String(x||''))?x:'';
-    const cards=items.map(x=>`<div class="sdpp-item"><div class="sdpp-item-preview">${safeAsset(x.asset)?`<img src="${esc(x.asset)}" alt="" loading="lazy">`:'✦'}</div><span>${esc(x.name)}</span></div>`).join('');
-    return `<section class="sdpp-extra" dir="rtl"><h3>عناصر اللاعب</h3><div class="sdpp-items" data-items>${cards||'<p class="sdpp-empty">لا توجد عناصر للعرض</p>'}</div>${items.length>3?'<button type="button" class="sdpp-show-all" data-action="items">عرض كل العناصر</button>':''}<h3>الألعاب</h3><div class="sdpp-game-list">${[['pool','بلياردو'],['carrom','كيرم'],['tablesoccer','فوتبول'],['crazy8','أونو']].map(([id,name])=>{const x=(user.gameStatistics||[]).find(g=>g.gameId===id);return `<div class="sdpp-game"><strong>${name}</strong><span>المباريات: ${x?esc(numberText(x.played)):'—'}</span><span>الفوز: ${x?esc(numberText(x.wins)):'—'}</span></div>`}).join('')}</div><p class="sdpp-empty">تظهر الأرقام عند توفر سجل مباريات موثوق لكل لعبة.</p></section>`;
+    return '<section data-profile-details></section>';
   }
 
   function renderProfile(user, player) {
     activeProfile={user,player};
     const img=`<img class="sdpp-avatar-img" data-sd-avatar src="${user.id?'/api/avatar/'+encodeURIComponent(user.id):DEFAULT_AVATAR_URL}" alt="">`;
     const remaining=Number.isFinite(Number(user.reputationDailyRemaining))?Math.max(0,Number(user.reputationDailyRemaining)):0;
-    const repDisabled=user.reputationGrantedToday||remaining<=0;
+    const repDisabled=user.relation==='self'||user.reputationGrantedToday||remaining<=0;
     card.innerHTML=`
       <button class="sdpp-close" type="button" aria-label="إغلاق">${icon('close')}</button>
       <div class="sdpp-cover"><span class="sdpp-cover-mark">S</span></div>
@@ -148,19 +146,11 @@
           <div><small>السمعة</small><b>${icon('fire')}${esc(numberText(user.reputation))}</b></div>
         </div>
         <div class="sdpp-actions">
-          <button class="sdpp-action report" data-action="report" type="button" title="إبلاغ">${icon('report')}<span>إبلاغ</span></button>
+          <button class="sdpp-action report" data-action="report" type="button" title="إبلاغ" ${user.relation==='self'?'disabled':''}>${icon('report')}<span>إبلاغ</span></button>
           ${relationButton(user)}
           <button class="sdpp-action reputation" data-action="reputation" type="button" ${repDisabled?'disabled':''}>${icon('fire')}<span>${user.reputationGrantedToday?'مُنحت اليوم':'منح سمعة'}</span><small>${remaining}/5 اليوم</small></button>
         </div>
-        <div class="sdpp-more-wrap">
-          <button class="sdpp-more-btn" data-action="toggle-full" type="button">
-            <span>عرض الملف كاملاً</span>
-            <span class="sdpp-more-arrow">▼</span>
-          </button>
-        </div>
-        <div class="sdpp-full-section" hidden>
-          ${showcaseMarkup(user)}
-        </div>
+        ${showcaseMarkup(user)}
         <div id="sdpp-report-box" class="sdpp-report-box" hidden>
           <label for="sdpp-report-text">وصف المشكلة</label>
           <textarea id="sdpp-report-text" maxlength="500" rows="3" placeholder="اكتب باختصار ما حدث..."></textarea>
@@ -169,23 +159,7 @@
       </div>`;
     wireSafeAvatarImages(card);
     card.querySelector('.sdpp-close').onclick=closeProfile;
-    const moreBtn = card.querySelector('[data-action="toggle-full"]');
-    const fullSec = card.querySelector('.sdpp-full-section');
-    if (moreBtn && fullSec) {
-      moreBtn.onclick = () => {
-        const isHidden = fullSec.hidden;
-        fullSec.hidden = !isHidden;
-        moreBtn.classList.toggle('expanded', isHidden);
-        moreBtn.querySelector('span:first-child').textContent = isHidden ? 'عرض مختصر' : 'عرض الملف كاملاً';
-        moreBtn.querySelector('.sdpp-more-arrow').textContent = isHidden ? '▲' : '▼';
-        positionLayer();
-      };
-    }
-    card.querySelector('[data-action="items"]')?.addEventListener('click',e=>{
-      card.querySelector('[data-items]')?.classList.toggle('expanded');
-      e.currentTarget.textContent=card.querySelector('[data-items]')?.classList.contains('expanded')?'عرض أقل':'عرض كل العناصر';
-      positionLayer();
-    });
+    window.SamiDevProfileDetails?.render(card.querySelector('[data-profile-details]'),user,{own:user.relation==='self'});
     card.querySelector('[data-action="friend"]')?.addEventListener('click',()=>friendAction());
     card.querySelector('[data-action="reputation"]')?.addEventListener('click',()=>reputationAction());
     card.querySelector('[data-action="report"]')?.addEventListener('click',()=>{const b=$('#sdpp-report-box',card);if(b){b.hidden=false;$('#sdpp-report-text',card)?.focus();positionLayer();}});

@@ -29,7 +29,7 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
   win.fetch=async route=>({ok:true,json:async()=>String(route).includes('public-profile')?
     {ok:true,user:{id:other.accountId,displayName:other.name,username:'guest',wins:17,reputation:6,accountAgeDays:22,relation:'none',reputationDailyRemaining:4}}:
     {ok:true,equipped:{carrom_theme:'carrom_cat'}}});
-  for(const name of ['samidev-games.js','samidev-network.js','waiting-room.js','room-menu.js','player-profile-ui.js'])win.eval(read(name));
+  for(const name of ['samidev-games.js','samidev-network.js','waiting-room.js','room-menu.js','profile-details.js','player-profile-ui.js'])win.eval(read(name));
   win.document.dispatchEvent(new win.Event('DOMContentLoaded'));
   try{
     let started=false;
@@ -38,9 +38,9 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
     const doc=win.document,waiting=doc.getElementById('sd-waiting');assert(waiting);
     assert.equal(started,false);assert.equal(doc.querySelectorAll('.sd-waiting-player').length,1);
     assert.equal(doc.querySelectorAll('.sd-waiting-top .sd-waiting-player').length,0);
-    assert.equal(doc.querySelector('.sd-waiting-own').textContent,me.name);
-    if(game==='pool')assert.equal(doc.querySelectorAll('.sd-waiting-mirror img[src="/images/themes/pool-emerald.webp"]').length,4);
-    if(game==='carrom')assert.equal(doc.querySelector('.sd-waiting-board').getAttribute('src'),'/images/themes/cat-preview.webp');
+    assert.equal(doc.querySelector('.sd-waiting-own .sd-waiting-name').textContent,me.name);
+    assert.equal(doc.querySelectorAll('.sd-waiting-board,.sd-waiting-mirror').length,0,'Waiting must not fabricate a substitute table');
+    win.SamiDevWaitingRoom.sceneReady();assert.equal(waiting.dataset.renderer,'native');
     // Returning is a native navigation message, never leave_room / resignation.
     doc.getElementById('sd-room-back-button').click();
     assert.equal(bridge.at(-1).type,'room_background');assert.equal(socket.readyState,Socket.OPEN);
@@ -50,8 +50,8 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
     socket.receive({...room,type:'room_state'});
     assert.equal(doc.querySelectorAll('.sd-waiting-player').length,2);
     const opponent=doc.querySelector('.sd-waiting-top .sd-waiting-player');
-    assert.equal(opponent.querySelector('span').textContent,other.name);
-    assert.equal(opponent.querySelector('span').children.length,0);
+    assert.equal(opponent.querySelector('.sd-waiting-name').textContent,other.name);
+    assert.equal(opponent.querySelector('.sd-waiting-name').children.length,0);
     opponent.click();assert.equal(bridge.at(-1).type,'open_player_profile');assert.equal(bridge.at(-1).userId,other.accountId);
     // Web fallback profile really becomes visible; ID specificity used to hide it.
     win.SamiDevPlayerProfileUI.openSeat(1);await flush();

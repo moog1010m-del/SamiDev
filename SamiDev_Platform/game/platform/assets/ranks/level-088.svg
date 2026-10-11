@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title-88">
+<title id="title-88">SamiDev · قطب · المستوى 88</title>
+<defs><linearGradient id="metal-88" x2=".7" y2="1"><stop stop-color="#c9ffff"/><stop offset=".48" stop-color="#419597"/><stop offset="1" stop-color="#c9ffff"/></linearGradient><radialGradient id="core-88"><stop stop-color="#224349"/><stop offset="1" stop-color="#08181f"/></radialGradient></defs>
+<path d="M80 10 L137 45 L146 104 L80 148 L14 104 L23 45Z" fill="#08191e" stroke="#419597" stroke-width="2"/>
+<path d="M80 17 L130 48 L139 100 L80 140 L21 100 L30 48Z" fill="none" stroke="#c9ffff" opacity=".32"/>
+<path d="M 22 74 l -10 -12 l 10 -12" fill="none" stroke="#c9ffff" stroke-width="2" opacity=".8"/><path d="M 138 74 l -10 -12 l 10 -12" fill="none" stroke="#c9ffff" stroke-width="2" opacity=".8"/><polygon points="80.00,22.00 90.09,46.93 112.92,32.70 106.43,58.80 133.26,60.70 112.67,78.00 133.26,95.30 106.43,97.20 112.92,123.30 90.09,109.07 80.00,134.00 69.91,109.07 47.08,123.30 53.57,97.20 26.74,95.30 47.33,78.00 26.74,60.70 53.57,58.80 47.08,32.70 69.91,46.93" fill="url(#metal-88)" stroke="#c9ffff" stroke-width="1.7"/>
+<path d="M80 28 L83 53 L80 48 L77 53Z" fill="white" opacity=".65"/>
+<circle cx="80" cy="78" r="28" fill="url(#core-88)" stroke="#c9ffff" stroke-width="2"/>
+<circle cx="80" cy="78" r="23" fill="none" stroke="#419597" opacity=".65"/>
+<text x="80" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="850" fill="#c9ffff">88</text>
+<circle cx="131.50" cy="110.69" r="2.5" fill="#c9ffff"/><circle cx="123.94" cy="120.31" r="2.5" fill="#c9ffff"/><circle cx="114.60" cy="128.24" r="2.5" fill="#c9ffff"/><circle cx="103.87" cy="134.13" r="2.5" fill="#c9ffff"/><circle cx="92.18" cy="137.77" r="2.5" fill="#c9ffff"/><circle cx="80.00" cy="139.00" r="2.5" fill="#c9ffff"/><circle cx="67.82" cy="137.77" r="2.5" fill="#c9ffff"/><circle cx="56.13" cy="134.13" r="2.5" fill="#c9ffff"/><path d="M74 134 L80 126 L86 134 L80 140Z" fill="#c9ffff"/>
+</svg>

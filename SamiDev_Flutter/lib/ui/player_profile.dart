@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../runtime/api.dart';
+import 'profile_details.dart';
 
 class ProfileDecoration extends StatelessWidget {
   const ProfileDecoration(this.name,{super.key,this.size=22});
@@ -113,6 +114,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           ]),
           if(reporting)...[TextField(controller:report,maxLength:500,maxLines:3,decoration:const InputDecoration(labelText:'وصف المشكلة',border:OutlineInputBorder())),FilledButton(onPressed:busy?null:()=>action('report'),child:const Text('إرسال للإدارة'))],
           if(busy)const Padding(padding:EdgeInsets.all(12),child:LinearProgressIndicator()),
+          ProfileDetails(user:u),
         ],
         if(error!=null)...[Padding(padding:const EdgeInsets.all(12),child:Text(error!,style:TextStyle(color:colors.error))),if(u==null&&!loading)TextButton(onPressed:load,child:const Text('إعادة المحاولة'))],
       ])));

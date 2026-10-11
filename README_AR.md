@@ -4,6 +4,9 @@
 [POSTGRES_PRODUCTION_AR.md](SamiDev_Platform/POSTGRES_PRODUCTION_AR.md).
 PostgreSQL يخزّن بيانات الحسابات الدائمة، وRedis ينسّق اللعب والجلسات المؤقتة.
 
+تحديث المقتنيات وإحصاءات الألعاب والرتب 1–100 ومشهد الانتظار الأصلي موثق في
+[PROFILE_RANKS_AND_WAITING_AR.md](SamiDev_Platform/PROFILE_RANKS_AND_WAITING_AR.md).
+
 # SamiDev V36 — إصلاح الواجهة والرسومات
 
 ابدأ من `RELEASE_V36_AR.md` للتغييرات وحدود التحقق. هذه حزمة كاملة وأصول Flutter مضمنة. ما يلي توثيق النسخة الأساسية السابق.

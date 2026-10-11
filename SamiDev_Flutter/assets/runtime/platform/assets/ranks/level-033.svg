@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title-33">
+<title id="title-33">SamiDev · نجم · المستوى 33</title>
+<defs><linearGradient id="metal-33" x2=".7" y2="1"><stop stop-color="#acdff5"/><stop offset=".48" stop-color="#37799a"/><stop offset="1" stop-color="#acdff5"/></linearGradient><radialGradient id="core-33"><stop stop-color="#224349"/><stop offset="1" stop-color="#08181f"/></radialGradient></defs>
+<path d="M80 10 L137 45 L146 104 L80 148 L14 104 L23 45Z" fill="#08191e" stroke="#37799a" stroke-width="2"/>
+<path d="M80 17 L130 48 L139 100 L80 140 L21 100 L30 48Z" fill="none" stroke="#acdff5" opacity=".32"/>
+<polygon points="80.00,22.00 95.50,51.15 128.50,50.00 111.00,78.00 128.50,106.00 95.50,104.85 80.00,134.00 64.50,104.85 31.50,106.00 49.00,78.00 31.50,50.00 64.50,51.15" fill="url(#metal-33)" stroke="#acdff5" stroke-width="1.7"/>
+<path d="M80 28 L83 53 L80 48 L77 53Z" fill="white" opacity=".65"/>
+<circle cx="80" cy="78" r="28" fill="url(#core-33)" stroke="#acdff5" stroke-width="2"/>
+<circle cx="80" cy="78" r="23" fill="none" stroke="#37799a" opacity=".65"/>
+<text x="80" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="850" fill="#acdff5">33</text>
+<circle cx="131.50" cy="110.69" r="2.5" fill="#acdff5"/><circle cx="123.94" cy="120.31" r="2.5" fill="#acdff5"/><circle cx="114.60" cy="128.24" r="2.5" fill="#acdff5"/><path d="M74 134 L80 126 L86 134 L80 140Z" fill="#acdff5"/>
+</svg>

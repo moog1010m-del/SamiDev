@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title-61">
+<title id="title-61">SamiDev · مجرة · المستوى 61</title>
+<defs><linearGradient id="metal-61" x2=".7" y2="1"><stop stop-color="#fff0a9"/><stop offset=".48" stop-color="#b78b38"/><stop offset="1" stop-color="#fff0a9"/></linearGradient><radialGradient id="core-61"><stop stop-color="#224349"/><stop offset="1" stop-color="#08181f"/></radialGradient></defs>
+<path d="M80 10 L137 45 L146 104 L80 148 L14 104 L23 45Z" fill="#08191e" stroke="#b78b38" stroke-width="2"/>
+<path d="M80 17 L130 48 L139 100 L80 140 L21 100 L30 48Z" fill="none" stroke="#fff0a9" opacity=".32"/>
+<path d="M 22 74 l -10 -12 l 10 -12" fill="none" stroke="#fff0a9" stroke-width="2" opacity=".8"/><path d="M 138 74 l -10 -12 l 10 -12" fill="none" stroke="#fff0a9" stroke-width="2" opacity=".8"/><polygon points="80.00,22.00 90.37,49.50 116.00,35.10 106.27,62.83 135.15,68.28 109.87,83.27 128.50,106.00 99.50,101.24 99.15,130.62 80.00,108.33 60.85,130.62 60.50,101.24 31.50,106.00 50.13,83.27 24.85,68.28 53.73,62.83 44.00,35.10 69.63,49.50" fill="url(#metal-61)" stroke="#fff0a9" stroke-width="1.7"/>
+<path d="M80 28 L83 53 L80 48 L77 53Z" fill="white" opacity=".65"/>
+<circle cx="80" cy="78" r="28" fill="url(#core-61)" stroke="#fff0a9" stroke-width="2"/>
+<circle cx="80" cy="78" r="23" fill="none" stroke="#b78b38" opacity=".65"/>
+<text x="80" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="850" fill="#fff0a9">61</text>
+<circle cx="131.50" cy="110.69" r="2.5" fill="#fff0a9"/><path d="M74 134 L80 126 L86 134 L80 140Z" fill="#fff0a9"/>
+</svg>

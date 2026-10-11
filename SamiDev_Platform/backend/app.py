@@ -318,16 +318,17 @@ class SamiDevRealtime:
         if not winner_seats:
             return
         account_ids = await self.store.account_ids_for_room(rid)
-        winner_ids = {account_ids[seat] for seat in winner_seats if account_ids.get(seat)}
-        if not winner_ids:
-            return
-        # A room can emit more than one post-game authority revision. Claim the
-        # result before changing counters so a completed match is counted once.
-        if not await self.store.claim_profile_result(rid):
-            return
-        for uid in sorted(winner_ids):
+        room = await self.store.get_room_state(rid)
+        gid = game_id(room['settings'])
+        created = int(room['createdAt'])
+        # A room code may be reused. The creation time distinguishes matches;
+        # account result + per-game counters + overall wins commit atomically.
+        match = f'{rid}:{created}'
+        tied = len(event['finishOrder'][0]) > 1
+        for uid in sorted({str(v) for v in account_ids.values() if v}):
+            winner = any(account_ids.get(seat) == uid for seat in winner_seats)
             try:
-                await self.platform.increment_wins(uid, 1)
+                await self.platform.record_game_result(uid, gid, match, won=winner and not tied, drawn=winner and tied)
             except PlatformError as exc:
                 print("[SamiDev] profile win award", uid, exc.code)
 

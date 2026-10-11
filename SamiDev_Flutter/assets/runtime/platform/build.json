@@ -1,6 +1,6 @@
 {
   "release": "V37",
-  "buildId": "samidev-v37-2dd863cd10e61448",
+  "buildId": "samidev-v37-364908dd2fbf37fd",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,17 +8,21 @@
     "pool"
   ],
   "files": {
-    "platform/index.html": "691c13809679c3d95868d40fb531f8c8636c174481c16d635dcc0da1596bf763",
+    "platform/index.html": "62ad7548e0e3f6c267491afa01ca40c6ddf0e8a577ccab892fbda04ea00424e8",
     "platform/platform.css": "cd56801e6592bc80f777989c29054d7dedf72cd96944b7cc1e51d775027b78f1",
-    "platform/platform.js": "3019eaa564a196596c45dbc46c5ad361157236bda0173d6edbbcbc1e06b3aede",
+    "platform/platform.js": "941bd3f4c128e879f2596b1d668cea0c4aabdb0ccc92664591ea63e502cdd432",
     "samidev-games.js": "9c0dece53f812f41e1264eb97d378975fc859c144c46b83f6d89c8dccb1dc525",
-    "index.html": "24ee3ab40615753f3a8cad26f6103c06d7b5ae199c0ac403236dc21a39843e8a",
-    "browser-runtime.js": "1abe8f60adb4f851ba77626b094df34ea2448f64e8a0ca3b7965403c47d09595",
+    "profile-details.css": "eca05057b0914d22f54ac731991260f866ffebf02a1e383860ccd729bce05213",
+    "profile-details.js": "79d84630b04f6d90b2f2f8d00717659363c00ae12e74d16a48ec3b11b410e2fe",
+    "index.html": "b448a62715b5263a6d16dca200d3f80987fd87da1887940813dc426aac2ada25",
+    "browser-runtime.js": "012ac612081113f616fbc76b50bd6710b8a9fb1a9e0dce6c4029af0fb0311c79",
+    "waiting-room.js": "042a6697f29931056b13347afb7d9198cd5b5845636e79dc84aa38c3f4e6c68f",
+    "player-profile-ui.js": "655b212ffb0b3ab2b2b9801efefc5536f6ff60397ebca5fa63f40c6403715f30",
     "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
     "game-touch.css": "3b46fb9faf96cbfde8954ad1304a294bf5299a4883ddaaef93ccab4151778079",
     "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
-    "games/tablesoccer/index.html": "dc8a57cf86f96f35b5326b2212158a276284c34f7b14c9bd61a91ac02e722d60",
-    "games/crazy8/index.html": "60ea1b7d083bea2d95875219939355c56383fe04bf275cbe963a85302fe6e087",
-    "games/pool/index.html": "dbaf01fad652593a85b4e781397e9eb2fc87f6d5f7a9896c7e91b1ddba37c2e2"
+    "games/tablesoccer/index.html": "a7df3ad5b067283d7794cc9aa1e4ccce1b9ad3afbddca7d8424572bf2945d23c",
+    "games/crazy8/index.html": "ea88512ea04ad91097347668ed0a3781ab74dbacda3f2cc25f1fc00a52107019",
+    "games/pool/index.html": "a96e5612cfc849bc96f2374ddf82a51107c8a4348d01a1c7fcd43a548e47e45b"
   }
 }

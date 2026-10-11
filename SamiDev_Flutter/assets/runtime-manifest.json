@@ -8,16 +8,16 @@
   },
   "files": {
     "__assets.json": {
-      "size": 6500,
-      "sha256": "45ca0ddf1dd1546a5145491e1ef63f03a9c1fece6f8cca6c9f78624204ec16a6"
+      "size": 6425,
+      "sha256": "389baa2391a383277b291cfe962086e80cc729906496350ace6369f816d83150"
     },
     "attestation.json": {
-      "size": 12461,
-      "sha256": "57e211f5c438c69c1dd23314fce92f4a96db3c9e3d65ed7fdc9f54c3d339a291"
+      "size": 12337,
+      "sha256": "926e7aeb74e73338a9ba69fd88bcd37523b96b7be7121570449a2bca8ffdb2e0"
     },
     "browser-runtime.js": {
-      "size": 66355,
-      "sha256": "1abe8f60adb4f851ba77626b094df34ea2448f64e8a0ca3b7965403c47d09595"
+      "size": 69064,
+      "sha256": "012ac612081113f616fbc76b50bd6710b8a9fb1a9e0dce6c4029af0fb0311c79"
     },
     "carrom-themes.js": {
       "size": 1683,
@@ -40,8 +40,8 @@
       "sha256": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277"
     },
     "games/crazy8/__assets.json": {
-      "size": 5012,
-      "sha256": "4f862a27e938a04274a8ecc862286b6615eb1ea342dcdd4f2c1adff6db65d13e"
+      "size": 4953,
+      "sha256": "a51590a522b60bee81653d966efa537114ccc47c5672e3c28d6856f040a88d91"
     },
     "games/crazy8/anim/arrow_single.atlas": {
       "size": 228,
@@ -92,8 +92,8 @@
       "sha256": "7a8e87a65d1d49b7e43a90077841968323682eb43b00eaa78d7fb45af42bc794"
     },
     "games/crazy8/attestation.json": {
-      "size": 6358,
-      "sha256": "6d56f6762441ba1293085b877844ecd60c9780e8c4f68e27dfa1efd3f34040c4"
+      "size": 6292,
+      "sha256": "a7648d13d3d79a4d83ca804b2440993932e4fd6e39099903f70b84387354ae03"
     },
     "games/crazy8/dictionary.json": {
       "size": 28417,
@@ -124,8 +124,8 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "games/crazy8/index.html": {
-      "size": 6907,
-      "sha256": "60ea1b7d083bea2d95875219939355c56383fe04bf275cbe963a85302fe6e087"
+      "size": 7001,
+      "sha256": "ea88512ea04ad91097347668ed0a3781ab74dbacda3f2cc25f1fc00a52107019"
     },
     "games/crazy8/main.js": {
       "size": 784000,
@@ -284,12 +284,12 @@
       "sha256": "c83181afe8e06336b68e53cda0067039c8e99ba594aaab70914bd568cc4ed3d2"
     },
     "games/pool/__assets.json": {
-      "size": 14626,
-      "sha256": "8d874d142901328bfb314984bd4b8e1c65c250ac13085b2db439267815d45bef"
+      "size": 14450,
+      "sha256": "32197bb2e4c9f8d0b735e56293527a40f9452589c64517f2a63013f28daed0ed"
     },
     "games/pool/attestation.json": {
-      "size": 18543,
-      "sha256": "0429525c01a8c093287e637cbdb1d477db975fbbc80446eef42588dbbf356bdb"
+      "size": 18360,
+      "sha256": "38b1fac277da878b4dba4bbdc7859072b9d0c7739269e0dca071dd5994fa24ea"
     },
     "games/pool/images/imported/themes/th_basic_background.webp": {
       "size": 290,
@@ -772,8 +772,8 @@
       "sha256": "1c3efbf483d7973fbe3dee71ad0051df3bc8d23333e7e211a62c60edbe0d0eb2"
     },
     "games/pool/index.html": {
-      "size": 6620,
-      "sha256": "dbaf01fad652593a85b4e781397e9eb2fc87f6d5f7a9896c7e91b1ddba37c2e2"
+      "size": 6714,
+      "sha256": "a96e5612cfc849bc96f2374ddf82a51107c8a4348d01a1c7fcd43a548e47e45b"
     },
     "games/pool/main.js": {
       "size": 986525,
@@ -996,12 +996,12 @@
       "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
     },
     "games/tablesoccer/__assets.json": {
-      "size": 6814,
-      "sha256": "c28695dda642a57a193168dce5014193222c1aa76a15d8422e245194959134d9"
+      "size": 6738,
+      "sha256": "0a1089dc35867110eba36f2ac4560355b5d19f056fb8eb3df4d34975991712f5"
     },
     "games/tablesoccer/attestation.json": {
-      "size": 8113,
-      "sha256": "eb75e4888a997baa7c99c8260398dcd4c83a760f6c0fe9a996fb8034b4519811"
+      "size": 8030,
+      "sha256": "d03cffc13589eaf36d3b5a8a3a2b3ed8ae95949f16d8be0de167fe3a8c09634e"
     },
     "games/tablesoccer/dictionary.json": {
       "size": 82289,
@@ -1100,8 +1100,8 @@
       "sha256": "5c3c2543293f9dcc881a47de08b1178164096bab564acab990c330c9335822d9"
     },
     "games/tablesoccer/index.html": {
-      "size": 7448,
-      "sha256": "dc8a57cf86f96f35b5326b2212158a276284c34f7b14c9bd61a91ac02e722d60"
+      "size": 7542,
+      "sha256": "a7df3ad5b067283d7794cc9aa1e4ccce1b9ad3afbddca7d8424572bf2945d23c"
     },
     "games/tablesoccer/main.js": {
       "size": 967301,
@@ -1400,8 +1400,8 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "index.html": {
-      "size": 7248,
-      "sha256": "24ee3ab40615753f3a8cad26f6103c06d7b5ae199c0ac403236dc21a39843e8a"
+      "size": 7342,
+      "sha256": "b448a62715b5263a6d16dca200d3f80987fd87da1887940813dc426aac2ada25"
     },
     "inventory-ui.css": {
       "size": 2950,
@@ -1479,29 +1479,841 @@
       "size": 848,
       "sha256": "e59efa183947e85cc227facfba69ce1d2b3cf437fb0f689d42501f94e15dd447"
     },
+    "platform/assets/ranks/level-001.png": {
+      "size": 41932,
+      "sha256": "88df27fdf5fbc7fd2f89177a6bb273fb7c80d7e235ecf9c5c372c04f9b9cc836"
+    },
+    "platform/assets/ranks/level-001.svg": {
+      "size": 1391,
+      "sha256": "a9ba6d5e8ef61510c008bc6e4cc2de8b0799b46994f857c66f35df3f2bfc1d6d"
+    },
+    "platform/assets/ranks/level-002.png": {
+      "size": 42439,
+      "sha256": "81ddf66a5db254865a6352fc4f6fe786cb6a3a6bbfa2e0462d12b707d09a42b6"
+    },
+    "platform/assets/ranks/level-002.svg": {
+      "size": 1447,
+      "sha256": "11208aca62ce0ffe76cba81f86791340e57125f58376de697ab0d1b57b4208ff"
+    },
+    "platform/assets/ranks/level-003.png": {
+      "size": 43233,
+      "sha256": "7ab133de8746f58d59aea2929a36bbdf25ff48399d1fbf8b10b02803518bd5a0"
+    },
+    "platform/assets/ranks/level-003.svg": {
+      "size": 1503,
+      "sha256": "1a487d209fe34a6b6b75f5d74d19fe19f19f4641ab60e40ea8ded7923cb6a092"
+    },
+    "platform/assets/ranks/level-004.png": {
+      "size": 42843,
+      "sha256": "4dd205d676d98c815c70226493f0617263bacaecf49d37ae05819e0ac4ab0722"
+    },
+    "platform/assets/ranks/level-004.svg": {
+      "size": 1559,
+      "sha256": "4631f611aff7f2ab149d98d49e4b55cff0014de6e71c78791df15d4f8ae2a57b"
+    },
+    "platform/assets/ranks/level-005.png": {
+      "size": 43462,
+      "sha256": "1d95fe27c42e48b19dcb2999c20173402f36efcfdddce9c4ef5270ba2a014254"
+    },
+    "platform/assets/ranks/level-005.svg": {
+      "size": 1614,
+      "sha256": "1554b6c06d35a2119cb2583a2e1d208cf22560803ccd1a5791a94bbb7abf40f3"
+    },
+    "platform/assets/ranks/level-006.png": {
+      "size": 43551,
+      "sha256": "4561293d9950dad67ad86d2795ef689ba85b499afeae16378aeb31433d621ef5"
+    },
+    "platform/assets/ranks/level-006.svg": {
+      "size": 1669,
+      "sha256": "54371145c580f499631b7cc8acecdc4e2fc115ef57d2d00953c5103f2bd6071b"
+    },
+    "platform/assets/ranks/level-007.png": {
+      "size": 43346,
+      "sha256": "e46bd0d3ca390491412b9816cea3ba5d96a6701fa26b0152ed67f735540a0ea9"
+    },
+    "platform/assets/ranks/level-007.svg": {
+      "size": 1724,
+      "sha256": "dfbe29793326a061ddc96e004e67d22b985fda0e0777a6ccd9627099e54ea3c9"
+    },
+    "platform/assets/ranks/level-008.png": {
+      "size": 44218,
+      "sha256": "2f3e45ff0eed942f246e5088db4df07fa12ad8e938c274ee030ad90949be195e"
+    },
+    "platform/assets/ranks/level-008.svg": {
+      "size": 1779,
+      "sha256": "d21f8a2ed3be5147b753e72fa8e0a2dcab8620327192e86702395cb65a5f8d0c"
+    },
+    "platform/assets/ranks/level-009.png": {
+      "size": 44193,
+      "sha256": "52e229fb365a76a44afd0e3e5dff073e6f691cf0e66171d8d2572eec39c0f534"
+    },
+    "platform/assets/ranks/level-009.svg": {
+      "size": 1834,
+      "sha256": "fd2be0c694fecf724d5f8be28728d7960eb9c72cfa04834a94f3f99f01dacb93"
+    },
+    "platform/assets/ranks/level-010.png": {
+      "size": 44836,
+      "sha256": "dd3407658eff7077ca5438f91c7ee6d72942cd9b67ce6c04b7ff22cc05ff5e63"
+    },
+    "platform/assets/ranks/level-010.svg": {
+      "size": 1897,
+      "sha256": "9fe63cd63f906bbc5fe4f78d6276b4754de682dc339f9ff89a105b1c7f52bffb"
+    },
+    "platform/assets/ranks/level-011.png": {
+      "size": 42185,
+      "sha256": "315542bfa5aca7fcda5abeca181f8715ecadee5cffa55c2fdcd893152d15165e"
+    },
+    "platform/assets/ranks/level-011.svg": {
+      "size": 1397,
+      "sha256": "0bef05a03382c51613873c33ee3879b62036358116888bb8f705a2f919912e93"
+    },
+    "platform/assets/ranks/level-012.png": {
+      "size": 42613,
+      "sha256": "813818c0264a42bddc645f6eaacfd8166bbbcbb8350b25ae2a04322d39eaf967"
+    },
+    "platform/assets/ranks/level-012.svg": {
+      "size": 1453,
+      "sha256": "1eae90c702cf93ed1777438e487e3e681d8e3d543e772fffb6a8e0148ab76e33"
+    },
+    "platform/assets/ranks/level-013.png": {
+      "size": 43614,
+      "sha256": "d6eb2a1ad8a4290817ea942438d3fd545a2578b3cbaff1c39c07693856928af0"
+    },
+    "platform/assets/ranks/level-013.svg": {
+      "size": 1509,
+      "sha256": "612a87383c38897f80c17532f0db7e64c35e083f301edad525f465c49e492dd3"
+    },
+    "platform/assets/ranks/level-014.png": {
+      "size": 43366,
+      "sha256": "d1452e79d96da4ed9385c5adf9ae7f9a77954137f196f5a449628037390bd1d4"
+    },
+    "platform/assets/ranks/level-014.svg": {
+      "size": 1565,
+      "sha256": "b720586e8e006951448842722504b9e3dda31712ff1829b907c457321825d4ad"
+    },
+    "platform/assets/ranks/level-015.png": {
+      "size": 43836,
+      "sha256": "281757b2c21872b04e82697a28e1b22d1c0e540683a576f9b2ecf5cd0a2a23b2"
+    },
+    "platform/assets/ranks/level-015.svg": {
+      "size": 1620,
+      "sha256": "39a77dede7c5f9da554a3a797f53d21756092ba10c5356d3ba1ae7208be47dbb"
+    },
+    "platform/assets/ranks/level-016.png": {
+      "size": 43834,
+      "sha256": "2f2f0f0e1e1822654a7edf3dd3940c4d69d1f591ad4c93893fa9b68ef587acdd"
+    },
+    "platform/assets/ranks/level-016.svg": {
+      "size": 1675,
+      "sha256": "be5f278c83f2563788db2797be909ceee85ca6880e4da80badb96b643c4f9c39"
+    },
+    "platform/assets/ranks/level-017.png": {
+      "size": 43708,
+      "sha256": "5fbfa58688cdae7c382a1b29be78b9c551fd6e0eed2c8c662131a141c9f26c33"
+    },
+    "platform/assets/ranks/level-017.svg": {
+      "size": 1730,
+      "sha256": "3ba01831e60a00e93a8b73865960d71898b64cef33fc121c87fa48d066be0589"
+    },
+    "platform/assets/ranks/level-018.png": {
+      "size": 44411,
+      "sha256": "3aa73038cc15af1d67256abfefcf9039765486e262cacea24ede42419dbe9421"
+    },
+    "platform/assets/ranks/level-018.svg": {
+      "size": 1785,
+      "sha256": "3b8071908f9da47aa9fed70b9fbb0644bbd19d2aa36bbc1bc3f748fb9ad70f17"
+    },
+    "platform/assets/ranks/level-019.png": {
+      "size": 44395,
+      "sha256": "87b1cb05ecaeec96308e94409d88b91ff4501e91745796055e9d7c5553b89a55"
+    },
+    "platform/assets/ranks/level-019.svg": {
+      "size": 1840,
+      "sha256": "b58da7410077d5506e9ebf09878f4937f6f85cfd4cb70898d888fb8a50293614"
+    },
+    "platform/assets/ranks/level-020.png": {
+      "size": 45200,
+      "sha256": "3a8c2309ecf7d02b03181174d1a87fc11c7055f4c927be518eec14891e20d430"
+    },
+    "platform/assets/ranks/level-020.svg": {
+      "size": 1895,
+      "sha256": "b8bf8fcd3df85ee1c9dd96b07381c700e7cdc0f00a4d8034ed990a8d840f6591"
+    },
+    "platform/assets/ranks/level-021.png": {
+      "size": 42081,
+      "sha256": "e1fb7ec38084a6ab40ea1b7c7122b79b5914112b32567d4316e4eebf97080eca"
+    },
+    "platform/assets/ranks/level-021.svg": {
+      "size": 1423,
+      "sha256": "19b82f17b630f12e8ac0797c8d61931ad01ff6059c1b274df542f92c98dd008f"
+    },
+    "platform/assets/ranks/level-022.png": {
+      "size": 42854,
+      "sha256": "b5e001ea246615eceed80b905d2c880534436e036ebeb1fcc115d406cf41d945"
+    },
+    "platform/assets/ranks/level-022.svg": {
+      "size": 1479,
+      "sha256": "f79c46a409e4a166741e2f92da8c52535a8a8e285eef79aee08007406b24fcb6"
+    },
+    "platform/assets/ranks/level-023.png": {
+      "size": 43405,
+      "sha256": "9acdb5fbb4ce5be4aa38e19575153a5882f69142951df3cb5d560ffe7e025aee"
+    },
+    "platform/assets/ranks/level-023.svg": {
+      "size": 1535,
+      "sha256": "60fa54290db1e25136c60b4176657f77bf33a97cc275dad4ff57ea960dfdf024"
+    },
+    "platform/assets/ranks/level-024.png": {
+      "size": 43677,
+      "sha256": "905fd5f1310799b1a2d742ea7ad768408a126f197c500bf253e1fce8febd28a4"
+    },
+    "platform/assets/ranks/level-024.svg": {
+      "size": 1591,
+      "sha256": "7513f3e46585e144063645682d28bf206fcc94dfc83a1afeb63eeb73c2d5c515"
+    },
+    "platform/assets/ranks/level-025.png": {
+      "size": 43332,
+      "sha256": "1ff6614101f0f985784560651eae7bca8239e8c876a3d7c03d9f9440945b8430"
+    },
+    "platform/assets/ranks/level-025.svg": {
+      "size": 1646,
+      "sha256": "91db2c1ad0e4c218da83f262bdf61f7be4e7f99df2166db09e288807995e058e"
+    },
+    "platform/assets/ranks/level-026.png": {
+      "size": 44078,
+      "sha256": "3287ed3d0fbde6d8d782c098dda38629b27a57f1c88a4f991636a570f104f7b2"
+    },
+    "platform/assets/ranks/level-026.svg": {
+      "size": 1701,
+      "sha256": "b3fc43467a432b3c09f11b75c73f765ed78c72bbce2c88472959c7763937c66e"
+    },
+    "platform/assets/ranks/level-027.png": {
+      "size": 43781,
+      "sha256": "1d23738ed386ba3cf58c7389c62d1549a1af3ed95718c67e5639ec716759a251"
+    },
+    "platform/assets/ranks/level-027.svg": {
+      "size": 1756,
+      "sha256": "cd230da0d555affbfce9eebe7208363e47637d9c084b6509a5ffac430393d25f"
+    },
+    "platform/assets/ranks/level-028.png": {
+      "size": 44676,
+      "sha256": "f293ef6ed0396ed7c40e110622a69af2e93a15c9dc5c92f349d2199a3906d50d"
+    },
+    "platform/assets/ranks/level-028.svg": {
+      "size": 1811,
+      "sha256": "2b36f328cda7cf0e3dec437638623a9cd1616793fc40c4a7b519e4b9eb609306"
+    },
+    "platform/assets/ranks/level-029.png": {
+      "size": 45083,
+      "sha256": "985948a48f2470155b55d1ed212a9b8941451ecf82c0b2c6344e4a8b99c0a096"
+    },
+    "platform/assets/ranks/level-029.svg": {
+      "size": 1866,
+      "sha256": "86880f9eb0ae8e5f4efea59357632ddcb368a8cac0384ca3f274263a62e7ce46"
+    },
+    "platform/assets/ranks/level-030.png": {
+      "size": 45406,
+      "sha256": "8c3e520d228b7181770f7010be6a5a3bbde9b3579baba6ae68e31c17370e80e5"
+    },
+    "platform/assets/ranks/level-030.svg": {
+      "size": 1921,
+      "sha256": "fe5914b2eba19f4364e233bcc4c7ea5b318f652528bf618cb6666e18405d21a2"
+    },
+    "platform/assets/ranks/level-031.png": {
+      "size": 43275,
+      "sha256": "dba280eccdd88bf8208ad60612d048df7331d17778b657e0f4aa47caab4a5cc8"
+    },
+    "platform/assets/ranks/level-031.svg": {
+      "size": 1421,
+      "sha256": "3817e5f7e174350f8b3192eb29e9b2ca6dee0f9bf15583051bdf3967093342df"
+    },
+    "platform/assets/ranks/level-032.png": {
+      "size": 44110,
+      "sha256": "274e4086b56715c83f83623981d47191879ac3b0a85941f5307247d8e4706768"
+    },
+    "platform/assets/ranks/level-032.svg": {
+      "size": 1477,
+      "sha256": "a01662346f9ecc677f9ee05b937c6af0f9c50eba407cb9fdd0f00d6bc8638773"
+    },
+    "platform/assets/ranks/level-033.png": {
+      "size": 43994,
+      "sha256": "7946fc7befe7db31dd422c3e1ee310d077acb413ebe4a770d25f4d72a16a44ad"
+    },
+    "platform/assets/ranks/level-033.svg": {
+      "size": 1533,
+      "sha256": "44365cb78ba2251c0c29a466812b0cf86a813140a24f096d32640c3848296600"
+    },
+    "platform/assets/ranks/level-034.png": {
+      "size": 44912,
+      "sha256": "5cb0689977f733bde4337d1832a00a63f07ddafb80b89f5b4f77c6533c234c0c"
+    },
+    "platform/assets/ranks/level-034.svg": {
+      "size": 1589,
+      "sha256": "0d46a744b137024ff5a660461091eca673669fdc04f8fe7a5b4f5ef3082f232c"
+    },
+    "platform/assets/ranks/level-035.png": {
+      "size": 44366,
+      "sha256": "a994e0280b709311e16a22d3848e6a2f647c5deffda3b678acf4748de7eda138"
+    },
+    "platform/assets/ranks/level-035.svg": {
+      "size": 1644,
+      "sha256": "11e3a7e7e26d7e93827ffbbf6ab3847657406a213922af796d27428dca2bd63e"
+    },
+    "platform/assets/ranks/level-036.png": {
+      "size": 45110,
+      "sha256": "2dbeaca742b911e325d829e19752c43d488bdfc643640cecc56768eeccbc8b33"
+    },
+    "platform/assets/ranks/level-036.svg": {
+      "size": 1699,
+      "sha256": "2eaca64a8f04513a541530f29f11b7fb1c69eb805535cfa2644d630a8770654e"
+    },
+    "platform/assets/ranks/level-037.png": {
+      "size": 44895,
+      "sha256": "f0b70444849222110d45d432018d7ec250fabc5ea68a85108879e59fa49d0286"
+    },
+    "platform/assets/ranks/level-037.svg": {
+      "size": 1754,
+      "sha256": "c41f3f99f10ba9b1eb030a60ef292b74569c90a9f55e8eb8603e3ffd2b3332d2"
+    },
+    "platform/assets/ranks/level-038.png": {
+      "size": 45346,
+      "sha256": "11c0d8270ceecb01d8ebe1cfb48f40549afa31cae0a0fa609b5d75a21462c2f0"
+    },
+    "platform/assets/ranks/level-038.svg": {
+      "size": 1809,
+      "sha256": "01e368811f402936cb6e488e211df09680e8d88b4d2efb714d8162fe3bf19517"
+    },
+    "platform/assets/ranks/level-039.png": {
+      "size": 45890,
+      "sha256": "59c95d07a48449fe009fccb89041e222c86610dea156f8d2300bec91994b2f36"
+    },
+    "platform/assets/ranks/level-039.svg": {
+      "size": 1864,
+      "sha256": "4545b60982ee90ae30e428d5b2784bb1875dc0e20a4dc6ded525a642c9bf7dee"
+    },
+    "platform/assets/ranks/level-040.png": {
+      "size": 45446,
+      "sha256": "66c0cb55894735c978fd0122375a043a00659a4b5d365d0b8b5678e4343ad23d"
+    },
+    "platform/assets/ranks/level-040.svg": {
+      "size": 1919,
+      "sha256": "f1062881cbee40af24272845051433a39addd6a4fd3e8f274fa5a37afc2888a0"
+    },
+    "platform/assets/ranks/level-041.png": {
+      "size": 47036,
+      "sha256": "6b18e5c18d7c50ab34f4b4dfc9fdadc47c5bbe87fc63f3f79e75883a5d1d08b5"
+    },
+    "platform/assets/ranks/level-041.svg": {
+      "size": 1473,
+      "sha256": "10002cc79bb05ce177a20158198cbf4e140f5eca14717bf5ebad1f78c97b6a8e"
+    },
+    "platform/assets/ranks/level-042.png": {
+      "size": 47196,
+      "sha256": "f4252a4cfbacef1b4cfbcae10f1fd2eb1744b5992a11424abc725fc017e13847"
+    },
+    "platform/assets/ranks/level-042.svg": {
+      "size": 1529,
+      "sha256": "4d0c4351a48bbc734d489318da52b63c1a385afd98153c0fd7542dd0d6a102b6"
+    },
+    "platform/assets/ranks/level-043.png": {
+      "size": 47869,
+      "sha256": "7815f1e11b200b741f42ecb7c1568238e5a91e217721b4d7c79b8690c13c0f68"
+    },
+    "platform/assets/ranks/level-043.svg": {
+      "size": 1585,
+      "sha256": "9420f04e3fd4aff034d6ace53dd3b16be52934e28ae7fc668c855ee167f15b65"
+    },
+    "platform/assets/ranks/level-044.png": {
+      "size": 47755,
+      "sha256": "b5c0c219f7bf2a448bd6b32d042c942149c7623b8d26a8c509ae892db534fd91"
+    },
+    "platform/assets/ranks/level-044.svg": {
+      "size": 1641,
+      "sha256": "66bc578856fa32d1aebff1bee36391adff5637249ec97df07e68cae3eaf1406d"
+    },
+    "platform/assets/ranks/level-045.png": {
+      "size": 48132,
+      "sha256": "a24a40a5fd93fd2cac16fc5db26b260e97d978dcaca3563662e6c2ab91ed44d1"
+    },
+    "platform/assets/ranks/level-045.svg": {
+      "size": 1696,
+      "sha256": "35aaaae2afae7c81fb9e48987c0bfb49c4c3bab4af4f013b01fd9d1cf25060bf"
+    },
+    "platform/assets/ranks/level-046.png": {
+      "size": 48398,
+      "sha256": "c023f5af5463ae3f76d3517fb1f8085846d104aabbdc4ecc3044795944386d9d"
+    },
+    "platform/assets/ranks/level-046.svg": {
+      "size": 1751,
+      "sha256": "4a0380b105bb4c2cf35041b40ffdcc09f2e3473b5bfaf2486dd96cfaed252961"
+    },
+    "platform/assets/ranks/level-047.png": {
+      "size": 47714,
+      "sha256": "e659f328ac3bead5c3034701ecce5c59d786573293b3cd6218866098527e6257"
+    },
+    "platform/assets/ranks/level-047.svg": {
+      "size": 1806,
+      "sha256": "6b497ab3a922c7e1510fdcc475ca4562f0d633dd04e0145d012116673b09019d"
+    },
+    "platform/assets/ranks/level-048.png": {
+      "size": 48805,
+      "sha256": "bba43c6828c5642b5596750be7e46a0fd4117860b5f14b0a92c301d3e3f77ef2"
+    },
+    "platform/assets/ranks/level-048.svg": {
+      "size": 1861,
+      "sha256": "bd7e5d56cbf352450ed8cb2b0efe29d9dd2c046bb2f5fd863117fc42f6aba90d"
+    },
+    "platform/assets/ranks/level-049.png": {
+      "size": 48070,
+      "sha256": "036e56e2b3eee3b05a54717bd901987e04a0f9ba50d3b58e509074e4cc05fa45"
+    },
+    "platform/assets/ranks/level-049.svg": {
+      "size": 1916,
+      "sha256": "ce0dfcdc66d0047e42db2fdc04179aa4c7a418f659ab61bda0c23da347f549bd"
+    },
+    "platform/assets/ranks/level-050.png": {
+      "size": 48636,
+      "sha256": "9e2fe75cd5019746b988b6826543d9395b981388421e67dc8686f46a7027c3be"
+    },
+    "platform/assets/ranks/level-050.svg": {
+      "size": 1971,
+      "sha256": "045863b33f5c11407f6766da4b9afe04f601f2a36f08a0d0c51dacd71597c110"
+    },
+    "platform/assets/ranks/level-051.png": {
+      "size": 47923,
+      "sha256": "1c580a2afcb87e7e006ca04bcae203703d703ac98e1318de4400fd76d708c5e8"
+    },
+    "platform/assets/ranks/level-051.svg": {
+      "size": 1668,
+      "sha256": "706ed7b5f4b8c92013142cb1fc46f8af95dd82a332fc80108834576b5794e395"
+    },
+    "platform/assets/ranks/level-052.png": {
+      "size": 48485,
+      "sha256": "e00ccb7d015e02b015eb1591b483fddd2922868fc81106ea7ea4b004589706f3"
+    },
+    "platform/assets/ranks/level-052.svg": {
+      "size": 1724,
+      "sha256": "037c7f713a86c46ce76df69c86f9504b517dea5a6f6f8b18315fcc272d74c7fa"
+    },
+    "platform/assets/ranks/level-053.png": {
+      "size": 49097,
+      "sha256": "b96f09f4d7e96420fe2d125a6db891e5dbbf6bcc66a54699b97102f9c77df540"
+    },
+    "platform/assets/ranks/level-053.svg": {
+      "size": 1780,
+      "sha256": "f8a73a0d8ffcc18dc2b185a880de734a7223d2f24844a0681138075cd9c29ab4"
+    },
+    "platform/assets/ranks/level-054.png": {
+      "size": 48666,
+      "sha256": "56cff803ee44d80191840d51f2e3752ef4b3a0a385085ba402a66b0a1806a8f2"
+    },
+    "platform/assets/ranks/level-054.svg": {
+      "size": 1836,
+      "sha256": "21fa3d4ce2d27254e6b5a74a06b7047bedcf71cc4b05136bd80c296d3c8bcf0c"
+    },
+    "platform/assets/ranks/level-055.png": {
+      "size": 48844,
+      "sha256": "9659297d03913f62b4c03b6c000df528b06c59623908a623093bc9a8447bf5e2"
+    },
+    "platform/assets/ranks/level-055.svg": {
+      "size": 1891,
+      "sha256": "3ad0d726b8cc3e4fbc151d87a3730774bb881c37239427a46bb0e766d399037f"
+    },
+    "platform/assets/ranks/level-056.png": {
+      "size": 49418,
+      "sha256": "9e3a26ffcbaca4628be0e2f93de0f924a7e72ca3d971518f8b190ae4cec3a5ce"
+    },
+    "platform/assets/ranks/level-056.svg": {
+      "size": 1946,
+      "sha256": "84c41b73d00e283a5e96ca6c8789edb8a8b5788633a005330a5c89afff2dc049"
+    },
+    "platform/assets/ranks/level-057.png": {
+      "size": 48662,
+      "sha256": "c401409153cac724f7bdba1ecb9c494da3c98459cac1410405154a729fad2592"
+    },
+    "platform/assets/ranks/level-057.svg": {
+      "size": 2001,
+      "sha256": "a3c444f01b5491d7b8183aaf316c67bc7ad101dd2bf67a571445f0fc46a241d0"
+    },
+    "platform/assets/ranks/level-058.png": {
+      "size": 49726,
+      "sha256": "699283435d3b56fd6a806e99a3f94ae2e73bf8974451f20fad865b6b9d49c092"
+    },
+    "platform/assets/ranks/level-058.svg": {
+      "size": 2056,
+      "sha256": "d305b4c745dbeb82392da9c9d8f6ee002a408ed0e369399b44a1c3e0ddd4bbe7"
+    },
+    "platform/assets/ranks/level-059.png": {
+      "size": 49153,
+      "sha256": "de4144d654c8e41c11874bfb239061d2239e5002c3505871bc0cd2b681a503ea"
+    },
+    "platform/assets/ranks/level-059.svg": {
+      "size": 2111,
+      "sha256": "5898fba147c85be3d927dbd4c5b58a02c3a14788122d849c58ba019f8ce4e00d"
+    },
+    "platform/assets/ranks/level-060.png": {
+      "size": 49644,
+      "sha256": "2a896e4b546471964eb7d64cf3bb43d31261c45f39a40bb5ab702a0e97e14a1e"
+    },
+    "platform/assets/ranks/level-060.svg": {
+      "size": 2166,
+      "sha256": "700cea30d453f85367ede4552686b1fec02cb74fd3b120025ae268a9428dd2ed"
+    },
+    "platform/assets/ranks/level-061.png": {
+      "size": 48756,
+      "sha256": "3fdc3ad6e73272a8f9e387ba743b5ad7f94d7a9bc5b1af94708f72f470d36233"
+    },
+    "platform/assets/ranks/level-061.svg": {
+      "size": 1694,
+      "sha256": "8d25bee08339a1292d310545117cfc755347396bbc9f49f8a506430a1ceffe7e"
+    },
+    "platform/assets/ranks/level-062.png": {
+      "size": 49600,
+      "sha256": "4fa37cd5ad6f7d6ea0d98d4df950a5262e948e383fb6af3b22d5a6aba3fe2112"
+    },
+    "platform/assets/ranks/level-062.svg": {
+      "size": 1750,
+      "sha256": "549d19dd496a3499aa4a022072aa844c4a2d429f22d074b13b98b9413ecc3114"
+    },
+    "platform/assets/ranks/level-063.png": {
+      "size": 49761,
+      "sha256": "52c66294a1615f105e8a0e8f2ab5a5db7239cae06d026927246daf6f91eac459"
+    },
+    "platform/assets/ranks/level-063.svg": {
+      "size": 1806,
+      "sha256": "bd3819b99156c553a0d4a71773fc439470ea2b523221a91a892b3398ea57601f"
+    },
+    "platform/assets/ranks/level-064.png": {
+      "size": 49854,
+      "sha256": "8437452daf3400742f985e2e331543bcd2adc5ab225347d1c81e1504cd9dd068"
+    },
+    "platform/assets/ranks/level-064.svg": {
+      "size": 1863,
+      "sha256": "a5e8137b9ab5b44a7066bf662fd598321a61012cbbba565c8aaf7ab65b1c3972"
+    },
+    "platform/assets/ranks/level-065.png": {
+      "size": 50147,
+      "sha256": "6379d062defcf6c0bbd23fa5dcaca06b4358fe639d5849052e27ba0cf919e10b"
+    },
+    "platform/assets/ranks/level-065.svg": {
+      "size": 1918,
+      "sha256": "a882d2885bc8df4c3a53108c87b3d63ae8b9aab5f04240b0d65113451be1d6d6"
+    },
+    "platform/assets/ranks/level-066.png": {
+      "size": 50093,
+      "sha256": "ab82b0de29db700cef9547d579d3cda83ea863169b6add138749c53bbeac423f"
+    },
+    "platform/assets/ranks/level-066.svg": {
+      "size": 1973,
+      "sha256": "c4af798d756629bd4849fba1cf9f12090e3a9a20c7de86acfb8e5e6aaf2328d8"
+    },
+    "platform/assets/ranks/level-067.png": {
+      "size": 49879,
+      "sha256": "6a83fa7d0cabc7c3aedd0f1d33ba67b87dbcf760e22bbfa294298bb94ce9e768"
+    },
+    "platform/assets/ranks/level-067.svg": {
+      "size": 2028,
+      "sha256": "631093ece82073d1cb87330d7c342e4018415c6e4c211e19969d8352e4d5ca11"
+    },
+    "platform/assets/ranks/level-068.png": {
+      "size": 50806,
+      "sha256": "7c71855243a6c36d50c0d0b079d70f1776eefdd69b72268a5714fe527beb8c45"
+    },
+    "platform/assets/ranks/level-068.svg": {
+      "size": 2083,
+      "sha256": "6fc731a4438cdc2e4214bdeccce01fef498bd9e083d9a2c302bf3fa52af52ca3"
+    },
+    "platform/assets/ranks/level-069.png": {
+      "size": 50933,
+      "sha256": "d956f845b8bc30affb5258517600671f7a3d101f965a695564a06a06d7ea9776"
+    },
+    "platform/assets/ranks/level-069.svg": {
+      "size": 2138,
+      "sha256": "506720142a9c0cbe5059d057afff83d27dfc9571fac817304b0fd6ddeb2e7904"
+    },
+    "platform/assets/ranks/level-070.png": {
+      "size": 50198,
+      "sha256": "b51d68ea76650d544e2070d1ea97255cbdaa325b8509c398edd02943d2fc8c98"
+    },
+    "platform/assets/ranks/level-070.svg": {
+      "size": 2193,
+      "sha256": "eb462743fca5c151156a820b9d60ed11a50d9fb2aeff4b8e6b4689ac61b093b0"
+    },
+    "platform/assets/ranks/level-071.png": {
+      "size": 48179,
+      "sha256": "f422a58a49d620939ed9dd1d91e5cb44dccf486001219c1e28ed88259b9cdef3"
+    },
+    "platform/assets/ranks/level-071.svg": {
+      "size": 1694,
+      "sha256": "3ec5ecbe191efaf04d25c6bd95898f73b9c5b1e184e9d4b2916f503f25359139"
+    },
+    "platform/assets/ranks/level-072.png": {
+      "size": 49101,
+      "sha256": "642a40e9392247cdbb81a1ad44e704abd46cee91636e373ee61d05271cd733b6"
+    },
+    "platform/assets/ranks/level-072.svg": {
+      "size": 1750,
+      "sha256": "be2fc9119a90cc195657430c4ef4ce4fdb704f0f5fb9d9628a774ed5364c64dc"
+    },
+    "platform/assets/ranks/level-073.png": {
+      "size": 49635,
+      "sha256": "b8400375e0db00340e35b9b67491bb5610824fc7c3397af24218c7bfbf267220"
+    },
+    "platform/assets/ranks/level-073.svg": {
+      "size": 1806,
+      "sha256": "a466415fb78f98eb025a3284df44bbb1619529f56a99bb9b849bb129dfc5272e"
+    },
+    "platform/assets/ranks/level-074.png": {
+      "size": 49109,
+      "sha256": "1180a8f7771746c2fb02a9fb51dc13d6b5520a1a3e37c74d6ca639eb6e293013"
+    },
+    "platform/assets/ranks/level-074.svg": {
+      "size": 1863,
+      "sha256": "64c27f0be06015a3c75b3d93121710b4067c0a2c623185a63d32944cc2f8a2a9"
+    },
+    "platform/assets/ranks/level-075.png": {
+      "size": 49758,
+      "sha256": "4cc0ec3ad56e2800e63349bc900a691684bb3ce2f3df24a7efcbf1b1fdb346d3"
+    },
+    "platform/assets/ranks/level-075.svg": {
+      "size": 1918,
+      "sha256": "aebd88cf47370f8079367fefecabf69302faadfe9ce1e37ac15455e7ac3cb68e"
+    },
+    "platform/assets/ranks/level-076.png": {
+      "size": 50004,
+      "sha256": "0c16cfd855bf57e4fb3bce44c2d4604d8929654fc468353547389e33fa2f775b"
+    },
+    "platform/assets/ranks/level-076.svg": {
+      "size": 1973,
+      "sha256": "ec5d16e9a4b8dff0f4dfb4d811c06a19e82c26aaf39639256c5d5b8f6255df2f"
+    },
+    "platform/assets/ranks/level-077.png": {
+      "size": 49439,
+      "sha256": "2f075e657077b6419781f5e139b394303d3c3f67a10dba96821ff4ba5f86fc7d"
+    },
+    "platform/assets/ranks/level-077.svg": {
+      "size": 2028,
+      "sha256": "bba38bb4384aaa34ab7d0a82768234428c04b0095317f65b5f95c0d079752e2d"
+    },
+    "platform/assets/ranks/level-078.png": {
+      "size": 50709,
+      "sha256": "4fff5e3fc2f2fe7eee81a05667772fe1f31eb227c50717263d5ce8882e67e3e8"
+    },
+    "platform/assets/ranks/level-078.svg": {
+      "size": 2083,
+      "sha256": "6aa52942153f5212b35b93ecd63e84186fa5ea49099c68189462754fc5211f34"
+    },
+    "platform/assets/ranks/level-079.png": {
+      "size": 50628,
+      "sha256": "787bb004d3997b6b1d666cb0a9b48382049846658097ab60d26f29acb765d18c"
+    },
+    "platform/assets/ranks/level-079.svg": {
+      "size": 2138,
+      "sha256": "b2506d7ed3e551b782762ed5924843f381a31128c31f1d2130903a66136dfdb4"
+    },
+    "platform/assets/ranks/level-080.png": {
+      "size": 50852,
+      "sha256": "4450075e5cd9fd7911f5f4c98eb132bf1b07aef4a94816d9300e9d0d2170d7b2"
+    },
+    "platform/assets/ranks/level-080.svg": {
+      "size": 2193,
+      "sha256": "a322dbc96dde5e9523c6baf86f9c101e7c41779ad0d9d05961b4cfab3d9ffb02"
+    },
+    "platform/assets/ranks/level-081.png": {
+      "size": 48822,
+      "sha256": "0fc042f04848448a8956f884ce013a5e473fc9d4b6ca3a2430a689edeb51e6ac"
+    },
+    "platform/assets/ranks/level-081.svg": {
+      "size": 1716,
+      "sha256": "5d848760ee5fd2e6a47c65ac25b12fd6d383f193ea24b6b5fca461746506f38b"
+    },
+    "platform/assets/ranks/level-082.png": {
+      "size": 49631,
+      "sha256": "335b1e85319fa93b4c83d472bbc056500152d0e871eeb508ff36ed453452ce06"
+    },
+    "platform/assets/ranks/level-082.svg": {
+      "size": 1772,
+      "sha256": "f80dc05aa91b7cff22a8e956bc60f1c1a0eebd471031dc01a3668d3dcff7da91"
+    },
+    "platform/assets/ranks/level-083.png": {
+      "size": 49599,
+      "sha256": "40d96276941670f8b832b1f8881f549a59ea7824ccecaa0247a2b72f975f1bc8"
+    },
+    "platform/assets/ranks/level-083.svg": {
+      "size": 1828,
+      "sha256": "5a4dee7d0bd06e2ab7365de28647e557b77abc70df64532dc49724dc59bf38b6"
+    },
+    "platform/assets/ranks/level-084.png": {
+      "size": 49609,
+      "sha256": "a2df3d8df42638a8347c19f57a055787798358e654e8a3d4bec445c97b2277dd"
+    },
+    "platform/assets/ranks/level-084.svg": {
+      "size": 1884,
+      "sha256": "5b5274949c6b07c49654cd55379da41294a9ed8645d1c0a45bb6acb9f6281a8d"
+    },
+    "platform/assets/ranks/level-085.png": {
+      "size": 50404,
+      "sha256": "0b6753cff256ddffabf13ca91ff78ce2aecc59fe48f724e907bc5a05542bbbc9"
+    },
+    "platform/assets/ranks/level-085.svg": {
+      "size": 1939,
+      "sha256": "d958b2719339bb0be0207cb7a06927b2caa6f8091110aeba72b8bef98579490d"
+    },
+    "platform/assets/ranks/level-086.png": {
+      "size": 50998,
+      "sha256": "4d3ca79d5be1342cf27e46206c91ae94fe96a4760631e9c2ea6cac4045d1ba0a"
+    },
+    "platform/assets/ranks/level-086.svg": {
+      "size": 1994,
+      "sha256": "1b343c9ec882496dd4faff21921a13d17ec01353c2570753cd278078b5000ff8"
+    },
+    "platform/assets/ranks/level-087.png": {
+      "size": 50603,
+      "sha256": "b35934e1fc5f136849a16df7b899a3b27278e8d8f2a4f71523483d36456a8c19"
+    },
+    "platform/assets/ranks/level-087.svg": {
+      "size": 2049,
+      "sha256": "faebe1d98fa59ee18d5f96bea751412ba811886c59ebc29acbce64ffe1db64b0"
+    },
+    "platform/assets/ranks/level-088.png": {
+      "size": 50731,
+      "sha256": "3d3992b04039baa9b190a9ddb9050e70296ac3aafcffbb93fa28c5192b71a176"
+    },
+    "platform/assets/ranks/level-088.svg": {
+      "size": 2104,
+      "sha256": "bf2464057b24d7d41ef3be704d63abcafc61c09489e9b797a09b2ab88d52b085"
+    },
+    "platform/assets/ranks/level-089.png": {
+      "size": 51510,
+      "sha256": "e62a5091da35873dc0ae71fd5bd4313c2814406192d93cada52d981bd250c3ab"
+    },
+    "platform/assets/ranks/level-089.svg": {
+      "size": 2159,
+      "sha256": "766450827573fe32b3e70abdba210302d5b3314f3b30db9c76e1768e3492b6e8"
+    },
+    "platform/assets/ranks/level-090.png": {
+      "size": 51394,
+      "sha256": "dc9dcd6e5b5d93982d44ccc64e03e90bf46f088cb1c6d60c9d3ac921a6e58a7b"
+    },
+    "platform/assets/ranks/level-090.svg": {
+      "size": 2214,
+      "sha256": "3ed71525eab706ff94979e58845f555adcfe05359e7e5ffd8cdaf289516321db"
+    },
+    "platform/assets/ranks/level-091.png": {
+      "size": 49313,
+      "sha256": "3d4cf0b37b70225a1aaf4af4a5cd9154b5666e05e4d5ec52fe0b20b7c86f1e25"
+    },
+    "platform/assets/ranks/level-091.svg": {
+      "size": 1716,
+      "sha256": "373ce9182ce30371d22c869636ef5344d47e6c20c3dcf2ee5bb1a3dd83c7c17e"
+    },
+    "platform/assets/ranks/level-092.png": {
+      "size": 50318,
+      "sha256": "1c67b04a778a3f9b3b5170ae6b8ef35f4bd430d884bb64c26cc2cb17535ed642"
+    },
+    "platform/assets/ranks/level-092.svg": {
+      "size": 1772,
+      "sha256": "0143873b5064d6f2700cd9cfbdadc291f8bf324cd0bba8390186654e179e9b81"
+    },
+    "platform/assets/ranks/level-093.png": {
+      "size": 50266,
+      "sha256": "a64193bff083306f08cb342591747c51538ecfb85237b86cabb2f25d53d55988"
+    },
+    "platform/assets/ranks/level-093.svg": {
+      "size": 1828,
+      "sha256": "00e4b2e564f62edc0cef7f326526b91baab37ae8b8cd8f3b964f6c39460a015f"
+    },
+    "platform/assets/ranks/level-094.png": {
+      "size": 50133,
+      "sha256": "09a4d380924bec5c7e74fbe68c8ebcd6ff2adc6bd98b0aa3374319509765485d"
+    },
+    "platform/assets/ranks/level-094.svg": {
+      "size": 1884,
+      "sha256": "00a9b39c27f672ee988488a813253609144d5ca082a709c9962308ad5197afae"
+    },
+    "platform/assets/ranks/level-095.png": {
+      "size": 50846,
+      "sha256": "e87200e06663bea9a656ec40353d2bff95b9e2836f774fd675f0f70d3c31442a"
+    },
+    "platform/assets/ranks/level-095.svg": {
+      "size": 1939,
+      "sha256": "2a55f32d0e5c96558e288889888e598cace58abcbc7521648c3555b92e4de62d"
+    },
+    "platform/assets/ranks/level-096.png": {
+      "size": 51531,
+      "sha256": "08d5f8f23e410a499b4bf2bdac1b1768501533510655ca70922fbfcab914452a"
+    },
+    "platform/assets/ranks/level-096.svg": {
+      "size": 1994,
+      "sha256": "0983ea7bc34dcb94f0b35a56cb8692c46f3362f97aac071aa949a6ed9ea6bade"
+    },
+    "platform/assets/ranks/level-097.png": {
+      "size": 51373,
+      "sha256": "c82b994d365a57d20c784feae403409677cbe63e59ed14dbc0dc4b6f25caee8c"
+    },
+    "platform/assets/ranks/level-097.svg": {
+      "size": 2049,
+      "sha256": "82de907a30ae4b07225a015650e36a2db7476393b324c43f4b545c9024ea7557"
+    },
+    "platform/assets/ranks/level-098.png": {
+      "size": 51734,
+      "sha256": "fb78298371ee262b9ea80cd8ea48d9668ef69d6662877dbb6d1422c079097db7"
+    },
+    "platform/assets/ranks/level-098.svg": {
+      "size": 2104,
+      "sha256": "a9e7b8ea434562d6ea492fb11e0d345f69e5b2baf188f6bd3d62e7eef53849ae"
+    },
+    "platform/assets/ranks/level-099.png": {
+      "size": 52149,
+      "sha256": "857c708356773e055e3e4aa6b41774e73cf5e0ffcf1f320e143479ec5ae461c9"
+    },
+    "platform/assets/ranks/level-099.svg": {
+      "size": 2159,
+      "sha256": "a38082de42ff6072ee4a43b7025d8730507c077dd7c56eb25a81adaf338f47b4"
+    },
+    "platform/assets/ranks/level-100.png": {
+      "size": 52047,
+      "sha256": "99c248d978c3c0d20a92b0386b35f8f693f0a4ada3208cce0bbb1cd4088cd005"
+    },
+    "platform/assets/ranks/level-100.svg": {
+      "size": 2222,
+      "sha256": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207"
+    },
     "platform/build.json": {
-      "size": 1315,
-      "sha256": "9ceab5b9e005acf1e29237689752f0d51ac2834b42eb4be9a17135bb95630e2f"
+      "size": 1667,
+      "sha256": "bc304ebb35ffaa50160a555ff5d40c711166a31e71e1c5225c44dfb633dc5509"
     },
     "platform/index.html": {
-      "size": 33232,
-      "sha256": "691c13809679c3d95868d40fb531f8c8636c174481c16d635dcc0da1596bf763"
+      "size": 33490,
+      "sha256": "62ad7548e0e3f6c267491afa01ca40c6ddf0e8a577ccab892fbda04ea00424e8"
     },
     "platform/platform.css": {
       "size": 96174,
       "sha256": "cd56801e6592bc80f777989c29054d7dedf72cd96944b7cc1e51d775027b78f1"
     },
     "platform/platform.js": {
-      "size": 60873,
-      "sha256": "3019eaa564a196596c45dbc46c5ad361157236bda0173d6edbbcbc1e06b3aede"
+      "size": 59793,
+      "sha256": "941bd3f4c128e879f2596b1d668cea0c4aabdb0ccc92664591ea63e502cdd432"
+    },
+    "platform/ranks.html": {
+      "size": 8381,
+      "sha256": "afad05aaf7fe132081f4661adad2d5b3b42ef2b58ae8a849f340977691a1ff9a"
     },
     "player-profile-sheet.svg": {
       "size": 4067,
       "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
     },
     "player-profile-ui.js": {
-      "size": 30971,
-      "sha256": "a3e0ce51af0afd0cdafc11321a39a4702240c7c5afa2979891a097074ab9af93"
+      "size": 28834,
+      "sha256": "655b212ffb0b3ab2b2b9801efefc5536f6ff60397ebca5fa63f40c6403715f30"
+    },
+    "profile-details.css": {
+      "size": 4573,
+      "sha256": "eca05057b0914d22f54ac731991260f866ffebf02a1e383860ccd729bce05213"
+    },
+    "profile-details.js": {
+      "size": 7695,
+      "sha256": "79d84630b04f6d90b2f2f8d00717659363c00ae12e74d16a48ec3b11b410e2fe"
     },
     "room-menu.js": {
       "size": 18265,
@@ -1540,8 +2352,8 @@
       "sha256": "9c0dece53f812f41e1264eb97d378975fc859c144c46b83f6d89c8dccb1dc525"
     },
     "samidev-integrity.json": {
-      "size": 662,
-      "sha256": "d0003ad12ef63c9c6eb599108f5cc2f4d95c29586a1525cad0bdfe330495a1b1"
+      "size": 640,
+      "sha256": "6cdae428dd910949463e9e66633470daa4299c3d0f02bef094bca8eaeebd58c7"
     },
     "samidev-network.js": {
       "size": 16394,
@@ -1748,8 +2560,8 @@
       "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
     },
     "waiting-room.js": {
-      "size": 14512,
-      "sha256": "a2e8c7562513257460b44628cf4b1c267f24e462b944ac6c7f240babe96422c6"
+      "size": 5389,
+      "sha256": "042a6697f29931056b13347afb7d9198cd5b5845636e79dc84aa38c3f4e6c68f"
     },
     "web-bridge.js": {
       "size": 2203,

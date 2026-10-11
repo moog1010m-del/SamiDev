@@ -32,6 +32,14 @@ CREATE INDEX IF NOT EXISTS samidev_social_expiry
 CREATE UNIQUE INDEX IF NOT EXISTS samidev_social_username
     ON samidev_social_documents ((split_part(key, ':', 1)), (value->>'usernameLower'))
     WHERE kind = 'hash' AND split_part(key, ':', 2) = 'user';
+CREATE TABLE IF NOT EXISTS samidev_match_results (
+    account_key text NOT NULL REFERENCES samidev_social_documents(key) ON DELETE CASCADE,
+    match_id text NOT NULL,
+    game_id text NOT NULL CHECK (game_id IN ('pool', 'carrom', 'tablesoccer', 'crazy8')),
+    outcome text NOT NULL CHECK (outcome IN ('win', 'loss', 'draw')),
+    recorded_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    PRIMARY KEY (account_key, match_id)
+);
 """
 
 
@@ -40,7 +48,7 @@ def durable_key(key):
     parts = str(key).split(':')
     return len(parts) >= 2 and parts[0] == os.getenv('SAMIDEV_PLATFORM_PREFIX', 'sdp') and parts[1] in {
         'user', 'username', 'users', 'friends', 'requests', 'repday',
-        'reptarget', 'matchrating', 'reports', 'store', 'community',
+        'reptarget', 'matchrating', 'reports', 'store', 'community', 'game-stats', 'game-result',
     } and not (parts[1] == 'community' and (
         len(parts) < 4 or parts[-1] != 'chat'
     ))

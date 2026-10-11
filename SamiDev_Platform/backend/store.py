@@ -186,6 +186,7 @@ class MemoryStore:
     def _room_payload(self, room: MemRoom) -> dict[str, Any]:
         return {
             "roomId": room.room_id,
+            "createdAt": room.created_at,
             "communityId": room.community_id,
             "capacity": room.capacity,
             "settings": room.settings,
@@ -919,6 +920,7 @@ class RedisStore:
         seq_raw = await self.r.hgetall(self.kseq(rid))
         return {
             "roomId": rid,
+            "createdAt": int(meta.get("createdAt") or 0),
             "communityId": str(meta.get("communityId") or "majlis"),
             "capacity": capacity,
             "settings": json.loads(meta["settings"]),

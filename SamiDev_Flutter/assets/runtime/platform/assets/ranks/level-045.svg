@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title-45">
+<title id="title-45">SamiDev · مدار · المستوى 45</title>
+<defs><linearGradient id="metal-45" x2=".7" y2="1"><stop stop-color="#e4ccff"/><stop offset=".48" stop-color="#6c62a2"/><stop offset="1" stop-color="#e4ccff"/></linearGradient><radialGradient id="core-45"><stop stop-color="#224349"/><stop offset="1" stop-color="#08181f"/></radialGradient></defs>
+<path d="M80 10 L137 45 L146 104 L80 148 L14 104 L23 45Z" fill="#08191e" stroke="#6c62a2" stroke-width="2"/>
+<path d="M80 17 L130 48 L139 100 L80 140 L21 100 L30 48Z" fill="none" stroke="#e4ccff" opacity=".32"/>
+<polygon points="80.00,22.00 92.12,48.74 119.60,38.40 109.26,65.88 136.00,78.00 109.26,90.12 119.60,117.60 92.12,107.26 80.00,134.00 67.88,107.26 40.40,117.60 50.74,90.12 24.00,78.00 50.74,65.88 40.40,38.40 67.88,48.74" fill="url(#metal-45)" stroke="#e4ccff" stroke-width="1.7"/>
+<path d="M80 28 L83 53 L80 48 L77 53Z" fill="white" opacity=".65"/>
+<circle cx="80" cy="78" r="28" fill="url(#core-45)" stroke="#e4ccff" stroke-width="2"/>
+<circle cx="80" cy="78" r="23" fill="none" stroke="#6c62a2" opacity=".65"/>
+<text x="80" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="850" fill="#e4ccff">45</text>
+<circle cx="131.50" cy="110.69" r="2.5" fill="#e4ccff"/><circle cx="123.94" cy="120.31" r="2.5" fill="#e4ccff"/><circle cx="114.60" cy="128.24" r="2.5" fill="#e4ccff"/><circle cx="103.87" cy="134.13" r="2.5" fill="#e4ccff"/><circle cx="92.18" cy="137.77" r="2.5" fill="#e4ccff"/><path d="M74 134 L80 126 L86 134 L80 140Z" fill="#e4ccff"/>
+</svg>
