@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-08T11:44:49.566908+00:00",
+  "ok": true,
+  "audioFilesDecoded": 105,
+  "maximumDecodedMonoPeak": 0.9142076373100281,
+  "durationsPreservedWithinSeconds": 0.13,
+  "tests": [
+    {
+      "command": "node tests/pool_audio.js",
+      "passed": true,
+      "output": "{\"ok\":true,\"serverEvents\":30,\"authoritativeCollisions\":true,\"gestureMuteBackgroundAndTiming\":true}\n"
+    },
+    {
+      "command": "node tests/pool_runtime.js",
+      "passed": true,
+      "output": "{\"case\":\"rules and security\",\"checks\":25,\"localBreakMs\":61.451306,\"frames\":119}\n{\"ok\":true,\"checks\":33,\"nativeLegalWinAndEarlyEightLoss\":true}\n"
+    },
+    {
+      "command": "node tests/pool_client.js",
+      "passed": true,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 18,\n  \"viewports\": [\n    \"1440 desktop\",\n    \"390 portrait phone\"\n  ],\n  \"canvasRasterized\": true,\n  \"physicalBrowserTested\": false\n}\n"
+    },
+    {
+      "command": "python3 tests/pool_ws.py",
+      "passed": true,
+      "output": "[SamiDev Realtime] node=node-e3ff7566 store=memory\n[SamiDev Store] daily match reward uid=KIK26HFET96xy0p- room=8EYMMJ +50 coins\n[SamiDev Store] daily match reward uid=ds50uVM-IaMGui7V room=8EYMMJ +50 coins\n{\n  \"ok\": true,\n  \"results\": [\n    \"Catalog, assets, authenticated invitation, two-player match and actual server break\",\n    \"Chat, spectator view, spectator move rejection, forged result rejection and seat ownership\",\n    \"Reconnect, GameHost restoration, resignation winner and platform finished-room lifecycle\"\n  ]\n}\n"
+    },
+    {
+      "command": "python3 tests/original_assets.py",
+      "passed": true,
+      "output": "{\"ok\": true, \"mediaFilesVerified\": 198, \"processedOriginalAudioFiles\": 105, \"oldVisualsReused\": 0, \"localAssetIndexesVerified\": 3, \"legacyHostHooks\": 0}\n"
+    },
+    {
+      "command": "python3 start_dev.py --check",
+      "passed": true,
+      "output": "[SamiDev GameHost] http://127.0.0.1:32989 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-9eaadf33 store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/audio-refresh/SamiDev_Platform_V25\nBuild:    samidev-v25-51e077854e85575f\nGameHost: http://127.0.0.1:32989  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:55783/platform/?build=samidev-v25-51e077854e85575f\nCHECK PASSED: all four games and all platform files are served by this project.\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom online",
+      "passed": true,
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js crazy8 online",
+      "passed": true,
+      "output": "{\n  \"game\": \"crazy8\",\n  \"started\": true,\n  \"turn\": [\n    1\n  ],\n  \"warnings\": [\n    \"resync requested\",\n    \"[game] Texture width 125.00000000000001 is float, rounded to 126\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js tablesoccer online",
+      "passed": true,
+      "output": "before-shot [ 0 ] true [ 0 ] [2,1] [2,1] []\nafter-shot [ 0 ] [ 0 ] [5,3] [5,3]\n{\n  \"game\": \"tablesoccer\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"flags\": [\n    \"Red.c.h\",\n    \"Blue.c.h\"\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [tg1] clearTimer - Timer 1 is not in this group\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    }
+  ],
+  "limitations": [
+    "Playback tested with AudioContext doubles, not a physical phone or graphical browser",
+    "Redis and production load not tested in this update"
+  ],
+  "allChannelsPeakVerified": true,
+  "maximumDecodedChannelPeak": 0.9142076373100281
+}

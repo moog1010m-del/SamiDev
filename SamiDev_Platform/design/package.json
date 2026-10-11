@@ -1,0 +1,7 @@
+{
+  "name": "samidev-original-art-build",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local deterministic assembly of the project's generated images and original vector sprites",
+  "dependencies": { "sharp": "0.35.4" }
+}

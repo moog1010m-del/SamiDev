@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "mainJsUntouched": true,
+  "browserRuntimeSha256": "d6b47928e596e13c2039deda73eb2f2b5f3c17a28245083cd731718982ce7c0d",
+  "staticRegression": {
+    "ok": true,
+    "mainJsUntouched": true,
+    "seat0MoveAccepted": true,
+    "seat0StrikerMoved": true,
+    "seat1MoveAccepted": true,
+    "seat1StrikerMoved": true,
+    "browserHoverDoesNotEmitTouchMove": true,
+    "before0": [
+      540,
+      885.6
+    ],
+    "after0": [
+      378.564,
+      885.6
+    ],
+    "before1": [
+      540,
+      194.4
+    ],
+    "after1": [
+      378.56399999999996,
+      194.4
+    ],
+    "browserTouchUsesSamiDevBottomOrigin": true,
+    "browserMouseKeepsDomTopOrigin": true
+  },
+  "chromiumRegression": {
+    "ok": true,
+    "engine": "Chromium + WebGL",
+    "bugReproducedBeforeFix": {
+      "visualDrag": "slider center x=450 -> x=525 at y=543",
+      "strikerPosBefore": 0.5,
+      "strikerPosAfter": 0.5,
+      "requestStrikerMoveCalls": 0,
+      "touchEventsReachedBrowserBridge": true
+    },
+    "rootCause": "DOM touch Y was top-origin while main.js InputManager expects SamiDev bottom-origin and flips Y internally, so slider hit-testing was vertically mirrored.",
+    "afterFix": {
+      "initialStrikerPos": 0.5,
+      "firstDrag": {
+        "strikerPos": 0.5,
+        "requestStrikerMoveCalls": 0,
+        "tutorialClosed": true
+      },
+      "dragRight": {
+        "strikerPos": 0.908215,
+        "requestStrikerMoveCalls": 12
+      },
+      "dragLeft": {
+        "strikerPos": 0.208418,
+        "requestStrikerMoveCalls": 24
+      },
+      "pageErrors": []
+    },
+    "note": "On a fresh profile, main.js tutorialModal owns a full-screen drag handler; the first drag can close that original tutorial. After it is closed, the slider receives drag normally."
+  }
+}

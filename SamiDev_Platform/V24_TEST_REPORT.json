@@ -1,0 +1,78 @@
+{
+  "version": "SamiDev V24",
+  "verifiedAt": "2026-10-05T10:11:55.885049+00:00",
+  "ok": true,
+  "tests": [
+    {
+      "command": "node tests/multigame_runtime.js",
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"checks\": 102,\n  \"results\": [\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 2,\n      \"live\": 0,\n      \"teams\": null,\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 2,\n      \"live\": 1,\n      \"teams\": null,\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 4,\n      \"live\": 0,\n      \"teams\": [\n        [\n          0,\n          1\n        ],\n        [\n          2,\n          3\n        ]\n      ],\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 4,\n      \"live\": 1,\n      \"teams\": [\n        [\n          0,\n          1\n        ],\n        [\n          2,\n          3\n        ]\n      ],\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"carrom\",\n      \"players\": 2\n    },\n    {\n      \"game\": \"carrom\",\n      \"players\": 4\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"scoringGoals\": 2,\n      \"gameOver\": true\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "python3 tests/multigame_ws.py",
+      "exitCode": 0,
+      "stdout": "[SamiDev Realtime] node=node-79d67fd1 store=memory\n[SamiDev] handler error GameHostError injected startup failure\n[SamiDev Store] daily match reward uid=Md8iH4oIqpX7_4UX room=T5QWME +50 coins\n[SamiDev Store] daily match reward uid=xtUZgW-twCp4B9y5 room=T5QWME +50 coins\n[SamiDev Store] daily match reward uid=Md8iH4oIqpX7_4UX room=LPG8ZN +50 coins\n[SamiDev Store] daily match reward uid=xtUZgW-twCp4B9y5 room=LPG8ZN +50 coins\n[SamiDev Store] daily match reward uid=Md8iH4oIqpX7_4UX room=R3KFYR +50 coins\n[SamiDev Store] daily match reward uid=cn7eAnUX9KllcMsE room=R3KFYR +50 coins\n[SamiDev Store] daily match reward uid=kLjGRg7kH_9UwQ1T room=R3KFYR +50 coins\n[SamiDev Store] daily match reward uid=xtUZgW-twCp4B9y5 room=R3KFYR +50 coins\n{\n  \"ok\": true,\n  \"results\": [\n    \"shared registration/login; anonymous socket rejected; both games catalogued\",\n    \"transient startup failure leaves begun=false and ready retry succeeds\",\n    \"carrom players=2 live=1: start, moves, spectator, reconnect, resignation\",\n    \"Table Soccer invite accepted once; replay rejected\",\n    \"tablesoccer players=2 live=0: start, moves, spectator, reconnect, resignation, snapshot restore\",\n    \"tablesoccer players=4 live=1: start, moves, spectator, reconnect, resignation, snapshot restore\",\n    \"unsupported game rejected; three independent matches on one backend\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/multigame_routing.js",
+      "exitCode": 0,
+      "stdout": "{\"ok\":true,\"correctGameRedirect\":true,\"reconnectTokenPreserved\":true,\"tokenAbsentFromUrl\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom",
+      "exitCode": 0,
+      "stdout": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\",\n    \"[game] [music] Cannot stream music: uri=carrom/bg_trimmed.m4a, hash=d59d848e8a955ea0b70fdfb58945409e836f19d4, reason=0\"\n  ],\n  \"errors\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js tablesoccer online",
+      "exitCode": 0,
+      "stdout": "before-shot [ 0 ] true [ 0 ] [2,1] [2,1] []\nafter-shot [ 0 ] [ 0 ] [5,3] [5,3]\n{\n  \"game\": \"tablesoccer\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"flags\": [\n    \"Red.c.h\",\n    \"Blue.c.h\"\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [tg1] clearTimer - Timer 3 is not in this group\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/gamehost_conformance.js",
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"mainJsSha256\": \"718c80249878db84d08d86ffc98971041ab35d7f86b3b198e70fedd237c53215\",\n  \"settingsCombinations\": 60,\n  \"checksPassed\": 369,\n  \"checksFailed\": 0,\n  \"failures\": [],\n  \"memory\": null\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/browser_runtime_race_regression.js",
+      "exitCode": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"bundleIntegrityVerified\": true,\n  \"collapsedSurfaceRecovered\": true,\n  \"earlyObserverCannotPoisonSurface\": true,\n  \"visualResizePreservesTurnTimer\": true,\n  \"sameSequenceTurnMismatchDetected\": true,\n  \"staleRevisionRejected\": true,\n  \"animatingMismatchRetained\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "node tests/mainjs_observer_regression.js",
+      "exitCode": 0,
+      "stdout": "{\n  \"observer\": true,\n  \"localSeat\": -1,\n  \"server\": false,\n  \"moveApplied\": true,\n  \"outboundMoves\": 0,\n  \"ok\": true\n}\n",
+      "stderr": ""
+    }
+  ],
+  "brandingResidualFiles": [],
+  "javascriptSyntaxFailures": [],
+  "pythonCompileExitCode": 0,
+  "integrity": {
+    "publisher": "SamiDev",
+    "algorithm": "sha256",
+    "games": {
+      "carrom": {
+        "sha256": "718c80249878db84d08d86ffc98971041ab35d7f86b3b198e70fedd237c53215",
+        "main": "main.js"
+      },
+      "tablesoccer": {
+        "sha256": "741459b8538d28969aad460d2313cacb336862f3e433bb4c7a5bcaa5ca75bf84",
+        "main": "games/tablesoccer/main.js"
+      }
+    }
+  },
+  "limitations": [
+    "WebGL/audio mocked for browser bridge tests; no visual/browser/device QA.",
+    "Redis/Docker production deployment and load testing not executed.",
+    "Earlier security findings F04, F05, F07, F08, F09, F10 remain; see README_AR.md.",
+    "Online automatic post-pass repositioning disabled; standard red/blue teams and default stadium only."
+  ]
+}

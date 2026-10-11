@@ -1,0 +1,50 @@
+{
+  "board_classic": {
+    "prompt": "Create an original production game texture: ONE square carrom board body seen from perfectly overhead, orthographic and symmetric, no perspective. Entire isolated square board fills 94% of a square image with a transparent margin. New visual identity: pale warm ash wood playing surface, wide deep petrol-teal enamel frame, slim satin champagne brass inside edge, subtle small brass corner inlays. Flat friendly premium board-game illustration, soft material shading but no cast shadow outside the object. The inner wood area must be absolutely EMPTY: no playing lines, no circles, no holes or pockets, no coins, no striker, no hands, no letters, no numbers, no logos, no watermark. The frame must be plain and evenly thick on all four sides; frame about 8% of board width, slightly rounded outer corners. Leave all rules markings and pockets to exact programmatic overlays. This is a fresh independent design, not a recreation of any app's art. Render one complete square board sprite only, crisp edges and actual transparent surroundings.",
+    "mode": "built-in image generation",
+    "transparentRequested": true,
+    "source": "board_classic.png"
+  },
+  "board_cat": {
+    "prompt": "Create an original production game texture: ONE square carrom board body seen from perfectly overhead, orthographic and symmetric, no perspective. Entire isolated square board fills 94% of a square image with a transparent margin. Design: pale warm honey maple playing surface, wide very dark midnight-blue enamel frame, thin brushed copper inside edge. Small abstract copper cat-ear chevron inlays centered on each of the four frame sides, very restrained, no faces. Flat friendly premium board-game illustration, soft material shading, no exterior cast shadows. Inner wood playing area completely EMPTY: no playing lines, no circles, no holes or pockets, no coins, no striker, no hands, no letters, no numbers, no logos, no watermark. Frame evenly thick on all sides, about 8% of width, slightly rounded outer corners. Exact rules markings and pockets will be overlaid programmatically. New independent design. One complete square sprite only with crisp edges and genuinely transparent surroundings.",
+    "mode": "built-in image generation",
+    "transparentRequested": true,
+    "source": "board_cat.png"
+  },
+  "table_background": {
+    "prompt": "Create an original landscape 3:2 background texture for an online card and carrom game, no game objects. A luxurious deep petrol-teal fabric gaming table, perfectly flat top-down orthographic texture. Very subtle fine woven linen grain and soft large light falloff with a slightly lighter quiet center; all the central 80% must be calm dark teal so cards and a board stay legible on top. At the extreme outer edges only, a delicate low-contrast geometric diamond stitch border in muted warm brass and teal; contemporary understated craft style. Corners may have sparse subtle diamond geometry, no ornate logos. No text, no letters, no numbers, no symbols representing a company, no cards, no boards, no coins, no objects, no mockup, no table perspective, no watermark. Full bleed rectangular opaque texture, suitable as responsive cover background.",
+    "mode": "built-in image generation",
+    "transparentRequested": false,
+    "source": "table_background.png"
+  },
+  "card_surfaces": {
+    "prompt": "Create a production sprite source sheet for an ORIGINAL casual card game, transparent background, landscape 3:2 canvas. Precisely SIX separate tall rounded rectangular card surfaces arranged in a regular THREE COLUMN by TWO ROW grid. Each card occupies the center of its own equal rectangular grid cell with generous transparent padding, no overlap. Each card is front-on orthographic, ratio 164:228, gently rounded corners, simple clean satin ink texture, thin cream edge, subtle recessed inner hairline border. Reading left to right: top row one terracotta RED blank card, one muted azure BLUE blank card, one jade GREEN blank card. Bottom row one warm ochre YELLOW blank card, one dark INK-NAVY blank card, and one decorated card BACK in petrol teal with a centered abstract woven diamond geometry in warm ivory and copper. All five face surfaces must remain plain and empty in the middle for accurate numbers and rules symbols to be added later. New independent art direction, calm premium illustrated board-game style, no resemblance to a known card brand. NO letters, NO numbers, NO words, NO logos, NO diagonal ovals, no shadows outside cards, no extra objects, no white background. Genuinely transparent between cards. Exactly six cards in the specified positions.",
+    "mode": "built-in image generation",
+    "transparentRequested": true,
+    "source": "card_surfaces.png"
+  },
+  "reactions": {
+    "prompt": "Generate an ORIGINAL game reaction sprite sheet. A square canvas with exactly TWELVE separate charming hand-painted enamel reaction faces in a precise regular FOUR COLUMNS by THREE ROWS grid, each centered in an equally sized cell with large transparent gutters and no overlap. Every face is a round warm ivory ceramic token with gentle copper rim, expressive dark ink eyes and mouth, tiny teal or coral accents. Consistent front-on view and equal visual size. Reading left-to-right row 1: cheerful gentle smile; laughing with closed eyes; impressed open mouth; enthusiastic star eyes. Row 2: playful wink; excited broad grin; sad single tear; very surprised round eyes. Row 3: thoughtful raised eyebrow; amused squint; friendly tongue-out; grumpy frown. No hands, no bodies, no objects outside faces. A fresh independent illustration style, not standard branded emoji artwork, crisp readable at 100px. NO letters, NO words, NO logos, NO watermark, no tile panels, no opaque background. Transparent surroundings and gaps, all twelve complete faces fully visible without being cropped.",
+    "mode": "built-in image generation",
+    "transparentRequested": true,
+    "source": "reactions.png"
+  },
+  "football_grass": {
+    "prompt": "Create an ORIGINAL full-bleed square game texture for a premium top-down table-soccer field. Entire image is uniformly detailed stylized deep jade-green short grass with subtle soft alternating horizontal mowing bands, restrained natural fiber grain, broad balanced overhead lighting, no hard cast shadows. Calm elegant illustrated material that matches a petrol teal, warm brass and ivory board-game art direction. NO field lines, NO stadium, NO borders, NO ball, NO players, NO circles, NO letters, NO logos, NO text, NO watermark. A production material texture, absolutely flat and orthographic, no perspective. Exact sport markings will be added programmatically.",
+    "mode": "built-in image generation",
+    "transparentRequested": false,
+    "source": "football_grass.png"
+  },
+  "carrom_discs": {
+    "prompt": "Create an ORIGINAL production game sprite source sheet on a genuinely transparent background, landscape 4:1 arrangement with FOUR separate circular carrom pieces in ONE horizontal row, equal square cells, generous clear gutters, no overlap. All four perfectly round disks, strict top-down orthographic view, equal disk diameter, no perspective, no cast shadows outside disks. From left to right: 1 ivory-white wooden carrom man with restrained champagne brass ring; 2 very dark charcoal-teal wooden carrom man with muted brass concentric groove; 3 terracotta-red queen with restrained ivory and brass concentric groove; 4 ivory striker with teal concentric circles, fine brass edge and small centered simple diamond inlay. Premium polished hand-crafted wood, soft material shading, crisp realistic illustrated texture. No faces, no character, no letters, no words, no numbers, no logos, no watermark. Disks fill about 80% of each cell and are aligned to a common centerline. Entire surroundings and spaces must be transparent. Usable small game assets with distinct colors.",
+    "mode": "built-in image generation",
+    "transparentRequested": true,
+    "source": "carrom_discs.png"
+  },
+  "football_team_tiles": {
+    "prompt": "Create TWO ORIGINAL square team token surface designs side by side in a 2:1 horizontal image, equal square halves separated by an exact straight vertical boundary, no gutter. This is a production flat texture sheet for table-soccer pieces, NOT a mockup or physical object. LEFT square: deep terracotta-red satin enamel, central bold ivory abstract angular double-chevron crest inside a thin champagne-brass diamond outline. RIGHT square: deep azure-blue satin enamel, central bold ivory abstract four-point compass diamond inside a thin champagne-brass circular outline. Each symbol centered and fills 55 percent of its square, high contrast and recognisable at 32 pixels. Uniform subtle material shading, all shapes strictly front-facing, no perspective. Completely independent geometric designs, no references to actual teams or clubs, no animals, no dice, no letters, no numbers, no logos, no watermark, no external frame.",
+    "mode": "built-in image generation",
+    "transparentRequested": false,
+    "source": "football_team_tiles.png"
+  }
+}

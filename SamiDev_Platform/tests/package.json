@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "description": "Optional DOM regression test dependency; not needed to run SamiDev",
+  "devDependencies": {
+    "happy-dom": "20.14.6",
+    "linkedom": "0.18.13",
+    "@napi-rs/canvas": "0.1.100"
+  }
+}

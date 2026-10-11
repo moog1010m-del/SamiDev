@@ -1,0 +1,719 @@
+{
+	"skeleton": {
+		"hash": "B4e3Ab57pig",
+		"spine": "4.1.24",
+		"x": -680,
+		"y": -575.18,
+		"width": 1360,
+		"height": 960
+	},
+	"bones": [
+		{
+			"name": "root"
+		},
+		{
+			"name": "reverse_CTRL",
+			"parent": "root"
+		},
+		{
+			"name": "center",
+			"parent": "reverse_CTRL"
+		},
+		{
+			"name": "reverse_01",
+			"parent": "center",
+			"rotation": 49.61,
+			"x": -43.03,
+			"y": 30.33
+		},
+		{
+			"name": "reverse_02",
+			"parent": "center",
+			"rotation": 51.24,
+			"x": 40.32,
+			"y": -27.48
+		},
+		{
+			"name": "fx_bg",
+			"parent": "reverse_CTRL"
+		}
+	],
+	"slots": [
+		{
+			"name": "BG_guide",
+			"bone": "root"
+		},
+		{
+			"name": "guide",
+			"bone": "root"
+		},
+		{
+			"name": "fx_bg",
+			"bone": "fx_bg",
+			"attachment": "fx_bg"
+		},
+		{
+			"name": "reverse_01",
+			"bone": "reverse_01",
+			"attachment": "reverse_01"
+		},
+		{
+			"name": "reverse_02",
+			"bone": "reverse_02",
+			"attachment": "reverse_02"
+		},
+		{
+			"name": "reverse_bright1",
+			"bone": "reverse_01",
+			"color": "ffffff00",
+			"attachment": "reverse_bright1"
+		},
+		{
+			"name": "reverse_bright2",
+			"bone": "reverse_02",
+			"color": "ffffff00",
+			"attachment": "reverse_bright2"
+		}
+	],
+	"skins": [
+		{
+			"name": "default",
+			"attachments": {
+				"reverse_bright1": {
+					"reverse_bright1": {
+						"x": 8.63,
+						"y": -18.71,
+						"scaleX": 1.6351,
+						"scaleY": 1.6351,
+						"rotation": -49.54,
+						"width": 75,
+						"height": 94
+					}
+				},
+				"reverse_bright2": {
+					"reverse_bright2": {
+						"x": -6.69,
+						"y": 16.41,
+						"scaleX": 1.6565,
+						"scaleY": 1.6565,
+						"rotation": -51.78,
+						"width": 75,
+						"height": 94
+					}
+				}
+			}
+		},
+		{
+			"name": "blue",
+			"attachments": {
+				"fx_bg": {
+					"fx_bg": {
+						"name": "blue_glow",
+						"x": -2.1,
+						"y": -86.21,
+						"scaleX": 5.9727,
+						"scaleY": 5.9727,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"reverse_01": {
+					"reverse_01": {
+						"name": "reverse_blue1",
+						"x": 6.94,
+						"y": -19.6,
+						"rotation": -49.61,
+						"width": 99,
+						"height": 134
+					}
+				},
+				"reverse_02": {
+					"reverse_02": {
+						"name": "reverse_blue2",
+						"x": -5.81,
+						"y": 15.86,
+						"rotation": -51.24,
+						"width": 99,
+						"height": 134
+					}
+				}
+			}
+		},
+		{
+			"name": "green",
+			"attachments": {
+				"fx_bg": {
+					"fx_bg": {
+						"name": "green_glow",
+						"x": -2.1,
+						"y": -86.21,
+						"scaleX": 5.9727,
+						"scaleY": 5.9727,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"reverse_01": {
+					"reverse_01": {
+						"name": "reverse_green1",
+						"x": 6.94,
+						"y": -19.6,
+						"rotation": -49.61,
+						"width": 99,
+						"height": 134
+					}
+				},
+				"reverse_02": {
+					"reverse_02": {
+						"name": "reverse_green2",
+						"x": -5.81,
+						"y": 15.86,
+						"rotation": -51.24,
+						"width": 99,
+						"height": 134
+					}
+				}
+			}
+		},
+		{
+			"name": "red",
+			"attachments": {
+				"fx_bg": {
+					"fx_bg": {
+						"name": "red_glow",
+						"x": -2.1,
+						"y": -86.21,
+						"scaleX": 5.9727,
+						"scaleY": 5.9727,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"reverse_01": {
+					"reverse_01": {
+						"name": "reverse_red1",
+						"x": 6.94,
+						"y": -19.6,
+						"rotation": -49.61,
+						"width": 98,
+						"height": 134
+					}
+				},
+				"reverse_02": {
+					"reverse_02": {
+						"name": "reverse_red2",
+						"x": -5.81,
+						"y": 15.86,
+						"rotation": -51.24,
+						"width": 98,
+						"height": 134
+					}
+				}
+			}
+		},
+		{
+			"name": "yellow",
+			"attachments": {
+				"fx_bg": {
+					"fx_bg": {
+						"name": "yellow_glow",
+						"x": -2.1,
+						"y": -86.21,
+						"scaleX": 5.9727,
+						"scaleY": 5.9727,
+						"width": 194,
+						"height": 151
+					}
+				},
+				"reverse_01": {
+					"reverse_01": {
+						"name": "reverse_yellow1",
+						"x": 6.94,
+						"y": -19.6,
+						"rotation": -49.61,
+						"width": 99,
+						"height": 134
+					}
+				},
+				"reverse_02": {
+					"reverse_02": {
+						"name": "reverse_yellow2",
+						"x": -5.81,
+						"y": 15.86,
+						"rotation": -51.24,
+						"width": 99,
+						"height": 134
+					}
+				}
+			}
+		}
+	],
+	"animations": {
+		"reverse_CCW": {
+			"slots": {
+				"fx_bg": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.0833,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_01": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.1667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_02": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.1667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_bright1": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.2,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_bright2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.2,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.3333,
+							"color": "ffffff00"
+						}
+					]
+				}
+			},
+			"bones": {
+				"reverse_01": {
+					"translate": [
+						{
+							"x": -152,
+							"y": 129.31,
+							"curve": "stepped"
+						},
+						{
+							"time": 0.0833,
+							"x": -152,
+							"y": 129.31
+						},
+						{
+							"time": 0.3333
+						},
+						{
+							"time": 0.3667,
+							"x": 1.72,
+							"y": -1.46
+						},
+						{
+							"time": 0.4167,
+							"x": -6.29,
+							"y": 5.35
+						},
+						{
+							"time": 0.5,
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833
+						},
+						{
+							"time": 1.1667,
+							"x": -15.21,
+							"y": -17.88
+						},
+						{
+							"time": 1.3333,
+							"x": 156.94,
+							"y": 184.47
+						}
+					]
+				},
+				"reverse_02": {
+					"translate": [
+						{
+							"x": 145.79,
+							"y": -117.04,
+							"curve": "stepped"
+						},
+						{
+							"time": 0.0833,
+							"x": 145.79,
+							"y": -117.04
+						},
+						{
+							"time": 0.3333
+						},
+						{
+							"time": 0.4,
+							"x": 0.35,
+							"y": -0.24
+						},
+						{
+							"time": 0.45,
+							"x": 10.05,
+							"y": -8.07
+						},
+						{
+							"time": 0.5333,
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833
+						},
+						{
+							"time": 1.1667,
+							"x": 16.86,
+							"y": 21
+						},
+						{
+							"time": 1.3333,
+							"x": -127.63,
+							"y": -158.97
+						}
+					]
+				},
+				"center": {
+					"rotate": [
+						{
+							"value": 188.55,
+							"curve": [
+								0.167,
+								188.55,
+								0.333,
+								7
+							]
+						},
+						{
+							"time": 0.5
+						},
+						{
+							"time": 1.3333,
+							"value": -31.68
+						}
+					]
+				},
+				"reverse_CTRL": {
+					"scale": [
+						{
+							"x": -1.478,
+							"y": 1.478
+						}
+					]
+				},
+				"fx_bg": {
+					"scale": [
+						{
+							"x": 0.081,
+							"y": 0.081
+						},
+						{
+							"time": 0.3333
+						}
+					]
+				}
+			}
+		},
+		"reverse_CW": {
+			"slots": {
+				"fx_bg": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.0833,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_01": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.1667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_02": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.1667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_bright1": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.2,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"reverse_bright2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.2,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.3333,
+							"color": "ffffff00"
+						}
+					]
+				}
+			},
+			"bones": {
+				"reverse_01": {
+					"translate": [
+						{
+							"x": -152,
+							"y": 129.31,
+							"curve": "stepped"
+						},
+						{
+							"time": 0.0833,
+							"x": -152,
+							"y": 129.31
+						},
+						{
+							"time": 0.3333
+						},
+						{
+							"time": 0.3667,
+							"x": 1.72,
+							"y": -1.46
+						},
+						{
+							"time": 0.4167,
+							"x": -6.29,
+							"y": 5.35
+						},
+						{
+							"time": 0.5,
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833
+						},
+						{
+							"time": 1.1667,
+							"x": -15.21,
+							"y": -17.88
+						},
+						{
+							"time": 1.3333,
+							"x": 156.94,
+							"y": 184.47
+						}
+					]
+				},
+				"reverse_02": {
+					"translate": [
+						{
+							"x": 145.79,
+							"y": -117.04,
+							"curve": "stepped"
+						},
+						{
+							"time": 0.0833,
+							"x": 145.79,
+							"y": -117.04
+						},
+						{
+							"time": 0.3333
+						},
+						{
+							"time": 0.4,
+							"x": 0.35,
+							"y": -0.24
+						},
+						{
+							"time": 0.45,
+							"x": 10.05,
+							"y": -8.07
+						},
+						{
+							"time": 0.5333,
+							"curve": "stepped"
+						},
+						{
+							"time": 1.0833
+						},
+						{
+							"time": 1.1667,
+							"x": 16.86,
+							"y": 21
+						},
+						{
+							"time": 1.3333,
+							"x": -127.63,
+							"y": -158.97
+						}
+					]
+				},
+				"center": {
+					"rotate": [
+						{
+							"value": 188.55,
+							"curve": [
+								0.167,
+								188.55,
+								0.333,
+								7
+							]
+						},
+						{
+							"time": 0.5
+						},
+						{
+							"time": 1.3333,
+							"value": -31.68
+						}
+					]
+				},
+				"reverse_CTRL": {
+					"scale": [
+						{
+							"x": 1.478,
+							"y": 1.478
+						}
+					]
+				},
+				"fx_bg": {
+					"scale": [
+						{
+							"x": 0.081,
+							"y": 0.081
+						},
+						{
+							"time": 0.3333
+						}
+					]
+				}
+			}
+		}
+	}
+}

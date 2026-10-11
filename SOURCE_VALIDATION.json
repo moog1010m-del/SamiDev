@@ -1,0 +1,44 @@
+{
+  "dartSyntaxFiles": 17,
+  "dartSyntaxOK": true,
+  "flutterAnalyzer": "NOT RUN",
+  "flutterTests": "NOT RUN",
+  "androidBuild": "NOT RUN",
+  "iosBuild": "NOT RUN",
+  "bundledFilesVerified": 425,
+  "lobbyByteIdenticalToWeb": true,
+  "audio": [
+    {
+      "file": "card-shuffle.m4a",
+      "decodedPeak": 0.476965993642807,
+      "durationSeconds": 1.207437641723356
+    },
+    {
+      "file": "card-draw.m4a",
+      "decodedPeak": 0.30250078439712524,
+      "durationSeconds": 0.34829931972789113
+    },
+    {
+      "file": "card-place.m4a",
+      "decodedPeak": 0.46795225143432617,
+      "durationSeconds": 0.37151927437641724
+    },
+    {
+      "file": "card-special.m4a",
+      "decodedPeak": 0.5193228125572205,
+      "durationSeconds": 0.46439909297052157
+    }
+  ],
+  "dartSyntaxTool": "Tree-sitter (syntax only)",
+  "nativeCommunityUI": true,
+  "nativeGameViewportKeyboardTest": "AUTHORED, NOT RUN",
+  "pixelReview": "NOT RUN",
+  "generatedAt": "2026-10-10T12:04:49.729491+00:00",
+  "nativeTunnelAuthTest": "AUTHORED, NOT RUN",
+  "androidGradleBuildGuard": "SOURCE REVIEW ONLY; NOT BUILT",
+  "nativeRetainedTableTest": "AUTHORED, NOT RUN",
+  "nativePlayerProfileTest": "AUTHORED, NOT RUN",
+  "deviceWebViewRetention": "NOT RUN",
+  "runtimeBrandingScan": "PASS: 425 files",
+  "engineByteComparison": "PASS: three identical engines; three display text literals only in crazy8"
+}

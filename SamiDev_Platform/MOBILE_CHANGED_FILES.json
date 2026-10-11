@@ -1,0 +1,33 @@
+{
+  "comparedTo": "SamiDev_Carrom_Football_Refresh.zip",
+  "modified": [
+    "SamiDev_Platform_V25/ORIGINAL_ASSETS_TEST_REPORT.json",
+    "SamiDev_Platform_V25/README_AR.md",
+    "SamiDev_Platform_V25/game/__assets.json",
+    "SamiDev_Platform_V25/game/attestation.json",
+    "SamiDev_Platform_V25/game/browser-runtime.js",
+    "SamiDev_Platform_V25/game/games/crazy8/attestation.json",
+    "SamiDev_Platform_V25/game/games/crazy8/index.html",
+    "SamiDev_Platform_V25/game/games/crazy8/main.js",
+    "SamiDev_Platform_V25/game/games/tablesoccer/attestation.json",
+    "SamiDev_Platform_V25/game/games/tablesoccer/index.html",
+    "SamiDev_Platform_V25/game/games/tablesoccer/main.js",
+    "SamiDev_Platform_V25/game/index.html",
+    "SamiDev_Platform_V25/game/main.js",
+    "SamiDev_Platform_V25/game/platform/build.json",
+    "SamiDev_Platform_V25/game/samidev-integrity.json",
+    "SamiDev_Platform_V25/tests/browser_multigame_smoke.js",
+    "SamiDev_Platform_V25/tests/browser_runtime_race_regression.js",
+    "SamiDev_Platform_V25/tools/update_original_asset_index.py",
+    "SamiDev_Platform_V25/tools/update_ui_build.py"
+  ],
+  "added": [
+    "SamiDev_Platform_V25/MOBILE_CHANGED_FILES.json",
+    "SamiDev_Platform_V25/MOBILE_FIX_AR.md",
+    "SamiDev_Platform_V25/MOBILE_TEST_REPORT.json",
+    "SamiDev_Platform_V25/game/game-touch.css",
+    "SamiDev_Platform_V25/game/game-touch.js",
+    "SamiDev_Platform_V25/tests/mobile_gestures.js"
+  ],
+  "removed": []
+}

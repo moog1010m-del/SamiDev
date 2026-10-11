@@ -1,0 +1,32 @@
+{
+	"ar": {
+		"iap_button_items": "أغراض"
+	},
+	"de": {
+		"iap_button_items": "ARTIKEL"
+	},
+	"en": {
+		"iap_button_items": "ITEMS"
+	},
+	"es": {
+		"iap_button_items": "ARTÍCULOS"
+	},
+	"fa": {
+		"iap_button_items": "موارد"
+	},
+	"fr": {
+		"iap_button_items": "ARTICLES"
+	},
+	"it": {
+		"iap_button_items": "ARTICOLI"
+	},
+	"pt": {
+		"iap_button_items": "ITENS"
+	},
+	"th": {
+		"iap_button_items": "รายการ"
+	},
+	"tr": {
+		"iap_button_items": "ÖĞELER"
+	}
+}

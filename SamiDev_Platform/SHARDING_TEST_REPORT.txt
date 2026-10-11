@@ -1,0 +1,12 @@
+SamiDev Authoritative GameHost sharding test
+===========================================
+Players: 120
+Rooms: 60 (1v1)
+GameHost shards: 3
+Result: 60/60 rooms passed
+Distribution observed:
+- shard 8101: 22 rooms / 22 moves
+- shard 8102: 14 rooms / 14 moves
+- shard 8103: 24 rooms / 24 moves
+
+This validates rendezvous room routing across three authoritative GameHost processes in local development mode.

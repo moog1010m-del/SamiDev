@@ -1,0 +1,234 @@
+{
+  "ok": true,
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "mainJsUntouched": true,
+  "modifiedFileSha256": {
+    "game/browser-runtime.js": "d6b47928e596e13c2039deda73eb2f2b5f3c17a28245083cd731718982ce7c0d",
+    "gamehost/runtime.js": "b5f79d7d339cf7abea567153e34c2c2181746465e30167d65d732cc53c3c428b",
+    "backend/app.py": "a533ba7157260499ffd4a28a21719bae0f2f15c7d64032c105fb1818b6604865",
+    "backend/store.py": "5900f932c985f6ec837b0dd62878834405cdb14dd60ecdafca7edc7776fd70c8"
+  },
+  "results": {
+    "conformance": {
+      "ok": true,
+      "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+      "settingsCombinations": 60,
+      "checksPassed": 369,
+      "checksFailed": 0,
+      "failures": [],
+      "memory": {
+        "rss": 84860928,
+        "heapTotal": 53972992,
+        "heapUsed": 34577976,
+        "external": 1516424,
+        "arrayBuffers": 16659
+      }
+    },
+    "alarmAuthority": {
+      "ok": true,
+      "staleAlarmBroadcast": false,
+      "staleAlarmIgnored": true,
+      "supersededTimerCancelled": true,
+      "events": [
+        {
+          "type": "alarm_superseded",
+          "id": 1,
+          "by": 101
+        },
+        {
+          "type": "stale_alarm_ignored",
+          "id": 101,
+          "expected": 1,
+          "pending": true
+        },
+        {
+          "type": "alarm_superseded",
+          "id": 1001,
+          "by": 1002
+        }
+      ]
+    },
+    "stateCheckpoint": {
+      "pendingSnapshotDeferred": true,
+      "pendingStateUnchanged": true,
+      "oneWorldStillDeferred": true,
+      "stableSnapshotProduced": true,
+      "stableSerializePure": true,
+      "finalState": {
+        "noAnimations": 1,
+        "lastState": 1,
+        "lastValidAnim": 1,
+        "pending": 0
+      },
+      "ok": true
+    },
+    "turnAuthority": {
+      "ok": true,
+      "turnTransitionVerified": true,
+      "seat0ShotAccepted": true,
+      "turnPassedToSeat1": true,
+      "seat1ShotAccepted": true,
+      "turnPassedBackToSeat0": true
+    },
+    "strikerMove": {
+      "ok": true,
+      "mainJsUntouched": true,
+      "seat0MoveAccepted": true,
+      "seat0StrikerMoved": true,
+      "seat1MoveAccepted": true,
+      "seat1StrikerMoved": true,
+      "browserHoverDoesNotEmitTouchMove": true,
+      "before0": [
+        540,
+        885.6
+      ],
+      "after0": [
+        378.564,
+        885.6
+      ],
+      "before1": [
+        540,
+        194.4
+      ],
+      "after1": [
+        378.56399999999996,
+        194.4
+      ],
+      "browserTouchUsesSamiDevBottomOrigin": true,
+      "browserMouseKeepsDomTopOrigin": true
+    },
+    "timeoutAfk": {
+      "alarmContainsNativeAutoMove": true,
+      "serverTurnAfterTimeout": 1,
+      "client0TurnAfterTimeout": 1,
+      "client1TurnAfterTimeout": 1,
+      "sequenceMirrored": true,
+      "timeoutReplicated": true,
+      "maxAutoMovesPerSeat": 3,
+      "maxConsecutiveAutoMoves": 4,
+      "autoMovesPerSeat": [
+        3,
+        0
+      ],
+      "resignedSeats": [
+        0
+      ],
+      "gameOverAfterThirdMiss": true,
+      "gameOverMessage": [
+        "go_resigned_observer",
+        1,
+        0
+      ],
+      "nativeAfkForfeit": true,
+      "ok": true
+    },
+    "storeSequence": {
+      "ok": true,
+      "before": [
+        1,
+        0
+      ],
+      "afterAuthorityAutoMove": [
+        2,
+        0
+      ],
+      "afterStaleAuthorityEvent": [
+        2,
+        0
+      ],
+      "nextRealMoveIndex": 1,
+      "final": [
+        3,
+        0
+      ]
+    },
+    "integrationWs": {
+      "ok": true,
+      "roomId": "KPEFAY",
+      "seats": [
+        0,
+        1
+      ],
+      "authorityBegin": {
+        "server": true,
+        "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b"
+      },
+      "legalMoveAuthority": {
+        "turn": [
+          0
+        ],
+        "sequence": [
+          1,
+          0
+        ],
+        "gameOver": false,
+        "lastValidAnim": 0
+      },
+      "sameMoveOnBothClients": true,
+      "wrongTurnRejected": true,
+      "clientSnapshotIgnored": true,
+      "resyncHasServerSnapshot": true,
+      "resyncSequence": [
+        1,
+        0
+      ],
+      "maliciousSnapshotPersisted": false
+    },
+    "integrationTimeoutWs": {
+      "ok": true,
+      "roomId": "U2RANM",
+      "alarmHasNativeAutoMove": true,
+      "alarmSequence": [
+        2,
+        0
+      ],
+      "serverTurnAfterMissTimer": [
+        1
+      ],
+      "sameTurnOnBothGateways": true,
+      "resyncSequence": [
+        2,
+        0
+      ],
+      "resyncSnapshotTurn": [
+        1
+      ],
+      "resyncSnapshotSequence": [
+        2,
+        0
+      ],
+      "nextPlayerMoveAccepted": true,
+      "sameMoveOnBothClients": true
+    },
+    "browserSliderChromium": {
+      "ok": true,
+      "engine": "Chromium + WebGL",
+      "bugReproducedBeforeFix": {
+        "visualDrag": "slider center x=450 -> x=525 at y=543",
+        "strikerPosBefore": 0.5,
+        "strikerPosAfter": 0.5,
+        "requestStrikerMoveCalls": 0,
+        "touchEventsReachedBrowserBridge": true
+      },
+      "rootCause": "DOM touch Y was top-origin while main.js InputManager expects SamiDev bottom-origin and flips Y internally, so slider hit-testing was vertically mirrored.",
+      "afterFix": {
+        "initialStrikerPos": 0.5,
+        "firstDrag": {
+          "strikerPos": 0.5,
+          "requestStrikerMoveCalls": 0,
+          "tutorialClosed": true
+        },
+        "dragRight": {
+          "strikerPos": 0.908215,
+          "requestStrikerMoveCalls": 12
+        },
+        "dragLeft": {
+          "strikerPos": 0.208418,
+          "requestStrikerMoveCalls": 24
+        },
+        "pageErrors": []
+      },
+      "note": "On a fresh profile, main.js tutorialModal owns a full-screen drag handler; the first drag can close that original tutorial. After it is closed, the slider receives drag normally."
+    }
+  }
+}

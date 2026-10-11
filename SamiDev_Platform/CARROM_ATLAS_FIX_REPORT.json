@@ -1,0 +1,62 @@
+{
+  "atlas_dimensions": [
+    3116,
+    2128
+  ],
+  "atlas_rectangles": 33,
+  "replaced_sprites": [
+    "board_0",
+    "strike_base_0",
+    "strike_01",
+    "carrom_black",
+    "carrom_white",
+    "carrom_red",
+    "carroms_preview",
+    "positioning",
+    "shoot",
+    "examples",
+    "final",
+    "theme_preview",
+    "close",
+    "premium_icon_large"
+  ],
+  "preserved_functional_sprites": [
+    "arrow_line",
+    "arrow_outline_fill",
+    "arrow_outline",
+    "empty_dot",
+    "help",
+    "loading",
+    "points_details",
+    "score_back_left",
+    "score_back_right",
+    "separator",
+    "strike_circle",
+    "striker_highlight",
+    "target_points",
+    "timer_bar",
+    "timer_mask",
+    "timer",
+    "tutorial_arrow",
+    "tutorial_finger",
+    "tutorial_side"
+  ],
+  "preserved_pixels_and_alpha_exact": true,
+  "png_webp_visual_equality": true,
+  "main_js_unchanged": true,
+  "texture_attestation_sha256_valid": true,
+  "runtime_tests": {
+    "browser_multigame_smoke_carrom": {
+      "passed": true,
+      "webgl_mocked": true,
+      "errors": []
+    },
+    "striker_move_regression": {
+      "passed": true
+    }
+  },
+  "full_browser_visual_test": {
+    "run": false,
+    "reason": "Chromium executable unavailable in execution environment"
+  }
+}

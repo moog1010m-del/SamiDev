@@ -1,0 +1,72 @@
+{
+	"ar": {
+		"shop_widget_header": "اختيار العناصر",
+		"shop_widget_display_owned": "العرض مملوك",
+		"shop_widget_confirm": "تأكيد",
+		"shop_widget_search_placeholder": "البحث عن العناصر",
+		"shop_widget_cancel": "إلغاء"
+	},
+	"de": {
+		"shop_widget_header": "GEGENSTÄNDE AUSWÄHLEN",
+		"shop_widget_display_owned": "Im Besitz anzeigen",
+		"shop_widget_confirm": "BESTÄTIGEN",
+		"shop_widget_search_placeholder": "Elemente suchen...",
+		"shop_widget_cancel": "ABBRECH"
+	},
+	"en": {
+		"shop_widget_header": "SELECT ITEMS",
+		"shop_widget_display_owned": "Display Owned",
+		"shop_widget_confirm": "CONFIRM",
+		"shop_widget_search_placeholder": "Search items...",
+		"shop_widget_cancel": "CANCEL"
+	},
+	"es": {
+		"shop_widget_header": "SELECCIONAR ARTICULOS",
+		"shop_widget_display_owned": "Mostrar propiedad",
+		"shop_widget_confirm": "CONFIRMAR",
+		"shop_widget_search_placeholder": "Buscar elementos...",
+		"shop_widget_cancel": "CANCELAR"
+	},
+	"fa": {
+		"shop_widget_header": "اقلام را انتخاب کنید",
+		"shop_widget_display_owned": "نمایش متعلق به",
+		"shop_widget_confirm": "تایید",
+		"shop_widget_search_placeholder": "موارد را جستجو کنید",
+		"shop_widget_cancel": "لغو"
+	},
+	"fr": {
+		"shop_widget_header": "SÉLECTIONNER DES ARTICLES",
+		"shop_widget_display_owned": "Afficher la propriété",
+		"shop_widget_confirm": "CONFIRMER",
+		"shop_widget_search_placeholder": "Recherche d'articles...",
+		"shop_widget_cancel": "ANNULER"
+	},
+	"it": {
+		"shop_widget_header": "SELEZIONA GLI ARTICOLI",
+		"shop_widget_display_owned": "Mostra di proprietà",
+		"shop_widget_confirm": "CONFERMA",
+		"shop_widget_search_placeholder": "Ricerca articoli...",
+		"shop_widget_cancel": "ANNULLA"
+	},
+	"pt": {
+		"shop_widget_header": "SELECIONAR ITENS",
+		"shop_widget_display_owned": "Exibir propriedade",
+		"shop_widget_confirm": "CONFIMAR",
+		"shop_widget_search_placeholder": "Procurar itens...",
+		"shop_widget_cancel": "CANCELAR"
+	},
+	"th": {
+		"shop_widget_header": "เลือกรายการ",
+		"shop_widget_display_owned": "แสดงเป็นเจ้าของ",
+		"shop_widget_confirm": "ยืนยัน",
+		"shop_widget_search_placeholder": "รายการค้นหา...",
+		"shop_widget_cancel": "ยกเลิก"
+	},
+	"tr": {
+		"shop_widget_header": "EŞYALARI SEÇ",
+		"shop_widget_display_owned": "Sahip Olunanları Görüntüle",
+		"shop_widget_confirm": "ONAYLA",
+		"shop_widget_search_placeholder": "Arama öğeleri...",
+		"shop_widget_cancel": "İPTAL"
+	}
+}

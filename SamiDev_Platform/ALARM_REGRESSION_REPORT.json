@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "staleAlarmBroadcast": false,
+  "staleAlarmIgnored": true,
+  "supersededTimerCancelled": true,
+  "events": [
+    {
+      "type": "alarm_superseded",
+      "id": 1,
+      "by": 101
+    },
+    {
+      "type": "stale_alarm_ignored",
+      "id": 101,
+      "expected": 1,
+      "pending": true
+    },
+    {
+      "type": "alarm_superseded",
+      "id": 1001,
+      "by": 1002
+    }
+  ]
+}

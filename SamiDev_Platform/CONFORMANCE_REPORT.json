@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "settingsCombinations": 60,
+  "checksPassed": 369,
+  "checksFailed": 0,
+  "failures": [],
+  "memory": {
+    "rss": 83410944,
+    "heapTotal": 54243328,
+    "heapUsed": 34436760,
+    "external": 1516424,
+    "arrayBuffers": 16659
+  }
+}

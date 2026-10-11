@@ -1,0 +1,22 @@
+{
+  "publisher": "SamiDev",
+  "algorithm": "sha256",
+  "games": {
+    "carrom": {
+      "sha256": "4ef307c85128211d99a32035fc8a65c82ba30bf733b12c16968cff09eb8c475c",
+      "main": "main.js"
+    },
+    "crazy8": {
+      "sha256": "170037080f4fedc3a61fb55ca49cb02cfa4163645d41e7ef13ebd5b6965767a3",
+      "main": "games/crazy8/main.js"
+    },
+    "pool": {
+      "sha256": "b3d77e70ca2ddbfd987e932f6b20c4e88ae074012e5be1775e992b0ab8a55682",
+      "main": "games/pool/main.js"
+    },
+    "tablesoccer": {
+      "sha256": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085",
+      "main": "games/tablesoccer/main.js"
+    }
+  }
+}

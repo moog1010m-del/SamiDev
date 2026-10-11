@@ -1,0 +1,140 @@
+{
+  "release": "V36",
+  "date": "2026-10-11",
+  "passed": true,
+  "checks": [
+    {
+      "name": "identity_geometry",
+      "passed": true,
+      "command": [
+        "node",
+        "tests/avatar_layout_v36.cjs"
+      ],
+      "env": {},
+      "output": "avatar_layout_v36: OK (48 measured name / badge / alignment cases; resize restoration)\n"
+    },
+    {
+      "name": "store_http",
+      "passed": true,
+      "command": [
+        "python",
+        "tests/carrom_store_regression.py"
+      ],
+      "env": {},
+      "output": "carrom_store_regression: OK (HTTP sessions, free equip, return to classic, account isolation, Redis branch persistence, unchanged wallet)\n"
+    },
+    {
+      "name": "asset_integrity",
+      "passed": true,
+      "command": [
+        "python",
+        "tests/original_assets.py"
+      ],
+      "env": {},
+      "output": "{\"ok\": true, \"mediaFilesVerified\": 235, \"processedOriginalAudioFiles\": 105, \"preservedOriginalPoolImages\": 15, \"localAssetIndexesVerified\": 3, \"legacyHostHooks\": 0}\n"
+    },
+    {
+      "name": "pool_mobile",
+      "passed": true,
+      "command": [
+        "node",
+        "tests/browser_multigame_smoke.js",
+        "pool",
+        "online"
+      ],
+      "env": {
+        "SD_MOBILE": "1",
+        "SD_LAYOUT_ONLY": "1",
+        "SD_VIEWPORT": "320x740",
+        "SD_SEATS": "2",
+        "SD_CUE": "pool_cue_moon"
+      },
+      "output": "{\n  \"game\": \"pool\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 4 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 5 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 9 is not in this group\"\n  ],\n  \"errors\": []\n}\nMOBILE_UI {\"viewport\":[320,740],\"canvas\":[480,1110],\"players\":[{\"seat\":0,\"radius\":50,\"fontSize\":40,\"name\":\"لاعب باسم …\",\"maxNameWidth\":398,\"x\":726,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":726,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":1,\"radius\":50,\"fontSize\":40,\"name\":\"لاعب باسم …\",\"maxNameWidth\":398,\"x\":354,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":354,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]}]}\n"
+    },
+    {
+      "name": "carrom_mobile",
+      "passed": true,
+      "command": [
+        "node",
+        "tests/browser_multigame_smoke.js",
+        "carrom",
+        "online"
+      ],
+      "env": {
+        "SD_MOBILE": "1",
+        "SD_LAYOUT_ONLY": "1",
+        "SD_VIEWPORT": "320x740",
+        "SD_SEATS": "4",
+        "SD_CUE": "pool_cue_moon"
+      },
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\nMOBILE_UI {\"viewport\":[320,740],\"canvas\":[480,1110],\"players\":[{\"seat\":0,\"radius\":60,\"fontSize\":40,\"name\":\"لاعب باسم…\",\"maxNameWidth\":220,\"x\":415.13513513513516,\"y\":1619,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":\"avatarBottom\",\"x\":415.13513513513516,\"y\":1619,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":1,\"radius\":60,\"fontSize\":40,\"name\":\"لاعب باسم…\",\"maxNameWidth\":220,\"x\":590,\"y\":178,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":\"avatarLeft\",\"x\":590,\"y\":178,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":2,\"radius\":60,\"fontSize\":40,\"name\":\"لاعب باسم…\",\"maxNameWidth\":220,\"x\":415.13513513513516,\"y\":233.51351351351352,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":\"avatarTop\",\"x\":415.13513513513516,\"y\":233.51351351351352,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":3,\"radius\":60,\"fontSize\":40,\"name\":\"لاعب باسم…\",\"maxNameWidth\":220,\"x\":240,\"y\":178,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":\"avatarRight\",\"x\":240,\"y\":178,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]}]}\n"
+    },
+    {
+      "name": "crazy8_mobile",
+      "passed": true,
+      "command": [
+        "node",
+        "tests/browser_multigame_smoke.js",
+        "crazy8",
+        "online"
+      ],
+      "env": {
+        "SD_MOBILE": "1",
+        "SD_LAYOUT_ONLY": "1",
+        "SD_VIEWPORT": "320x740",
+        "SD_SEATS": "4",
+        "SD_CUE": "pool_cue_moon"
+      },
+      "output": "{\n  \"game\": \"crazy8\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"resync requested\",\n    \"[game] Texture width 125.00000000000001 is float, rounded to 126\"\n  ],\n  \"errors\": []\n}\nMOBILE_UI {\"viewport\":[320,740],\"canvas\":[480,1110],\"players\":[{\"seat\":0,\"radius\":56,\"fontSize\":40,\"name\":\"You (لاعب با…\",\"maxNameWidth\":440,\"x\":415.13513513513516,\"y\":1766.4,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":null,\"x\":415.13513513513516,\"y\":1766.4,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":\"LayerContents\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":\"LayeredNode\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":1,\"radius\":56,\"fontSize\":40,\"name\":\"لاعب…\",\"maxNameWidth\":117,\"x\":65,\"y\":307.2,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":null,\"x\":65,\"y\":307.2,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":\"LayerContents\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":\"LayeredNode\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":2,\"radius\":56,\"fontSize\":40,\"name\":\"لاعب باسم طو…\",\"maxNameWidth\":440,\"x\":415.13513513513516,\"y\":220.8,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":null,\"x\":415.13513513513516,\"y\":220.8,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":\"LayerContents\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":\"LayeredNode\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":3,\"radius\":56,\"fontSize\":40,\"name\":\"لاعب…\",\"maxNameWidth\":117,\"x\":765.2702702702703,\"y\":307.2,\"parentWidth\":830.2702702702703,\"parentHeight\":1920,\"ancestors\":[{\"name\":null,\"x\":765.2702702702703,\"y\":307.2,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":\"LayerContents\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":\"LayeredNode\",\"x\":0,\"y\":0,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0,\"ay\":0},{\"name\":null,\"x\":415.13513513513516,\"y\":960,\"w\":830.2702702702703,\"h\":1920,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]}]}\n"
+    },
+    {
+      "name": "tablesoccer_mobile",
+      "passed": true,
+      "command": [
+        "node",
+        "tests/browser_multigame_smoke.js",
+        "tablesoccer",
+        "online"
+      ],
+      "env": {
+        "SD_MOBILE": "1",
+        "SD_LAYOUT_ONLY": "1",
+        "SD_VIEWPORT": "320x740",
+        "SD_SEATS": "4",
+        "SD_CUE": "pool_cue_moon"
+      },
+      "output": "{\n  \"game\": \"tablesoccer\",\n  \"started\": true,\n  \"turn\": [],\n  \"flags\": [\n    -1,\n    -1\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [tg1] clearTimer - Timer 1 is not in this group\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\nMOBILE_UI {\"viewport\":[320,740],\"canvas\":[480,1110],\"players\":[{\"seat\":0,\"radius\":64,\"fontSize\":40,\"name\":\"لاعب باس…\",\"maxNameWidth\":202.5,\"x\":888.75,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":888.75,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":1,\"radius\":64,\"fontSize\":40,\"name\":\"لاعب باس…\",\"maxNameWidth\":202.5,\"x\":684.15,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":684.15,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":2,\"radius\":64,\"fontSize\":40,\"name\":\"لاعب باس…\",\"maxNameWidth\":202.5,\"x\":395.85,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":395.85,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":3,\"radius\":64,\"fontSize\":40,\"name\":\"لاعب باس…\",\"maxNameWidth\":202.5,\"x\":191.25,\"y\":303.75,\"parentWidth\":1080,\"parentHeight\":2497.5,\"ancestors\":[{\"name\":null,\"x\":191.25,\"y\":303.75,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1248.75,\"w\":1080,\"h\":2497.5,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]}]}\n"
+    },
+    {
+      "name": "pool_moon_turn_cycle",
+      "passed": true,
+      "command": "SD_CUE=pool_cue_moon node tests/browser_multigame_smoke.js pool online pool_emerald",
+      "observed": "Passed in preceding run: moon equipped and uploaded, opponent classic on turn 1, moon restored on turn 0; native shot and server state agree. Existing TimerGroup warnings retained."
+    }
+  ],
+  "limits": [
+    "WebGL and audio mocked in engine smoke checks",
+    "No Chromium browser binary available",
+    "Flutter/Dart SDK unavailable; no APK/device build performed"
+  ],
+  "flutter_assets": "436 files synchronized",
+  "finalEngines": {
+    "carrom": {
+      "sha256": "632f7dc65edd129a2fdb16a73449bf86ae9da5b9e1000b96c3bc05814a03a187",
+      "main": "main.js"
+    },
+    "tablesoccer": {
+      "sha256": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085",
+      "main": "games/tablesoccer/main.js"
+    },
+    "crazy8": {
+      "sha256": "170037080f4fedc3a61fb55ca49cb02cfa4163645d41e7ef13ebd5b6965767a3",
+      "main": "games/crazy8/main.js"
+    },
+    "pool": {
+      "sha256": "625509034e1eb324d31c1a5dfe9064bf0225e309a4226ee5b6d05ab96355fdd0",
+      "main": "games/pool/main.js"
+    }
+  },
+  "identityGeometryNote": "Narrow badge rows additionally verified after final sizing adjustment."
+}

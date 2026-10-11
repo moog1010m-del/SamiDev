@@ -1,0 +1,314 @@
+
+bread_dog.png
+size: 567, 567
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+body
+  rotate: true
+  xy: 318, 84
+  size: 81, 68
+  orig: 81, 68
+  offset: 0, 0
+  index: -1
+butter
+  rotate: false
+  xy: 2, 7
+  size: 41, 26
+  orig: 41, 26
+  offset: 0, 0
+  index: -1
+cream
+  rotate: false
+  xy: 475, 106
+  size: 65, 48
+  orig: 65, 48
+  offset: 0, 0
+  index: -1
+dog2_body
+  rotate: true
+  xy: 318, 19
+  size: 63, 76
+  orig: 63, 76
+  offset: 0, 0
+  index: -1
+dog2_ear_L
+  rotate: true
+  xy: 219, 403
+  size: 28, 31
+  orig: 28, 31
+  offset: 0, 0
+  index: -1
+dog2_ear_R
+  rotate: true
+  xy: 185, 403
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: -1
+dog2_hand_L
+  rotate: false
+  xy: 549, 286
+  size: 16, 20
+  orig: 16, 20
+  offset: 0, 0
+  index: -1
+dog2_hand_R
+  rotate: false
+  xy: 549, 264
+  size: 16, 20
+  orig: 16, 20
+  offset: 0, 0
+  index: -1
+dog2_nose
+  rotate: true
+  xy: 139, 202
+  size: 15, 6
+  orig: 15, 6
+  offset: 0, 0
+  index: -1
+ears
+  rotate: false
+  xy: 310, 289
+  size: 16, 19
+  orig: 16, 19
+  offset: 0, 0
+  index: -1
+eye
+  rotate: true
+  xy: 129, 70
+  size: 14, 8
+  orig: 14, 8
+  offset: 0, 0
+  index: -1
+eyebrow
+  rotate: false
+  xy: 268, 16
+  size: 15, 6
+  orig: 15, 6
+  offset: 0, 0
+  index: -1
+eyes
+  rotate: false
+  xy: 447, 418
+  size: 10, 15
+  orig: 10, 15
+  offset: 0, 0
+  index: -1
+fx_butter_00
+  rotate: true
+  xy: 388, 84
+  size: 49, 75
+  orig: 64, 128
+  offset: 7, 53
+  index: -1
+fx_butter_01
+  rotate: true
+  xy: 397, 207
+  size: 49, 97
+  orig: 64, 128
+  offset: 7, 31
+  index: -1
+fx_butter_02
+  rotate: false
+  xy: 347, 167
+  size: 48, 102
+  orig: 64, 128
+  offset: 7, 26
+  index: -1
+fx_butter_03
+  rotate: true
+  xy: 440, 258
+  size: 48, 107
+  orig: 64, 128
+  offset: 7, 21
+  index: -1
+fx_butter_04
+  rotate: true
+  xy: 328, 271
+  size: 48, 110
+  orig: 64, 128
+  offset: 7, 18
+  index: -1
+fx_butter_05
+  rotate: false
+  xy: 268, 24
+  size: 48, 114
+  orig: 64, 128
+  offset: 7, 14
+  index: -1
+fx_butter_06
+  rotate: true
+  xy: 447, 308
+  size: 48, 115
+  orig: 64, 128
+  offset: 7, 13
+  index: -1
+fx_butter_07
+  rotate: true
+  xy: 447, 358
+  size: 48, 118
+  orig: 64, 128
+  offset: 7, 10
+  index: -1
+fx_butter_08
+  rotate: false
+  xy: 278, 310
+  size: 48, 121
+  orig: 64, 128
+  offset: 7, 7
+  index: -1
+fx_butter_09
+  rotate: true
+  xy: 2, 35
+  size: 49, 125
+  orig: 64, 128
+  offset: 7, 3
+  index: -1
+fx_butter_10
+  rotate: true
+  xy: 460, 408
+  size: 49, 105
+  orig: 64, 128
+  offset: 7, 23
+  index: -1
+fx_butter_11
+  rotate: true
+  xy: 475, 156
+  size: 49, 74
+  orig: 64, 128
+  offset: 7, 54
+  index: -1
+fx_powder1
+  rotate: false
+  xy: 2, 403
+  size: 181, 162
+  orig: 188, 163
+  offset: 7, 0
+  index: -1
+fx_powder3
+  rotate: false
+  xy: 2, 219
+  size: 144, 182
+  orig: 151, 183
+  offset: 0, 1
+  index: -1
+fx_powder_00
+  rotate: false
+  xy: 496, 207
+  size: 59, 49
+  orig: 150, 150
+  offset: 36, 46
+  index: -1
+fx_powder_01
+  rotate: false
+  xy: 396, 15
+  size: 74, 67
+  orig: 150, 150
+  offset: 31, 35
+  index: -1
+fx_powder_02
+  rotate: true
+  xy: 460, 459
+  size: 106, 100
+  orig: 150, 150
+  offset: 17, 19
+  index: -1
+fx_powder_03
+  rotate: false
+  xy: 328, 321
+  size: 117, 112
+  orig: 150, 150
+  offset: 13, 15
+  index: -1
+fx_powder_04
+  rotate: false
+  xy: 139, 15
+  size: 127, 123
+  orig: 150, 150
+  offset: 9, 9
+  index: -1
+fx_powder_05
+  rotate: false
+  xy: 148, 140
+  size: 131, 127
+  orig: 150, 150
+  offset: 7, 7
+  index: -1
+fx_powder_06
+  rotate: true
+  xy: 148, 269
+  size: 132, 128
+  orig: 150, 150
+  offset: 6, 7
+  index: -1
+fx_powder_07
+  rotate: false
+  xy: 323, 435
+  size: 135, 130
+  orig: 150, 150
+  offset: 5, 6
+  index: -1
+fx_powder_08
+  rotate: false
+  xy: 2, 86
+  size: 135, 131
+  orig: 150, 150
+  offset: 5, 5
+  index: -1
+fx_powder_09
+  rotate: false
+  xy: 185, 433
+  size: 136, 132
+  orig: 150, 150
+  offset: 4, 5
+  index: -1
+hand
+  rotate: true
+  xy: 551, 175
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: -1
+hand2
+  rotate: false
+  xy: 551, 190
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
+leg
+  rotate: false
+  xy: 281, 149
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+mochi_dog
+  rotate: false
+  xy: 397, 135
+  size: 76, 70
+  orig: 76, 70
+  offset: 0, 0
+  index: -1
+nose
+  rotate: false
+  xy: 278, 293
+  size: 30, 15
+  orig: 30, 15
+  offset: 0, 0
+  index: -1
+tounge
+  rotate: true
+  xy: 397, 260
+  size: 9, 12
+  orig: 9, 12
+  offset: 0, 0
+  index: -1
+trail_butter_glow
+  rotate: false
+  xy: 281, 167
+  size: 64, 102
+  orig: 65, 103
+  offset: 0, 0
+  index: -1

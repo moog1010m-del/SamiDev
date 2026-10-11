@@ -1,0 +1,72 @@
+{
+  "release": "V30",
+  "generatedAt": "2026-10-10T12:04:49.729491+00:00",
+  "scope": [
+    "carrom",
+    "crazy8",
+    "pool",
+    "tablesoccer",
+    "shared runtime and Flutter asset copy"
+  ],
+  "runtimeFilesScanned": 425,
+  "remainingRuntimeMarkers": [],
+  "displayTextChanges": 33,
+  "changedDisplayFiles": [
+    "game/games/crazy8/dictionary.json",
+    "game/games/crazy8/index.html",
+    "game/games/crazy8/main.js"
+  ],
+  "images": {
+    "files": 116,
+    "uniqueFiles": 81,
+    "rasterContactSheetReview": 70,
+    "svgTextReview": 11,
+    "ocrFiles": 70,
+    "ocrFailures": 0,
+    "ocrMarkerFindings": 0,
+    "manualFinding": "P currency icon in pool inventory, replaced with existing project artwork at 48x48",
+    "limitations": "Raster contact-sheet review and OCR are not an exhaustive visual similarity or provenance audit",
+    "reviewedInputVersion": "V29",
+    "releaseUniqueImages": 80,
+    "releaseUniqueRasters": 69
+  },
+  "engineComparisonsWithV29": {
+    "main.js": {
+      "beforeSha256": "b77f6b1a0f2131a2ea923bbcd48b729d17ec6d18bc6fe355a13e4984985bf18b",
+      "afterSha256": "b77f6b1a0f2131a2ea923bbcd48b729d17ec6d18bc6fe355a13e4984985bf18b",
+      "change": "byte-identical"
+    },
+    "games/crazy8/main.js": {
+      "beforeSha256": "e1d07d8bd0a57b869e4e07a2fdcffa972bf3f18af2d04b190ad50cee0c25aa68",
+      "afterSha256": "a22f5e22c757f64f3f1684cf63c31c78e2146b228e5566cbdba72e1a0c0d3f2c",
+      "change": "three display text literals only"
+    },
+    "games/pool/main.js": {
+      "beforeSha256": "2471cd2617303b082d358c1c5c9bcf7cfcf3af197918233276a10d7209db7c11",
+      "afterSha256": "2471cd2617303b082d358c1c5c9bcf7cfcf3af197918233276a10d7209db7c11",
+      "change": "byte-identical"
+    },
+    "games/tablesoccer/main.js": {
+      "beforeSha256": "30e4061134eaad34f1ae940714d320a1970f71d33e383729dff98150ee0f367d",
+      "afterSha256": "30e4061134eaad34f1ae940714d320a1970f71d33e383729dff98150ee0f367d",
+      "change": "byte-identical"
+    }
+  },
+  "requiredNoticesPreserved": true,
+  "ownershipOrExclusivityCertified": false,
+  "notes": [
+    "Audit tools, reports and removed lines in patches intentionally name retired branding outside shipped game assets.",
+    "No function identifiers, protocol or serialized keys changed.",
+    "17 supplied pool images remain byte-identical; balls and their atlas preserved."
+  ],
+  "compatibilityIdentifiersPreserved": [
+    "deadred",
+    "booblue",
+    "DeadRed",
+    "BooBlue",
+    "deadRed",
+    "booBlue",
+    "setting_special_deadred",
+    "setting_special_booblue"
+  ]
+}

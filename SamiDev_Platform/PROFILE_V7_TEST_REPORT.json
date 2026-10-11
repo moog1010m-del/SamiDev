@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "version": "profile-v7-profile-tap-dislike-fix",
+  "fixes": {
+    "dislikeReputationDelta": -1,
+    "reputationFloor": 0,
+    "stableAvatarHitTargets": true,
+    "pointerDownProfileOpen": true,
+    "canvasCoordinateFallback": true
+  },
+  "tests": {
+    "profile_ui_regression": "PASS",
+    "player_profile_social_regression": "PASS",
+    "player_profile_click_regression": "PASS",
+    "profile_game_avatar_regression": "PASS",
+    "profile_win_stats_regression": "PASS",
+    "avatar_exit_regression": "PASS",
+    "platform_v1_regression": "PASS",
+    "gamehost_conformance": "369/369 PASS"
+  },
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "browserHarnessNote": "Chromium in the execution environment is policy-blocked from localhost/file URLs; source-level click regression was used instead."
+}

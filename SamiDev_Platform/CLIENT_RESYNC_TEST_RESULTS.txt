@@ -1,0 +1,220 @@
+===== node tests/client_resync_regression.js =====
+PASS client resync regression
+main.js sha256: f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b
+resync requests sent in coalescing test: 2
+===== node tests/striker_move_regression.js =====
+{
+  "ok": true,
+  "mainJsUntouched": true,
+  "seat0MoveAccepted": true,
+  "seat0StrikerMoved": true,
+  "seat1MoveAccepted": true,
+  "seat1StrikerMoved": true,
+  "browserHoverDoesNotEmitTouchMove": true,
+  "browserTouchUsesSamiDevBottomOrigin": true,
+  "browserMouseKeepsDomTopOrigin": true,
+  "before0": [
+    540,
+    885.6
+  ],
+  "after0": [
+    378.564,
+    885.6
+  ],
+  "before1": [
+    540,
+    194.4
+  ],
+  "after1": [
+    378.56399999999996,
+    194.4
+  ]
+}
+===== node tests/turn_authority_regression.js =====
+{
+  "ok": true,
+  "turnTransitionVerified": true,
+  "seat0ShotAccepted": true,
+  "turnPassedToSeat1": true,
+  "seat1ShotAccepted": true,
+  "turnPassedBackToSeat0": true
+}
+===== node tests/alarm_authority_regression.js =====
+{
+  "ok": true,
+  "staleAlarmBroadcast": false,
+  "staleAlarmIgnored": true,
+  "supersededTimerCancelled": true,
+  "events": [
+    {
+      "type": "alarm_superseded",
+      "id": 1,
+      "by": 101
+    },
+    {
+      "type": "stale_alarm_ignored",
+      "id": 101,
+      "expected": 1,
+      "pending": true
+    },
+    {
+      "type": "alarm_superseded",
+      "id": 1001,
+      "by": 1002
+    }
+  ]
+}
+===== node tests/state_checkpoint_regression.js =====
+{
+  "pendingSnapshotDeferred": true,
+  "pendingStateUnchanged": true,
+  "oneWorldStillDeferred": true,
+  "stableSnapshotProduced": true,
+  "stableSerializePure": true,
+  "finalState": {
+    "noAnimations": 1,
+    "lastState": 1,
+    "lastValidAnim": 1,
+    "pending": 0
+  },
+  "ok": true
+}
+===== node tests/timeout_afk_regression.js =====
+{
+  "alarmContainsNativeAutoMove": true,
+  "serverTurnAfterTimeout": 1,
+  "client0TurnAfterTimeout": 1,
+  "client1TurnAfterTimeout": 1,
+  "sequenceMirrored": true,
+  "timeoutReplicated": true,
+  "maxAutoMovesPerSeat": 3,
+  "maxConsecutiveAutoMoves": 4,
+  "autoMovesPerSeat": [
+    3,
+    0
+  ],
+  "resignedSeats": [
+    0
+  ],
+  "gameOverAfterThirdMiss": true,
+  "gameOverMessage": [
+    "go_resigned_observer",
+    1,
+    0
+  ],
+  "nativeAfkForfeit": true,
+  "ok": true
+}
+===== node tests/gamehost_conformance.js =====
+{
+  "ok": true,
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "settingsCombinations": 60,
+  "checksPassed": 369,
+  "checksFailed": 0,
+  "failures": [],
+  "memory": {
+    "rss": 84865024,
+    "heapTotal": 53972992,
+    "heapUsed": 35180136,
+    "external": 1516424,
+    "arrayBuffers": 16659
+  }
+}
+===== python tests/store_sequence_regression.py =====
+{
+  "ok": true,
+  "before": [
+    1,
+    0
+  ],
+  "afterAuthorityAutoMove": [
+    2,
+    0
+  ],
+  "afterStaleAuthorityEvent": [
+    2,
+    0
+  ],
+  "nextRealMoveIndex": 1,
+  "final": [
+    3,
+    0
+  ]
+}
+===== python tests/store_authority_epoch_regression.py =====
+{
+  "firstAccepted": true,
+  "duplicateRejected": true,
+  "wrongShardRejected": true,
+  "newerSnapshotPreserved": true,
+  "epochAdvanced": true,
+  "oldEpochRejected": true,
+  "newEpochAccepted": true,
+  "ok": true
+}
+===== python tests/room_leave_regression.py =====
+ROOM_LEAVE_REGRESSION_PASS
+===== python tests/integration_ws.py --url ws://127.0.0.1:47871/ws =====
+{
+  "ok": true,
+  "roomId": "D4BQET",
+  "seats": [
+    0,
+    1
+  ],
+  "authorityBegin": {
+    "server": true,
+    "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b"
+  },
+  "legalMoveAuthority": {
+    "turn": [
+      0
+    ],
+    "sequence": [
+      1,
+      0
+    ],
+    "gameOver": false,
+    "lastValidAnim": 0
+  },
+  "sameMoveOnBothClients": true,
+  "wrongTurnRejected": true,
+  "clientSnapshotIgnored": true,
+  "resyncHasServerSnapshot": true,
+  "resyncSequence": [
+    1,
+    0
+  ],
+  "maliciousSnapshotPersisted": false
+}
+===== python tests/integration_timeout_ws.py --url ws://127.0.0.1:47871/ws =====
+===== python tests/integration_timeout_ws.py --url ws://127.0.0.1:47871/ws =====
+{
+  "ok": true,
+  "roomId": "NK3PTZ",
+  "alarmHasNativeAutoMove": true,
+  "alarmSequence": [
+    2,
+    0
+  ],
+  "serverTurnAfterMissTimer": [
+    1
+  ],
+  "sameTurnOnBothGateways": true,
+  "resyncSequence": [
+    2,
+    0
+  ],
+  "resyncSnapshotTurn": [
+    1
+  ],
+  "resyncSnapshotSequence": [
+    2,
+    0
+  ],
+  "nextPlayerMoveAccepted": true,
+  "sameMoveOnBothClients": true
+}
+
+ALL_SELECTED_REGRESSIONS_PASS

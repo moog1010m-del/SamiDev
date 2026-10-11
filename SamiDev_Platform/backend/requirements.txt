@@ -1,0 +1,7 @@
+# Direct runtime dependencies are pinned so production rebuilds do not silently
+# change the networking/runtime stack. Update deliberately after running tests.
+aiohttp==3.13.3
+redis==6.4.0
+uvloop==0.22.1; platform_system != "Windows"
+
+Pillow==12.3.0

@@ -1,0 +1,125 @@
+{
+  "source": "pool(8).zip",
+  "preservedImages": 15,
+  "files": [
+    {
+      "path": "game/games/pool/scene-avatars/scene_avatars_bot.webp",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/scene_avatars_owner_badge.webp",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/lobby_avatar_join.png",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/lobby_avatar_empty_seat.png",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/player_indicator.png",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_search.webp",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/IAPButton/iap_button_icon.png",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_preview.webp",
+      "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_head_line.webp",
+      "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    }
+  ],
+  "replacedTable": {
+    "path": "game/games/pool/images/imported/themes/th_basic_table.webp",
+    "previousSha256": "5a711fdab61554d8da52933f964b6321221872501a7057ac5f7470c2b833b73f",
+    "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
+    "source": "Generated pool table, original geometry alpha/pocket mask retained; user requested table-only replacement"
+  },
+  "brandReplacements": [
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "previousSha256": "aaf5d8a652df8b557f6ee5a3ae04f6a5a846d1bd346331e5e41e31e23d762013",
+      "sha256": "fe3fc282656afe10132f02674fc359f5bb7b9ea3fc7d4f18d797932fdabd5262",
+      "source": "game/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "reason": "Reuse existing SamiDev currency artwork at identical 48x48 dimensions; resource key unchanged"
+    }
+  ],
+  "v36Replacements": [
+    {
+      "path": "game/games/pool/images/ui/ui.webp",
+      "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+      "type": "image",
+      "source": "V36: requested cue-frame/background replacement; other atlas pixels retained"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_background.webp",
+      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
+      "type": "image",
+      "source": "V36: requested cue-frame/background replacement; other atlas pixels retained"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "patch": "crazy8-draw-hotfix-1",
+  "baseRelease": "V37",
+  "project": "C:\\Users\\Dev\\Desktop\\\u0645\u062c\u0644\u062f \u062c\u062f\u064a\u062f (10)\\SamiDev_V36",
+  "backup": "CARD_DRAW_HOTFIX_BACKUP_20261011T194849738567Z.zip",
+  "files": {
+    "SamiDev_Platform/game/browser-runtime.js": "1abe8f60adb4f851ba77626b094df34ea2448f64e8a0ca3b7965403c47d09595",
+    "SamiDev_Platform/game/index.html": "24ee3ab40615753f3a8cad26f6103c06d7b5ae199c0ac403236dc21a39843e8a",
+    "SamiDev_Platform/game/games/pool/index.html": "dbaf01fad652593a85b4e781397e9eb2fc87f6d5f7a9896c7e91b1ddba37c2e2",
+    "SamiDev_Platform/game/games/crazy8/index.html": "60ea1b7d083bea2d95875219939355c56383fe04bf275cbe963a85302fe6e087",
+    "SamiDev_Platform/game/games/tablesoccer/index.html": "dc8a57cf86f96f35b5326b2212158a276284c34f7b14c9bd61a91ac02e722d60",
+    "SamiDev_Platform/game/platform/build.json": "3b3b4bb2c1e274b5b0d92a4f226f0e42528092e6e40880a2188de14ed5ccbb7d",
+    "SamiDev_Platform/game/attestation.json": "bfff0a2971cb9688f01cd8cb1c59fd8cbc24b0c0f10a158b176f273f050a4b23",
+    "SamiDev_Platform/game/games/pool/attestation.json": "38b1fac277da878b4dba4bbdc7859072b9d0c7739269e0dca071dd5994fa24ea",
+    "SamiDev_Platform/game/games/crazy8/attestation.json": "a7648d13d3d79a4d83ca804b2440993932e4fd6e39099903f70b84387354ae03",
+    "SamiDev_Platform/game/games/tablesoccer/attestation.json": "d03cffc13589eaf36d3b5a8a3a2b3ed8ae95949f16d8be0de167fe3a8c09634e",
+    "SamiDev_Flutter/assets/runtime/browser-runtime.js": "1abe8f60adb4f851ba77626b094df34ea2448f64e8a0ca3b7965403c47d09595",
+    "SamiDev_Flutter/assets/runtime/index.html": "24ee3ab40615753f3a8cad26f6103c06d7b5ae199c0ac403236dc21a39843e8a",
+    "SamiDev_Flutter/assets/runtime/games/pool/index.html": "dbaf01fad652593a85b4e781397e9eb2fc87f6d5f7a9896c7e91b1ddba37c2e2",
+    "SamiDev_Flutter/assets/runtime/games/crazy8/index.html": "60ea1b7d083bea2d95875219939355c56383fe04bf275cbe963a85302fe6e087",
+    "SamiDev_Flutter/assets/runtime/games/tablesoccer/index.html": "dc8a57cf86f96f35b5326b2212158a276284c34f7b14c9bd61a91ac02e722d60",
+    "SamiDev_Flutter/assets/runtime/platform/build.json": "3b3b4bb2c1e274b5b0d92a4f226f0e42528092e6e40880a2188de14ed5ccbb7d",
+    "SamiDev_Flutter/assets/runtime/attestation.json": "bfff0a2971cb9688f01cd8cb1c59fd8cbc24b0c0f10a158b176f273f050a4b23",
+    "SamiDev_Flutter/assets/runtime/games/pool/attestation.json": "38b1fac277da878b4dba4bbdc7859072b9d0c7739269e0dca071dd5994fa24ea",
+    "SamiDev_Flutter/assets/runtime/games/crazy8/attestation.json": "a7648d13d3d79a4d83ca804b2440993932e4fd6e39099903f70b84387354ae03",
+    "SamiDev_Flutter/assets/runtime/games/tablesoccer/attestation.json": "d03cffc13589eaf36d3b5a8a3a2b3ed8ae95949f16d8be0de167fe3a8c09634e",
+    "SamiDev_Flutter/assets/runtime-manifest.json": "cb377b9205bb733d484bdac4be0732501d03c66ea34f236a547a3e6178abafab",
+    "SamiDev_Platform/tests/crazy8_draw_hotfix_client.js": "747b370034d6f48c735bc35c4770286e676de456f20d36cad1db0b265f9ccc6e",
+    "FILES_SHA256.json": "17e6940da7587448a2fba1ae0dddfc25c5a41c38a9b51009d941b1d60a38ff1a"
+  }
+}

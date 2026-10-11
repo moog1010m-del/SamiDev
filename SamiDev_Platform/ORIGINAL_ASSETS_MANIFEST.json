@@ -1,0 +1,2149 @@
+{
+  "date": "2026-10-11",
+  "scope": [
+    "carrom",
+    "crazy8",
+    "tablesoccer",
+    "shared game and profile icons",
+    "Pool table changed; original pool balls retained"
+  ],
+  "generatedImageSources": 8,
+  "newVisualFiles": 94,
+  "newAudioFiles": 4,
+  "replacedExistingMediaFiles": 163,
+  "addedRuntimeBackgrounds": 2,
+  "containsOldImagePixels": true,
+  "legalExclusivityGuaranteed": false,
+  "existingGameEngineRewritten": false,
+  "previousMediaHashes": [
+    {
+      "path": "game/player-profile-sheet.svg",
+      "sha256": "d5a432ba2a5f8db8c8be864151a15107509596c15327ad0ef17b8ccc4ba54862"
+    },
+    {
+      "path": "game/scene-settings/woosh_open.m4a",
+      "sha256": "6918b0974e5ac9f5c0efcb89d83f66967c6d2446f9b4aecc4c691616c7661b85"
+    },
+    {
+      "path": "game/scene-settings/select.m4a",
+      "sha256": "4213f68f93bae0b76f6d02bebb500bba3b75f3a8b0cbadaa8375bd90cfbf02c9"
+    },
+    {
+      "path": "game/scene-settings/switch_on.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/scene-settings/woosh_close.m4a",
+      "sha256": "22f2cb9c351c92fe1d20fdbdfe3950954eb642ee117ff07eed345445cde501bb"
+    },
+    {
+      "path": "game/scene-settings/switch_off.m4a",
+      "sha256": "003d43af5dab8ddab1acaff186df3acbc34e4935aa2c76b98e659485be65e98b"
+    },
+    {
+      "path": "game/scene-reactions/bells.m4a",
+      "sha256": "b19bedd869f8b92f5d42f316d9e00990dff01cde384c88f9f41bb48e87bfd8d5"
+    },
+    {
+      "path": "game/scene-reactions/reactions.webp",
+      "sha256": "344011bfc6ccc68e9a4dc7748fbe10f73665d978342e7450bd6f45db70b04708"
+    },
+    {
+      "path": "game/scene-reactions/gift_icon.webp",
+      "sha256": "3ca74adce963a9375b93b3ee36b82f27ee6bc29ae9c744ac4748b695db34edd8"
+    },
+    {
+      "path": "game/scene-reactions/whoosh2.m4a",
+      "sha256": "3dcfc328e368ba0744878397942a1609c84844ffe340606c19917e28395c4989"
+    },
+    {
+      "path": "game/scene-reactions/whoosh1.m4a",
+      "sha256": "e9c1611ce45b1173d9ae74630688128f047e14a45a602bfbc271bcb11b98d890"
+    },
+    {
+      "path": "game/images/default-avatar.png",
+      "sha256": "1ddafef582164a3b29905f6d115576561d8c99a8f6a643521aec769591e0fcd7"
+    },
+    {
+      "path": "game/images/game.webp",
+      "sha256": "0aed997d2fa56a1fbfd2b1433a241f47216f21f0410dd470ea5b2bb775450627"
+    },
+    {
+      "path": "game/sounds/tap.m4a",
+      "sha256": "810ba57c064276681392c15afc7196b1a816cf1be5dc43b639b7f336103664bd"
+    },
+    {
+      "path": "game/sounds/pebbles-tap-sound-d-sound-effect-241981446_nw_prev.m4a",
+      "sha256": "326bc306e0b0e52e24b16a4ef5c0a86fb3bf8b9db657d160f7aee91c944229d1"
+    },
+    {
+      "path": "game/sounds/251573134_nw_prev.m4a",
+      "sha256": "de27e4563a23f6e3acc58301bb9eb9a9d4a1498edc3a94e028adcbc5f8def968"
+    },
+    {
+      "path": "game/sounds/falling-stonesrocks-stone-impact57-sound-effect-220005383_nw_prev.m4a",
+      "sha256": "3c2318d0ef9584e38c633682328e08d8cb1cf32013585c457474c39cb7b4dae6"
+    },
+    {
+      "path": "game/sounds/247498187-oriental-win-03-prize-winner-a.m4a",
+      "sha256": "ad6b88de0db14762bf0a11ac14039b863c3ec52ce8fd3e0286b1c11025ddfee3"
+    },
+    {
+      "path": "game/sounds/251573127_nw_prev.m4a",
+      "sha256": "2aed1e6328aff16abf72af7770d3926e6cd23297c50d8d21e85b6e6f995bdfff"
+    },
+    {
+      "path": "game/sounds/tap_disabled.m4a",
+      "sha256": "6c0b6ce7ae4efa5650a66c3451f2c04ef526f636b16effb30733d981829e875d"
+    },
+    {
+      "path": "game/sounds/magic-poof-pop-sound-effect-197679100_nw_prev.m4a",
+      "sha256": "439799bc6b437070e85364e804d074b661ccca24324a5234366c2cb11e6827cb"
+    },
+    {
+      "path": "game/sounds/dragging-stool-05-loop-sound-effect-010766441_nw_prev.m4a",
+      "sha256": "4acd324536835344b559a2f70536c2bf451502e75aee045c1f7c044327e15bce"
+    },
+    {
+      "path": "game/sounds/067738089-fail-game-lose-level-31.m4a",
+      "sha256": "99872148db5ecbc11bda77ffadb77fce5a9830829717c1e5f197e92e71b1b43f"
+    },
+    {
+      "path": "game/sounds/woosh2.m4a",
+      "sha256": "9b9f0e40258bd1cb9c89612d0529323021d620f516deffbf855d047e33d43796"
+    },
+    {
+      "path": "game/sounds/falling-stonesrocks-stone-impact10-sound-effect-220005327_nw_prev.m4a",
+      "sha256": "55adc38375f85b6da8fb015838672d42fa6f30e2bffce305a1e5cba69a38a5e1"
+    },
+    {
+      "path": "game/sounds/251573114_nw_prev.m4a",
+      "sha256": "44430066fc3632060266bb106dabaf9b0380680f285f162267c9df0180fd6c5a"
+    },
+    {
+      "path": "game/sounds/woosh1.m4a",
+      "sha256": "47d006ec4b644d5e534218df21bb80cee025fff5a63161e47fa9afde7dbbb55c"
+    },
+    {
+      "path": "game/sounds/striker_short.m4a",
+      "sha256": "b222fac66595ce3703e7888249ea3411cf3c75e8b9b8a987f2c472b51df6e726"
+    },
+    {
+      "path": "game/scene-avatars/lobby_avatar_join.png",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77"
+    },
+    {
+      "path": "game/scene-avatars/player_indicator.png",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a"
+    },
+    {
+      "path": "game/scene-avatars/scene_avatars_owner_badge.webp",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba"
+    },
+    {
+      "path": "game/scene-avatars/scene_avatars_bot.webp",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c"
+    },
+    {
+      "path": "game/scene-avatars/turn_audio.m4a",
+      "sha256": "c28ba86aa4103f03c914438d253385e3e226693af5df22c69bb27e255946edf8"
+    },
+    {
+      "path": "game/scene-avatars/lobby_avatar_empty_seat.png",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff"
+    },
+    {
+      "path": "game/images/themes/classic-preview.webp",
+      "sha256": "73d17e4b4481a922628f2d54a5a26bf5184af40501ba3e492d8ca26efce901d8"
+    },
+    {
+      "path": "game/images/themes/cat-atlas.webp",
+      "sha256": "37c16b978f6c1465c8932c340772acc7eb869204ac46a41906f92508f968b322"
+    },
+    {
+      "path": "game/images/themes/cat-preview.webp",
+      "sha256": "8c3328fd2c192e25f09e38453ddac56f7adb06b4cbb5372b66cf88e072c8b40e"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/woosh_open.m4a",
+      "sha256": "6918b0974e5ac9f5c0efcb89d83f66967c6d2446f9b4aecc4c691616c7661b85"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/select.m4a",
+      "sha256": "4213f68f93bae0b76f6d02bebb500bba3b75f3a8b0cbadaa8375bd90cfbf02c9"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/switch_on.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/woosh_close.m4a",
+      "sha256": "22f2cb9c351c92fe1d20fdbdfe3950954eb642ee117ff07eed345445cde501bb"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/switch_off.m4a",
+      "sha256": "003d43af5dab8ddab1acaff186df3acbc34e4935aa2c76b98e659485be65e98b"
+    },
+    {
+      "path": "game/games/crazy8/anim/arrow_single.webp",
+      "sha256": "3665e43ea8ab8ef8c614dcd581b9afcadc737abf2f51cf8052958748e830d9f4"
+    },
+    {
+      "path": "game/games/crazy8/anim/numbers.webp",
+      "sha256": "008d5715e198c6b3727b85feeb58c2c71deed4b80d89931a6c3951677474bb4b"
+    },
+    {
+      "path": "game/games/crazy8/anim/skip.webp",
+      "sha256": "43187b6f9edced1609fe34cba2a531f7018b9554278c7ad5835203c3fbc9518a"
+    },
+    {
+      "path": "game/games/crazy8/anim/reverse.webp",
+      "sha256": "4d086dbc21bd4e4aadcc37755c6ee1ac26d8c24fc15021ade9b7d152eeaa2ef9"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/bells.m4a",
+      "sha256": "b19bedd869f8b92f5d42f316d9e00990dff01cde384c88f9f41bb48e87bfd8d5"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/reactions.webp",
+      "sha256": "344011bfc6ccc68e9a4dc7748fbe10f73665d978342e7450bd6f45db70b04708"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/gift_icon.webp",
+      "sha256": "3ca74adce963a9375b93b3ee36b82f27ee6bc29ae9c744ac4748b695db34edd8"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+      "sha256": "3dcfc328e368ba0744878397942a1609c84844ffe340606c19917e28395c4989"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+      "sha256": "e9c1611ce45b1173d9ae74630688128f047e14a45a602bfbc271bcb11b98d890"
+    },
+    {
+      "path": "game/games/crazy8/images/MainSheet.webp",
+      "sha256": "8f9ae3878693f096186bafd2553cf5708b140a9942795625018d13d61397d903"
+    },
+    {
+      "path": "game/games/crazy8/images/CardBackSheet.webp",
+      "sha256": "eb2388e4f0d4d2394f943c77010b732eb8a0f95db782292a0f99db36d61d6699"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/lobby_avatar_join.png",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/player_indicator.png",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/scene_avatars_owner_badge.webp",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/scene_avatars_bot.webp",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+      "sha256": "c28ba86aa4103f03c914438d253385e3e226693af5df22c69bb27e255946edf8"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/lobby_avatar_empty_seat.png",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "5eb10667b7db131c3720ff3c1ee2ee8e4601087095d0e9da67d8992373616675"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_search.webp",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "sha256": "aaf5d8a652df8b557f6ee5a3ae04f6a5a846d1bd346331e5e41e31e23d762013"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "9ae2d9e7491d0145bc83bd56cefe90c5f26aeec495a61aff6c88800f33fbc40a"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_icon.png",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "5eb10667b7db131c3720ff3c1ee2ee8e4601087095d0e9da67d8992373616675"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_search.webp",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "sha256": "aaf5d8a652df8b557f6ee5a3ae04f6a5a846d1bd346331e5e41e31e23d762013"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "9ae2d9e7491d0145bc83bd56cefe90c5f26aeec495a61aff6c88800f33fbc40a"
+    },
+    {
+      "path": "game/scene-ui/IAPButton/iap_button_icon.png",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0"
+    },
+    {
+      "path": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/platform/assets/profile/calendar.svg",
+      "sha256": "bffa84ea2a3808388f2ba22d42b169abab0dbc1a2f5158a5f46571eaa994ba82"
+    },
+    {
+      "path": "game/platform/assets/profile/camera.svg",
+      "sha256": "673328c0c1bbfd4fba696cb2f284d2c9241ac2f0ce4b397a3f5910c92259f9e8"
+    },
+    {
+      "path": "game/platform/assets/profile/chevron.svg",
+      "sha256": "6b483273870de692068a0d7cd6798184dab4fc81b30e22cd525dec3f8658560b"
+    },
+    {
+      "path": "game/platform/assets/profile/edit.svg",
+      "sha256": "dee6b783898b5a57ecd6d5ddb3e0e5d2948b601eda9b49c228d0699d85378f0c"
+    },
+    {
+      "path": "game/platform/assets/profile/profile-sheet.svg",
+      "sha256": "10538b1b3f25c67f366b6138fcbc9709ff286c6dbede3abefb1d406ccc517c0c"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/palm-swords.webp",
+      "sha256": "23fb47f806dc0fd843a48464595e5246bef1f4a0b21a3204c96483edc4150a28"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/prestige.webp",
+      "sha256": "d6aff6268d2143fa37e290a124d35b43faba25e1738c61c931215dc0cc38d619"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/reputation-flame.webp",
+      "sha256": "920af6f8212e6a1dd6b97d21486e48b88e2eea006610b984b3917c0d98184dd7"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/star.webp",
+      "sha256": "8cd308b69bb15f3753490878836e12de8feead1066008d24d8997af74db1b3fc"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/trophy.webp",
+      "sha256": "655e67d29e7a522ffdf76d79e3f053420c150ffb58311ab7581b1dc6a5a63b52"
+    },
+    {
+      "path": "game/platform/assets/profile/reputation.svg",
+      "sha256": "f735e2850499c44211a2c9ab8a6daf506183dd415dbd84e658c24d0cf13f4a10"
+    },
+    {
+      "path": "game/platform/assets/profile/saudi-emblem.svg",
+      "sha256": "b6abc65c43efbd8f1fdd6427e52c74d2f4c49eebcca3ce409cd6af7bffbff84a"
+    },
+    {
+      "path": "game/platform/assets/profile/settings.svg",
+      "sha256": "1a8eab4df74faede71bd482e3a88f892d33747984325c38d91d0f8d039c068fe"
+    },
+    {
+      "path": "game/platform/assets/profile/star.svg",
+      "sha256": "a3dd76941e76a6658ca930b0fd048cccc8d983b3f3ccf1d70c7258ff189748d9"
+    },
+    {
+      "path": "game/platform/assets/profile/trophy.svg",
+      "sha256": "7df9aeb8544e03e6b0e7dab6d53f4d3d0f81520f4b51227fe7064f03044a98eb"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-1-standard.png",
+      "sha256": "c44c0848439efee861e7284352323b67088eacbf3db9807b32e83e5924e35e43"
+    },
+    {
+      "path": "game/games/tablesoccer/images/thumbnail-standard.png",
+      "sha256": "7796e30fa3a3bab0083cfbe5e83074a24e6bd9de442379e1b7071395d9e3f57a"
+    },
+    {
+      "path": "game/games/tablesoccer/images/main.webp",
+      "sha256": "60198513e8d2415832b867663d19e1e33fbcaa4f93ace067189b41d1e844fae5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-3-standard.png",
+      "sha256": "e60dbb8133aee18090ca8cdef93e4eef141e8511499eeef71c59fb9a427e61d4"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_away.png",
+      "sha256": "ec307371c3aa3394e01f38233dd8f87ec5ddd1cda3099bd944317d970f114486"
+    },
+    {
+      "path": "game/games/tablesoccer/images/ball-standard.png",
+      "sha256": "2fbf0cf7c503c653612a8fb3fb093fa87d62d0ccd2f86535d2fae103b27f87e3"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goal-scored-standard.png",
+      "sha256": "c86cef8d76de0e88e1b214d26c6d4c816b77f86e10fa3e6e427d43b2cced4804"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-4-standard.png",
+      "sha256": "6ebca2e8c9fe529bba04ed09750b0cd58a1d77544b2836231c3aab794b4aa37d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-music-standard.m4a",
+      "sha256": "3aab153a0f4e74cb411058c16128aaebfdb03fa28f97ec6b38f458de565fb6ef"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-2-standard.png",
+      "sha256": "ec94f434f1860690ddf62c267bf9379122386279571de2579a219941773e7e04"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_home.png",
+      "sha256": "e0b6b80ee2e84415bcac87cb376431c03fce8246130e3611cbcd38a08835475d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/stadium-img-standard.png",
+      "sha256": "1ba11bd1d06d825ccf477f6ee4beccc11c7aab1a32f819f4b1b3f8b41ec6b1dd"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-img-standard.png",
+      "sha256": "32a208a7a5cea789e61f2d6dac6a52fa7fd1099e10226e7ad9b14d3e1eb572a7"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_shop_preview.png",
+      "sha256": "95e3ec14d726b91a5ace09476a534432edbf700b89ffc1d4b4dd6c92e3c41442"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-bottom-standard.png",
+      "sha256": "b3307b797b0229018789537c4a230bc90fb175c292f1de4c082711386e5cb4b5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/field-img-standard.png",
+      "sha256": "16ca9219a91095ca50951633ffce5458f4f42204d0b74649df971a7a53d8f970"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-top-standard.png",
+      "sha256": "b3307b797b0229018789537c4a230bc90fb175c292f1de4c082711386e5cb4b5"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_join.png",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+      "sha256": "c28ba86aa4103f03c914438d253385e3e226693af5df22c69bb27e255946edf8"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_bot.webp",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/player_indicator.png",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_owner_badge.webp",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_empty_seat.png",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+      "sha256": "e9c1611ce45b1173d9ae74630688128f047e14a45a602bfbc271bcb11b98d890"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+      "sha256": "3dcfc328e368ba0744878397942a1609c84844ffe340606c19917e28395c4989"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/bells.m4a",
+      "sha256": "b19bedd869f8b92f5d42f316d9e00990dff01cde384c88f9f41bb48e87bfd8d5"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/reactions.webp",
+      "sha256": "344011bfc6ccc68e9a4dc7748fbe10f73665d978342e7450bd6f45db70b04708"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/gift_icon.webp",
+      "sha256": "3ca74adce963a9375b93b3ee36b82f27ee6bc29ae9c744ac4748b695db34edd8"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long3.m4a",
+      "sha256": "278f162d7a0f43f27a146588dde83357f2e6b69a060e1bdf75ce0f242b0587a5"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem3.m4a",
+      "sha256": "f09dde3c8e5c12956bd5a88ac14abb5a0fffbda104c98779a2c348a3ebd31e37"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem4.m4a",
+      "sha256": "ebe93727d8da2088b1f07c8abc802d6131c865e1411cc668a2393b89e5d719db"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+      "sha256": "6acea59dc9130231823d652049bfcdbd09d0d5b37ba94006023a973695ea267a"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide2.m4a",
+      "sha256": "7eec7ec02870f7417428e0cd6d562975d4011c6db9b530b26af1aea5f8484b61"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem1.m4a",
+      "sha256": "83c5e5a5f3cfda050d6efff7eed4421a692f0ef1d57e23608d7476390fff7235"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap.m4a",
+      "sha256": "8187adc4ab98616b5d659b45bbe19e7473adeeec8f6c761a97ecf1451733d6b9"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short1.m4a",
+      "sha256": "95270d214d039e30afce27d130223a6db54bfc476803607479d21c4dec39562e"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_won1.m4a",
+      "sha256": "007c2e7e392451c6ffc7fd77e0698ba8249bfdc904027e7687491aa716dfe7c0"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit3.m4a",
+      "sha256": "7ec3a731bef43a969800eb58501bcb47f961482c06ca09d2f8d04719650cdfbf"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit2.m4a",
+      "sha256": "3fa7a28e550908882c6e9c6243b30620a6b9385a8042b6a7a044a835e21844d0"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_lose1.m4a",
+      "sha256": "29247e702f28b75f498a2ded17795e86e1101f5f4a20c41ad0a959d936de4f9f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whoosh.m4a",
+      "sha256": "cd3ae4dc88853996900e6c78a76ffbfaf69839a54053172b11e83cbc2ae9ca56"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/post1.m4a",
+      "sha256": "f0f6045ec4f9ffa14ad29108ad96ee5951033791d90c03d7cd96f7c4f106fdbb"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/goal1.m4a",
+      "sha256": "fd25bb45866442a78f872252ed4d619c88d6d0c45eb2034eef2fc1b7ee777b21"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short2.m4a",
+      "sha256": "ebab2ec5eb438b914484e12059e5d104a8ef6bf3b1d0053bf148fc2d57b9ebce"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whistle1.m4a",
+      "sha256": "76260d1b2224bccf1f66e02078d3576251a403cac14ca55e116f04f1d2719bf9"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem2.m4a",
+      "sha256": "14e9d80a5e4119a84e4b2462f69a21fbe313ea425445496e5def95cb64b3c747"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit1.m4a",
+      "sha256": "4d735276b451b8a88ab0b7b7988e16407da7571792c62d4de9df7f71546e9aba"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long2.m4a",
+      "sha256": "8035074fa18ba4168ed1e050a795419c10a5688aee1427fb4ed29e1b8294d09f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long1.m4a",
+      "sha256": "1389952163109ccf586a81c3dd07edd64c5338ee3d99a096ba4e2bdf4624b42e"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide1.m4a",
+      "sha256": "b5e29f70f05cb436757281f166f42e9eb2f56519d3e2f12dd9cc8f6e71bacbf8"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_icon.png",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "5eb10667b7db131c3720ff3c1ee2ee8e4601087095d0e9da67d8992373616675"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "sha256": "aaf5d8a652df8b557f6ee5a3ae04f6a5a846d1bd346331e5e41e31e23d762013"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_search.webp",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "9ae2d9e7491d0145bc83bd56cefe90c5f26aeec495a61aff6c88800f33fbc40a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543"
+    }
+  ],
+  "assets": [
+    {
+      "path": "game/games/crazy8/anim/arrow_single.webp",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "c740049c53a9df2dc09abfea40927bfdb68dd50046bdd93609377e233c36c1d6"
+    },
+    {
+      "path": "game/games/crazy8/anim/numbers.webp",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "435a309b51bce6cfc7df0455e8dcc9ada87171fbd1ade29c59e365c5a4fb60e8"
+    },
+    {
+      "path": "game/games/crazy8/anim/reverse.webp",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "df5ffb73717b6f269c2a508b5abe3a5ef4690d4ab2ef5c4b8c77912962c7e09a"
+    },
+    {
+      "path": "game/games/crazy8/anim/skip.webp",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "7a8e87a65d1d49b7e43a90077841968323682eb43b00eaa78d7fb45af42bc794"
+    },
+    {
+      "path": "game/games/crazy8/images/CardBackSheet.webp",
+      "source": "generated original card back",
+      "sha256": "3e16def3bb7a03fcc03fbf8b9690132fee07d439c0ad0b4a75426049c152a1c6"
+    },
+    {
+      "path": "game/games/crazy8/images/MainSheet.webp",
+      "source": "generated card surfaces + newly drawn numbers and rule symbols",
+      "sha256": "20d8529eb065b797e8ef82825cd954255aa8effcf31c9f840cdfe7a7c1532174"
+    },
+    {
+      "path": "game/games/crazy8/images/table-background.webp",
+      "source": "V36 generated sprites and requested UI artwork",
+      "sha256": "0c17334a75f736ac058435329fc7dc184a9abb55150b729ac631cb939b4a445a",
+      "type": "image"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/lobby_avatar_empty_seat.png",
+      "source": "new source-authored vector icon",
+      "sha256": "3406723db5ef73e89909a4c0a27f8c21a46b508519da18c7bfa8e6fca786e642"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/lobby_avatar_join.png",
+      "source": "new source-authored vector icon",
+      "sha256": "33fa90f2724597d34178357754f71cd74cc26b814e436ccb16dfbca4ac4e59c0"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/player_indicator.png",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "898e0d1a4adcc8231364e5f58462efa6f788e6bc82e9bbcaa22cc42df71d7575"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/scene_avatars_bot.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "21e8c2129751d170a29d4507c1aa3c5c224d47e88893091539cd0d4a830b939d"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/scene_avatars_owner_badge.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "d765776d80803fe90c840acdba0df4ef87356027605840d0b1d11506c217279a"
+    },
+    {
+      "path": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 984229821,
+      "duration": 0.85,
+      "previousPath": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+      "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/bells.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 291974157,
+      "duration": 0.85,
+      "previousPath": "game/games/crazy8/scene-reactions/bells.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/gift_icon.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "390cbb3f3de2d343c2cfc21137fb83a7233440cc65cc677ce60cb50796586583"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/reactions.webp",
+      "source": "generated reaction sheet",
+      "sha256": "850ea2adfe25f5c7b97600893994885a4fa9e57bb14623fc0e2123e44fa7d105"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1837229440,
+      "duration": 0.45,
+      "previousPath": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2739483956,
+      "duration": 0.45,
+      "previousPath": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/select.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1639084113,
+      "duration": 0.22,
+      "previousPath": "game/games/crazy8/scene-settings/select.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/switch_off.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1545449503,
+      "duration": 0.22,
+      "previousPath": "game/games/crazy8/scene-settings/switch_off.m4a",
+      "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/switch_on.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 776399576,
+      "duration": 0.22,
+      "previousPath": "game/games/crazy8/scene-settings/switch_on.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/woosh_close.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2850647129,
+      "duration": 0.45,
+      "previousPath": "game/games/crazy8/scene-settings/woosh_close.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/games/crazy8/scene-settings/woosh_open.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3409426428,
+      "duration": 0.45,
+      "previousPath": "game/games/crazy8/scene-settings/woosh_open.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_icon.png",
+      "source": "new source-authored vector icon",
+      "sha256": "c03eadba2209f18c4c692ccfff450f86d4b5ba0e8f961d701eb63dbbcb0acdeb"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 4143551952,
+      "duration": 0.12,
+      "previousPath": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "cb242492802665a2b04c0aeda37b66be3dfb6c4c7f13a0ffc7b5b5fde637d851"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "fe3fc282656afe10132f02674fc359f5bb7b9ea3fc7d4f18d797932fdabd5262"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "fb26c3ffc58c8c35b293c86db127e9ca0bde8e3bbd6cb4786abd91cc6875b6e7"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1393362767,
+      "duration": 0.22,
+      "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3557798499,
+      "duration": 0.85,
+      "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "ddb1456a26863f27845abd9a26747a0438ad438bdfcc410e116871ee3a1cbf23"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "e6304172866f03df94e50efa5c19375463c5a9c475dcba914b5aec25e44b5725"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "ea369fda2f00b88940bb34dd3138b21b5639c151232309238a8add8ff4ab0231"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "d61b9601164700b52b869d335c7d769300d8c85acf28110d4272adbf8a356c82"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_search.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "560c20cba26835b448f5e3104e66f0b211c4dcdb4ec772870ac2911564953f41"
+    },
+    {
+      "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1909194025,
+      "duration": 0.12,
+      "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/crazy8/sounds/card-draw.m4a",
+      "type": "audio",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "sha256": "f265e16aa290b5f6fee8e09819bf997fd37eb97e67c3991f20970e9eb947340b"
+    },
+    {
+      "path": "game/games/crazy8/sounds/card-place.m4a",
+      "type": "audio",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "sha256": "3b5ef5d010cbe58336fa35645cb18bd57f48ac44f70b1560e559024201dbb178"
+    },
+    {
+      "path": "game/games/crazy8/sounds/card-shuffle.m4a",
+      "type": "audio",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "sha256": "03d89b4ab946704c3821a01363df3405568bbb4795a3590124c26349b0da436c"
+    },
+    {
+      "path": "game/games/crazy8/sounds/card-special.m4a",
+      "type": "audio",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "sha256": "ab1f6582dfb626854ac8ec5b3e8ba85ed66f0dfa9ea9e55e321c8e36adac5f18"
+    },
+    {
+      "path": "game/games/crazy8/sounds/card-warning.m4a",
+      "sha256": "c83181afe8e06336b68e53cda0067039c8e99ba594aaab70914bd568cc4ed3d2",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_background.webp",
+      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
+      "type": "image",
+      "source": "V36 generated sprites and requested UI artwork"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_head_line.webp",
+      "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_preview.webp",
+      "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_table.webp",
+      "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/images/ui/ui.webp",
+      "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+      "type": "image",
+      "source": "V36 generated sprites and requested UI artwork"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/lobby_avatar_empty_seat.png",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/lobby_avatar_join.png",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/player_indicator.png",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/scene_avatars_bot.webp",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/scene_avatars_owner_badge.webp",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-avatars/turn_audio.m4a",
+      "type": "audio",
+      "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-settings/select.m4a",
+      "type": "audio",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-settings/switch_off.m4a",
+      "type": "audio",
+      "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-settings/switch_on.m4a",
+      "type": "audio",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-settings/woosh_close.m4a",
+      "type": "audio",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-settings/woosh_open.m4a",
+      "type": "audio",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-ui/IAPButton/iap_button_icon.png",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/IAPButton/iap_button_tap.m4a",
+      "type": "audio",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "sha256": "fe3fc282656afe10132f02674fc359f5bb7b9ea3fc7d4f18d797932fdabd5262",
+      "type": "image",
+      "source": "Existing SamiDev generated/project artwork: game/scene-ui/ShopWidget/shop_widget_coin.webp; reused at identical dimensions in V30"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "type": "audio",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "type": "audio",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_search.webp",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9",
+      "type": "image",
+      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+    },
+    {
+      "path": "game/games/pool/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "type": "audio",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball1.m4a",
+      "type": "audio",
+      "sha256": "f02da9074323db6b1e310d93238bb595584d3f0471445503bde6421a22d3df84",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball2.m4a",
+      "type": "audio",
+      "sha256": "5a3c0e54f0bf37d9982504cefa8ddc7110e16441caf78870326a5a53bb1220a7",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball3.m4a",
+      "type": "audio",
+      "sha256": "ac796162e11cc05161417f342d3b396405fccbc3d53625dde44a785a6cb40059",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball_soft1.m4a",
+      "type": "audio",
+      "sha256": "14a8420592c30539e4c77b0b2420cf2b339132b883d8c3401605a5f37520215c",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball_soft2.m4a",
+      "type": "audio",
+      "sha256": "5c4bdfa23eb069f74aa30ef61d7b6a84a31b08baedf674fe0be0b9083891059f",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/ball_soft3.m4a",
+      "type": "audio",
+      "sha256": "d136e584d1045f4b13ad887fa3643b2b6f3636f05e90c93ce2838f2af6802515",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/cue_hard1.m4a",
+      "type": "audio",
+      "sha256": "a1bf79077ee9d4497d95e5aa2a9dc885b5c62148ec72f3da48b00a4d320c4b20",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/cue_hard2.m4a",
+      "type": "audio",
+      "sha256": "37b9db7d8459e3845027b4b39b9f357ebf068be8c45db3a43447ffa9b2abfb84",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/cue_soft1.m4a",
+      "type": "audio",
+      "sha256": "0c439dcd86205e422851b36533781dd3556e46a5e16d67c91c4d0ce55af30f6e",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/pocket1.m4a",
+      "type": "audio",
+      "sha256": "e7d90af1a28b4613eb0fc48bac6f08ebdade94ec6d37a3ed4c268f5611dc39d3",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/pocket2.m4a",
+      "type": "audio",
+      "sha256": "d6fa0dae3a329c15ab857aa8b5dd7051ff53d35fa8b7b8510733d38fefedea5f",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/pocket3.m4a",
+      "type": "audio",
+      "sha256": "c5ef637472a1b33bc67cc740224a14a4e9c69910dea9caa129ac4dd33f2562b9",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rack.m4a",
+      "type": "audio",
+      "sha256": "81fbf964cba925495e2d543a2fa510ff739c517f9c3f250d8e5d40ea07bc6959",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail1.m4a",
+      "type": "audio",
+      "sha256": "396825610e6cd0b3c8a94c47a2980584d7de85fe5a3c3aa4f94f1bd5edddc04e",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail2.m4a",
+      "type": "audio",
+      "sha256": "8de97a10abd2874a119095e22c497afb6c44ca16db6bddd2697d7f7b2d5bbbd7",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail3.m4a",
+      "type": "audio",
+      "sha256": "14ef97f57561019122740c51f8cc744955e2e7fdbbb41abf9faac2f4fb026785",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail_soft1.m4a",
+      "type": "audio",
+      "sha256": "9ccea7edb1c6eb32b6fa52f2e79699aebf6d29b47a0653b94d0fea6f08bb6bf7",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail_soft2.m4a",
+      "type": "audio",
+      "sha256": "1103e0aa8b83533a7e073e0327f3a5280b6a5397f1bd31f93b6141395a7335e9",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/rail_soft3.m4a",
+      "type": "audio",
+      "sha256": "3dd8d8b5e61f76244847ee5208251b77026658f71e59f19349f4b37435250902",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/sunk1.m4a",
+      "type": "audio",
+      "sha256": "fd8cf9c508b2f7dcde8a504d3d4bdce78671e20ab4fb84b009163191e9ad668b",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/sunk2.m4a",
+      "type": "audio",
+      "sha256": "ba7ca699e83a144511ba8955d8bf588134cfdbc52b37648647a86fbfab8841a5",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/sunk3.m4a",
+      "type": "audio",
+      "sha256": "6a38fdc28d98a9a64535426bddec88789dd607c9f300fb9ce3b1f0d1ea94df5c",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/pool/sounds/tap.m4a",
+      "type": "audio",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing"
+    },
+    {
+      "path": "game/games/tablesoccer/images/ball-standard.png",
+      "source": "new procedural sphere texture",
+      "sha256": "160959d567764f0b943be76ec2df11aae07a2a2f252aeaabbc4b54a9a24a9d1d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-img-standard.png",
+      "source": "generated textile arena background",
+      "sha256": "afaeed89f9d7712a33feeb59f7a44f6388d47ddd63a99d1d439813290dd8b2e5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-music-standard.m4a",
+      "source": "user-supplied original recording, lightly processed; see AUDIO_RESTORE_MANIFEST.json",
+      "seed": 2601570545,
+      "duration": 8.0,
+      "previousPath": "game/games/tablesoccer/images/bg-music-standard.m4a",
+      "sha256": "945dbf2b2ec2cc592fcf160c4d4e112416acf03f6f9a1e0ca677a3a3f709e919"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-1-standard.png",
+      "source": "new vector confetti",
+      "sha256": "47062a544310b3c3489bf10f55e1430170327750cc2dbc192f70cc31f2b55077"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-2-standard.png",
+      "source": "new vector confetti",
+      "sha256": "c40baa10a397453eedfbb06c3b59758a316a4927f5ff9ae42061b9698da40f5d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-3-standard.png",
+      "source": "new vector confetti",
+      "sha256": "53157f4e4950054533ea302eb50c2225315b46dc00a8018bf81522416b6d4545"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-4-standard.png",
+      "source": "new vector confetti",
+      "sha256": "df854e4e6e46511329c813257a5614a7321c78ac3e8b472b2675daa2029cf6fd"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_away.png",
+      "source": "generated independent team emblem",
+      "sha256": "dc44e07e4340887936ab910d4cb7f85836b8fdbaf54891283dc5d4724f50620b"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_home.png",
+      "source": "generated independent team emblem",
+      "sha256": "a720385b856d95c02fa1068c985271593a49d562ae729903bb2ccb81c5422c07"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_shop_preview.png",
+      "source": "generated independent team emblem composite",
+      "sha256": "a6b7179125c4b417ff203453d88c29080f201c09152f3088aef45d287aabd1b4"
+    },
+    {
+      "path": "game/games/tablesoccer/images/field-img-standard.png",
+      "source": "generated turf + newly drawn exact pitch lines and rail geometry",
+      "sha256": "eee1576fb5c09dc33270f1a838f4edc37982b3ed0dbfc18c741e64b26b7c8e3b"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goal-scored-standard.png",
+      "source": "new ball and source-drawn goal lettering",
+      "sha256": "fe89bbe50bed9f55d78c918a9651ba60b01c60c1915c0f2233d96c120d728c7d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-bottom-standard.png",
+      "source": "new vector net and posts",
+      "sha256": "1740707f49539c562234ccd378be8570d2006f90a620ec4949b7e903d83b5c31"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-top-standard.png",
+      "source": "new vector net and posts",
+      "sha256": "1740707f49539c562234ccd378be8570d2006f90a620ec4949b7e903d83b5c31"
+    },
+    {
+      "path": "game/games/tablesoccer/images/main.webp",
+      "source": "new functional sprites and new field composite",
+      "sha256": "6479b8ba5d8d3165ee80debb783174135d65e89082d5ab68c4028ac7265e33b7"
+    },
+    {
+      "path": "game/games/tablesoccer/images/stadium-img-standard.png",
+      "source": "new vector stadium seating",
+      "sha256": "21d53e3762b416428315c5b1f066b6bf6296fd19340f639f79467b0b5f08a235"
+    },
+    {
+      "path": "game/games/tablesoccer/images/thumbnail-standard.png",
+      "source": "new field and arena composite",
+      "sha256": "95f0966250baceea54bb89a5351188a5df574ed3caa84a63946488aab07a9233"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_empty_seat.png",
+      "source": "new shared game artwork",
+      "sha256": "3406723db5ef73e89909a4c0a27f8c21a46b508519da18c7bfa8e6fca786e642"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_join.png",
+      "source": "new shared game artwork",
+      "sha256": "33fa90f2724597d34178357754f71cd74cc26b814e436ccb16dfbca4ac4e59c0"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/player_indicator.png",
+      "source": "new shared game artwork",
+      "sha256": "898e0d1a4adcc8231364e5f58462efa6f788e6bc82e9bbcaa22cc42df71d7575"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_bot.webp",
+      "source": "new shared game artwork",
+      "sha256": "21e8c2129751d170a29d4507c1aa3c5c224d47e88893091539cd0d4a830b939d"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_owner_badge.webp",
+      "source": "new shared game artwork",
+      "sha256": "d765776d80803fe90c840acdba0df4ef87356027605840d0b1d11506c217279a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3792858502,
+      "duration": 0.85,
+      "previousPath": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+      "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/bells.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3872298911,
+      "duration": 0.85,
+      "previousPath": "game/games/tablesoccer/scene-reactions/bells.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/gift_icon.webp",
+      "source": "new shared game artwork",
+      "sha256": "390cbb3f3de2d343c2cfc21137fb83a7233440cc65cc677ce60cb50796586583"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/reactions.webp",
+      "source": "new shared game artwork",
+      "sha256": "850ea2adfe25f5c7b97600893994885a4fa9e57bb14623fc0e2123e44fa7d105"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2984587614,
+      "duration": 0.45,
+      "previousPath": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 136550279,
+      "duration": 0.45,
+      "previousPath": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_icon.png",
+      "source": "new shared game artwork",
+      "sha256": "c03eadba2209f18c4c692ccfff450f86d4b5ba0e8f961d701eb63dbbcb0acdeb"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2779758860,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "source": "new shared game artwork",
+      "sha256": "cb242492802665a2b04c0aeda37b66be3dfb6c4c7f13a0ffc7b5b5fde637d851"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "source": "new shared game artwork",
+      "sha256": "fe3fc282656afe10132f02674fc359f5bb7b9ea3fc7d4f18d797932fdabd5262"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "source": "new shared game artwork",
+      "sha256": "fb26c3ffc58c8c35b293c86db127e9ca0bde8e3bbd6cb4786abd91cc6875b6e7"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3753341201,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3804744420,
+      "duration": 0.85,
+      "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "source": "new shared game artwork",
+      "sha256": "ddb1456a26863f27845abd9a26747a0438ad438bdfcc410e116871ee3a1cbf23"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "source": "new shared game artwork",
+      "sha256": "e6304172866f03df94e50efa5c19375463c5a9c475dcba914b5aec25e44b5725"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "source": "new shared game artwork",
+      "sha256": "ea369fda2f00b88940bb34dd3138b21b5639c151232309238a8add8ff4ab0231"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "source": "new shared game artwork",
+      "sha256": "d61b9601164700b52b869d335c7d769300d8c85acf28110d4272adbf8a356c82"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_search.webp",
+      "source": "new shared game artwork",
+      "sha256": "560c20cba26835b448f5e3104e66f0b211c4dcdb4ec772870ac2911564953f41"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1985458126,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem1.m4a",
+      "source": "user-supplied original recording, lightly processed; see AUDIO_RESTORE_MANIFEST.json",
+      "seed": 3085470828,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ahem1.m4a",
+      "sha256": "94586ec55f46ccdda45c90be6c6bb58ed176e825ac2517f987a81ae0578359ed"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem2.m4a",
+      "source": "user-supplied original recording, lightly processed; see AUDIO_RESTORE_MANIFEST.json",
+      "seed": 713124484,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ahem2.m4a",
+      "sha256": "ef5f1bded5e82c22f11ff9af2f0b71d074cd0b6c3341c20a20df1300c417b234"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem3.m4a",
+      "source": "user-supplied original recording, lightly processed; see AUDIO_RESTORE_MANIFEST.json",
+      "seed": 1614367821,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ahem3.m4a",
+      "sha256": "199af70179bfe202a4843933cbb3d48590bddae552096f9f4b5e34afe8170f8b"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem4.m4a",
+      "source": "user-supplied original recording, lightly processed; see AUDIO_RESTORE_MANIFEST.json",
+      "seed": 1503484881,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ahem4.m4a",
+      "sha256": "c28af4b245140ee60039124541f24039fefae35dcd95d281975e3510625da61f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 849123667,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ball_long1.m4a",
+      "sha256": "ee26689d9203cc7ecbeef6058c1c41657f4f93671103a20762bdad9bbe9a2c20"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1878103759,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ball_long2.m4a",
+      "sha256": "41cb300f53bd546a3db9632a32ffc30bb2bc938b8be3362298de04b1ebc9609a"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long3.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1856740343,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ball_long3.m4a",
+      "sha256": "223b5dda456845b610f0d2bd859be4f5bfa9624330d07f715c8ca6141a7368be"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1050390569,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ball_short1.m4a",
+      "sha256": "6bdedf496da696ab12080d27639177b22c4488783bd67e7ab1de7d7bff2d2f90"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2627125578,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/ball_short2.m4a",
+      "sha256": "927a07440340acf8b5b83b115dab4a3a92cd08ddab1ad679a6118af83a94fbd1"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/goal1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 912818595,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/goal1.m4a",
+      "sha256": "baba388384c987c82c56d28b656c3d04a933d6146c74c478954c9d068a876af0"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/post1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 17427345,
+      "duration": 0.22,
+      "previousPath": "game/games/tablesoccer/sounds/post1.m4a",
+      "sha256": "0bb9daa568a739acd2126a4db0d83aa31f0b3de6bdd964428a671578ecc5fb8f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 266219099,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/sounds/tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2065336757,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3151502756,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/sounds/token_hit1.m4a",
+      "sha256": "f71c92f3737ed6c8405a6d791a434166de88b533b7547c02ef18aa24e6ff3f2a"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3132743371,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/sounds/token_hit2.m4a",
+      "sha256": "979dc922754a94f5ae3f24e9b1bc820ecfb0aca9e72935f478b0b667c00a6711"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit3.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1648641810,
+      "duration": 0.12,
+      "previousPath": "game/games/tablesoccer/sounds/token_hit3.m4a",
+      "sha256": "05dff257fbc31fc2e8d41ff64a59b49ee8943fdbc4a653bc8f3a2cf45fa5f9f3"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3568449685,
+      "duration": 0.45,
+      "previousPath": "game/games/tablesoccer/sounds/token_slide1.m4a",
+      "sha256": "de5c017f48c035de322ecc027f44eb72df9fc1f2507cf42f483aaa67aee1e17a"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1038195060,
+      "duration": 0.45,
+      "previousPath": "game/games/tablesoccer/sounds/token_slide2.m4a",
+      "sha256": "81cb882341545248058bf1fb674b03a664bb403eaa2c4acd37b1a166d18f2bd6"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whistle1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1616871062,
+      "duration": 0.35,
+      "previousPath": "game/games/tablesoccer/sounds/whistle1.m4a",
+      "sha256": "4e663cde6892d90840fce725ff266e6d0437021172aabd5eb048c9e50ad40939"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whoosh.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2570746866,
+      "duration": 0.45,
+      "previousPath": "game/games/tablesoccer/sounds/whoosh.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_lose1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2727602873,
+      "duration": 0.85,
+      "previousPath": "game/games/tablesoccer/sounds/you_lose1.m4a",
+      "sha256": "01c0258eae47aab9fb894d7673d5aab0dcf0e26c3653792244ddf9a3a281d538"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_won1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 4260844455,
+      "duration": 0.85,
+      "previousPath": "game/games/tablesoccer/sounds/you_won1.m4a",
+      "sha256": "9761f304381aa5eaab8ed7efd913ec8308cc02852efbe3388f5d965a4302e6d9"
+    },
+    {
+      "path": "game/images/cues/classic-preview.webp",
+      "sha256": "8cae1e42e1b05927dea38ca72440638217178fc312fea43620020efa9d45af05",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/images/cues/classic.webp",
+      "sha256": "1b844918b45d175b1d30be47397704423c4f7416c7d684a8b050c3458e54a1b3",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/images/cues/moon-preview.webp",
+      "sha256": "54a34062c276183b8985c20d1fd6603784fe79affb000bed21f39511030885a2",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/images/cues/moon.webp",
+      "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/images/default-avatar.png",
+      "source": "new source-authored default avatar",
+      "sha256": "ee59be84b2628148d828e9adf5a7ee7b75fd32b37802ec33344f93592a290b91"
+    },
+    {
+      "path": "game/images/game.webp",
+      "source": "generated board and discs + newly drawn functional sprites",
+      "sha256": "125c1872dbb76bd0815e348f6b72a1835d395de42b0b17b0858a6b6b4a6a2f03"
+    },
+    {
+      "path": "game/images/table-background.webp",
+      "source": "V36 generated sprites and requested UI artwork",
+      "sha256": "0c17334a75f736ac058435329fc7dc184a9abb55150b729ac631cb939b4a445a",
+      "type": "image"
+    },
+    {
+      "path": "game/images/themes/cat-atlas.webp",
+      "source": "generated board and discs + newly drawn functional sprites",
+      "sha256": "849fa30c66de0e3b847aa3e3770f5dd3d6ff666490a5b39e032ee43e460a0f71"
+    },
+    {
+      "path": "game/images/themes/cat-preview.webp",
+      "source": "new board composite",
+      "sha256": "4e9cb0be773cc2ab7d13e33a22bcac7d6f06bb56ca7f09d5d242ac36c8dc751f"
+    },
+    {
+      "path": "game/images/themes/classic-preview.webp",
+      "source": "new board composite",
+      "sha256": "2a6bc28aa385bedb4982171737775607ee5cfc494d7945d4fff34c35ccce00e4"
+    },
+    {
+      "path": "game/images/themes/pool-emerald-preview.webp",
+      "type": "image",
+      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
+      "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+    },
+    {
+      "path": "game/images/themes/pool-emerald.webp",
+      "type": "image",
+      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
+      "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+    },
+    {
+      "path": "game/images/themes/pool-midnight-preview.webp",
+      "type": "image",
+      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
+      "sha256": "1690730118f1af8559e64ba57d4708405c19c4893e8ebf934b9e2739f564db36"
+    },
+    {
+      "path": "game/images/themes/pool-midnight.webp",
+      "type": "image",
+      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
+      "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083"
+    },
+    {
+      "path": "game/platform/assets/profile/calendar.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "b03a1e1060bc6bfc61f06fca8b3c7bb164a1b0cab2ab732a82ad896410a2a098"
+    },
+    {
+      "path": "game/platform/assets/profile/camera.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "3f790ee98509b9cd64af0072ba13fd6ee755b26e874bfd18b6abb912bda100f6"
+    },
+    {
+      "path": "game/platform/assets/profile/chevron.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "d941bfbb5daa0f26dba0cb19f6ac2003ace7cf46afabb834315fb8b19a6bbdd0"
+    },
+    {
+      "path": "game/platform/assets/profile/edit.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "e8feb2a9ba67b043f38be64712b5f76f29aa0d6a742616d872bf611397502f74"
+    },
+    {
+      "path": "game/platform/assets/profile/profile-sheet.svg",
+      "source": "new source-authored profile sheet",
+      "sha256": "b8c130b20c4ed8187e4597b0ffc7455fdfa1e647fd96ef2661b6249f456c4f37"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/palm-swords.webp",
+      "source": "new source-authored profile icon",
+      "sha256": "f1a02fbb4669e907afb5a01410041748394415b4be0c5da2ee3fd9a4fb10ac81"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/prestige.webp",
+      "source": "new source-authored profile icon",
+      "sha256": "d5789a69103c899985b1d657b44d2c8ef2aaa0cedc0c5819d505ca18187ca7c7"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/reputation-flame.webp",
+      "source": "new source-authored profile icon",
+      "sha256": "ea9553235ef5772bf9ae16a9094a55dd929b32add9aee68e9c3674e9eba0ff6a"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/star.webp",
+      "source": "new source-authored profile icon",
+      "sha256": "141f574158efd9bb8f69b27de50e660a8efed02381fd59632da26b11ba6ec58f"
+    },
+    {
+      "path": "game/platform/assets/profile/raster/trophy.webp",
+      "source": "new source-authored profile icon",
+      "sha256": "0ff578c7993148ebfed01534b182e09e60d87278f38fb7c53dd526d5d3824f02"
+    },
+    {
+      "path": "game/platform/assets/profile/reputation.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "fe497f13b3dc20842999f26a6a65f01a06ca2520000102aed2dba775f56e419f"
+    },
+    {
+      "path": "game/platform/assets/profile/saudi-emblem.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "594aa89d08eb5ce8be25f7958f86a5d5409fc52c787b51117c04de514053679e"
+    },
+    {
+      "path": "game/platform/assets/profile/settings.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "5a9e36c4b5dd59e53fc3e0c59cab53ee4783496b79393038016f7812fb18a798"
+    },
+    {
+      "path": "game/platform/assets/profile/star.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "6b39d81d9c0063c418518d64fb34f081ca9fd4c7657330933d6e28304babeda8"
+    },
+    {
+      "path": "game/platform/assets/profile/trophy.svg",
+      "source": "new source-authored profile icon",
+      "sha256": "e59efa183947e85cc227facfba69ce1d2b3cf437fb0f689d42501f94e15dd447"
+    },
+    {
+      "path": "game/player-profile-sheet.svg",
+      "source": "new source-authored vector icons",
+      "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
+    },
+    {
+      "path": "game/room-sprites/cards.png",
+      "sha256": "e2222c888eee4174e2ce636bac57d22054ba39b5aba8a051a6eeda1e77af0918",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/room-sprites/carrom.png",
+      "sha256": "00c38591fd5d8f6f5a2a7b7f09ee237eba088a57c387eb594bfc4979da9ca5f9",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/room-sprites/domino.png",
+      "sha256": "a2cb4a302f05987772c2017055a4888d277c31aff1bd9c65b8fe78980962c1f4",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/room-sprites/football.png",
+      "sha256": "fdb7f7ac93015e4cd34128af9d72a8c6dccb825a5c2850a273569a8653ab24cd",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/room-sprites/pool.png",
+      "sha256": "22046ca53283ef730a6d54fa58e5d3c0781b49afdb24e8017c35321c4faabc65",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/room-sprites/sprite-sheet.png",
+      "sha256": "543fc0ecad13b711e42af81a6587c968edded91b77b6ce6223c22e802249f081",
+      "source": "V36 generated sprites and requested UI artwork",
+      "type": "image"
+    },
+    {
+      "path": "game/scene-avatars/lobby_avatar_empty_seat.png",
+      "source": "new source-authored vector icon",
+      "sha256": "3406723db5ef73e89909a4c0a27f8c21a46b508519da18c7bfa8e6fca786e642"
+    },
+    {
+      "path": "game/scene-avatars/lobby_avatar_join.png",
+      "source": "new source-authored vector icon",
+      "sha256": "33fa90f2724597d34178357754f71cd74cc26b814e436ccb16dfbca4ac4e59c0"
+    },
+    {
+      "path": "game/scene-avatars/player_indicator.png",
+      "source": "new vector-derived animation frames, original frame layout retained",
+      "sha256": "898e0d1a4adcc8231364e5f58462efa6f788e6bc82e9bbcaa22cc42df71d7575"
+    },
+    {
+      "path": "game/scene-avatars/scene_avatars_bot.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "21e8c2129751d170a29d4507c1aa3c5c224d47e88893091539cd0d4a830b939d"
+    },
+    {
+      "path": "game/scene-avatars/scene_avatars_owner_badge.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "d765776d80803fe90c840acdba0df4ef87356027605840d0b1d11506c217279a"
+    },
+    {
+      "path": "game/scene-avatars/turn_audio.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1331771952,
+      "duration": 0.85,
+      "previousPath": "game/scene-avatars/turn_audio.m4a",
+      "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+    },
+    {
+      "path": "game/scene-reactions/bells.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 4135479511,
+      "duration": 0.85,
+      "previousPath": "game/scene-reactions/bells.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/scene-reactions/gift_icon.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "390cbb3f3de2d343c2cfc21137fb83a7233440cc65cc677ce60cb50796586583"
+    },
+    {
+      "path": "game/scene-reactions/reactions.webp",
+      "source": "generated reaction sheet",
+      "sha256": "850ea2adfe25f5c7b97600893994885a4fa9e57bb14623fc0e2123e44fa7d105"
+    },
+    {
+      "path": "game/scene-reactions/whoosh1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3749946029,
+      "duration": 0.45,
+      "previousPath": "game/scene-reactions/whoosh1.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/scene-reactions/whoosh2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3659754987,
+      "duration": 0.45,
+      "previousPath": "game/scene-reactions/whoosh2.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/scene-settings/select.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 204414159,
+      "duration": 0.22,
+      "previousPath": "game/scene-settings/select.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/scene-settings/switch_off.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1885036185,
+      "duration": 0.22,
+      "previousPath": "game/scene-settings/switch_off.m4a",
+      "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9"
+    },
+    {
+      "path": "game/scene-settings/switch_on.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 4238181,
+      "duration": 0.22,
+      "previousPath": "game/scene-settings/switch_on.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/scene-settings/woosh_close.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 3876353930,
+      "duration": 0.45,
+      "previousPath": "game/scene-settings/woosh_close.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/scene-settings/woosh_open.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2240383978,
+      "duration": 0.45,
+      "previousPath": "game/scene-settings/woosh_open.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/scene-ui/IAPButton/iap_button_icon.png",
+      "source": "new source-authored vector icon",
+      "sha256": "c03eadba2209f18c4c692ccfff450f86d4b5ba0e8f961d701eb63dbbcb0acdeb"
+    },
+    {
+      "path": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2161323779,
+      "duration": 0.12,
+      "previousPath": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "cb242492802665a2b04c0aeda37b66be3dfb6c4c7f13a0ffc7b5b5fde637d851"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "fe3fc282656afe10132f02674fc359f5bb7b9ea3fc7d4f18d797932fdabd5262"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "fb26c3ffc58c8c35b293c86db127e9ca0bde8e3bbd6cb4786abd91cc6875b6e7"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2940396712,
+      "duration": 0.22,
+      "previousPath": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2250099422,
+      "duration": 0.85,
+      "previousPath": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "ddb1456a26863f27845abd9a26747a0438ad438bdfcc410e116871ee3a1cbf23"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "e6304172866f03df94e50efa5c19375463c5a9c475dcba914b5aec25e44b5725"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "ea369fda2f00b88940bb34dd3138b21b5639c151232309238a8add8ff4ab0231"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "d61b9601164700b52b869d335c7d769300d8c85acf28110d4272adbf8a356c82"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_search.webp",
+      "source": "new source-authored vector icon",
+      "sha256": "560c20cba26835b448f5e3104e66f0b211c4dcdb4ec772870ac2911564953f41"
+    },
+    {
+      "path": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2316909020,
+      "duration": 0.12,
+      "previousPath": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/sounds/disc-hit-bright.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 439428893,
+      "duration": 0.12,
+      "previousPath": "game/sounds/disc-hit-bright.m4a",
+      "sha256": "a95326a910272da6e2201d2f19b536451fc2eff2323efabf94c9d83057ecb49a"
+    },
+    {
+      "path": "game/sounds/disc-hit-deep.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1153766663,
+      "duration": 0.12,
+      "previousPath": "game/sounds/disc-hit-deep.m4a",
+      "sha256": "4479dbac624cceba2ae997903160a88f312233181ca51984a55ecd94dc034f7c"
+    },
+    {
+      "path": "game/sounds/disc-hit-soft.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1274550336,
+      "duration": 0.12,
+      "previousPath": "game/sounds/disc-hit-soft.m4a",
+      "sha256": "b2dda890f9c2bd3e345bacc7a150d34782bc5c4ea5249d22e6ffc1c460837bde"
+    },
+    {
+      "path": "game/sounds/disc-rail-tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1640466824,
+      "duration": 0.12,
+      "previousPath": "game/sounds/disc-rail-tap.m4a",
+      "sha256": "ef09f5b4ae1998a41036b943a54de79032763ad8191f1aee0dfff96ab4223348"
+    },
+    {
+      "path": "game/sounds/pocket-drop-deep.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1983907004,
+      "duration": 0.22,
+      "previousPath": "game/sounds/pocket-drop-deep.m4a",
+      "sha256": "dab87c53c0d5609bd3c4d1d4d94202ae89040b7adbf94c49c9cf06b9397dee51"
+    },
+    {
+      "path": "game/sounds/pocket-drop-soft.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1323991307,
+      "duration": 0.22,
+      "previousPath": "game/sounds/pocket-drop-soft.m4a",
+      "sha256": "45ebf1bcda90515f7df81b19bb414273f5b57d8ab9682b7242997e3b59c1e6b9"
+    },
+    {
+      "path": "game/sounds/pocket-soft-pop.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 994473039,
+      "duration": 0.22,
+      "previousPath": "game/sounds/pocket-soft-pop.m4a",
+      "sha256": "219434224b9c3426b71c9496f7fd3e46e1528330ef2114f1d3232e530e5be276"
+    },
+    {
+      "path": "game/sounds/round-loss.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2193624178,
+      "duration": 0.85,
+      "previousPath": "game/sounds/round-loss.m4a",
+      "sha256": "01c0258eae47aab9fb894d7673d5aab0dcf0e26c3653792244ddf9a3a281d538"
+    },
+    {
+      "path": "game/sounds/round-win.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 721374161,
+      "duration": 0.85,
+      "previousPath": "game/sounds/round-win.m4a",
+      "sha256": "9761f304381aa5eaab8ed7efd913ec8308cc02852efbe3388f5d965a4302e6d9"
+    },
+    {
+      "path": "game/sounds/striker-slide.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1071523336,
+      "duration": 0.45,
+      "previousPath": "game/sounds/striker-slide.m4a",
+      "sha256": "cc6b2a6429c2d73c45b01d4c42dbe0dfd7e58762cc87addc1157aadbb28ae9d6"
+    },
+    {
+      "path": "game/sounds/striker_short.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2181384816,
+      "duration": 0.22,
+      "previousPath": "game/sounds/striker_short.m4a",
+      "sha256": "c0fb8f7e1f0aabc9c0a570723b1aecf8f18d76f96c82f3025d2559d1c1c20e43"
+    },
+    {
+      "path": "game/sounds/tap.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 2770654484,
+      "duration": 0.12,
+      "previousPath": "game/sounds/tap.m4a",
+      "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+    },
+    {
+      "path": "game/sounds/tap_disabled.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 827533579,
+      "duration": 0.12,
+      "previousPath": "game/sounds/tap_disabled.m4a",
+      "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+    },
+    {
+      "path": "game/sounds/woosh1.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 612947230,
+      "duration": 0.45,
+      "previousPath": "game/sounds/woosh1.m4a",
+      "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+    },
+    {
+      "path": "game/sounds/woosh2.m4a",
+      "source": "CC0 Freesound recording; see FREESOUND_AUDIO.json for authors, sources and processing",
+      "seed": 1259805148,
+      "duration": 0.45,
+      "previousPath": "game/sounds/woosh2.m4a",
+      "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    }
+  ],
+  "audioSource": "V37: 105 effects from 15 CC0 Freesound recordings; existing music and four vocal reactions retained",
+  "processedOriginalAudioFiles": 105,
+  "preservedOriginalPoolImages": 17,
+  "mediaCount": 236,
+  "v36GeneratedImageSources": 7,
+  "v37FreesoundEffects": 105,
+  "v37NewAudioFiles": 1
+}

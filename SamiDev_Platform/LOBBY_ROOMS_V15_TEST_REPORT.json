@@ -1,0 +1,18 @@
+{
+  "version": "V15",
+  "scope": [
+    "hide current user from community member list",
+    "desktop horizontal game-room rows",
+    "mobile vertical game-room cards preserved"
+  ],
+  "tests": {
+    "node_platform_syntax": "PASS",
+    "community_hub_regression": "PASS",
+    "community_profile_return_regression": "PASS",
+    "platform_v1_regression": "PASS",
+    "profile_ui_regression": "PASS",
+    "lobby_rooms_v15_regression": "PASS",
+    "gamehost_conformance": "369/369 PASS"
+  },
+  "game_main_modified": false
+}

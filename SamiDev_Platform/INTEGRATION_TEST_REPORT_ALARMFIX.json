@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "roomId": "V6HKRL",
+  "seats": [
+    0,
+    1
+  ],
+  "authorityBegin": {
+    "server": true,
+    "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b"
+  },
+  "legalMoveAuthority": {
+    "turn": [
+      0
+    ],
+    "sequence": [
+      1,
+      0
+    ],
+    "gameOver": false,
+    "lastValidAnim": 0
+  },
+  "sameMoveOnBothClients": true,
+  "wrongTurnRejected": true,
+  "clientSnapshotIgnored": true,
+  "resyncHasServerSnapshot": true,
+  "resyncSequence": [
+    1,
+    0
+  ],
+  "maliciousSnapshotPersisted": false
+}

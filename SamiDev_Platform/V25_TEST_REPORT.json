@@ -1,0 +1,44 @@
+{
+  "release": "V25",
+  "buildId": "samidev-v25-170d9aae0a99e442",
+  "date": "2026-10-05",
+  "checks": [
+    {
+      "command": "python start_dev.py --check",
+      "passed": true,
+      "scope": "Real child services, two-game catalog, served HTML/CSS/JS SHA-256 verification"
+    },
+    {
+      "command": "python tests/start_dev_ui_check.py",
+      "passed": true,
+      "scope": "Mixed local folder and stale HTTP UI rejected"
+    },
+    {
+      "command": "python tests/platform_ui_http.py",
+      "passed": true,
+      "scope": "Actual served HTML/JS in LinkeDOM; real registration/community/tickets; game buttons, settings and entry routes"
+    },
+    {
+      "command": "python tests/multigame_ws.py",
+      "passed": true,
+      "scope": "Registration/login; 2-player Carrom; 2- and 4-player Table Soccer; moves, spectators, reconnect, invitations, restore, startup retry"
+    },
+    {
+      "command": "node tests/multigame_routing.js",
+      "passed": true,
+      "scope": "Cross-game redirect and session reconnect token retention"
+    },
+    {
+      "command": "node --check game/platform/platform.js",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "User machine/root cause not directly observed",
+    "No visual rendering or mobile touch test: Chromium could not start in this environment",
+    "Windows BAT inspected, not executed on Windows",
+    "Nginx/Docker configuration not executed",
+    "Local memory data is not persistent",
+    "Prior security findings are unchanged by this UI fix; see README_AR.md"
+  ]
+}

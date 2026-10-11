@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "version": "V16",
+  "mainJsUntouched": true,
+  "mainJsSha256": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c",
+  "defaultAvatarSha256": "1ddafef582164a3b29905f6d115576561d8c99a8f6a643521aec769591e0fcd7",
+  "defaultAvatar": {"path": "game/images/default-avatar.png", "width": 320, "height": 320, "format": "PNG"},
+  "gamehost": {"checksPassed": 369, "checksFailed": 0},
+  "regressions": [
+    "community_members_avatar_v16_regression",
+    "lobby_rooms_v15_regression",
+    "community_hub_regression",
+    "community_profile_return_regression",
+    "profile_game_avatar_regression",
+    "profile_ui_regression",
+    "player_profile_social_regression",
+    "avatar_exit_regression",
+    "platform_v1_regression",
+    "browser_runtime_race_regression",
+    "timeout_afk_regression",
+    "turn_authority_regression",
+    "gamehost_conformance"
+  ],
+  "browserScreenshot": "not-run: headless Chromium in this container did not finish because required system/DBus services are unavailable"
+}

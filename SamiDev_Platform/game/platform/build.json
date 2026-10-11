@@ -1,0 +1,24 @@
+{
+  "release": "V37",
+  "buildId": "samidev-v37-2dd863cd10e61448",
+  "games": [
+    "carrom",
+    "tablesoccer",
+    "crazy8",
+    "pool"
+  ],
+  "files": {
+    "platform/index.html": "691c13809679c3d95868d40fb531f8c8636c174481c16d635dcc0da1596bf763",
+    "platform/platform.css": "cd56801e6592bc80f777989c29054d7dedf72cd96944b7cc1e51d775027b78f1",
+    "platform/platform.js": "3019eaa564a196596c45dbc46c5ad361157236bda0173d6edbbcbc1e06b3aede",
+    "samidev-games.js": "9c0dece53f812f41e1264eb97d378975fc859c144c46b83f6d89c8dccb1dc525",
+    "index.html": "24ee3ab40615753f3a8cad26f6103c06d7b5ae199c0ac403236dc21a39843e8a",
+    "browser-runtime.js": "1abe8f60adb4f851ba77626b094df34ea2448f64e8a0ca3b7965403c47d09595",
+    "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
+    "game-touch.css": "3b46fb9faf96cbfde8954ad1304a294bf5299a4883ddaaef93ccab4151778079",
+    "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
+    "games/tablesoccer/index.html": "dc8a57cf86f96f35b5326b2212158a276284c34f7b14c9bd61a91ac02e722d60",
+    "games/crazy8/index.html": "60ea1b7d083bea2d95875219939355c56383fe04bf275cbe963a85302fe6e087",
+    "games/pool/index.html": "dbaf01fad652593a85b4e781397e9eb2fc87f6d5f7a9896c7e91b1ddba37c2e2"
+  }
+}

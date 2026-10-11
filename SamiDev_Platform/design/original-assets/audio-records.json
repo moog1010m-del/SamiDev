@@ -1,0 +1,506 @@
+[
+  {
+    "path": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 984229821,
+    "duration": 0.85,
+    "previousPath": "game/games/crazy8/scene-avatars/turn_audio.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-reactions/bells.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 291974157,
+    "duration": 0.85,
+    "previousPath": "game/games/crazy8/scene-reactions/bells.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1837229440,
+    "duration": 0.45,
+    "previousPath": "game/games/crazy8/scene-reactions/whoosh1.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2739483956,
+    "duration": 0.45,
+    "previousPath": "game/games/crazy8/scene-reactions/whoosh2.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-settings/select.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1639084113,
+    "duration": 0.22,
+    "previousPath": "game/games/crazy8/scene-settings/select.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-settings/switch_off.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1545449503,
+    "duration": 0.22,
+    "previousPath": "game/games/crazy8/scene-settings/switch_off.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-settings/switch_on.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 776399576,
+    "duration": 0.22,
+    "previousPath": "game/games/crazy8/scene-settings/switch_on.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-settings/woosh_close.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2850647129,
+    "duration": 0.45,
+    "previousPath": "game/games/crazy8/scene-settings/woosh_close.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-settings/woosh_open.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3409426428,
+    "duration": 0.45,
+    "previousPath": "game/games/crazy8/scene-settings/woosh_open.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 4143551952,
+    "duration": 0.12,
+    "previousPath": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1393362767,
+    "duration": 0.22,
+    "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3557798499,
+    "duration": 0.85,
+    "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1909194025,
+    "duration": 0.12,
+    "previousPath": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/images/bg-music-standard.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2601570545,
+    "duration": 8.0,
+    "previousPath": "game/games/tablesoccer/images/bg-music-standard.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3792858502,
+    "duration": 0.85,
+    "previousPath": "game/games/tablesoccer/scene-avatars/turn_audio.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-reactions/bells.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3872298911,
+    "duration": 0.85,
+    "previousPath": "game/games/tablesoccer/scene-reactions/bells.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2984587614,
+    "duration": 0.45,
+    "previousPath": "game/games/tablesoccer/scene-reactions/whoosh1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 136550279,
+    "duration": 0.45,
+    "previousPath": "game/games/tablesoccer/scene-reactions/whoosh2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2779758860,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3753341201,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3804744420,
+    "duration": 0.85,
+    "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1985458126,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ahem1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3085470828,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ahem1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ahem2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 713124484,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ahem2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ahem3.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1614367821,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ahem3.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ahem4.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1503484881,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ahem4.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ball_long1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 849123667,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ball_long1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ball_long2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1878103759,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ball_long2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ball_long3.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1856740343,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ball_long3.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ball_short1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1050390569,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ball_short1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/ball_short2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2627125578,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/ball_short2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/goal1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 912818595,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/goal1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/post1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 17427345,
+    "duration": 0.22,
+    "previousPath": "game/games/tablesoccer/sounds/post1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 266219099,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/sounds/tap.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2065336757,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/sounds/tap_disabled.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/token_hit1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3151502756,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/sounds/token_hit1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/token_hit2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3132743371,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/sounds/token_hit2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/token_hit3.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1648641810,
+    "duration": 0.12,
+    "previousPath": "game/games/tablesoccer/sounds/token_hit3.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/token_slide1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3568449685,
+    "duration": 0.45,
+    "previousPath": "game/games/tablesoccer/sounds/token_slide1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/token_slide2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1038195060,
+    "duration": 0.45,
+    "previousPath": "game/games/tablesoccer/sounds/token_slide2.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/whistle1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1616871062,
+    "duration": 0.35,
+    "previousPath": "game/games/tablesoccer/sounds/whistle1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/whoosh.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2570746866,
+    "duration": 0.45,
+    "previousPath": "game/games/tablesoccer/sounds/whoosh.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/you_lose1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2727602873,
+    "duration": 0.85,
+    "previousPath": "game/games/tablesoccer/sounds/you_lose1.m4a"
+  },
+  {
+    "path": "game/games/tablesoccer/sounds/you_won1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 4260844455,
+    "duration": 0.85,
+    "previousPath": "game/games/tablesoccer/sounds/you_won1.m4a"
+  },
+  {
+    "path": "game/scene-avatars/turn_audio.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1331771952,
+    "duration": 0.85,
+    "previousPath": "game/scene-avatars/turn_audio.m4a"
+  },
+  {
+    "path": "game/scene-reactions/bells.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 4135479511,
+    "duration": 0.85,
+    "previousPath": "game/scene-reactions/bells.m4a"
+  },
+  {
+    "path": "game/scene-reactions/whoosh1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3749946029,
+    "duration": 0.45,
+    "previousPath": "game/scene-reactions/whoosh1.m4a"
+  },
+  {
+    "path": "game/scene-reactions/whoosh2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3659754987,
+    "duration": 0.45,
+    "previousPath": "game/scene-reactions/whoosh2.m4a"
+  },
+  {
+    "path": "game/scene-settings/select.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 204414159,
+    "duration": 0.22,
+    "previousPath": "game/scene-settings/select.m4a"
+  },
+  {
+    "path": "game/scene-settings/switch_off.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1885036185,
+    "duration": 0.22,
+    "previousPath": "game/scene-settings/switch_off.m4a"
+  },
+  {
+    "path": "game/scene-settings/switch_on.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 4238181,
+    "duration": 0.22,
+    "previousPath": "game/scene-settings/switch_on.m4a"
+  },
+  {
+    "path": "game/scene-settings/woosh_close.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 3876353930,
+    "duration": 0.45,
+    "previousPath": "game/scene-settings/woosh_close.m4a"
+  },
+  {
+    "path": "game/scene-settings/woosh_open.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2240383978,
+    "duration": 0.45,
+    "previousPath": "game/scene-settings/woosh_open.m4a"
+  },
+  {
+    "path": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2161323779,
+    "duration": 0.12,
+    "previousPath": "game/scene-ui/IAPButton/iap_button_tap.m4a"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2940396712,
+    "duration": 0.22,
+    "previousPath": "game/scene-ui/ShopWidget/shop_widget_error.m4a"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2250099422,
+    "duration": 0.85,
+    "previousPath": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2316909020,
+    "duration": 0.12,
+    "previousPath": "game/scene-ui/ShopWidget/shop_widget_tap.m4a"
+  },
+  {
+    "path": "game/sounds/disc-hit-bright.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 439428893,
+    "duration": 0.12,
+    "previousPath": "game/sounds/disc-hit-bright.m4a"
+  },
+  {
+    "path": "game/sounds/disc-hit-deep.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1153766663,
+    "duration": 0.12,
+    "previousPath": "game/sounds/disc-hit-deep.m4a"
+  },
+  {
+    "path": "game/sounds/disc-hit-soft.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1274550336,
+    "duration": 0.12,
+    "previousPath": "game/sounds/disc-hit-soft.m4a"
+  },
+  {
+    "path": "game/sounds/disc-rail-tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1640466824,
+    "duration": 0.12,
+    "previousPath": "game/sounds/disc-rail-tap.m4a"
+  },
+  {
+    "path": "game/sounds/pocket-drop-deep.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1983907004,
+    "duration": 0.22,
+    "previousPath": "game/sounds/pocket-drop-deep.m4a"
+  },
+  {
+    "path": "game/sounds/pocket-drop-soft.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1323991307,
+    "duration": 0.22,
+    "previousPath": "game/sounds/pocket-drop-soft.m4a"
+  },
+  {
+    "path": "game/sounds/pocket-soft-pop.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 994473039,
+    "duration": 0.22,
+    "previousPath": "game/sounds/pocket-soft-pop.m4a"
+  },
+  {
+    "path": "game/sounds/round-loss.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2193624178,
+    "duration": 0.85,
+    "previousPath": "game/sounds/round-loss.m4a"
+  },
+  {
+    "path": "game/sounds/round-win.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 721374161,
+    "duration": 0.85,
+    "previousPath": "game/sounds/round-win.m4a"
+  },
+  {
+    "path": "game/sounds/striker-slide.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1071523336,
+    "duration": 0.45,
+    "previousPath": "game/sounds/striker-slide.m4a"
+  },
+  {
+    "path": "game/sounds/striker_short.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2181384816,
+    "duration": 0.22,
+    "previousPath": "game/sounds/striker_short.m4a"
+  },
+  {
+    "path": "game/sounds/tap.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 2770654484,
+    "duration": 0.12,
+    "previousPath": "game/sounds/tap.m4a"
+  },
+  {
+    "path": "game/sounds/tap_disabled.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 827533579,
+    "duration": 0.12,
+    "previousPath": "game/sounds/tap_disabled.m4a"
+  },
+  {
+    "path": "game/sounds/woosh1.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 612947230,
+    "duration": 0.45,
+    "previousPath": "game/sounds/woosh1.m4a"
+  },
+  {
+    "path": "game/sounds/woosh2.m4a",
+    "source": "new procedural synthesis; no input recording",
+    "seed": 1259805148,
+    "duration": 0.45,
+    "previousPath": "game/sounds/woosh2.m4a"
+  }
+]

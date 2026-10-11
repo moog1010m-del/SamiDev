@@ -1,0 +1,38 @@
+{
+  "build": "samidev-authoritative-sync-v2",
+  "date": "2026-10-01",
+  "status": "passed",
+  "changes": {
+    "seatScopedRevealTransport": true,
+    "serverWorldStateValidation": true,
+    "infoPacketsExcludedFromMoveCount": true,
+    "inPlaceResyncWithoutPageReload": true,
+    "authoritativeAlarmTransport": true,
+    "serverAlarmRemainingSerialization": true,
+    "clientSnapshotsNonAuthoritative": true
+  },
+  "tests": {
+    "gameLogicConformance": {
+      "passed": 369,
+      "failed": 0,
+      "settingsCombinations": 60
+    },
+    "websocketIntegration": {
+      "passed": true,
+      "clientSnapshotIgnored": true,
+      "serverSnapshotResync": true
+    },
+    "load1000Players": {
+      "players": 1000,
+      "rooms": 500,
+      "failedRooms": 0,
+      "elapsedSeconds": 10.55,
+      "moveFanoutMs": {
+        "avg": 6.94,
+        "p50": 4.46,
+        "p95": 20.11,
+        "max": 156.44
+      }
+    }
+  }
+}

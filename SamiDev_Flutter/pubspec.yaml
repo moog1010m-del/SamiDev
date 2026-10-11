@@ -1,0 +1,68 @@
+name: samidev
+description: SamiDev full platform with a managed local game runtime.
+publish_to: none
+version: 1.0.3+4
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+  flutter: '>=3.47.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: 4.14.1
+  webview_flutter_android: 4.14.1
+  webview_flutter_wkwebview: 3.27.0
+  flutter_secure_storage: 11.2.0
+  image_picker: 1.2.4
+  crypto: 3.0.7
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/runtime-manifest.json
+    - assets/runtime/
+    - assets/runtime/games/crazy8/
+    - assets/runtime/games/crazy8/anim/
+    - assets/runtime/games/crazy8/images/
+    - assets/runtime/games/crazy8/imported/
+    - assets/runtime/games/crazy8/scene-avatars/
+    - assets/runtime/games/crazy8/scene-reactions/
+    - assets/runtime/games/crazy8/scene-settings/
+    - assets/runtime/games/crazy8/scene-ui/IAPButton/
+    - assets/runtime/games/crazy8/scene-ui/ShopWidget/
+    - assets/runtime/games/crazy8/sounds/
+    - assets/runtime/games/pool/
+    - assets/runtime/games/pool/images/imported/themes/
+    - assets/runtime/games/pool/images/ui/
+    - assets/runtime/games/pool/imported/
+    - assets/runtime/games/pool/scene-avatars/
+    - assets/runtime/games/pool/scene-settings/
+    - assets/runtime/games/pool/scene-ui/IAPButton/
+    - assets/runtime/games/pool/scene-ui/ShopWidget/
+    - assets/runtime/games/pool/shaders/
+    - assets/runtime/games/pool/sounds/
+    - assets/runtime/games/tablesoccer/
+    - assets/runtime/games/tablesoccer/images/
+    - assets/runtime/games/tablesoccer/imported/
+    - assets/runtime/games/tablesoccer/scene-avatars/
+    - assets/runtime/games/tablesoccer/scene-reactions/
+    - assets/runtime/games/tablesoccer/scene-ui/IAPButton/
+    - assets/runtime/games/tablesoccer/scene-ui/ShopWidget/
+    - assets/runtime/games/tablesoccer/sounds/
+    - assets/runtime/images/
+    - assets/runtime/images/cues/
+    - assets/runtime/images/themes/
+    - assets/runtime/imported/
+    - assets/runtime/platform/
+    - assets/runtime/platform/assets/profile/
+    - assets/runtime/platform/assets/profile/raster/
+    - assets/runtime/room-sprites/
+    - assets/runtime/scene-avatars/
+    - assets/runtime/scene-reactions/
+    - assets/runtime/scene-settings/
+    - assets/runtime/scene-ui/IAPButton/
+    - assets/runtime/scene-ui/ShopWidget/
+    - assets/runtime/shaders/
+    - assets/runtime/sounds/

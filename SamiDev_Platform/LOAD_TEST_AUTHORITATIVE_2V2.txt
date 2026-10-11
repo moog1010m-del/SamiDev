@@ -1,0 +1,5 @@
+players=1000 seats=4 rooms=250 ok_rooms=250 failed_rooms=0 elapsed=1.64s
+setup_ms: avg=203.23 p50=59.51 p95=469.90 max=475.74
+move_fanout_ms: avg=58.80 p50=29.15 p95=88.99 max=1111.08
+gamehost_rss_kb=153988
+gamehost_health={"ok":true,"service":"SamiDev Authoritative Game Host","rooms":250,"mainJsSha256":"966ccb94fb6629a45856492528bede14f85d90e34eb3ef4cedddae29be4c95ee","metrics":{"requests":503,"moves":250,"accepted":250,"rejected":0,"roomsCreated":250,"events":250,"errors":0}}

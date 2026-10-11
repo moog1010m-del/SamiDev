@@ -1,0 +1,36 @@
+{
+  "version": 36,
+  "games": {
+    "pool": "pool.png",
+    "carrom": "carrom.png",
+    "crazy8": "cards.png",
+    "tablesoccer": "football.png"
+  },
+  "spriteSheet": "sprite-sheet.png",
+  "frames": {
+    "pool": {
+      "x": 0,
+      "y": 0,
+      "w": 256,
+      "h": 256
+    },
+    "carrom": {
+      "x": 256,
+      "y": 0,
+      "w": 256,
+      "h": 256
+    },
+    "cards": {
+      "x": 0,
+      "y": 256,
+      "w": 256,
+      "h": 256
+    },
+    "football": {
+      "x": 256,
+      "y": 256,
+      "w": 256,
+      "h": 256
+    }
+  }
+}

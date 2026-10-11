@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-08T08:50:36.099308+00:00",
+  "ok": true,
+  "tests": [
+    {
+      "command": "node tests/pool_runtime.js",
+      "passed": true,
+      "output": "{\"case\":\"rules and security\",\"checks\":25,\"localBreakMs\":54.82260400000001,\"frames\":119}\n{\"ok\":true,\"checks\":31,\"nativeLegalWinAndEarlyEightLoss\":true}\n"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 tests/pool_ws.py",
+      "passed": true,
+      "output": "[SamiDev Realtime] node=node-7b4016c1 store=memory\n[SamiDev Store] daily match reward uid=UZAqptxMu8SKuKql room=Y27DFP +50 coins\n[SamiDev Store] daily match reward uid=qtxwyooccCNSPKTI room=Y27DFP +50 coins\n{\n  \"ok\": true,\n  \"results\": [\n    \"Catalog, assets, authenticated invitation, two-player match and actual server break\",\n    \"Chat, spectator view, spectator move rejection, forged result rejection and seat ownership\",\n    \"Reconnect, GameHost restoration, resignation winner and platform finished-room lifecycle\"\n  ]\n}\n"
+    },
+    {
+      "command": "node tests/pool_client.js",
+      "passed": true,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 18,\n  \"viewports\": [\n    \"1440 desktop\",\n    \"390 portrait phone\"\n  ],\n  \"canvasRasterized\": true,\n  \"physicalBrowserTested\": false\n}\n"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 start_dev.py --check",
+      "passed": true,
+      "output": "[SamiDev GameHost] http://127.0.0.1:48903 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-166806ac store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/pool-integration/SamiDev_Platform_V25\nBuild:    samidev-v25-42bf9c75481bbaec\nGameHost: http://127.0.0.1:48903  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:46831/platform/?build=samidev-v25-42bf9c75481bbaec\nCHECK PASSED: all four games and all platform files are served by this project.\n"
+    }
+  ],
+  "limitations": [
+    "No physical mobile/browser test; client canvas rendered with DOM/network test doubles",
+    "Redis and production load not tested"
+  ]
+}

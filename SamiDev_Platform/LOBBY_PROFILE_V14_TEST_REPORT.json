@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "version": "V14",
+  "changedFiles": [
+    "game/platform/index.html",
+    "game/platform/platform.css",
+    "game/platform/platform.js"
+  ],
+  "mainJsChanged": false,
+  "sha256": {
+    "game/platform/index.html": "91dd3ab837a29f0a3b27da0e83cb1ca9efdd752764a9a88a84cb70a417659922",
+    "game/platform/platform.css": "4440b7c4818ade840bd0b0fea83c3de571f4124a1c16071d0e6dd294a5569bb5",
+    "game/platform/platform.js": "f7ccc47b8f25e13c572a4753b1dcbd0608326178284f84e6b7950303472908d3",
+    "game/main.js": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c"
+  }
+}

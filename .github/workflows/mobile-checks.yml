@@ -1,0 +1,38 @@
+name: Platform and mobile checks
+on:
+  workflow_dispatch:
+  pull_request:
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned Flutter
+        run: |
+          git clone --depth 1 --branch 3.47.7 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Analyze, test, and build debug Android
+        working-directory: SamiDev_Flutter
+        env:
+          SAMIDEV_SERVER_URL: https://ci.invalid
+        run: bash tool/verify.sh
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Flutter
+        run: |
+          git clone --depth 1 --branch 3.47.7 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Build simulator without signing
+        working-directory: SamiDev_Flutter
+        run: |
+          python3 ../SamiDev_Platform/tools/refresh_integrity.py
+          python3 tool/sync_assets.py
+          flutter pub get
+          flutter test
+          flutter build ios --simulator --debug --dart-define=SAMIDEV_SERVER_URL=https://ci.invalid

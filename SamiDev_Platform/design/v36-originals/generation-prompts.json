@@ -1,0 +1,48 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "name": "room-pool",
+      "file": "room-pool.png",
+      "prompt": "Use case: stylized-concept. Production 2D mobile board-game sprite, clean simple illustrated shapes, restrained soft shading, crisp readable silhouette at 54 pixels, warm friendly casual-game art. No labels, no text, no watermark, no UI frame. Square 1024px canvas. One compact centered cluster of three billiard balls: black 8-ball foremost, golden yellow and blue behind, one wooden cue diagonally behind. True transparent background, generous clear margin.",
+      "transparent_background": true
+    },
+    {
+      "name": "room-carrom",
+      "file": "room-carrom.png",
+      "prompt": "Use case: stylized-concept. Production 2D mobile board-game sprite, clean simple illustrated shapes, restrained soft shading, crisp readable silhouette at 54 pixels, warm friendly casual-game art. No labels, no text, no watermark, no UI frame. Square 1024px canvas. A small square classic light wooden carrom board seen directly overhead, four black corner pockets, simple red circle line marking, three small black ivory and red carrom discs near center. True transparent background, generous clear margin.",
+      "transparent_background": true
+    },
+    {
+      "name": "room-crazy8",
+      "file": "room-crazy8.png",
+      "prompt": "Use case: stylized-concept. Production 2D mobile board-game sprite, clean simple illustrated shapes, restrained soft shading, crisp readable silhouette at 54 pixels, warm friendly casual-game art. No labels, no text, no watermark, no UI frame. Square 1024px canvas. A centered fan of four rounded UNO-like playing cards, solid red blue yellow green faces, thick cream borders, simple large white oval and numeral 8 on front red card. No logo, no other text. True transparent background, generous margin.",
+      "transparent_background": true
+    },
+    {
+      "name": "room-tablesoccer",
+      "file": "room-tablesoccer.png",
+      "prompt": "Use case: stylized-concept. Production 2D mobile board-game sprite, clean simple illustrated shapes, restrained soft shading, crisp readable silhouette at 54 pixels, warm friendly casual-game art. No labels, no text, no watermark, no UI frame. Square 1024px canvas. A centered white-and-black football in front of a small green mini football pitch with two clean white lines, overhead/very slight three-quarter cartoon view, compact square composition, no player figures. True transparent background, generous margin.",
+      "transparent_background": true
+    },
+    {
+      "name": "table-background",
+      "file": "table-background.png",
+      "prompt": "Use case: stylized-concept. Asset type: quiet seamless game table background texture. Wide 1536x1024. A nearly uniform muted dark charcoal plum background, with a very subtle thin geometric diagonal diamond lattice and tiny dots where some lines intersect. Extremely low contrast tone-on-tone lines. Sparse, calm, flat, matte, simple. No flowers, no floral petals, no stars, no ornate motifs, no border, no text, no objects, no strong vignette. Designed for small white player names overlaid on top. Entire canvas opaque.",
+      "transparent_background": false
+    },
+    {
+      "name": "cue-classic",
+      "file": "cue-classic.png",
+      "prompt": "Use case: stylized-concept. Production game sprite: ONE classic billiards cue, perfectly straight, horizontal, orthographic side view. TIP AT FAR LEFT, butt at far right. Pale maple shaft, tiny blue chalk tip, ivory ferrule, warm walnut handle with a simple dark grip and understated narrow brass collars. Very thin long elegant cue occupying 90% of a wide 1536x1024 transparent canvas, centered vertically, no perspective, no cast shadow, no words, no extra objects. Clean simple 2D sprite shading, sharp edges. True transparent background.",
+      "transparent_background": true
+    },
+    {
+      "name": "cue-moon",
+      "file": "cue-moon.png",
+      "prompt": "Use case: stylized-concept. Production game sprite: ONE moon-themed billiards cue, perfectly straight, horizontal orthographic side view. TIP AT FAR LEFT, butt at far right. Pale silver shaft, tiny pale blue chalk tip, midnight navy handle with one clear ivory crescent moon emblem and only three tiny silver dots, narrow silver collars. Understated elegant lunar theme, simple design. Very thin long cue occupying 90% of wide 1536x1024 transparent canvas, centered vertically, no perspective, no external glow, no shadow, no words, no extra objects. Clean simple 2D sprite shading. True transparent background.",
+      "transparent_background": true
+    }
+  ],
+  "packing": "../build_v36_assets.cjs"
+}

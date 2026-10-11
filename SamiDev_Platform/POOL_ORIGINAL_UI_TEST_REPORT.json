@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-08T11:56:50.899530+00:00",
+  "ok": true,
+  "originalPoolImagesPreserved": 19,
+  "tests": [
+    {
+      "command": "node tests/pool_runtime.js",
+      "environment": {},
+      "passed": true,
+      "output": "{\"case\":\"rules and security\",\"checks\":31,\"localBreakMs\":65.79915599999998,\"frames\":119}\n{\"ok\":true,\"checks\":39,\"nativeLegalWinAndEarlyEightLoss\":true}\n"
+    },
+    {
+      "command": "python3 tests/pool_ws.py",
+      "environment": {},
+      "passed": true,
+      "output": "[SamiDev Realtime] node=node-36c04741 store=memory\n[SamiDev Store] daily match reward uid=3EKRzvihvjOLr7Kl room=VLGJ2E +50 coins\n[SamiDev Store] daily match reward uid=Lll2yyx6hoFSEo8S room=VLGJ2E +50 coins\n{\n  \"ok\": true,\n  \"results\": [\n    \"Catalog, assets, authenticated invitation, two-player match and actual server break\",\n    \"Chat, spectator view, spectator move rejection, forged result rejection and seat ownership\",\n    \"Reconnect, GameHost restoration, resignation winner and platform finished-room lifecycle\"\n  ]\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js pool online",
+      "environment": {},
+      "passed": true,
+      "output": "{\n  \"game\": \"pool\",\n  \"started\": true,\n  \"turn\": [\n    1\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 4 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 5 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 9 is not in this group\",\n    \"[SamiDev Sync] ignored authority alarm without reveal [object Object]\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 17 is not in this group\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js pool online",
+      "environment": {
+        "SD_MOBILE": "1",
+        "SD_LAYOUT_ONLY": "1",
+        "SD_VIEWPORT": "390x844"
+      },
+      "passed": true,
+      "output": "{\n  \"game\": \"pool\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 4 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 5 is not in this group\",\n    \"[game] [TimerGroup] [logic] clearTimer - Timer 9 is not in this group\"\n  ],\n  \"errors\": []\n}\nMOBILE_UI {\"viewport\":[390,844],\"canvas\":[585,1266],\"players\":[{\"seat\":0,\"radius\":50,\"fontSize\":40,\"name\":\"لاعب باسم طويل ل...\",\"maxNameWidth\":398,\"x\":726,\"y\":249.23076923076925,\"parentWidth\":1080,\"parentHeight\":2337.2307692307695,\"ancestors\":[{\"name\":null,\"x\":726,\"y\":249.23076923076925,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1168.6153846153848,\"w\":1080,\"h\":2337.2307692307695,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]},{\"seat\":1,\"radius\":50,\"fontSize\":40,\"name\":\"لاعب باسم طويل ل...\",\"maxNameWidth\":398,\"x\":354,\"y\":249.23076923076925,\"parentWidth\":1080,\"parentHeight\":2337.2307692307695,\"ancestors\":[{\"name\":null,\"x\":354,\"y\":249.23076923076925,\"w\":0,\"h\":0,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5},{\"name\":null,\"x\":540,\"y\":1168.6153846153848,\"w\":1080,\"h\":2337.2307692307695,\"sx\":1,\"sy\":1,\"ax\":0.5,\"ay\":0.5}]}]}\n"
+    },
+    {
+      "command": "python3 tests/original_assets.py",
+      "environment": {},
+      "passed": true,
+      "output": "{\"ok\": true, \"mediaFilesVerified\": 217, \"processedOriginalAudioFiles\": 105, \"preservedOriginalPoolImages\": 19, \"localAssetIndexesVerified\": 3, \"legacyHostHooks\": 0}\n"
+    },
+    {
+      "command": "python3 start_dev.py --check",
+      "environment": {},
+      "passed": true,
+      "output": "[SamiDev GameHost] http://127.0.0.1:49887 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-0e08dcbd store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/pool-original/SamiDev_Platform_V25\nBuild:    samidev-v25-8b3ebff59106b878\nGameHost: http://127.0.0.1:49887  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:37721/platform/?build=samidev-v25-8b3ebff59106b878\nCHECK PASSED: all four games and all platform files are served by this project.\n"
+    },
+    {
+      "command": "node tests/game_security_runtime.js",
+      "environment": {},
+      "passed": true,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 323,\n  \"carromConfigurations\": 10,\n  \"localShotMs\": {\n    \"max\": 13.519734,\n    \"average\": 4.6388338999999945\n  },\n  \"note\": \"Local fixed-shot timings are not a production load test.\"\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom online",
+      "environment": {},
+      "passed": true,
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js crazy8 online",
+      "environment": {},
+      "passed": true,
+      "output": "{\n  \"game\": \"crazy8\",\n  \"started\": true,\n  \"turn\": [\n    1\n  ],\n  \"warnings\": [\n    \"resync requested\",\n    \"[game] Texture width 125.00000000000001 is float, rounded to 126\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js tablesoccer online",
+      "environment": {},
+      "passed": true,
+      "output": "before-shot [ 0 ] true [ 0 ] [2,1] [2,1] []\nafter-shot [ 0 ] [ 0 ] [5,3] [5,3]\n{\n  \"game\": \"tablesoccer\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"flags\": [\n    \"Red.c.h\",\n    \"Blue.c.h\"\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [tg1] clearTimer - Timer 1 is not in this group\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    }
+  ],
+  "limitations": [
+    "Native WebGL and audio APIs mocked; no graphical browser or physical phone test",
+    "Redis and production load not tested"
+  ]
+}

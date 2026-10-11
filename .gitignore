@@ -1,0 +1,65 @@
+# Build and binary artifacts
+*.apk
+*.aab
+*.zip
+*.tar.gz
+*.ipa
+*.app
+
+# Temporary and patch directories
+باتش/
+patch/
+*.diff
+*.patch
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+**/build/
+**/.dart_tool/
+**/.gradle/
+local.properties
+key.properties
+*.jks
+*.keystore
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# Node / JS
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Logs & temporary runtime files
+*.log
+*.tmp

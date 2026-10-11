@@ -1,0 +1,105 @@
+{
+  "baseline": "SamiDev_Mobile_Fix.zip",
+  "changes": [
+    {
+      "path": "GAME_SECURITY_FIX_AR.md",
+      "status": "added",
+      "sha256": "507b126c8722e5c7197e4b205292e9764495d50226a56081ec020724c93a0533"
+    },
+    {
+      "path": "GAME_SECURITY_TEST_REPORT.json",
+      "status": "added",
+      "sha256": "18b10df65d8cb241f1e5723680e75a27d8e3f34d25c495bf57d7515f61088a55"
+    },
+    {
+      "path": "ORIGINAL_ASSETS_TEST_REPORT.json",
+      "status": "modified",
+      "sha256": "807a94dfced4fb195043254aeba6b19fd1bfc488e393a9545c9188dd69655c79"
+    },
+    {
+      "path": "SECURITY_PATCH_NOTES_AR.md",
+      "status": "modified",
+      "sha256": "137dc239c150a6f041e196bb250f5f6d0a5406bcf3d3e8b9e92cc93ddd9c1b18"
+    },
+    {
+      "path": "backend/app.py",
+      "status": "modified",
+      "sha256": "ded320db0232466e5f977321ba0483e3a4f5a6a84fb1b001b677f500f8c89dd8"
+    },
+    {
+      "path": "backend/store.py",
+      "status": "modified",
+      "sha256": "d6b0d6c48bdbe8945e9513747f288965fcf059507be05c24201ad216b6207f6b"
+    },
+    {
+      "path": "gamehost/carrom.js",
+      "status": "added",
+      "sha256": "60bc9c38ebc6914353f0803a0b1f74c93ec6097cc5bdfb44c241e0e7da29f46d"
+    },
+    {
+      "path": "gamehost/runtime.js",
+      "status": "modified",
+      "sha256": "557e80a2ca66ef10e2f363fd214c0ea21039f705868ecedb0084847139227596"
+    },
+    {
+      "path": "gamehost/server.js",
+      "status": "modified",
+      "sha256": "d21eb5ced55defafcd8f8db62697d71a00b2755be30b1ed5ae72e9c5c6cf3673"
+    },
+    {
+      "path": "gamehost/validation.js",
+      "status": "modified",
+      "sha256": "9177f2b6cae2442502a54bcf018a51cc7c07f7ce3a2bd9e9a8c289515def9609"
+    },
+    {
+      "path": "start_dev.py",
+      "status": "modified",
+      "sha256": "d376fc5559d14c0153115d68656c90a197bd0e643d709c7cd29610ace5981bcf"
+    },
+    {
+      "path": "tests/game_security_client_sync.js",
+      "status": "added",
+      "sha256": "92a0ecf29eb4594021a15088c40d29b2bc5c6f776cbb11b42d8207fd39fd8757"
+    },
+    {
+      "path": "tests/game_security_config.py",
+      "status": "added",
+      "sha256": "36a328a62cefeb30674ca2f4f2ac6fbde146df5503a1c9d4c6c15d36cc7d3274"
+    },
+    {
+      "path": "tests/game_security_runtime.js",
+      "status": "added",
+      "sha256": "dd9b5be3b52c41bbfbe4fa7c884c97e4dfe90910baf88a0a28654751919e1f31"
+    },
+    {
+      "path": "tests/game_security_store.py",
+      "status": "added",
+      "sha256": "e6a965289755c33c7e1ace9a6bd9a7df0a9bb5fc4f3a6569f34dd3d8b9ec74c1"
+    },
+    {
+      "path": "tests/game_security_ws.py",
+      "status": "added",
+      "sha256": "c7ad51cfd20f44534fa4637159cc8d3144837fc1ae405d2369c6ac302e0546e8"
+    },
+    {
+      "path": "tests/gamehost_conformance.js",
+      "status": "modified",
+      "sha256": "654fb07134937e52fc5f12e29b10025cda5118943f17d397a96724b2692022d8"
+    },
+    {
+      "path": "tests/state_checkpoint_regression.js",
+      "status": "modified",
+      "sha256": "42aa5f29437cbbcfac581f3ddcc71267db11cf25bb7802ad64df9fe046454687"
+    },
+    {
+      "path": "tests/turn_authority_regression.js",
+      "status": "modified",
+      "sha256": "5e315249700517f6f0f00f8544421036312bb231ed3324b1147015946f265f5f"
+    },
+    {
+      "path": "tests/verify_game_security.py",
+      "status": "added",
+      "sha256": "180cea855943986f540a2747d5e0bb29bcb21925befeedbc770df1be7571d298"
+    }
+  ]
+}

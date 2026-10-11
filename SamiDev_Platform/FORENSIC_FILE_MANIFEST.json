@@ -1,0 +1,171 @@
+{
+  "root": "/mnt/data/SamiDev_Platform_V1_repair/SamiDev_Platform_V1",
+  "files": [
+    {
+      "file": "game/browser-runtime.js",
+      "bytes": 47066,
+      "lines": 905,
+      "sha256": "cc94de524c9e318f5184088303ffd35d4636431c433c17b9c767c357aa630857",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 905,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "game/samidev-network.js",
+      "bytes": 13453,
+      "lines": 372,
+      "sha256": "e3770c2caed1a65cc88bdd5dd3a6c6b56864d95e22ba4acbc9dbb3d5bc251216",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 372,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "game/chat-ui.js",
+      "bytes": 17443,
+      "lines": 377,
+      "sha256": "2cfea41f83539c64d2be922da2f002841b98b2bf083531242b95a9ddaae4546e",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 377,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "backend/app.py",
+      "bytes": 39254,
+      "lines": 803,
+      "sha256": "1de0f00c5def80537b29640fd102e4338361c567457c2a93d77bdedd05a73dd6",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 803,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "backend/store.py",
+      "bytes": 55407,
+      "lines": 1092,
+      "sha256": "d81b3855ab27457639e8945723de17fbe51165db6692c018fd2e2ca59ab8fec2",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 1092,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "backend/gamehost_client.py",
+      "bytes": 7456,
+      "lines": 168,
+      "sha256": "91c402411944877f4ab8a2156074acc7142b01d3cd47cd5634f284aaafaec477",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 168,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "gamehost/runtime.js",
+      "bytes": 20114,
+      "lines": 527,
+      "sha256": "ad37823402133ba190f989eb9fd6e3e35c491d90581ed6bb4e986f77556af4aa",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 527,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "gamehost/server.js",
+      "bytes": 12098,
+      "lines": 297,
+      "sha256": "27e683c10e183c1a0452bcc59303e942d7b7cf47eb5e91eb2c9760bf81aab1b6",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 0,
+        "CRLF": 297,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "game/main.js",
+      "bytes": 948671,
+      "lines": 602,
+      "sha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 602,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    },
+    {
+      "file": "deploy/nginx/nginx.conf",
+      "bytes": 4813,
+      "lines": 124,
+      "sha256": "a2bab4fc8b61c81764aa07c182df29854306ec5e7f742c03f49d8998c10fdc8b",
+      "bom_utf8": false,
+      "nul_bytes": 0,
+      "newlines": {
+        "LF": 124,
+        "CRLF": 0,
+        "CR": 0,
+        "NONE": 0
+      },
+      "unexpected_ascii_controls": [],
+      "unicode_format_chars": []
+    }
+  ],
+  "totals": {
+    "files": 10,
+    "bytes": 1165775,
+    "lines": 5267,
+    "ledger_rows": 5267
+  }
+}

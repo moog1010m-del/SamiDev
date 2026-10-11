@@ -1,0 +1,671 @@
+{
+  "base": "SamiDev_Platform_V1_store_wallet_rewards_v23",
+  "target": "SamiDev_Platform_V24",
+  "changes": [
+    {
+      "path": "CHANGES_AR.md",
+      "status": "modified",
+      "sha256": "5635b2cbe58e379ecc1d06e51eb164088b0bfd1eade2db1a124225eb7a5f4ea6"
+    },
+    {
+      "path": "CLIENT_RESYNC_TEST_RESULTS.txt",
+      "status": "modified",
+      "sha256": "5b8fde15824ce6d7868edc3b4a031a42464d87b85b802324047d2075f7355a61"
+    },
+    {
+      "path": "FORENSIC_CROSS_REFERENCE.txt",
+      "status": "modified",
+      "sha256": "800ecf3b172bec9bf7fb03aea4d62ad6d07a7174ed06bf4df607b8b6aa9a8492"
+    },
+    {
+      "path": "FORENSIC_LINE_LEDGER.csv",
+      "status": "modified",
+      "sha256": "7b768d27c47957872c884d0766d88a401ccaccc669d18322aa0cadb2d802991a"
+    },
+    {
+      "path": "FORENSIC_MAINJS_ZONE.txt",
+      "status": "modified",
+      "sha256": "bc34f2118654299a5e7a56265833d2991ca6dd27a1b2930ac41f4d9755e8e844"
+    },
+    {
+      "path": "NATIVE_LOGIC_FIX_NOTES_AR.md",
+      "status": "modified",
+      "sha256": "d516817146677521ead8c632fe79e6b9f9b99dc3b88bbc65b5e9d8cb8402a6be"
+    },
+    {
+      "path": "NATIVE_LOGIC_FIX_TEST_REPORT.json",
+      "status": "modified",
+      "sha256": "aa8fbda55121ec9affff0c8f2ea3eaba11550a409642caf862173a9e87b972df"
+    },
+    {
+      "path": "PROFILE_V10_NATIVE_AVATAR_TAP_FIX_AR.md",
+      "status": "modified",
+      "sha256": "53023f07f4851ad3722677ba0092fe5d3b0b4a55eca71acd9be2a9b01fafa496"
+    },
+    {
+      "path": "PROFILE_V11_NATIVE_HIT_TARGET_FIX_AR.md",
+      "status": "modified",
+      "sha256": "6a96540072e60f5a2f91c30ef913ad7aa63013990cc61a41d58bdbdc86f63b2a"
+    },
+    {
+      "path": "PROFILE_V11_TEST_REPORT.json",
+      "status": "modified",
+      "sha256": "b20530ddc07047019ab95c6ac5876c80c635bf2c52e86183720a78156542cbdb"
+    },
+    {
+      "path": "README_AR.md",
+      "status": "modified",
+      "sha256": "187ac2007e92c20661fd8c097be6fafbfd2f1fe1dc0844b1ed60bc3b04cf21c0"
+    },
+    {
+      "path": "SLIDER_FIX_NOTES_AR.md",
+      "status": "modified",
+      "sha256": "652bb79d7160a436000a6be8292681353d54c17c9cd0e9cdd247e18c64ba30c9"
+    },
+    {
+      "path": "SLIDER_FIX_TEST_REPORT.json",
+      "status": "modified",
+      "sha256": "fc0b4346d201e6685491f4da75b3c78727ad397b87eecb4ae3d87ad06cec41fd"
+    },
+    {
+      "path": "V24_TEST_REPORT.json",
+      "status": "added",
+      "sha256": "1282c07b6bc8424d034fbca2fe561adb4fbca2f2a788e527eac317cde534ab87"
+    },
+    {
+      "path": "backend/app.py",
+      "status": "modified",
+      "sha256": "d1939d5d1d8b31799ddac722c83279b9da942b9df9766b191bb37af602d79aa5"
+    },
+    {
+      "path": "backend/games.py",
+      "status": "added",
+      "sha256": "c65b6ff2447a5511ab53fa0a5756379a80ac4e5268e3014a80101ea57afcdf38"
+    },
+    {
+      "path": "backend/social_platform.py",
+      "status": "modified",
+      "sha256": "3933be36226c96f9f94c41dbdced8920402c5492a24eaf2ceab7c89e89a9a6d6"
+    },
+    {
+      "path": "backend/store.py",
+      "status": "modified",
+      "sha256": "f39caa406850d4d3ab02dfad392bb61127086ab0091fd51f03edfe7b321818f7"
+    },
+    {
+      "path": "docker-compose.yml",
+      "status": "modified",
+      "sha256": "9648a08100ba94bde602241358d9188567353190301a587185582075275224fa"
+    },
+    {
+      "path": "docs/legacy/README_V23_AR.md",
+      "status": "added",
+      "sha256": "2a2208bd980aca6410aaccafab02409fa19fc39fe167610836be2e198a462b9b"
+    },
+    {
+      "path": "game/attestation.json",
+      "status": "modified",
+      "sha256": "f9f7c027be85330bc0c8233bc4398e530f599ee1f567009bc3daa03794e2d101"
+    },
+    {
+      "path": "game/browser-runtime.js",
+      "status": "modified",
+      "sha256": "8f494cbd66abef4c3982f4f4e3c0d5925af63114249a3d43012e7ad9abadf481"
+    },
+    {
+      "path": "game/games/tablesoccer/__assets.json",
+      "status": "added",
+      "sha256": "29bbd1fab8b3c45db628a8c5fdd7654a1ee4fa03e3280f1a953870ad83a4e438"
+    },
+    {
+      "path": "game/games/tablesoccer/attestation.json",
+      "status": "added",
+      "sha256": "5fde1ba367b4c6dcd8526fe34303359e0f9c6d5bbcb63c9d6adc25625edea9cf"
+    },
+    {
+      "path": "game/games/tablesoccer/dictionary.json",
+      "status": "added",
+      "sha256": "f902b2a1cca2384643893dc54976bb4298c2eb9d8fae266d91cc7735394e3634"
+    },
+    {
+      "path": "game/games/tablesoccer/images/ball-standard.png",
+      "status": "added",
+      "sha256": "2fbf0cf7c503c653612a8fb3fb093fa87d62d0ccd2f86535d2fae103b27f87e3"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-img-standard.png",
+      "status": "added",
+      "sha256": "32a208a7a5cea789e61f2d6dac6a52fa7fd1099e10226e7ad9b14d3e1eb572a7"
+    },
+    {
+      "path": "game/games/tablesoccer/images/bg-music-standard.m4a",
+      "status": "added",
+      "sha256": "3aab153a0f4e74cb411058c16128aaebfdb03fa28f97ec6b38f458de565fb6ef"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-1-standard.png",
+      "status": "added",
+      "sha256": "c44c0848439efee861e7284352323b67088eacbf3db9807b32e83e5924e35e43"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-2-standard.png",
+      "status": "added",
+      "sha256": "ec94f434f1860690ddf62c267bf9379122386279571de2579a219941773e7e04"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-3-standard.png",
+      "status": "added",
+      "sha256": "e60dbb8133aee18090ca8cdef93e4eef141e8511499eeef71c59fb9a427e61d4"
+    },
+    {
+      "path": "game/games/tablesoccer/images/confetti-4-standard.png",
+      "status": "added",
+      "sha256": "6ebca2e8c9fe529bba04ed09750b0cd58a1d77544b2836231c3aab794b4aa37d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_away.png",
+      "status": "added",
+      "sha256": "ec307371c3aa3394e01f38233dd8f87ec5ddd1cda3099bd944317d970f114486"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_home.png",
+      "status": "added",
+      "sha256": "e0b6b80ee2e84415bcac87cb376431c03fce8246130e3611cbcd38a08835475d"
+    },
+    {
+      "path": "game/games/tablesoccer/images/default_shop_preview.png",
+      "status": "added",
+      "sha256": "95e3ec14d726b91a5ace09476a534432edbf700b89ffc1d4b4dd6c92e3c41442"
+    },
+    {
+      "path": "game/games/tablesoccer/images/field-img-standard.png",
+      "status": "added",
+      "sha256": "16ca9219a91095ca50951633ffce5458f4f42204d0b74649df971a7a53d8f970"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goal-scored-standard.png",
+      "status": "added",
+      "sha256": "c86cef8d76de0e88e1b214d26c6d4c816b77f86e10fa3e6e427d43b2cced4804"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-bottom-standard.png",
+      "status": "added",
+      "sha256": "b3307b797b0229018789537c4a230bc90fb175c292f1de4c082711386e5cb4b5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/goalpost-top-standard.png",
+      "status": "added",
+      "sha256": "b3307b797b0229018789537c4a230bc90fb175c292f1de4c082711386e5cb4b5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/main.webp",
+      "status": "added",
+      "sha256": "60198513e8d2415832b867663d19e1e33fbcaa4f93ace067189b41d1e844fae5"
+    },
+    {
+      "path": "game/games/tablesoccer/images/stadium-img-standard.png",
+      "status": "added",
+      "sha256": "1ba11bd1d06d825ccf477f6ee4beccc11c7aab1a32f819f4b1b3f8b41ec6b1dd"
+    },
+    {
+      "path": "game/games/tablesoccer/images/thumbnail-standard.png",
+      "status": "added",
+      "sha256": "7796e30fa3a3bab0083cfbe5e83074a24e6bd9de442379e1b7071395d9e3f57a"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/4t14z891l498z.json",
+      "status": "added",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/m62iouofbtlun.json",
+      "status": "added",
+      "sha256": "c9dff19b10fb32434f5657ab06891ffefed593d183d2f1b0515c05ba1683b84e"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/m62iov2pp2bp7.json",
+      "status": "added",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/nu48zpm37rb63.json",
+      "status": "added",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/nu4qt62sr5zyl.json",
+      "status": "added",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "game/games/tablesoccer/imported/qy83mupbbvfur.json",
+      "status": "added",
+      "sha256": "5c3c2543293f9dcc881a47de08b1178164096bab564acab990c330c9335822d9"
+    },
+    {
+      "path": "game/games/tablesoccer/index.html",
+      "status": "added",
+      "sha256": "45a01c4147244c4da6a90349219fc43a8186416e172d9251beaf8faef3144aaf"
+    },
+    {
+      "path": "game/games/tablesoccer/main.js",
+      "status": "added",
+      "sha256": "741459b8538d28969aad460d2313cacb336862f3e433bb4c7a5bcaa5ca75bf84"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_empty_seat.png",
+      "status": "added",
+      "sha256": "7f88f02b1791d29bb3647b726b294574ce747c9e23783ef8fb8a6ffe2a45aaff"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_join.png",
+      "status": "added",
+      "sha256": "868d3eda5b96b9b9a110775cdaf11009e4dfc7160a25190de24ccd2208d39e77"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/player_indicator.atlas",
+      "status": "added",
+      "sha256": "35952b6a72f4dc127a787bea86b1884908320f980a975bd1f41d084c19434de7"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/player_indicator.json",
+      "status": "added",
+      "sha256": "a8461e55dd66c4431f6bcc5e1fa99f8432bff996ec56d06dd85394836ec41c74"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/player_indicator.png",
+      "status": "added",
+      "sha256": "4ae8f148dea5707b21ea4e7649b5e7dcc5933bec46c57ff6b23704e4d75e371a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_bot.webp",
+      "status": "added",
+      "sha256": "9b83a7cdc8fbd43fd6d6c1a7a97895aa22a0cae304e41e947e8890714294954c"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/scene_avatars_owner_badge.webp",
+      "status": "added",
+      "sha256": "753c9cb2d7e99abd7c0def99b0332707f190471814ef2ec0c38fd14beb3d74ba"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+      "status": "added",
+      "sha256": "c28ba86aa4103f03c914438d253385e3e226693af5df22c69bb27e255946edf8"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/bells.m4a",
+      "status": "added",
+      "sha256": "b19bedd869f8b92f5d42f316d9e00990dff01cde384c88f9f41bb48e87bfd8d5"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/gift_icon.webp",
+      "status": "added",
+      "sha256": "3ca74adce963a9375b93b3ee36b82f27ee6bc29ae9c744ac4748b695db34edd8"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/reactions.webp",
+      "status": "added",
+      "sha256": "344011bfc6ccc68e9a4dc7748fbe10f73665d978342e7450bd6f45db70b04708"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+      "status": "added",
+      "sha256": "e9c1611ce45b1173d9ae74630688128f047e14a45a602bfbc271bcb11b98d890"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+      "status": "added",
+      "sha256": "3dcfc328e368ba0744878397942a1609c84844ffe340606c19917e28395c4989"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_dictionary.json",
+      "status": "added",
+      "sha256": "2c418d436e80aab130f1b7093bf735b667cf050a22942b4ba385c2b2d17ea957"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_icon.png",
+      "status": "added",
+      "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+      "status": "added",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_clear.webp",
+      "status": "added",
+      "sha256": "5b1e4a1ddaadefa78417cf98b8798326be0815fc877fbf2cd711ed656a8f7651"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_coin.webp",
+      "status": "added",
+      "sha256": "aaf5d8a652df8b557f6ee5a3ae04f6a5a846d1bd346331e5e41e31e23d762013"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_dictionary.json",
+      "status": "added",
+      "sha256": "66cd7345ff797d727e3fb9f12713119df3c7cea0c5f56dc797b96abe88cd9731"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_equipped.webp",
+      "status": "added",
+      "sha256": "07cf6a8ed294b6ff7d6b5b7bebbd439e8e03599e435cd990ac69e3fe454f6b95"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "status": "added",
+      "sha256": "9ae2d9e7491d0145bc83bd56cefe90c5f26aeec495a61aff6c88800f33fbc40a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "status": "added",
+      "sha256": "5eb10667b7db131c3720ff3c1ee2ee8e4601087095d0e9da67d8992373616675"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.webp",
+      "status": "added",
+      "sha256": "2e85c73b1c06ae51a55711a574255a1c854bccd71f913be62050d4e092d9f97a"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_loading.webp",
+      "status": "added",
+      "sha256": "f566b13160c01ed779e740c9772b6216f1771754aaa0b787b9ef37130cee8543"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+      "status": "added",
+      "sha256": "e2ce369e2f8df23c577bf3750246d56418819f565ac016a7561842da8d50434c"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_pip.webp",
+      "status": "added",
+      "sha256": "d9af30b088bc7c9fe52dc50416e615c71d68e5e5f5098231f3917be6ee6256c1"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_search.webp",
+      "status": "added",
+      "sha256": "d6bed81de87db7d16347eec42537c52fba61cfb0082972534f62032a283f3da9"
+    },
+    {
+      "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "status": "added",
+      "sha256": "7ee17da93e0ff06e1e0a0372c2c5497997e6c299b47b1a78393f13f39399bda4"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem1.m4a",
+      "status": "added",
+      "sha256": "83c5e5a5f3cfda050d6efff7eed4421a692f0ef1d57e23608d7476390fff7235"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem2.m4a",
+      "status": "added",
+      "sha256": "14e9d80a5e4119a84e4b2462f69a21fbe313ea425445496e5def95cb64b3c747"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem3.m4a",
+      "status": "added",
+      "sha256": "f09dde3c8e5c12956bd5a88ac14abb5a0fffbda104c98779a2c348a3ebd31e37"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ahem4.m4a",
+      "status": "added",
+      "sha256": "ebe93727d8da2088b1f07c8abc802d6131c865e1411cc668a2393b89e5d719db"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long1.m4a",
+      "status": "added",
+      "sha256": "1389952163109ccf586a81c3dd07edd64c5338ee3d99a096ba4e2bdf4624b42e"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long2.m4a",
+      "status": "added",
+      "sha256": "8035074fa18ba4168ed1e050a795419c10a5688aee1427fb4ed29e1b8294d09f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_long3.m4a",
+      "status": "added",
+      "sha256": "278f162d7a0f43f27a146588dde83357f2e6b69a060e1bdf75ce0f242b0587a5"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short1.m4a",
+      "status": "added",
+      "sha256": "95270d214d039e30afce27d130223a6db54bfc476803607479d21c4dec39562e"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/ball_short2.m4a",
+      "status": "added",
+      "sha256": "ebab2ec5eb438b914484e12059e5d104a8ef6bf3b1d0053bf148fc2d57b9ebce"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/goal1.m4a",
+      "status": "added",
+      "sha256": "fd25bb45866442a78f872252ed4d619c88d6d0c45eb2034eef2fc1b7ee777b21"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/post1.m4a",
+      "status": "added",
+      "sha256": "f0f6045ec4f9ffa14ad29108ad96ee5951033791d90c03d7cd96f7c4f106fdbb"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap.m4a",
+      "status": "added",
+      "sha256": "8187adc4ab98616b5d659b45bbe19e7473adeeec8f6c761a97ecf1451733d6b9"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+      "status": "added",
+      "sha256": "6acea59dc9130231823d652049bfcdbd09d0d5b37ba94006023a973695ea267a"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit1.m4a",
+      "status": "added",
+      "sha256": "4d735276b451b8a88ab0b7b7988e16407da7571792c62d4de9df7f71546e9aba"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit2.m4a",
+      "status": "added",
+      "sha256": "3fa7a28e550908882c6e9c6243b30620a6b9385a8042b6a7a044a835e21844d0"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_hit3.m4a",
+      "status": "added",
+      "sha256": "7ec3a731bef43a969800eb58501bcb47f961482c06ca09d2f8d04719650cdfbf"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide1.m4a",
+      "status": "added",
+      "sha256": "b5e29f70f05cb436757281f166f42e9eb2f56519d3e2f12dd9cc8f6e71bacbf8"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/token_slide2.m4a",
+      "status": "added",
+      "sha256": "7eec7ec02870f7417428e0cd6d562975d4011c6db9b530b26af1aea5f8484b61"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whistle1.m4a",
+      "status": "added",
+      "sha256": "76260d1b2224bccf1f66e02078d3576251a403cac14ca55e116f04f1d2719bf9"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/whoosh.m4a",
+      "status": "added",
+      "sha256": "cd3ae4dc88853996900e6c78a76ffbfaf69839a54053172b11e83cbc2ae9ca56"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_lose1.m4a",
+      "status": "added",
+      "sha256": "29247e702f28b75f498a2ded17795e86e1101f5f4a20c41ad0a959d936de4f9f"
+    },
+    {
+      "path": "game/games/tablesoccer/sounds/you_won1.m4a",
+      "status": "added",
+      "sha256": "007c2e7e392451c6ffc7fd77e0698ba8249bfdc904027e7687491aa716dfe7c0"
+    },
+    {
+      "path": "game/index.html",
+      "status": "modified",
+      "sha256": "97b34b54399fca544c4d87b5159acbdfa138fbdbf4d8f849426aaadb7ce5f133"
+    },
+    {
+      "path": "game/launcher.js",
+      "status": "modified",
+      "sha256": "7537f2931588206fc05993f373621922d449d0782ae02ae85c4e0240071e3605"
+    },
+    {
+      "path": "game/main.js",
+      "status": "modified",
+      "sha256": "718c80249878db84d08d86ffc98971041ab35d7f86b3b198e70fedd237c53215"
+    },
+    {
+      "path": "game/platform/index.html",
+      "status": "modified",
+      "sha256": "4aa34863e4711d88c86ba10a54f84d5c300d81486ab5115534e84be932a3c1c5"
+    },
+    {
+      "path": "game/platform/platform.js",
+      "status": "modified",
+      "sha256": "7f5818a65d2d4c87dd54fc3ba92113cef3f3302eec36a275b613bdc672a98a4d"
+    },
+    {
+      "path": "game/player-profile-ui.js",
+      "status": "modified",
+      "sha256": "da35f479a75bdc45abbebbd3f0c5c602835739256db6e132f2bb15735592c7ed"
+    },
+    {
+      "path": "game/samidev-games.js",
+      "status": "added",
+      "sha256": "5244879aa88881b01a67d1657e0fe79775fba7078d72e34b7bafc32656a2fd50"
+    },
+    {
+      "path": "game/samidev-integrity.json",
+      "status": "added",
+      "sha256": "58fc614b7a10bdbcb72bf47bd3e4ae05ab49ff96257e801098dcbfdfcd23a430"
+    },
+    {
+      "path": "game/samidev-network.js",
+      "status": "modified",
+      "sha256": "91e22e8362da007c8650999060f782dc930bce2396bd41ee7ac91fd53b4b39e2"
+    },
+    {
+      "path": "game/web-bridge.js",
+      "status": "modified",
+      "sha256": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e"
+    },
+    {
+      "path": "gamehost/runtime.js",
+      "status": "modified",
+      "sha256": "2c2d77a0d4d31ea5e604fdf06b4de228e7314df2f6b7563083c2571d799843a2"
+    },
+    {
+      "path": "gamehost/server.js",
+      "status": "modified",
+      "sha256": "1c7297645d85ef7fefb114951c7ff3f17f7d64c837345c6e45d33ec2e0614086"
+    },
+    {
+      "path": "gamehost/tablesoccer.js",
+      "status": "added",
+      "sha256": "062feafb403fcbd46abb3e798241397bb3e827ce8fb449b5ff0f196c7cb0e88b"
+    },
+    {
+      "path": "gamehost/validation.js",
+      "status": "added",
+      "sha256": "4ce130f3e410da7e6800a96d5f3ee7f2d87524672952a7730dfba14acf1a39b0"
+    },
+    {
+      "path": "start_dev.py",
+      "status": "modified",
+      "sha256": "6fcc0c1ba1a32e7639ac743ea7c51b891746f77a3fe80ca227e3b18751a96e0d"
+    },
+    {
+      "path": "tests/alarm_authority_regression.js",
+      "status": "modified",
+      "sha256": "c07ee59cafdc30ab6803ed35aa14eaa08d23185a7fd9533569e28dd60d103f6a"
+    },
+    {
+      "path": "tests/browser_multigame_smoke.js",
+      "status": "added",
+      "sha256": "6c07b4180090e35e0fda60ba7e5521f0b40ad8b0e75e32d7f20c6a6a82aaa200"
+    },
+    {
+      "path": "tests/browser_runtime_race_regression.js",
+      "status": "modified",
+      "sha256": "95ef6f3db878c0b3a7c9c2fe04956240ce590a7fbb72f2a681dabdf34a048e05"
+    },
+    {
+      "path": "tests/client_resync_regression.js",
+      "status": "modified",
+      "sha256": "a493e73bc188ccbed981876622d9fc8e107e33eec9ab8d7067f6dc02db1ec5e8"
+    },
+    {
+      "path": "tests/gamehost_conformance.js",
+      "status": "modified",
+      "sha256": "c96f3f0b0b65359d1a01afd2ee15cb2fd4c10f66f8ff432fd874b0a5718ca153"
+    },
+    {
+      "path": "tests/mainjs_observer_regression.js",
+      "status": "modified",
+      "sha256": "4abf8cdfa1f2c2f4fe73d1ffdc12a31b8233462fc5938410c1f957ecd8e3d08f"
+    },
+    {
+      "path": "tests/multigame_routing.js",
+      "status": "added",
+      "sha256": "d2c12ae085c154ee0515dff01210e79d5c7379319bb1b41fdf3e2ce1654cf46a"
+    },
+    {
+      "path": "tests/multigame_runtime.js",
+      "status": "added",
+      "sha256": "cef3910730cf9b1fe3f83cdf6d1a0a5d3221301557c1a0fd0aa37b1c6629a5ce"
+    },
+    {
+      "path": "tests/multigame_ws.py",
+      "status": "added",
+      "sha256": "0abde4ef5992db0cdbd3282a3db824dee4dccce2be3629cb3f608b84fefae07b"
+    },
+    {
+      "path": "tests/player_profile_click_regression.py",
+      "status": "modified",
+      "sha256": "123212567572094a3b85fb35dc467727eda627c6956d007291627b269de6f08e"
+    },
+    {
+      "path": "tests/profile_ui_regression.py",
+      "status": "modified",
+      "sha256": "a0e17d9d9564e6b6c7f57721a8d1a499c094caa67d67b8b321537dc834b0d7ea"
+    },
+    {
+      "path": "tests/state_checkpoint_regression.js",
+      "status": "modified",
+      "sha256": "a25fb6708f53a640adcc4cf255685c0ffb59999105f1be062a6e1eaa2dd90638"
+    },
+    {
+      "path": "tests/striker_move_regression.js",
+      "status": "modified",
+      "sha256": "7e8a32dfe71723cff59195e96277c51794083ea42f31199fcabcd38cf615faf1"
+    },
+    {
+      "path": "tests/timeout_afk_regression.js",
+      "status": "modified",
+      "sha256": "8e52f2311c6dd18c500630649c9c109e781ebc3b8937589b7df5ce669bc8ec0f"
+    },
+    {
+      "path": "tests/turn_authority_regression.js",
+      "status": "modified",
+      "sha256": "f43dc0bcc946c30b928c99875b3c020533d5b88b660bd4c409d357b518454330"
+    },
+    {
+      "path": "tests/turn_resize_race_regression.js",
+      "status": "modified",
+      "sha256": "606a7757946dc3879b3710a0c6db9678607c566132a51eaf7f2818e42c68cc9f"
+    },
+    {
+      "path": "tools/forensic_audit.py",
+      "status": "modified",
+      "sha256": "63a606f972c895d1025aab57bb0ec0bb04d2e2cdccceae12fc14b1b329a3c086"
+    },
+    {
+      "path": "tools/update_game_integrity.py",
+      "status": "added",
+      "sha256": "9d5261b179d8836c74e9b0f0eb848bb22f5533d763599ed2cb591e2061469920"
+    }
+  ]
+}

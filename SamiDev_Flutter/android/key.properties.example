@@ -1,0 +1,4 @@
+storePassword=SET_LOCALLY
+keyPassword=SET_LOCALLY
+keyAlias=samidev
+storeFile=/absolute/private/upload-keystore.jks

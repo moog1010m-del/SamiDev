@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "version": "V11",
+  "fix": "native avatar hit target inside main.js",
+  "mainJsSha256": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c",
+  "nativeHitTarget": {
+    "type": "scene Node",
+    "size": [180, 180],
+    "gesture": "Drag1 end",
+    "calls": "Avatar._onImageTap -> SamiDev.showProfile -> SamiDevPlayerProfileUI.openSeat"
+  },
+  "gamehost": {"checksPassed": 369, "checksFailed": 0},
+  "regressions": {
+    "profileClick": true,
+    "profileSocial": true,
+    "gameAvatar": true,
+    "avatarExit": true,
+    "winStats": true,
+    "profileUi": true,
+    "alarmAuthority": true,
+    "timeoutAfk": true,
+    "turnResizeRace": true,
+    "strikerMove": true,
+    "clientResync": true,
+    "turnAuthority": true,
+    "stateCheckpoint": true,
+    "browserRuntimeRace": true
+  }
+}

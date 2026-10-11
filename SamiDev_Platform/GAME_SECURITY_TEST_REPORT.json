@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-09T18:09:25.137234+00:00",
+  "ok": true,
+  "limitations": [
+    "No production load test or actual phone browser test",
+    "Redis only tested if SAMIDEV_TEST_REDIS_URL is supplied"
+  ],
+  "tests": [
+    {
+      "command": "node tests/game_security_runtime.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 323,\n  \"carromConfigurations\": 10,\n  \"localShotMs\": {\n    \"max\": 16.21917099999999,\n    \"average\": 4.3084786999999976\n  },\n  \"note\": \"Local fixed-shot timings are not a production load test.\"\n}\n"
+    },
+    {
+      "command": "python tests/game_security_store.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"checks\": {\n    \"memory\": 39\n  },\n  \"redisTested\": false\n}\n"
+    },
+    {
+      "command": "python tests/game_security_ws.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "[SamiDev Realtime] node=node-7fbfde4b store=memory\n{\n  \"ok\": true,\n  \"results\": [\n    \"Anonymous gameplay and direct unauthenticated GameHost access rejected\",\n    \"Wrong account cannot claim reconnect token; duplicate seats blocked via room and invitation\",\n    \"Both players forged Carrom scores, winner and positions: stripped, no state change or match completion\",\n    \"Shot replay and spectator moves rejected\",\n    \"Authorized reconnect and opponent next shot succeed after rejected attacks\"\n  ]\n}\n"
+    },
+    {
+      "command": "python tests/game_security_config.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 9,\n  \"nodeUnsafeExposureRejected\": true,\n  \"gatewayAuthDefaultOn\": true,\n  \"productionAuthAndSecretEnforced\": true\n}\n"
+    },
+    {
+      "command": "node tests/game_security_client_sync.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"results\": [\n    {\n      \"gamemode\": 0,\n      \"twoClientShotsReplicated\": true\n    },\n    {\n      \"gamemode\": 2,\n      \"twoClientShotsReplicated\": true\n    }\n  ]\n}\n"
+    },
+    {
+      "command": "node tests/turn_authority_regression.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"turnTransitionVerified\": true,\n  \"seat0ShotAccepted\": true,\n  \"turnPassedToSeat1\": true,\n  \"seat1ShotAccepted\": true,\n  \"turnPassedBackToSeat0\": true\n}\n"
+    },
+    {
+      "command": "node tests/state_checkpoint_regression.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"shotCheckpointImmediate\": true,\n  \"serverStateUnchanged\": true,\n  \"clientReportCannotDeferCheckpoint\": true,\n  \"stableSnapshotProduced\": true,\n  \"stableSerializePure\": true,\n  \"finalState\": {\n    \"noAnimations\": 1,\n    \"lastState\": 1,\n    \"lastValidAnim\": 1,\n    \"pending\": 0\n  },\n  \"ok\": true\n}\n"
+    },
+    {
+      "command": "node tests/gamehost_conformance.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"mainJsSha256\": \"b77f6b1a0f2131a2ea923bbcd48b729d17ec6d18bc6fe355a13e4984985bf18b\",\n  \"settingsCombinations\": 60,\n  \"checksPassed\": 369,\n  \"checksFailed\": 0,\n  \"failures\": [],\n  \"memory\": null\n}\n"
+    },
+    {
+      "command": "node tests/timeout_afk_regression.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"alarmContainsNativeAutoMove\": true,\n  \"serverTurnAfterTimeout\": 1,\n  \"client0TurnAfterTimeout\": 1,\n  \"client1TurnAfterTimeout\": 1,\n  \"sequenceMirrored\": true,\n  \"timeoutReplicated\": true,\n  \"maxAutoMovesPerSeat\": 3,\n  \"maxConsecutiveAutoMoves\": 4,\n  \"autoMovesPerSeat\": [\n    3,\n    0\n  ],\n  \"resignedSeats\": [\n    0\n  ],\n  \"gameOverAfterThirdMiss\": true,\n  \"gameOverMessage\": [\n    \"go_resigned_observer\",\n    1,\n    0\n  ],\n  \"nativeAfkForfeit\": true,\n  \"ok\": true\n}\n"
+    },
+    {
+      "command": "node tests/turn_resize_race_regression.js",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"serverTurn\": 1,\n  \"brokenClientTurn\": 0,\n  \"repairedClientTurn\": 1,\n  \"sameSequenceBroken\": true,\n  \"sameSequenceRepaired\": true,\n  \"bundleIntegrityVerified\": true\n}\n"
+    },
+    {
+      "command": "python tests/store_authority_epoch_regression.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"firstAccepted\": true,\n  \"duplicateRejected\": true,\n  \"wrongShardRejected\": true,\n  \"newerSnapshotPreserved\": true,\n  \"epochAdvanced\": true,\n  \"oldEpochRejected\": true,\n  \"newEpochAccepted\": true,\n  \"ok\": true\n}\n"
+    },
+    {
+      "command": "python tests/store_sequence_regression.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "{\n  \"ok\": true,\n  \"before\": [\n    1,\n    0\n  ],\n  \"afterAuthorityAutoMove\": [\n    2,\n    0\n  ],\n  \"afterStaleAuthorityEvent\": [\n    2,\n    0\n  ],\n  \"nextRealMoveIndex\": 1,\n  \"final\": [\n    3,\n    0\n  ]\n}\n"
+    },
+    {
+      "command": "python tests/store_rewards_v23_regression.py",
+      "passed": true,
+      "exitCode": 0,
+      "output": "[SamiDev Store] daily match reward uid=ZTzqJTF_eW1O-FLo room=ABCDEF +50 coins\n[SamiDev Store] daily match reward uid=sdMZedvbVLcjhDYh room=ABCDEF +50 coins\nstore_rewards_v23_regression: OK\n"
+    }
+  ]
+}

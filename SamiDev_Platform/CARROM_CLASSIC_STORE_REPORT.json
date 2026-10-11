@@ -1,0 +1,33 @@
+{
+  "defaultTheme": "carrom_classic",
+  "storeTheme": "carrom_cat",
+  "storePrice": 0,
+  "selectionSource": "authenticated server snapshot",
+  "appliesOn": "next game load",
+  "gameplayLogicChanged": false,
+  "atlasSize": [
+    3116,
+    2128
+  ],
+  "catAtlasByteIdentical": true,
+  "classicOriginalSpritesPreserved": 24,
+  "frontendTextFilesScanned": 57,
+  "brandTextMatches": [],
+  "testsPassed": [
+    "carrom_store_regression: HTTP authentication, account isolation, relogin persistence, unchanged wallet, Redis service branch with test double",
+    "store_rewards_v23_regression",
+    "carrom_theme_selection",
+    "browser smoke: carrom classic",
+    "browser smoke: carrom cat",
+    "browser smoke: carrom cat texture failure fallback",
+    "browser smoke: tablesoccer",
+    "striker_move_regression",
+    "start_dev_ui_check",
+    "atlas dimensions and pocket geometry",
+    "both games attestation hashes"
+  ],
+  "limitations": [
+    "Browser smoke uses mocked WebGL, not a full interactive browser test.",
+    "Redis persistence branch used a test double, not a live Redis server."
+  ]
+}

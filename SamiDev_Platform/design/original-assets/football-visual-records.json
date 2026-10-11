@@ -1,0 +1,130 @@
+[
+  {
+    "path": "game/games/tablesoccer/images/field-img-standard.png",
+    "source": "generated turf + newly drawn exact pitch lines and rail geometry"
+  },
+  {
+    "path": "game/games/tablesoccer/images/bg-img-standard.png",
+    "source": "generated textile arena background"
+  },
+  {
+    "path": "game/games/tablesoccer/images/stadium-img-standard.png",
+    "source": "new vector stadium seating"
+  },
+  {
+    "path": "game/games/tablesoccer/images/default_home.png",
+    "source": "generated independent team emblem"
+  },
+  {
+    "path": "game/games/tablesoccer/images/default_away.png",
+    "source": "generated independent team emblem"
+  },
+  {
+    "path": "game/games/tablesoccer/images/thumbnail-standard.png",
+    "source": "new field and arena composite"
+  },
+  {
+    "path": "game/games/tablesoccer/images/default_shop_preview.png",
+    "source": "generated independent team emblem composite"
+  },
+  {
+    "path": "game/games/tablesoccer/images/ball-standard.png",
+    "source": "new procedural sphere texture"
+  },
+  {
+    "path": "game/games/tablesoccer/images/goalpost-top-standard.png",
+    "source": "new vector net and posts"
+  },
+  {
+    "path": "game/games/tablesoccer/images/goalpost-bottom-standard.png",
+    "source": "new vector net and posts"
+  },
+  {
+    "path": "game/games/tablesoccer/images/goal-scored-standard.png",
+    "source": "new ball and source-drawn goal lettering"
+  },
+  {
+    "path": "game/games/tablesoccer/images/confetti-1-standard.png",
+    "source": "new vector confetti"
+  },
+  {
+    "path": "game/games/tablesoccer/images/confetti-2-standard.png",
+    "source": "new vector confetti"
+  },
+  {
+    "path": "game/games/tablesoccer/images/confetti-3-standard.png",
+    "source": "new vector confetti"
+  },
+  {
+    "path": "game/games/tablesoccer/images/confetti-4-standard.png",
+    "source": "new vector confetti"
+  },
+  {
+    "path": "game/games/tablesoccer/images/main.webp",
+    "source": "new functional sprites and new field composite"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_empty_seat.png",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/lobby_avatar_join.png",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/player_indicator.png",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/scene_avatars_bot.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-avatars/scene_avatars_owner_badge.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-reactions/gift_icon.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-reactions/reactions.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_icon.png",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_clear.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_coin.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_equipped.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_loading.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_pip.webp",
+    "source": "new shared game artwork"
+  },
+  {
+    "path": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_search.webp",
+    "source": "new shared game artwork"
+  }
+]

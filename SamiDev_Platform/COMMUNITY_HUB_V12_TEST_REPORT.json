@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "release": "V12 Community Hub",
+  "checks": {
+    "community_chat_isolation": true,
+    "community_presence_isolation": true,
+    "game_ticket_carries_community": true,
+    "game_room_persists_community": true,
+    "live_websocket_room_visible_only_in_source_community": true,
+    "profile_ui_regression": true,
+    "profile_win_stats_regression": true,
+    "profile_game_avatar_regression": true,
+    "avatar_exit_regression": true,
+    "player_profile_native_hit_target_regression": true,
+    "player_profile_social_regression": true,
+    "room_leave_regression": true,
+    "client_resync_regression": true,
+    "turn_authority_regression": true,
+    "timeout_afk_regression": true,
+    "gamehost_checks": "369/369"
+  },
+  "mainJsSha256": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c"
+}

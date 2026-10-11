@@ -1,0 +1,4103 @@
+[
+  {
+    "file": "game/games/pool/sounds/ball1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 0.97,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "pool ball collision"
+    },
+    "renderedDurationSeconds": 0.246395,
+    "replacedSha256": "e4179b6185d8be1f5dd30c97fc755a007c3f66b8bc6cc48cbf22b16babfa2147",
+    "sha256": "f02da9074323db6b1e310d93238bb595584d3f0471445503bde6421a22d3df84"
+  },
+  {
+    "file": "game/games/pool/sounds/ball_soft1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 0.97,
+          "highpassHz": 65,
+          "lowpassHz": 7500,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "soft ball collision"
+    },
+    "renderedDurationSeconds": 0.185578,
+    "replacedSha256": "50c5d02f0f4153ab5be32fbe89c415c8e1f56e0753109a22f63a6b5fb0ac3206",
+    "sha256": "14a8420592c30539e4c77b0b2420cf2b339132b883d8c3401605a5f37520215c"
+  },
+  {
+    "file": "game/games/pool/sounds/rail1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.22,
+          "playbackRate": 0.8536,
+          "highpassHz": 65,
+          "lowpassHz": 1700,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -8,
+      "role": "cushion Foley adapted from pool impact"
+    },
+    "renderedDurationSeconds": 0.257732,
+    "replacedSha256": "1a886c2be29858d3fa63a8f7091f073da0d9f08238a1c0c895b5c91b461cf9df",
+    "sha256": "396825610e6cd0b3c8a94c47a2980584d7de85fe5a3c3aa4f94f1bd5edddc04e"
+  },
+  {
+    "file": "game/games/pool/sounds/rail_soft1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 0.873,
+          "highpassHz": 65,
+          "lowpassHz": 1400,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -13,
+      "role": "soft cushion Foley"
+    },
+    "renderedDurationSeconds": 0.20619,
+    "replacedSha256": "33978d8155507d109f51523f0bf1dc254b75273e34bbe9ac24a468fd8bbed778",
+    "sha256": "9ccea7edb1c6eb32b6fa52f2e79699aebf6d29b47a0653b94d0fea6f08bb6bf7"
+  },
+  {
+    "file": "game/games/pool/sounds/pocket1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 4.72,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "ball pocket entry"
+    },
+    "renderedDurationSeconds": 0.282177,
+    "replacedSha256": "0a58c77109f4dde6f197112f241a2855374377ef7a628d31f2a354aa44664ec0",
+    "sha256": "e7d90af1a28b4613eb0fc48bac6f08ebdade94ec6d37a3ed4c268f5611dc39d3"
+  },
+  {
+    "file": "game/games/pool/sounds/sunk1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 5.02,
+          "durationSeconds": 0.58,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "ball rolling inside pocket"
+    },
+    "renderedDurationSeconds": 0.572517,
+    "replacedSha256": "6aec3bc35439a5a4957fe7719cb5f6fcc835dccd34a4d7806f22ba4be9aa7bf4",
+    "sha256": "fd8cf9c508b2f7dcde8a504d3d4bdce78671e20ab4fb84b009163191e9ad668b"
+  },
+  {
+    "file": "game/games/pool/sounds/ball2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "pool ball collision"
+    },
+    "renderedDurationSeconds": 0.239002,
+    "replacedSha256": "ae1f2b6a63d97a87768e816fe60e8b1de9a4ba423abee105683233fddad3c911",
+    "sha256": "5a3c0e54f0bf37d9982504cefa8ddc7110e16441caf78870326a5a53bb1220a7"
+  },
+  {
+    "file": "game/games/pool/sounds/ball_soft2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 7500,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "soft ball collision"
+    },
+    "renderedDurationSeconds": 0.18,
+    "replacedSha256": "fd5a781a8d8ce635ad531a0085cf6801b850ccd170615db0ac68f2ff4ff6e3e4",
+    "sha256": "5c4bdfa23eb069f74aa30ef61d7b6a84a31b08baedf674fe0be0b9083891059f"
+  },
+  {
+    "file": "game/games/pool/sounds/rail2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.22,
+          "playbackRate": 0.88,
+          "highpassHz": 65,
+          "lowpassHz": 1700,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -8,
+      "role": "cushion Foley adapted from pool impact"
+    },
+    "renderedDurationSeconds": 0.25,
+    "replacedSha256": "9b3e4eb8dd676822581feaec5306933e9b47bb43cd17de95cb3a94a419f5e4bb",
+    "sha256": "8de97a10abd2874a119095e22c497afb6c44ca16db6bddd2697d7f7b2d5bbbd7"
+  },
+  {
+    "file": "game/games/pool/sounds/rail_soft2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 1400,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -13,
+      "role": "soft cushion Foley"
+    },
+    "renderedDurationSeconds": 0.2,
+    "replacedSha256": "d6c92b6b99f09e4b3a2f10a075cfa07ebbaa1eb92502fd75fc51b57e61cfc038",
+    "sha256": "1103e0aa8b83533a7e073e0327f3a5280b6a5397f1bd31f93b6141395a7335e9"
+  },
+  {
+    "file": "game/games/pool/sounds/pocket2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 8.02,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "ball pocket entry"
+    },
+    "renderedDurationSeconds": 0.269546,
+    "replacedSha256": "7bfa02208b9929e38d78418ccf692d45e69d43bd023be11e632b85c643cfd616",
+    "sha256": "d6fa0dae3a329c15ab857aa8b5dd7051ff53d35fa8b7b8510733d38fefedea5f"
+  },
+  {
+    "file": "game/games/pool/sounds/sunk2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 8.32,
+          "durationSeconds": 0.58,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "ball rolling inside pocket"
+    },
+    "renderedDurationSeconds": 0.575329,
+    "replacedSha256": "0a152d1db93e8455e3a220eda11e15c1ca9712a03bcd21a50c79073b97ac8631",
+    "sha256": "ba7ca699e83a144511ba8955d8bf588134cfdbc52b37648647a86fbfab8841a5"
+  },
+  {
+    "file": "game/games/pool/sounds/ball3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 1.04,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "pool ball collision"
+    },
+    "renderedDurationSeconds": 0.229819,
+    "replacedSha256": "339557d20b29a6ede5c59796ca858023de8ddac3235e4aa88466db3d3dd8776a",
+    "sha256": "ac796162e11cc05161417f342d3b396405fccbc3d53625dde44a785a6cb40059"
+  },
+  {
+    "file": "game/games/pool/sounds/ball_soft3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 1.04,
+          "highpassHz": 65,
+          "lowpassHz": 7500,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "soft ball collision"
+    },
+    "renderedDurationSeconds": 0.173084,
+    "replacedSha256": "ed747a14c306ba43874b273dbd3650cdc78ec67cd82303575d663116a0ca5215",
+    "sha256": "d136e584d1045f4b13ad887fa3643b2b6f3636f05e90c93ce2838f2af6802515"
+  },
+  {
+    "file": "game/games/pool/sounds/rail3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.22,
+          "playbackRate": 0.9152,
+          "highpassHz": 65,
+          "lowpassHz": 1700,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -8,
+      "role": "cushion Foley adapted from pool impact"
+    },
+    "renderedDurationSeconds": 0.240385,
+    "replacedSha256": "b1277662c45de69e5671160c6938249317952ed8619270c320ca35d0fcd6dcb8",
+    "sha256": "14ef97f57561019122740c51f8cc744955e2e7fdbbb41abf9faac2f4fb026785"
+  },
+  {
+    "file": "game/games/pool/sounds/rail_soft3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.18,
+          "playbackRate": 0.936,
+          "highpassHz": 65,
+          "lowpassHz": 1400,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -13,
+      "role": "soft cushion Foley"
+    },
+    "renderedDurationSeconds": 0.192313,
+    "replacedSha256": "6bf21af0011cecc2f7cf24dcf47bcc92a4e76235db4c0fd6f5bddbc035944af8",
+    "sha256": "3dd8d8b5e61f76244847ee5208251b77026658f71e59f19349f4b37435250902"
+  },
+  {
+    "file": "game/games/pool/sounds/pocket3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 10.97,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "ball pocket entry"
+    },
+    "renderedDurationSeconds": 0.267574,
+    "replacedSha256": "2be36a591d21b6472ca7878cf5c4a6f40cceaf137a30c633c6cc1ea77b31c5d2",
+    "sha256": "c5ef637472a1b33bc67cc740224a14a4e9c69910dea9caa129ac4dd33f2562b9"
+  },
+  {
+    "file": "game/games/pool/sounds/sunk3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443057,
+        "title": "Inside_Pool_Table.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443057/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443057_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_inside.mp3",
+        "sha256": "b050607ed6837a7783785f75ea3f706deb8fc083ee29b2ec0114dfb30cec371f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_inside",
+          "startSeconds": 11.270000000000001,
+          "durationSeconds": 0.58,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "ball rolling inside pocket"
+    },
+    "renderedDurationSeconds": 0.58,
+    "replacedSha256": "6157cb6289145abb307d4ee82af6a40b8eadf2e59a455dd83636d790dba30a39",
+    "sha256": "6a38fdc28d98a9a64535426bddec88789dd607c9f300fb9ce3b1f0d1ea94df5c"
+  },
+  {
+    "file": "game/games/pool/sounds/cue_soft1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443067,
+        "title": "Pool_Table_Ball_Hit.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443067/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443067_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_cue.mp3",
+        "sha256": "106139699e12f482b845d7042b58136eac2e9ded85817caad3d62eeca36b9f1f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_cue",
+          "startSeconds": 4.825,
+          "durationSeconds": 0.14,
+          "playbackRate": 1.03,
+          "highpassHz": 90,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "cue striking ball"
+    },
+    "renderedDurationSeconds": 0.113061,
+    "replacedSha256": "d57d79d3eca3252691951dc92483dbba534d5db4321a8853533676cd4362d2d8",
+    "sha256": "0c439dcd86205e422851b36533781dd3556e46a5e16d67c91c4d0ce55af30f6e"
+  },
+  {
+    "file": "game/games/pool/sounds/cue_hard1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443067,
+        "title": "Pool_Table_Ball_Hit.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443067/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443067_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_cue.mp3",
+        "sha256": "106139699e12f482b845d7042b58136eac2e9ded85817caad3d62eeca36b9f1f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_cue",
+          "startSeconds": 4.825,
+          "durationSeconds": 0.14,
+          "playbackRate": 1,
+          "highpassHz": 90,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "cue striking ball"
+    },
+    "renderedDurationSeconds": 0.116304,
+    "replacedSha256": "8955ad7f4bb8cbbac4c8f47653d76ab68252898c4f68b0e82f913de11bd02b4f",
+    "sha256": "a1bf79077ee9d4497d95e5aa2a9dc885b5c62148ec72f3da48b00a4d320c4b20"
+  },
+  {
+    "file": "game/games/pool/sounds/cue_hard2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 443067,
+        "title": "Pool_Table_Ball_Hit.WAV",
+        "author": "AmberdeMeillon",
+        "source": "https://freesound.org/people/AmberdeMeillon/sounds/443067/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/443/443067_8282799-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_cue.mp3",
+        "sha256": "106139699e12f482b845d7042b58136eac2e9ded85817caad3d62eeca36b9f1f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_cue",
+          "startSeconds": 4.825,
+          "durationSeconds": 0.14,
+          "playbackRate": 0.96,
+          "highpassHz": 90,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -4.5,
+      "role": "cue striking ball"
+    },
+    "renderedDurationSeconds": 0.120998,
+    "replacedSha256": "e14f5c1f24f3c4ab97fb5b3ed823f5ff327a28a959d5cf3e029fd1b6da88603c",
+    "sha256": "37b9db7d8459e3845027b4b39b9f357ebf068be8c45db3a43447ffa9b2abfb84"
+  },
+  {
+    "file": "game/games/pool/sounds/rack.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 539854,
+        "title": "billiard ball clack",
+        "author": "Za-Games",
+        "source": "https://freesound.org/people/Za-Games/sounds/539854/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/539/539854_12029332-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "pool_clack.mp3",
+        "sha256": "8fba3f6faccc03d06ac6fa7f1a3e496b7dba18468364082526a9b8b52af0950d",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 0.98,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.07
+        },
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 1.04,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.145
+        },
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.25
+        },
+        {
+          "source": "pool_clack",
+          "startSeconds": 0,
+          "durationSeconds": 0.239,
+          "playbackRate": 1.02,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.39
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "recorded balls arranged as rack rattle"
+    },
+    "renderedDurationSeconds": 0.624331,
+    "replacedSha256": "e061c6e5727c0d8cb7d1c8b69061ab626c592bfed8826ab88e9fbb9ab293da44",
+    "sha256": "81fbf964cba925495e2d543a2fa510ff739c517f9c3f250d8e5d40ea07bc6959"
+  },
+  {
+    "file": "game/sounds/disc-hit-soft.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 65.89,
+          "durationSeconds": 0.2,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.2,
+    "replacedSha256": "ca0e367d54c0722e3ca68f29953215f85f87812c9b054822bfd6a1a84ea767fc",
+    "sha256": "b2dda890f9c2bd3e345bacc7a150d34782bc5c4ea5249d22e6ffc1c460837bde"
+  },
+  {
+    "file": "game/sounds/disc-hit-deep.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 66.16,
+          "durationSeconds": 0.22,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.21907,
+    "replacedSha256": "0f998974c96b80a9b4db98da8f1a3fe4f2cb7ec91d529ccfe52e6bb063f1967b",
+    "sha256": "4479dbac624cceba2ae997903160a88f312233181ca51984a55ecd94dc034f7c"
+  },
+  {
+    "file": "game/sounds/disc-hit-bright.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 68.52,
+          "durationSeconds": 0.23,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.22229,
+    "replacedSha256": "49564a50a12c5ed18cec20828446cebf5669800cd58c1f074c236ec01f701d79",
+    "sha256": "a95326a910272da6e2201d2f19b536451fc2eff2323efabf94c9d83057ecb49a"
+  },
+  {
+    "file": "game/sounds/disc-rail-tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 71.17,
+          "durationSeconds": 0.2,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -8,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.183605,
+    "replacedSha256": "6ded1c1ae6299411c771b25a92895afa8e542fb2afa0e78810f1866984927112",
+    "sha256": "ef09f5b4ae1998a41036b943a54de79032763ad8191f1aee0dfff96ab4223348"
+  },
+  {
+    "file": "game/sounds/pocket-drop-soft.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 73.55,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.3,
+    "replacedSha256": "2c74dd202528523a7281f645273c453c1e8f6cc328a19e74a775b312d9cb603a",
+    "sha256": "45ebf1bcda90515f7df81b19bb414273f5b57d8ab9682b7242997e3b59c1e6b9"
+  },
+  {
+    "file": "game/sounds/pocket-drop-deep.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 74.52,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5.5,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.278027,
+    "replacedSha256": "616eff924598401ee3b1e9da1a179a3fc0dcd0e42dd60bf929692f9c002be58c",
+    "sha256": "dab87c53c0d5609bd3c4d1d4d94202ae89040b7adbf94c49c9cf06b9397dee51"
+  },
+  {
+    "file": "game/sounds/pocket-soft-pop.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 73.36,
+          "durationSeconds": 0.24,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6.5,
+      "role": "wooden board-piece Foley for carrom"
+    },
+    "renderedDurationSeconds": 0.24,
+    "replacedSha256": "2f3a75be2ec1fcb6a5f3cab56774885c62fc4a1dcbfb5bde28d2561eef1c1886",
+    "sha256": "219434224b9c3426b71c9496f7fd3e46e1528330ef2114f1d3232e530e5be276"
+  },
+  {
+    "file": "game/sounds/striker-slide.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 80.04,
+          "durationSeconds": 0.46,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "wooden piece sliding"
+    },
+    "renderedDurationSeconds": 0.46,
+    "replacedSha256": "316215a9cc0c0f3cf338f21a11a41f725e20be67847cc237b8af354977d851b7",
+    "sha256": "cc6b2a6429c2d73c45b01d4c42dbe0dfd7e58762cc87addc1157aadbb28ae9d6"
+  },
+  {
+    "file": "game/sounds/striker_short.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 81.27,
+          "durationSeconds": 0.2,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -8,
+      "role": "short striker movement"
+    },
+    "renderedDurationSeconds": 0.18619,
+    "replacedSha256": "ed7516b2897d4aa42cd6c3339d5591cc8de7895696f005f6dcaaa0d82514c0cd",
+    "sha256": "c0fb8f7e1f0aabc9c0a570723b1aecf8f18d76f96c82f3025d2559d1c1c20e43"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/ball_long1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 521825,
+        "title": "SoccerBallKick.wav",
+        "author": "purchasing102",
+        "source": "https://freesound.org/people/purchasing102/sounds/521825/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/521/521825_1171364-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_bounces.mp3",
+        "sha256": "30b2d17ddb49dc893af3eec41bcc87a54dd574dee0e07bdd5f07741bae76a491",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_bounces",
+          "startSeconds": 1.915,
+          "durationSeconds": 0.38,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "football impact"
+    },
+    "renderedDurationSeconds": 0.341202,
+    "replacedSha256": "764dd2245746e5c2192c3b67e362582e4abd760907d68d65539c728781086c92",
+    "sha256": "ee26689d9203cc7ecbeef6058c1c41657f4f93671103a20762bdad9bbe9a2c20"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/ball_long2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 521825,
+        "title": "SoccerBallKick.wav",
+        "author": "purchasing102",
+        "source": "https://freesound.org/people/purchasing102/sounds/521825/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/521/521825_1171364-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_bounces.mp3",
+        "sha256": "30b2d17ddb49dc893af3eec41bcc87a54dd574dee0e07bdd5f07741bae76a491",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_bounces",
+          "startSeconds": 3.61,
+          "durationSeconds": 0.38,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "football impact"
+    },
+    "renderedDurationSeconds": 0.336281,
+    "replacedSha256": "c2de9e89add6cad012d37caddd04f4b521a86ae4d0a2b0c414363ba4c13475b4",
+    "sha256": "41cb300f53bd546a3db9632a32ffc30bb2bc938b8be3362298de04b1ebc9609a"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/ball_long3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 521825,
+        "title": "SoccerBallKick.wav",
+        "author": "purchasing102",
+        "source": "https://freesound.org/people/purchasing102/sounds/521825/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/521/521825_1171364-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_bounces.mp3",
+        "sha256": "30b2d17ddb49dc893af3eec41bcc87a54dd574dee0e07bdd5f07741bae76a491",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_bounces",
+          "startSeconds": 4.93,
+          "durationSeconds": 0.38,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -5,
+      "role": "football impact"
+    },
+    "renderedDurationSeconds": 0.340703,
+    "replacedSha256": "e188514517ce06362e909ceb868be06fc8e1ec421f5c38e1e01df4c7b485a687",
+    "sha256": "223b5dda456845b610f0d2bd859be4f5bfa9624330d07f715c8ca6141a7368be"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/ball_short1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555042,
+        "title": "Soccer Ball Kick",
+        "author": "bittermelonheart",
+        "source": "https://freesound.org/people/bittermelonheart/sounds/555042/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555042_11910076-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_kick.mp3",
+        "sha256": "7b5b6bd8f7567832c98f030e94783dba04108d74fef42fb24d5b2bbf1abb3949",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_kick",
+          "startSeconds": 0.02,
+          "durationSeconds": 0.32,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "short football kick"
+    },
+    "renderedDurationSeconds": 0.312948,
+    "replacedSha256": "6513977153c4b11299f7664f7275eae8cbf88209a8a72841e6e6e44c943c2001",
+    "sha256": "6bdedf496da696ab12080d27639177b22c4488783bd67e7ab1de7d7bff2d2f90"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/ball_short2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555042,
+        "title": "Soccer Ball Kick",
+        "author": "bittermelonheart",
+        "source": "https://freesound.org/people/bittermelonheart/sounds/555042/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555042_11910076-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_kick.mp3",
+        "sha256": "7b5b6bd8f7567832c98f030e94783dba04108d74fef42fb24d5b2bbf1abb3949",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_kick",
+          "startSeconds": 0.02,
+          "durationSeconds": 0.32,
+          "playbackRate": 1.045,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "short football kick"
+    },
+    "renderedDurationSeconds": 0.299887,
+    "replacedSha256": "11da8b37754e181af4ff31b4e65e18674339e8b8538a944d01bdbd8771dc168a",
+    "sha256": "927a07440340acf8b5b83b115dab4a3a92cd08ddab1ad679a6118af83a94fbd1"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/token_hit1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 65.89,
+          "durationSeconds": 0.24,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "table token impact"
+    },
+    "renderedDurationSeconds": 0.24,
+    "replacedSha256": "87c8fb4a89b7e1b0da4865cb052ec2ed211af679ba855dd738e24bbc31375087",
+    "sha256": "f71c92f3737ed6c8405a6d791a434166de88b533b7547c02ef18aa24e6ff3f2a"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/token_hit2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 66.16,
+          "durationSeconds": 0.24,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "table token impact"
+    },
+    "renderedDurationSeconds": 0.23907,
+    "replacedSha256": "9ed3675c3fd3ee03d5a212018846da67c09e1d9af66db07fda9c07e459e1b69b",
+    "sha256": "979dc922754a94f5ae3f24e9b1bc820ecfb0aca9e72935f478b0b667c00a6711"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/token_hit3.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 68.52,
+          "durationSeconds": 0.24,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "table token impact"
+    },
+    "renderedDurationSeconds": 0.23229,
+    "replacedSha256": "dc10b1705ec000a473fb5de1308ba69e5f28c7e23140f3b9b9d20fafcd6b04ca",
+    "sha256": "05dff257fbc31fc2e8d41ff64a59b49ee8943fdbc4a653bc8f3a2cf45fa5f9f3"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/token_slide1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 80.04,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -11,
+      "role": "table token slide"
+    },
+    "renderedDurationSeconds": 0.3,
+    "replacedSha256": "5462966180f158768a5d40241b63d2820567c8476a42f2fadf1d1d288d61df6c",
+    "sha256": "de5c017f48c035de322ecc027f44eb72df9fc1f2507cf42f483aaa67aee1e17a"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/token_slide2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 555190,
+        "title": "Board Game Pieces.WAV",
+        "author": "taure",
+        "source": "https://freesound.org/people/taure/sounds/555190/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/555/555190_2940947-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "board_pieces.mp3",
+        "sha256": "4de39768ccf07f5d34bb2b1f7ce73a544cfdf39a56edfa96077f26fe15781105",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "board_pieces",
+          "startSeconds": 81.27,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -11,
+      "role": "table token slide"
+    },
+    "renderedDurationSeconds": 0.28619,
+    "replacedSha256": "2af86bbf5022bd2378516639f47e9cdc4e60181d723e1002fb1a7e35ab615493",
+    "sha256": "81cb882341545248058bf1fb674b03a664bb403eaa2c4acd37b1a166d18f2bd6"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/post1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 387132,
+        "title": "Foosball Win",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/387132/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/387/387132_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "foosball_goal.mp3",
+        "sha256": "8399a6cf821105204a1343504b9434d68a7cb02b499daf8dd8024c7c1f5147d1",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "foosball_goal",
+          "startSeconds": 0.63,
+          "durationSeconds": 0.17,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -6,
+      "role": "table football impact used for post"
+    },
+    "renderedDurationSeconds": 0.17,
+    "replacedSha256": "8cda249f553224b77503d275dae54a3a6d969f276d3869da13a8e169cf2e6cdd",
+    "sha256": "0bb9daa568a739acd2126a4db0d83aa31f0b3de6bdd964428a671578ecc5fb8f"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/goal1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 813410,
+        "title": "Soccer net",
+        "author": "Luisa_Sanchez",
+        "source": "https://freesound.org/people/Luisa_Sanchez/sounds/813410/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/813/813410_17552599-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "soccer_net.mp3",
+        "sha256": "094928cab68000fc6114b50a64e54a132260fb7b7656c5c12c435a4a2342edee",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "soccer_net",
+          "startSeconds": 1.32,
+          "durationSeconds": 0.62,
+          "playbackRate": 1,
+          "highpassHz": 90,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "ball/net goal sound"
+    },
+    "renderedDurationSeconds": 0.565283,
+    "replacedSha256": "0610fd18085f30dd9d2de5030faf484338e55b6d297dec33d2df356fe03d2fff",
+    "sha256": "baba388384c987c82c56d28b656c3d04a933d6146c74c478954c9d068a876af0"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/whistle1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 538422,
+        "title": "Referee whistle sound.wav",
+        "author": "Rosa-Orenes256",
+        "source": "https://freesound.org/people/Rosa-Orenes256/sounds/538422/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/538/538422_11966684-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whistle.mp3",
+        "sha256": "1bc56409d3439a16fd54bc8fa83affb7e2bc69519b15ac49979d924e895910bf",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whistle",
+          "startSeconds": 0,
+          "durationSeconds": 0.536,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 9500,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "referee whistle"
+    },
+    "renderedDurationSeconds": 0.511043,
+    "replacedSha256": "1baceca7a18edffbc004575fb1bb5820ce9ec3dfdec71a0622a4c00955bc466e",
+    "sha256": "4e663cde6892d90840fce725ff266e6d0437021172aabd5eb048c9e50ad40939"
+  },
+  {
+    "file": "game/games/crazy8/sounds/card-draw.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 749323,
+        "title": "Using playing cards",
+        "author": "Magnesus",
+        "source": "https://freesound.org/people/Magnesus/sounds/749323/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/749/749323_2008500-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "cards.mp3",
+        "sha256": "9511cbc9c76bdced4f078a0b024fa206884ab33735907d139e59778bcc0fa9a4",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "cards",
+          "startSeconds": 0.655,
+          "durationSeconds": 0.21,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "draw card"
+    },
+    "renderedDurationSeconds": 0.157732,
+    "replacedSha256": "f035bf7a5cd748fd1553ccec5d3ae954fbc099613d6c790bb3b7dda4682beb85",
+    "sha256": "f265e16aa290b5f6fee8e09819bf997fd37eb97e67c3991f20970e9eb947340b"
+  },
+  {
+    "file": "game/games/crazy8/sounds/card-place.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 749323,
+        "title": "Using playing cards",
+        "author": "Magnesus",
+        "source": "https://freesound.org/people/Magnesus/sounds/749323/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/749/749323_2008500-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "cards.mp3",
+        "sha256": "9511cbc9c76bdced4f078a0b024fa206884ab33735907d139e59778bcc0fa9a4",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "cards",
+          "startSeconds": 12.0,
+          "durationSeconds": 0.31,
+          "playbackRate": 1,
+          "highpassHz": 160,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7.5,
+      "role": "place card"
+    },
+    "renderedDurationSeconds": 0.281746,
+    "replacedSha256": "90970f40aa10f652eb06d0dd040680503552420c13b5bfa543d5cbbc4146f827",
+    "sha256": "3b5ef5d010cbe58336fa35645cb18bd57f48ac44f70b1560e559024201dbb178"
+  },
+  {
+    "file": "game/games/crazy8/sounds/card-special.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 196575,
+        "title": "card flipping.aif",
+        "author": "trundlefly",
+        "source": "https://freesound.org/people/trundlefly/sounds/196575/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/196/196575_1812925-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "card_special.mp3",
+        "sha256": "2a9fc44296c67bee166dc768c4ef727c0a658be637259c339a00b9d0b50cae47",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "card_special",
+          "startSeconds": 2.36,
+          "durationSeconds": 0.28,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -7,
+      "role": "special card flip"
+    },
+    "renderedDurationSeconds": 0.28,
+    "replacedSha256": "a3e3f19164f11aabd41553f9cbf9eec204b8ba795f480c3be09ad26c066fb256",
+    "sha256": "ab1f6582dfb626854ac8ec5b3e8ba85ed66f0dfa9ea9e55e321c8e36adac5f18"
+  },
+  {
+    "file": "game/games/crazy8/sounds/card-shuffle.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 423767,
+        "title": "Card shuffling.mp3",
+        "author": "SomeoneCool15",
+        "source": "https://freesound.org/people/SomeoneCool15/sounds/423767/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/423/423767_8326967-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "card_shuffle.mp3",
+        "sha256": "8d4c24e575c98c49c429d08c317f331abc98780a9bb1f866a26be67d0b5ec09b",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "card_shuffle",
+          "startSeconds": 0.24,
+          "durationSeconds": 1.09,
+          "playbackRate": 1,
+          "highpassHz": 180,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -10,
+      "role": "shuffle cards"
+    },
+    "renderedDurationSeconds": 0.810113,
+    "replacedSha256": "aa3b9b2e881b667bf1d9c4d1e430a0124e19e195f8a7b913acf73f5dac60ccae",
+    "sha256": "03d89b4ab946704c3821a01363df3405568bbb4795a3590124c26349b0da436c"
+  },
+  {
+    "file": "game/games/crazy8/sounds/card-warning.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.3,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.3,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.13
+        }
+      ],
+      "peakDbFS": -16,
+      "role": "quiet recorded-bell stacking alert"
+    },
+    "renderedDurationSeconds": 0.37,
+    "replacedSha256": null,
+    "sha256": "c83181afe8e06336b68e53cda0067039c8e99ba594aaab70914bd568cc4ed3d2"
+  },
+  {
+    "file": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.5,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "turn notification from recorded bell"
+    },
+    "renderedDurationSeconds": 0.5,
+    "replacedSha256": "835719f1060717a2862226612355dce855792c243f8466b093b17e882b05eec9",
+    "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+  },
+  {
+    "file": "game/games/crazy8/scene-reactions/bells.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "c988a00683712e7e1a786e26bccb01cf26566a99976c7fe3b9df0af313129057",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "fd3ead91fc7dd96454d724e2422751cf2e99221af536073afb3129a9b10d185e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "e00501894549f041a5277e92c8f4f5cc6306cf751ac3bb21ad0ecca8df7f27b6",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/games/crazy8/scene-settings/select.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "4c5833a353558e6277baec80780189250e5a008b10f52d3c1663693027ab8c18",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/crazy8/scene-settings/switch_off.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.109819,
+    "replacedSha256": "77ad1e22716159aefb9bf6f63ad86ea9c4c36e8edd26497200de92596adb42cf",
+    "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9"
+  },
+  {
+    "file": "game/games/crazy8/scene-settings/switch_on.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/crazy8/scene-settings/woosh_close.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "6ef42c918128cbd59e80805630d0fcc9cb1fa1f2bfd5acd204ef1e2f4a3f9607",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/games/crazy8/scene-settings/woosh_open.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "e1cb9acfa70eab3af79497b1819021bcb59b6fa8a09be5a6189ea3476b552d6e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "5ecf22b4eb565bba0b795a3d2df53884976df14bf2a2a2f5080d8b9aee8c01f2",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "b80ef110ea131916117fc7690339801052bedc890c76e649b74534ee2bfe2ec2",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/pool/scene-avatars/turn_audio.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.5,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "turn notification from recorded bell"
+    },
+    "renderedDurationSeconds": 0.5,
+    "replacedSha256": "835719f1060717a2862226612355dce855792c243f8466b093b17e882b05eec9",
+    "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+  },
+  {
+    "file": "game/games/pool/scene-settings/select.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "4c5833a353558e6277baec80780189250e5a008b10f52d3c1663693027ab8c18",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/pool/scene-settings/switch_off.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.109819,
+    "replacedSha256": "77ad1e22716159aefb9bf6f63ad86ea9c4c36e8edd26497200de92596adb42cf",
+    "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9"
+  },
+  {
+    "file": "game/games/pool/scene-settings/switch_on.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/pool/scene-settings/woosh_close.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "6ef42c918128cbd59e80805630d0fcc9cb1fa1f2bfd5acd204ef1e2f4a3f9607",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/games/pool/scene-settings/woosh_open.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "e1cb9acfa70eab3af79497b1819021bcb59b6fa8a09be5a6189ea3476b552d6e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/games/pool/scene-ui/IAPButton/iap_button_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "5ecf22b4eb565bba0b795a3d2df53884976df14bf2a2a2f5080d8b9aee8c01f2",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "b80ef110ea131916117fc7690339801052bedc890c76e649b74534ee2bfe2ec2",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/pool/sounds/tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "6941a9f75492ca831580fd9754750a1f647ee08b09dda5db6b3dfe1ad65a2bbe",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.5,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "turn notification from recorded bell"
+    },
+    "renderedDurationSeconds": 0.5,
+    "replacedSha256": "835719f1060717a2862226612355dce855792c243f8466b093b17e882b05eec9",
+    "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-reactions/bells.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "c988a00683712e7e1a786e26bccb01cf26566a99976c7fe3b9df0af313129057",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "fd3ead91fc7dd96454d724e2422751cf2e99221af536073afb3129a9b10d185e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "e00501894549f041a5277e92c8f4f5cc6306cf751ac3bb21ad0ecca8df7f27b6",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "5ecf22b4eb565bba0b795a3d2df53884976df14bf2a2a2f5080d8b9aee8c01f2",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "b80ef110ea131916117fc7690339801052bedc890c76e649b74534ee2bfe2ec2",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "6941a9f75492ca831580fd9754750a1f647ee08b09dda5db6b3dfe1ad65a2bbe",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "edb47ef1e9892ceb0a5c32120067fd0707e93b550f469399574694b29d2017aa",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/whoosh.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "75841484f9dd1ec8c0ff18207245617caa659eba403ad9626d01d71104ed2478",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/you_lose1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.52,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.52,
+          "playbackRate": 0.72,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.2
+        }
+      ],
+      "peakDbFS": -13,
+      "role": "loss cue made from recorded bell"
+    },
+    "renderedDurationSeconds": 0.922222,
+    "replacedSha256": "8fd45adb9e3c70c85c432dea8227a9619e538d28064fe133e76359e7ca510901",
+    "sha256": "01c0258eae47aab9fb894d7673d5aab0dcf0e26c3653792244ddf9a3a281d538"
+  },
+  {
+    "file": "game/games/tablesoccer/sounds/you_won1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.17
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1.5,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.36
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "win cue made from recorded bell"
+    },
+    "renderedDurationSeconds": 0.826667,
+    "replacedSha256": "c26bddf7a78c32724ba5b7818dee82347c88ac8c8961f2cf7f9631d35ba46e5f",
+    "sha256": "9761f304381aa5eaab8ed7efd913ec8308cc02852efbe3388f5d965a4302e6d9"
+  },
+  {
+    "file": "game/scene-avatars/turn_audio.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.5,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "turn notification from recorded bell"
+    },
+    "renderedDurationSeconds": 0.5,
+    "replacedSha256": "835719f1060717a2862226612355dce855792c243f8466b093b17e882b05eec9",
+    "sha256": "76388ac0240f9c338766f4b535fa1ae20f2e93f8b92bea80acfda6f4a5c64d92"
+  },
+  {
+    "file": "game/scene-reactions/bells.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "c988a00683712e7e1a786e26bccb01cf26566a99976c7fe3b9df0af313129057",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/scene-reactions/whoosh1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "fd3ead91fc7dd96454d724e2422751cf2e99221af536073afb3129a9b10d185e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/scene-reactions/whoosh2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "e00501894549f041a5277e92c8f4f5cc6306cf751ac3bb21ad0ecca8df7f27b6",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/scene-settings/select.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "4c5833a353558e6277baec80780189250e5a008b10f52d3c1663693027ab8c18",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/scene-settings/switch_off.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.109819,
+    "replacedSha256": "77ad1e22716159aefb9bf6f63ad86ea9c4c36e8edd26497200de92596adb42cf",
+    "sha256": "b5a259ec57587dff9c6d494d98c4f90aa3ad6054e4f47588ffeb91471c4ddeb9"
+  },
+  {
+    "file": "game/scene-settings/switch_on.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/scene-settings/woosh_close.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "6ef42c918128cbd59e80805630d0fcc9cb1fa1f2bfd5acd204ef1e2f4a3f9607",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  },
+  {
+    "file": "game/scene-settings/woosh_open.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "e1cb9acfa70eab3af79497b1819021bcb59b6fa8a09be5a6189ea3476b552d6e",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "5ecf22b4eb565bba0b795a3d2df53884976df14bf2a2a2f5080d8b9aee8c01f2",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.56,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.14
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "positive feedback from recorded bell"
+    },
+    "renderedDurationSeconds": 0.588005,
+    "replacedSha256": "b80ef110ea131916117fc7690339801052bedc890c76e649b74534ee2bfe2ec2",
+    "sha256": "a9eff37796f1ff357dcef5cd47377ab3cfe8e820e2c6d6f821bfe6acde0f394f"
+  },
+  {
+    "file": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "076f55b8d1a65d5b888f899ff03416503674553ab27f7eae54aa54e222d9f66d",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/sounds/round-loss.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.52,
+          "playbackRate": 0.9,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.52,
+          "playbackRate": 0.72,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.2
+        }
+      ],
+      "peakDbFS": -13,
+      "role": "loss cue made from recorded bell"
+    },
+    "renderedDurationSeconds": 0.922222,
+    "replacedSha256": "9f9aaae26df3da9fd1f1250eaba36ad50f5835f9faf3128263f5c64b328c0821",
+    "sha256": "01c0258eae47aab9fb894d7673d5aab0dcf0e26c3653792244ddf9a3a281d538"
+  },
+  {
+    "file": "game/sounds/round-win.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 791495,
+        "title": "Bell 10.2 OS",
+        "author": "Sadiquecat",
+        "source": "https://freesound.org/people/Sadiquecat/sounds/791495/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/791/791495_5287430-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "bell.mp3",
+        "sha256": "77101b633950cdf0cebb0c7f0f5783f5e941b939dd25c3f371b7603d1c3978da",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1.25,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.17
+        },
+        {
+          "source": "bell",
+          "startSeconds": 0.015,
+          "durationSeconds": 0.7,
+          "playbackRate": 1.5,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.36
+        }
+      ],
+      "peakDbFS": -9,
+      "role": "win cue made from recorded bell"
+    },
+    "renderedDurationSeconds": 0.826667,
+    "replacedSha256": "fb77d1133ae9ae03f3a43b03bbd79eaad546d7160caf18fc127ea1646d62daa8",
+    "sha256": "9761f304381aa5eaab8ed7efd913ec8308cc02852efbe3388f5d965a4302e6d9"
+  },
+  {
+    "file": "game/sounds/tap.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.13,
+          "playbackRate": 1,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -14,
+      "role": "short tactile UI click"
+    },
+    "renderedDurationSeconds": 0.099229,
+    "replacedSha256": "a5828568117f7dbda36e4843e14a9949b87218556fc05010cd5cf5e5daec87d1",
+    "sha256": "648e926eac9bc63c9ee26d467acf4fa98698bb40351efb8879299995a78eb5c8"
+  },
+  {
+    "file": "game/sounds/tap_disabled.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 405550,
+        "title": "Stiff wooden tap",
+        "author": "Raclure",
+        "source": "https://freesound.org/people/Raclure/sounds/405550/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/405/405550_6436863-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "wood_tap.mp3",
+        "sha256": "4a48f483e5070a697506c94316957901330832975c0c367456c96c074db8a541",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.82,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        },
+        {
+          "source": "wood_tap",
+          "startSeconds": 0.13,
+          "durationSeconds": 0.12,
+          "playbackRate": 0.74,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0.085
+        }
+      ],
+      "peakDbFS": -15,
+      "role": "muted double wooden click"
+    },
+    "renderedDurationSeconds": 0.20381,
+    "replacedSha256": "3ea493f2ffb78f37af7ff7516ad1257b6abdc78cdf890fe29db3fca117d4c1f2",
+    "sha256": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1"
+  },
+  {
+    "file": "game/sounds/woosh1.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 1.05,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.274036,
+    "replacedSha256": "ec4b5596c37d066cfb5ea5b25342fc6f85830b1f26fdaf56b6b100aefe002bee",
+    "sha256": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97"
+  },
+  {
+    "file": "game/sounds/woosh2.m4a",
+    "license": "CC0-1.0",
+    "sources": [
+      {
+        "id": 389590,
+        "title": "Swing Woosh",
+        "author": "Jofae",
+        "source": "https://freesound.org/people/Jofae/sounds/389590/",
+        "license": "CC0-1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "previewUrl": "https://cdn.freesound.org/previews/389/389590_6512973-hq.mp3",
+        "sourceFormat": "Freesound public high-quality MP3 preview, not original lossless WAV",
+        "sourceFile": "whoosh.mp3",
+        "sha256": "8f82bf9847a8d6e77e335ca52550eb53616767acf52f73fa24a99d07b696fe0f",
+        "verifiedOn": "2026-10-11"
+      }
+    ],
+    "recipe": {
+      "layers": [
+        {
+          "source": "whoosh",
+          "startSeconds": 0,
+          "durationSeconds": 0.315,
+          "playbackRate": 0.95,
+          "highpassHz": 65,
+          "lowpassHz": 12000,
+          "offsetSeconds": 0
+        }
+      ],
+      "peakDbFS": -12,
+      "role": "recorded air swish"
+    },
+    "renderedDurationSeconds": 0.302472,
+    "replacedSha256": "2ae0b2f5a031229df9b5a5b0a45963393634a5d9645ceeecf9a00fceeb57c7e0",
+    "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+  }
+]

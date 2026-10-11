@@ -1,0 +1,384 @@
+
+stickers.png
+size: 380, 380
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+cloud
+  rotate: false
+  xy: 2, 273
+  size: 154, 105
+  orig: 154, 105
+  offset: 0, 0
+  index: -1
+crown
+  rotate: false
+  xy: 244, 314
+  size: 79, 64
+  orig: 79, 64
+  offset: 0, 0
+  index: -1
+flame
+  rotate: false
+  xy: 23, 182
+  size: 66, 89
+  orig: 66, 89
+  offset: 0, 0
+  index: -1
+heart_00
+  rotate: false
+  xy: 298, 190
+  size: 30, 43
+  orig: 70, 70
+  offset: 40, 26
+  index: -1
+heart_01
+  rotate: false
+  xy: 295, 235
+  size: 31, 42
+  orig: 70, 70
+  offset: 32, 21
+  index: -1
+heart_02
+  rotate: false
+  xy: 212, 2
+  size: 30, 41
+  orig: 70, 70
+  offset: 25, 17
+  index: -1
+heart_03
+  rotate: false
+  xy: 330, 194
+  size: 33, 39
+  orig: 70, 70
+  offset: 19, 14
+  index: -1
+heart_04
+  rotate: false
+  xy: 248, 98
+  size: 37, 42
+  orig: 70, 70
+  offset: 13, 9
+  index: -1
+heart_05
+  rotate: false
+  xy: 248, 142
+  size: 42, 42
+  orig: 70, 70
+  offset: 8, 6
+  index: -1
+heart_06
+  rotate: false
+  xy: 85, 29
+  size: 44, 43
+  orig: 70, 70
+  offset: 5, 3
+  index: -1
+heart_07
+  rotate: false
+  xy: 131, 30
+  size: 47, 44
+  orig: 70, 70
+  offset: 2, 1
+  index: -1
+heart_08
+  rotate: false
+  xy: 120, 126
+  size: 48, 44
+  orig: 70, 70
+  offset: 1, 0
+  index: -1
+heart_09
+  rotate: true
+  xy: 39, 63
+  size: 49, 44
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+heart_10
+  rotate: true
+  xy: 85, 74
+  size: 49, 44
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+heart_11
+  rotate: false
+  xy: 139, 172
+  size: 49, 44
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+pocket_kiss1
+  rotate: true
+  xy: 325, 298
+  size: 80, 53
+  orig: 81, 53
+  offset: 1, 0
+  index: -1
+pocket_kiss2
+  rotate: true
+  xy: 2, 36
+  size: 56, 35
+  orig: 56, 35
+  offset: 0, 0
+  index: -1
+pocket_sticker1_00
+  rotate: true
+  xy: 170, 126
+  size: 44, 27
+  orig: 60, 100
+  offset: 0, 72
+  index: -1
+pocket_sticker1_01
+  rotate: false
+  xy: 39, 40
+  size: 44, 21
+  orig: 60, 100
+  offset: 5, 56
+  index: -1
+pocket_sticker1_02
+  rotate: false
+  xy: 2, 2
+  size: 42, 32
+  orig: 60, 100
+  offset: 8, 42
+  index: -1
+pocket_sticker1_03
+  rotate: false
+  xy: 199, 141
+  size: 47, 43
+  orig: 60, 100
+  offset: 10, 31
+  index: -1
+pocket_sticker1_04
+  rotate: false
+  xy: 71, 125
+  size: 47, 55
+  orig: 60, 100
+  offset: 11, 19
+  index: -1
+pocket_sticker1_05
+  rotate: false
+  xy: 91, 208
+  size: 46, 63
+  orig: 60, 100
+  offset: 12, 11
+  index: -1
+pocket_sticker1_06
+  rotate: false
+  xy: 23, 114
+  size: 46, 66
+  orig: 60, 100
+  offset: 12, 8
+  index: -1
+starOUTLINE_1_00
+  rotate: true
+  xy: 295, 279
+  size: 33, 28
+  orig: 60, 60
+  offset: 0, 32
+  index: -1
+starOUTLINE_1_01
+  rotate: false
+  xy: 284, 52
+  size: 30, 28
+  orig: 60, 60
+  offset: 5, 27
+  index: -1
+starOUTLINE_1_02
+  rotate: false
+  xy: 84, 2
+  size: 29, 25
+  orig: 60, 60
+  offset: 16, 17
+  index: -1
+starOUTLINE_1_03
+  rotate: false
+  xy: 287, 82
+  size: 34, 31
+  orig: 60, 60
+  offset: 22, 6
+  index: -1
+starOUTLINE_1_04
+  rotate: false
+  xy: 46, 2
+  size: 36, 36
+  orig: 60, 60
+  offset: 24, 0
+  index: -1
+starOUTLINE_1_05
+  rotate: false
+  xy: 292, 148
+  size: 36, 36
+  orig: 60, 60
+  offset: 24, 0
+  index: -1
+starOUTLINE_1_06
+  rotate: false
+  xy: 330, 156
+  size: 36, 36
+  orig: 60, 60
+  offset: 24, 0
+  index: -1
+starOUTLINE_1_07
+  rotate: false
+  xy: 330, 118
+  size: 36, 36
+  orig: 60, 60
+  offset: 24, 0
+  index: -1
+starOUTLINE_3
+  rotate: false
+  xy: 158, 294
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+star_01_00
+  rotate: true
+  xy: 176, 78
+  size: 46, 31
+  orig: 71, 77
+  offset: 2, 44
+  index: -1
+star_01_01
+  rotate: true
+  xy: 180, 30
+  size: 46, 30
+  orig: 71, 77
+  offset: 4, 42
+  index: -1
+star_01_02
+  rotate: true
+  xy: 212, 45
+  size: 46, 29
+  orig: 71, 77
+  offset: 8, 36
+  index: -1
+star_01_03
+  rotate: false
+  xy: 328, 265
+  size: 43, 31
+  orig: 71, 77
+  offset: 15, 29
+  index: -1
+star_01_04
+  rotate: true
+  xy: 209, 93
+  size: 46, 37
+  orig: 71, 77
+  offset: 19, 21
+  index: -1
+star_01_05
+  rotate: true
+  xy: 131, 76
+  size: 48, 43
+  orig: 71, 77
+  offset: 20, 14
+  index: -1
+star_01_06
+  rotate: true
+  xy: 245, 235
+  size: 51, 48
+  orig: 71, 77
+  offset: 20, 9
+  index: -1
+star_01_07
+  rotate: false
+  xy: 192, 235
+  size: 51, 51
+  orig: 71, 77
+  offset: 20, 6
+  index: -1
+star_01_08
+  rotate: false
+  xy: 139, 218
+  size: 51, 53
+  orig: 71, 77
+  offset: 20, 4
+  index: -1
+starblack
+  rotate: true
+  xy: 192, 186
+  size: 47, 51
+  orig: 47, 51
+  offset: 0, 0
+  index: -1
+starred
+  rotate: true
+  xy: 245, 186
+  size: 47, 51
+  orig: 47, 51
+  offset: 0, 0
+  index: -1
+thunder_00
+  rotate: true
+  xy: 91, 182
+  size: 24, 28
+  orig: 50, 50
+  offset: 26, 18
+  index: -1
+thunder_01
+  rotate: false
+  xy: 171, 2
+  size: 21, 26
+  orig: 50, 50
+  offset: 20, 14
+  index: -1
+thunder_02
+  rotate: false
+  xy: 145, 2
+  size: 24, 26
+  orig: 50, 50
+  offset: 14, 11
+  index: -1
+thunder_03
+  rotate: false
+  xy: 115, 2
+  size: 28, 25
+  orig: 50, 50
+  offset: 9, 10
+  index: -1
+thunder_04
+  rotate: true
+  xy: 323, 83
+  size: 30, 27
+  orig: 50, 50
+  offset: 6, 8
+  index: -1
+thunder_05
+  rotate: false
+  xy: 328, 235
+  size: 32, 28
+  orig: 50, 50
+  offset: 4, 6
+  index: -1
+thunder_06
+  rotate: false
+  xy: 248, 67
+  size: 34, 29
+  orig: 50, 50
+  offset: 2, 5
+  index: -1
+thunder_07
+  rotate: false
+  xy: 292, 115
+  size: 36, 31
+  orig: 50, 50
+  offset: 0, 3
+  index: -1
+trail
+  rotate: false
+  xy: 2, 94
+  size: 19, 177
+  orig: 19, 177
+  offset: 0, 0
+  index: -1
+trail_line
+  rotate: true
+  xy: 158, 288
+  size: 4, 114
+  orig: 4, 138
+  offset: 0, 12
+  index: -1

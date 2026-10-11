@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "mainJsObserverSupport": true,
+  "spectatorSeat": -1,
+  "spectatorReadOnly": true,
+  "spectatorConsumesSeat": false,
+  "finishedRoomHiddenFromLobby": true,
+  "finishedRoomRejectsNewSpectator": true,
+  "gamehostChecksPassed": 369,
+  "gamehostChecksFailed": 0,
+  "mainJsSha256": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c"
+}

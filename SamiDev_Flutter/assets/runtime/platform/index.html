@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1016">
+  <meta name="samidev-release" content="V30">
+  <title>SamiDev V25 — الكيرم وكرة الطاولة</title>
+  <link rel="stylesheet" href="/platform/platform.css?v=cd56801e6592bc80">
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <section id="auth-screen" class="auth-screen">
+    <button id="auth-theme-toggle" class="theme-toggle auth-theme-toggle" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span><span class="theme-label">المظهر</span></button>
+    <div class="auth-card">
+      <div class="logo-mark">S</div>
+      <h1>SamiDev</h1>
+      <p class="muted">الكيرم وكرة الطاولة <span class="platform-version">V30</span></p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth="login">تسجيل الدخول</button>
+        <button class="auth-tab" data-auth="register">حساب جديد</button>
+      </div>
+      <form id="login-form" class="auth-form">
+        <label>اسم المستخدم<input name="username" autocomplete="username" maxlength="20" required></label>
+        <label>كلمة المرور<input name="password" type="password" autocomplete="current-password" minlength="1" maxlength="128" required></label>
+        <button class="primary" type="submit">دخول</button>
+      </form>
+      <form id="register-form" class="auth-form hidden">
+        <label>اسم المستخدم<input name="username" autocomplete="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" required></label>
+        <label>الاسم الظاهر<input name="displayName" maxlength="24" placeholder="الاسم الذي يراه اللاعبون"></label>
+        <label>كلمة المرور<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
+        <button class="primary" type="submit">إنشاء الحساب</button>
+      </form>
+      <p class="auth-note">اسم المستخدم: حروف إنجليزية، أرقام و _ فقط.</p>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <header class="platform-topbar">
+      <div class="brand topbar-brand"><span class="logo-small">S</span><div><strong>SamiDev <span class="platform-version">V30</span></strong><small>الألعاب والمساحات</small></div></div>
+      <nav class="topbar-nav" aria-label="التنقل الرئيسي">
+        <button class="nav-btn active" data-page="lobby"><span>⌂</span> المساحات</button>
+        <button class="nav-btn" data-page="friends"><span>＋</span> الأصدقاء <b id="request-badge" class="badge hidden">0</b></button>
+        <button class="nav-btn" data-page="store"><span>¤</span> المتجر</button>
+        <button class="nav-btn" data-page="profile"><span>○</span> الملف الشخصي</button>
+        <button id="admin-nav" class="nav-btn hidden" data-page="admin"><span>◇</span> الإدارة</button>
+      </nav>
+      <div class="topbar-user">
+        <div id="avatar" class="avatar"><img id="avatar-image" alt="" class="avatar-image hidden"><span id="avatar-fallback">P</span></div>
+        <div class="topbar-user-copy"><strong id="side-name">Player</strong><small id="side-username">@player</small></div>
+        <button id="theme-toggle" class="theme-toggle compact-theme" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span></button>
+        <button id="logout-btn" class="icon-btn" title="تسجيل الخروج" aria-label="تسجيل الخروج">↪</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <header class="mobile-header">
+        <div class="brand"><span class="logo-small">S</span><strong>SamiDev</strong></div>
+        <button id="mobile-menu" class="icon-btn" aria-label="القائمة">☰</button>
+      </header>
+
+      <section id="page-lobby" class="page active lobby-page">
+        <div id="community-home" class="community-home">
+          <section class="community-browser">
+            <div class="page-head community-page-head">
+              <div><span class="eyebrow">المجتمع</span><h2>اختر مساحتك</h2><p>كل مساحة لها شاتها، أعضاؤها وغرف لعبها الخاصة.</p></div>
+              <button id="refresh-communities" class="ghost">تحديث</button>
+            </div>
+            <div id="community-grid" class="community-grid"><div class="empty">جارٍ تحميل المساحات...</div></div>
+          </section>
+
+          <aside class="lobby-profile panel" aria-label="ملف اللاعب">
+            <div class="lobby-profile-cover"><span class="lobby-profile-cover-mark">S</span><span class="lobby-profile-cover-glow"></span></div>
+            <div class="lobby-profile-body">
+              <div class="lobby-avatar avatar">
+                <img id="lobby-avatar-image" alt="صورة الملف الشخصي" class="avatar-image hidden">
+                <span id="lobby-avatar-fallback">P</span>
+              </div>
+              <div class="lobby-profile-name-row"><span class="profile-sprite profile-sprite-emblem" aria-hidden="true"></span><h3 id="lobby-profile-name">Player</h3></div>
+              <div id="lobby-profile-handle" class="lobby-profile-handle">@player</div>
+              <div class="lobby-profile-stars" aria-label="خمس نجوم"><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span></div>
+              <div class="lobby-profile-divider"></div>
+              <div class="lobby-profile-stats">
+                <div><small>لاعب منذ</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="lobby-profile-since">0 يوم</strong></span></div>
+                <div><small>الفوز</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="lobby-profile-wins">0</strong></span></div>
+                <div><small>السمعة</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="lobby-profile-reputation">0</strong></span></div>
+              </div>
+              <div class="lobby-profile-info">
+                <div><span>الحساب</span><strong id="lobby-profile-account">@player</strong></div>
+                <div><span>الحالة</span><strong class="lobby-online"><i></i>متصل الآن</strong></div>
+              </div>
+              <div class="lobby-profile-spacer" aria-hidden="true"></div>
+              <button class="ghost lobby-profile-open" type="button" data-page="profile"><span>عرض الملف الكامل</span><span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span></button>
+            </div>
+          </aside>
+        </div>
+
+        <div id="community-room" class="community-room hidden">
+          <div class="community-userbar" aria-label="شريط الحساب داخل المساحة">
+            <button id="community-self-profile" class="community-user-identity" type="button" aria-label="فتح الملف الشخصي">
+              <span class="community-user-avatar avatar"><img id="community-user-avatar-image" alt="صورة الملف الشخصي" class="avatar-image hidden"><span id="community-user-avatar-fallback">P</span></span>
+              <span class="community-user-copy"><strong id="community-user-name">Player</strong><small id="community-user-handle">@player</small></span>
+            </button>
+            <div class="community-user-actions">
+              <button id="leave-community" class="room-utility-btn" type="button">المساحات</button>
+              <button id="community-profile-page" class="room-utility-btn" type="button">الملف الشخصي</button>
+              <button id="community-profile-edit" class="room-utility-btn accent" type="button"><span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span><span>تعديل</span></button>
+              <button id="room-theme-toggle" class="theme-toggle room-theme-toggle" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span><span class="theme-label">المظهر</span></button>
+            </div>
+          </div>
+          <div class="community-room-head">
+            <div class="community-active-identity"><span id="active-community-mark" class="community-mark">م</span><div><small>المساحة الحالية</small><h2 id="active-community-name">المجلس</h2><p id="active-community-description"></p></div></div>
+            <div class="community-room-head-actions">
+              <button id="exit-community" class="community-exit-btn" type="button" aria-label="الخروج من الروم العام">خروج من الروم</button>
+              <button id="open-create" class="primary" type="button">+ إنشاء مباراة</button>
+            </div>
+          </div>
+
+          <div class="community-layout">
+            <aside class="community-members-panel community-column">
+              <div class="column-head"><div><small>الحضور</small><h3>المتصلون</h3></div><span id="community-member-count" class="count-pill">0</span></div>
+              <div id="community-members" class="community-members"><div class="empty small">لا يوجد أعضاء متصلون</div></div>
+            </aside>
+
+            <section class="community-games-panel community-column">
+              <div class="column-head games-head"><div><small>داخل المساحة</small><h3>غرف اللعب</h3></div><button id="refresh-rooms" class="ghost compact">تحديث</button></div>
+              <div class="quick-games" aria-label="إنشاء مباراة جديدة">
+                <button id="quick-create-carrom" type="button" data-quick-game="carrom"><strong>الكيرم</strong><small>إنشاء مباراة</small></button>
+                <button id="quick-create-crazy8" type="button" data-quick-game="crazy8"><strong>كريزي 8</strong><small>إنشاء مباراة</small></button>
+                <button id="quick-create-pool" type="button" data-quick-game="pool"><strong>البلياردو</strong><small>إنشاء مباراة</small></button>
+                <button id="quick-create-tablesoccer" type="button" data-quick-game="tablesoccer"><strong>كرة الطاولة</strong><small>إنشاء مباراة</small></button>
+              </div>
+              <div id="rooms" class="rooms community-game-rooms"><div class="empty">لا توجد مباريات بعد.</div></div>
+            </section>
+
+            <aside class="community-chat-panel community-column">
+              <div class="column-head"><div><small>المحادثة العامة</small><h3 id="community-chat-title">شات المساحة</h3></div><span class="live-dot" title="مباشر"></span></div>
+              <div id="community-chat-messages" class="community-chat-messages"><div class="empty small">ابدأ أول محادثة هنا.</div></div>
+              <form id="community-chat-form" class="community-chat-form">
+                <textarea id="community-chat-input" maxlength="280" rows="2" placeholder="اكتب رسالة للموجودين في هذه المساحة..."></textarea>
+                <button class="primary" type="submit" aria-label="إرسال الرسالة">إرسال</button>
+              </form>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-store" class="page store-page">
+        <div class="page-head store-page-head">
+          <div><span class="eyebrow">متجر SamiDev</span><h2>تصاميمك ومكافآتك</h2><p>اختر تصميم الكيرم الذي يعجبك. اختيارك محفوظ لحسابك ويظهر في مبارياتك القادمة.</p></div>
+          <button id="store-refresh" class="ghost" type="button">تحديث</button>
+        </div>
+        <div class="store-dashboard">
+          <article class="store-wallet-card panel">
+            <div class="store-wallet-main"><span class="coin-mark" aria-hidden="true">C</span><div><small>رصيد الكوينز</small><strong id="store-balance">0</strong><span>Coin</span></div></div>
+            <div class="store-wallet-security"><span class="store-lock-mark" aria-hidden="true"></span><div><strong>محفظتك محفوظة</strong><small>رصيدك واختياراتك معك عند تسجيل الدخول من أي جهاز.</small></div></div>
+          </article>
+          <article class="daily-reward-card panel">
+            <div class="daily-reward-head"><div><small>مكافأة اللعب اليومية</small><h3><span id="store-reward-coins">50</span> كوينز لكل مباراة</h3></div><strong id="store-reward-progress">0/5</strong></div>
+            <div id="store-reward-steps" class="reward-steps" aria-label="تقدم مكافآت المباريات اليومية"></div>
+            <p id="store-reward-note">أول خمس مباريات مكتملة يوميًا تحصل على المكافأة.</p>
+          </article>
+          <section class="store-catalog-panel panel">
+            <div class="store-section-head"><div><small>المتجر والمقتنيات</small><h3>العناصر والتصاميم</h3></div><span id="store-owned-count" class="count-pill">0 مملوك</span></div>
+            <div id="store-category-bar" class="store-category-bar" role="tablist" aria-label="أقسام المتجر">
+              <button type="button" class="store-category-btn active" data-category="all">الكل</button>
+              <button type="button" class="store-category-btn" data-category="profile">ملصقات البروفايل</button>
+              <button type="button" class="store-category-btn" data-category="pool">بلياردو</button>
+              <button type="button" class="store-category-btn" data-category="carrom">كيرم</button>
+              <button type="button" class="store-category-btn" data-category="other">ألعاب أخرى</button>
+            </div>
+            <div id="store-catalog" class="store-catalog"><div class="empty small">جارٍ تحميل التصاميم...</div></div>
+          </section>
+          <aside class="store-ledger-panel panel">
+            <div class="store-section-head"><div><small>السجل</small><h3>آخر الحركات</h3></div></div>
+            <div id="store-ledger" class="store-ledger"><div class="empty small">لا توجد حركات حتى الآن.</div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="page-friends" class="page">
+        <div class="page-head"><div><h2>الأصدقاء</h2><p>أضف لاعبين واعرف من المتصل الآن.</p></div></div>
+        <div class="friends-grid">
+          <div class="panel">
+            <h3>إضافة صديق</h3>
+            <form id="friend-add" class="inline-form"><input name="username" placeholder="اسم المستخدم" required><button class="primary">إرسال طلب</button></form>
+            <div class="search-row"><input id="user-search" placeholder="بحث عن لاعب..."><button id="search-btn" class="ghost">بحث</button></div>
+            <div id="search-results" class="people-list"></div>
+          </div>
+          <div class="panel"><h3>طلبات الصداقة</h3><div id="friend-requests" class="people-list"><div class="empty small">لا توجد طلبات</div></div></div>
+          <div class="panel span2"><h3>قائمة الأصدقاء</h3><div id="friends-list" class="people-list columns"><div class="empty small">لا يوجد أصدقاء حتى الآن</div></div></div>
+        </div>
+      </section>
+
+      <section id="page-profile" class="page profile-page">
+        <div class="page-head profile-page-heading"><div><h2>الملف الشخصي</h2><p>هويتك التي يراها اللاعبون.</p></div></div>
+        <div class="profile-workspace">
+          <article class="profile-showcase panel" aria-label="الملف الشخصي">
+            <div class="profile-card-bar">
+              <button id="profile-edit-toggle" class="profile-card-action" type="button" aria-label="تعديل الملف الشخصي" title="تعديل الملف الشخصي">
+                <span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span>
+              </button>
+              <strong>الملف الشخصي</strong>
+            </div>
+            <div class="profile-cover" aria-hidden="true">
+              <span class="profile-cover-emblem">S</span>
+              <span class="profile-cover-glow"></span>
+            </div>
+            <div class="profile-showcase-body">
+              <div class="profile-avatar-wrap">
+                <div id="profile-avatar" class="avatar profile-avatar">
+                  <img id="profile-avatar-image" alt="صورة الملف الشخصي" class="avatar-image hidden">
+                  <span id="profile-avatar-fallback">P</span>
+                </div>
+                <button id="profile-photo-btn" class="profile-photo-btn" type="button" title="تغيير الصورة" aria-label="تغيير صورة الملف الشخصي">
+                  <span class="profile-sprite profile-sprite-camera" aria-hidden="true"></span>
+                </button>
+                <input id="profile-photo-input" class="hidden" type="file" accept="image/*">
+              </div>
+
+              <div class="profile-name-row">
+                <span class="profile-sprite profile-sprite-emblem profile-sticker" role="img" aria-label="ملصق النخلة والسيفين" title="ملصق النخلة والسيفين"></span>
+                <h3 id="profile-name">Player</h3>
+              </div>
+
+              <div class="profile-stars" aria-label="خمس نجوم">
+                <span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span>
+              </div>
+
+              <div class="profile-stats" aria-label="إحصاءات الملف الشخصي">
+                <div class="profile-stat profile-stat-since">
+                  <small>لاعب منذ</small>
+                  <div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="profile-since-value">0 يوم</strong></div>
+                </div>
+                <div class="profile-stat profile-stat-wins">
+                  <small>الفوز</small>
+                  <div class="profile-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="profile-wins">0</strong></div>
+                </div>
+                <div class="profile-stat profile-stat-reputation">
+                  <small>السمعة</small>
+                  <div class="profile-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="profile-reputation">0</strong></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div id="profile-editor-backdrop" class="profile-editor-backdrop" aria-hidden="true"></div>
+        <aside id="profile-editor" class="profile-editor panel" aria-label="تعديل الملف الشخصي" aria-hidden="true">
+          <div class="profile-editor-bar">
+            <button id="profile-editor-close" class="profile-editor-close" type="button" aria-label="إغلاق التعديل">×</button>
+            <strong>تعديل الملف الشخصي</strong>
+            <span class="profile-editor-bar-mark"><span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span></span>
+          </div>
+          <div class="profile-editor-content">
+            <div class="profile-editor-avatar-wrap">
+              <div class="avatar profile-editor-avatar">
+                <img id="profile-editor-avatar-image" alt="معاينة صورة الملف الشخصي" class="avatar-image hidden">
+                <span id="profile-editor-avatar-fallback">P</span>
+              </div>
+              <button id="profile-editor-upload" class="profile-editor-camera" type="button" aria-label="رفع صورة"><span class="profile-sprite profile-sprite-camera" aria-hidden="true"></span></button>
+            </div>
+            <button id="profile-upload-button" class="ghost profile-upload-button" type="button">اختيار صورة من الجهاز</button>
+            <p class="profile-upload-note">تُقص الصورة إلى مربع تلقائيًا قبل الحفظ.</p>
+
+            <div class="profile-field-group">
+              <span class="profile-field-label">أفاتارات سريعة</span>
+              <div class="profile-avatar-presets" aria-label="أفاتارات سريعة">
+                <button class="profile-preset preset-1" type="button" data-avatar-preset="0" aria-label="أفاتار 1"><span></span></button>
+                <button class="profile-preset preset-2" type="button" data-avatar-preset="1" aria-label="أفاتار 2"><span></span></button>
+                <button class="profile-preset preset-3" type="button" data-avatar-preset="2" aria-label="أفاتار 3"><span></span></button>
+                <button class="profile-preset preset-4" type="button" data-avatar-preset="3" aria-label="أفاتار 4"><span></span></button>
+                <button class="profile-preset preset-5" type="button" data-avatar-preset="4" aria-label="أفاتار 5"><span></span></button>
+              </div>
+            </div>
+
+            <label class="profile-field-group">
+              <span class="profile-field-label">الاسم</span>
+              <input id="profile-display-input" maxlength="24" autocomplete="nickname" placeholder="الاسم الظاهر">
+              <small><span id="profile-name-count">0</span>/24</small>
+            </label>
+
+            <div class="profile-editor-actions">
+              <button id="profile-save-name" class="profile-save-button" type="button">حفظ التغييرات</button>
+              <button id="profile-remove-photo" class="ghost profile-remove-photo" type="button">إزالة الصورة</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="page-admin" class="page">
+        <div class="page-head"><div><h2>الإدارة</h2><p>المستخدمون وحالة المنصة.</p></div><button id="admin-refresh" class="ghost">تحديث</button></div>
+        <div id="admin-stats" class="stats-strip admin-stats"></div>
+        <div class="panel admin-reports-panel">
+          <div class="admin-section-head"><div><h3>البلاغات</h3><p>بلاغات اللاعبين الواردة من داخل المباريات.</p></div><span id="admin-reports-count" class="role-chip">0</span></div>
+          <div id="admin-reports" class="admin-reports-list"><div class="empty small">لا توجد بلاغات</div></div>
+        </div>
+        <div class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>المستخدم</th><th>الحالة</th><th>الصلاحية</th><th>الحظر</th><th>إجراءات</th></tr></thead><tbody id="admin-users"></tbody></table></div></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="bottom-btn active" data-page="lobby">⌂<small>المساحات</small></button>
+      <button class="bottom-btn" data-page="friends">♟<small>الأصدقاء</small></button>
+      <button class="bottom-btn" data-page="store">¤<small>المتجر</small></button>
+      <button class="bottom-btn" data-page="profile">◎<small>الملف</small></button>
+      <button id="admin-bottom" class="bottom-btn hidden" data-page="admin">⚙<small>الإدارة</small></button>
+    </nav>
+  </div>
+
+  <div id="community-profile-modal" class="community-public-profile-modal" aria-hidden="true">
+    <div class="community-public-profile-shell">
+      <article class="profile-showcase community-public-profile-card panel" aria-label="ملف اللاعب">
+        <div class="profile-card-bar">
+          <button id="community-profile-close" class="community-public-profile-close" type="button" aria-label="إغلاق">×</button>
+          <strong>الملف الشخصي</strong>
+        </div>
+        <div class="profile-cover" aria-hidden="true">
+          <span class="profile-cover-emblem">S</span>
+          <span class="profile-cover-glow"></span>
+        </div>
+        <div class="profile-showcase-body">
+          <div class="profile-avatar-wrap">
+            <div class="avatar profile-avatar community-public-avatar">
+              <img id="community-profile-avatar-image" alt="صورة اللاعب" class="avatar-image hidden">
+              <span id="community-profile-avatar-fallback">P</span>
+            </div>
+          </div>
+          <div class="profile-name-row">
+            <span class="profile-sprite profile-sprite-emblem profile-sticker" role="img" aria-label="ملصق النخلة والسيفين"></span>
+            <h3 id="community-profile-name">Player</h3>
+          </div>
+          <div id="community-profile-handle" class="community-public-profile-handle">@player</div>
+          <div class="profile-stars" aria-label="خمس نجوم">
+            <span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span>
+          </div>
+          <div class="profile-stats" aria-label="إحصاءات اللاعب">
+            <div class="profile-stat profile-stat-since"><small>لاعب منذ</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="community-profile-since">0 يوم</strong></div></div>
+            <div class="profile-stat profile-stat-wins"><small>الفوز</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="community-profile-wins">0</strong></div></div>
+            <div class="profile-stat profile-stat-reputation"><small>السمعة</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="community-profile-reputation">0</strong></div></div>
+          </div>
+          <div id="community-profile-actions" class="community-public-profile-actions">
+            <button id="community-profile-report" class="community-public-action report" type="button"><span class="community-action-icon report" aria-hidden="true"></span><span>إبلاغ</span></button>
+            <button id="community-profile-friend" class="community-public-action friend" type="button"><span class="community-action-icon friend" aria-hidden="true"></span><span>إضافة صديق</span></button>
+            <button id="community-profile-reputation-btn" class="community-public-action reputation" type="button"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><span>منح سمعة</span><small id="community-profile-reputation-left">5/5 اليوم</small></button>
+          </div>
+          <div id="community-profile-report-box" class="community-public-report-box hidden">
+            <label for="community-profile-report-text">وصف المشكلة</label>
+            <textarea id="community-profile-report-text" maxlength="500" rows="3" placeholder="اكتب باختصار ما حدث..."></textarea>
+            <div><button id="community-profile-report-cancel" class="ghost" type="button">إلغاء</button><button id="community-profile-report-send" class="danger-btn" type="button">إرسال للإدارة</button></div>
+          </div>
+        </div>
+      </article>
+      <div id="community-profile-loading" class="community-public-profile-loading hidden">جارٍ تحميل الملف...</div>
+    </div>
+  </div>
+
+  <div id="create-modal" class="modal hidden">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="create-title">
+      <button class="modal-close" data-close="create-modal">×</button>
+      <h2 id="create-title">إنشاء مباراة <span class="platform-version">V30</span></h2>
+      <fieldset class="create-game-picker">
+        <legend>اختر اللعبة</legend>
+        <div class="create-game-options">
+          <button id="choose-carrom" type="button" data-create-game="carrom" class="selected" aria-pressed="true"><strong>الكيرم</strong><small>Carrom</small></button>
+          <button id="choose-crazy8" type="button" data-create-game="crazy8" aria-pressed="false"><strong>كريزي 8</strong><small>Crazy 8</small></button>
+          <button id="choose-pool" type="button" data-create-game="pool" aria-pressed="false"><strong>البلياردو</strong><small>8 Ball Pool</small></button>
+          <button id="choose-tablesoccer" type="button" data-create-game="tablesoccer" aria-pressed="false"><strong>كرة الطاولة</strong><small>Table Soccer</small></button>
+        </div>
+        <input id="create-game" type="hidden" value="carrom">
+      </fieldset>
+      <p id="create-game-description">الكيرم الكلاسيكي وأنماط النقاط.</p>
+<div class="setting crazy8-setting hidden"><label for="create-card-seats">عدد اللاعبين</label><select id="create-card-seats"><option value="0">لاعبان</option><option value="1">3 لاعبين</option><option value="2" selected>4 لاعبين</option><option value="3">6 لاعبين</option><option value="4">فريقان 2 ضد 2</option></select></div>
+<div class="setting crazy8-setting hidden"><label for="create-card-special">الأوراق الخاصة</label><select id="create-card-special"><option value="0">أساسية</option><option value="1">جميع الأوراق الخاصة</option><option value="2">الدرع</option><option value="3">كشف الأوراق</option><option value="4">الأحمر</option><option value="5">الأزرق</option></select></div>
+<div class="setting crazy8-setting hidden"><label for="create-card-live">نوع المباراة</label><select id="create-card-live"><option value="1">مباشر</option><option value="0">تناوب الأدوار</option></select></div>
+      <div class="setting soccer-setting hidden"><label for="create-soccer-mode">طريقة اللعب</label><select id="create-soccer-mode"><option value="0">تناوب — Tactical</option><option value="1">متزامن — Active</option></select></div>
+      <div class="setting soccer-setting hidden"><label for="create-goals">أهداف الفوز</label><select id="create-goals"><option value="0">هدفان</option><option value="1" selected>3 أهداف</option><option value="2">5 أهداف</option></select></div>
+      <div class="setting soccer-setting hidden"><label for="create-passes">التمريرات</label><select id="create-passes"><option value="0">بدون حد</option><option value="1">3 تمريرات</option><option value="2">6 تمريرات</option></select></div>
+      <div class="setting board-players-setting"><span>عدد اللاعبين</span><div class="seg"><button class="selected" data-setting="players" data-value="0">1v1</button><button data-setting="players" data-value="1">2v2</button></div></div>
+      <div class="setting carrom-setting"><span>النمط</span><select id="create-gamemode"><option value="0">Classic</option><option value="1">Pool</option><option value="2">Freestyle /120</option><option value="3">Freestyle /160</option><option value="4">Freestyle /210</option></select></div>
+      <div class="setting carrom-setting"><span>نوع المباراة</span><div class="seg"><button class="selected" data-setting="live" data-value="1">LIVE</button><button data-setting="live" data-value="0">TURN-BASED</button></div></div>
+      <div class="setting carrom-setting"><span>من يبدأ؟</span><select id="create-break"><option value="0">Player 1</option><option value="1">Player 2</option><option value="2">عشوائي</option></select></div>
+      <button id="create-go" class="primary full">إنشاء المباراة والدخول</button>
+    </div>
+  </div>
+
+  <script src="/samidev-games.js?v=9c0dece53f812f41"></script><script src="/platform/platform.js?v=3019eaa564a19659"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-08",
+  "ok": true,
+  "environment": {
+    "backend": "memory",
+    "gamehost": "Node.js",
+    "browser": "VM smoke with real PNG/WebP dimensions and mocked WebGL/audio; no actual graphical browser installed",
+    "redisDockerTested": false
+  },
+  "tests": [
+    {
+      "command": "node tests/crazy8_runtime.js",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\"ok\":true,\"checks\":6410,\"completedMatches\":60,\"seatModes\":5,\"timerModes\":2,\"specialModes\":6,\"afkTimer\":true,\"loadingGate\":true}\n"
+    },
+    {
+      "command": "python tests/crazy8_ws.py",
+      "exitCode": 0,
+      "passed": true,
+      "output": "[SamiDev Realtime] node=node-ddae7ee5 store=memory\n[SamiDev] live resync fallback GameHostError injected outage\n[SamiDev Store] daily match reward uid=73aG59PqRZuQlV69 room=A9EK4X +50 coins\n[SamiDev Store] daily match reward uid=BrjCHAQekqHvUwYv room=A9EK4X +50 coins\n[SamiDev] live resync fallback GameHostError injected outage\n[SamiDev Store] daily match reward uid=73aG59PqRZuQlV69 room=PQTHUM +50 coins\n[SamiDev Store] daily match reward uid=BrjCHAQekqHvUwYv room=PQTHUM +50 coins\n[SamiDev Store] daily match reward uid=pSQe_tC2Tm27jAUc room=PQTHUM +50 coins\n[SamiDev] live resync fallback GameHostError injected outage\n[SamiDev Store] daily match reward uid=73aG59PqRZuQlV69 room=ET9SA5 +50 coins\n[SamiDev Store] daily match reward uid=BrjCHAQekqHvUwYv room=ET9SA5 +50 coins\n[SamiDev Store] daily match reward uid=i9b8feVpHooJ__sD room=ET9SA5 +50 coins\n[SamiDev Store] daily match reward uid=pSQe_tC2Tm27jAUc room=ET9SA5 +50 coins\n[SamiDev] live resync fallback GameHostError injected outage\n[SamiDev Store] daily match reward uid=73aG59PqRZuQlV69 room=GYNJBK +50 coins\n[SamiDev Store] daily match reward uid=BrjCHAQekqHvUwYv room=GYNJBK +50 coins\n[SamiDev Store] daily match reward uid=cobRogZkikLx4-xP room=GYNJBK +50 coins\n[SamiDev Store] daily match reward uid=i9b8feVpHooJ__sD room=GYNJBK +50 coins\n[SamiDev Store] daily match reward uid=kEXyRXNTC0LKVYiW room=GYNJBK +50 coins\n[SamiDev Store] daily match reward uid=pSQe_tC2Tm27jAUc room=GYNJBK +50 coins\n[SamiDev] live resync fallback GameHostError injected outage\n[SamiDev Store] daily match reward uid=73aG59PqRZuQlV69 room=923PG2 +50 coins\n[SamiDev Store] daily match reward uid=BrjCHAQekqHvUwYv room=923PG2 +50 coins\n[SamiDev Store] daily match reward uid=i9b8feVpHooJ__sD room=923PG2 +50 coins\n[SamiDev Store] daily match reward uid=pSQe_tC2Tm27jAUc room=923PG2 +50 coins\n{\n  \"ok\": true,\n  \"authenticated\": true,\n  \"results\": [\n    {\n      \"seatMode\": 0,\n      \"capacity\": 2,\n      \"privacy\": true,\n      \"draw\": true,\n      \"spectator\": true,\n      \"reconnect\": true,\n      \"outageFallback\": true,\n      \"hostRestore\": true,\n      \"resignation\": true\n    },\n    {\n      \"seatMode\": 1,\n      \"capacity\": 3,\n      \"privacy\": true,\n      \"draw\": true,\n      \"spectator\": true,\n      \"reconnect\": true,\n      \"outageFallback\": true,\n      \"hostRestore\": true,\n      \"resignation\": true\n    },\n    {\n      \"seatMode\": 2,\n      \"capacity\": 4,\n      \"privacy\": true,\n      \"draw\": true,\n      \"spectator\": true,\n      \"reconnect\": true,\n      \"outageFallback\": true,\n      \"hostRestore\": true,\n      \"resignation\": true\n    },\n    {\n      \"seatMode\": 3,\n      \"capacity\": 6,\n      \"privacy\": true,\n      \"draw\": true,\n      \"spectator\": true,\n      \"reconnect\": true,\n      \"outageFallback\": true,\n      \"hostRestore\": true,\n      \"resignation\": true\n    },\n    {\n      \"seatMode\": 4,\n      \"capacity\": 4,\n      \"privacy\": true,\n      \"draw\": true,\n      \"spectator\": true,\n      \"reconnect\": true,\n      \"outageFallback\": true,\n      \"hostRestore\": true,\n      \"resignation\": true\n    }\n  ]\n}\n"
+    },
+    {
+      "command": "node tests/multigame_routing.js crazy8",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\"ok\":true,\"correctGameRedirect\":true,\"reconnectTokenPreserved\":true,\"tokenAbsentFromUrl\":true}\n"
+    },
+    {
+      "command": "node tests/multigame_runtime.js",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"ok\": true,\n  \"checks\": 102,\n  \"results\": [\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 2,\n      \"live\": 0,\n      \"teams\": null,\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 2,\n      \"live\": 1,\n      \"teams\": null,\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 4,\n      \"live\": 0,\n      \"teams\": [\n        [\n          0,\n          1\n        ],\n        [\n          2,\n          3\n        ]\n      ],\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"players\": 4,\n      \"live\": 1,\n      \"teams\": [\n        [\n          0,\n          1\n        ],\n        [\n          2,\n          3\n        ]\n      ],\n      \"finishOrder\": [\n        [\n          0\n        ],\n        [\n          1\n        ]\n      ]\n    },\n    {\n      \"game\": \"carrom\",\n      \"players\": 2\n    },\n    {\n      \"game\": \"carrom\",\n      \"players\": 4\n    },\n    {\n      \"game\": \"tablesoccer\",\n      \"scoringGoals\": 2,\n      \"gameOver\": true\n    }\n  ]\n}\n"
+    },
+    {
+      "command": "python tests/multigame_ws.py",
+      "exitCode": 0,
+      "passed": true,
+      "output": "[SamiDev Realtime] node=node-3e27bf61 store=memory\n[SamiDev] handler error GameHostError injected startup failure\n[SamiDev Store] daily match reward uid=PZnpCxuh3_LkseyQ room=N4GDXS +50 coins\n[SamiDev Store] daily match reward uid=kTjbH6zFs2jvsvWD room=N4GDXS +50 coins\n[SamiDev Store] daily match reward uid=PZnpCxuh3_LkseyQ room=Y4NSB8 +50 coins\n[SamiDev Store] daily match reward uid=kTjbH6zFs2jvsvWD room=Y4NSB8 +50 coins\n[SamiDev Store] daily match reward uid=JUOrxFxvqQnF9ggt room=M9WFLW +50 coins\n[SamiDev Store] daily match reward uid=PZnpCxuh3_LkseyQ room=M9WFLW +50 coins\n[SamiDev Store] daily match reward uid=kTjbH6zFs2jvsvWD room=M9WFLW +50 coins\n[SamiDev Store] daily match reward uid=lNWD7vHONOMuZ3kg room=M9WFLW +50 coins\n{\n  \"ok\": true,\n  \"results\": [\n    \"shared registration/login; anonymous socket rejected; both games catalogued\",\n    \"transient startup failure leaves begun=false and ready retry succeeds\",\n    \"carrom players=2 live=1: start, moves, spectator, reconnect, resignation\",\n    \"Table Soccer invite accepted once; replay rejected\",\n    \"tablesoccer players=2 live=0: start, moves, spectator, reconnect, resignation, snapshot restore\",\n    \"tablesoccer players=4 live=1: start, moves, spectator, reconnect, resignation, snapshot restore\",\n    \"unsupported game rejected; three independent matches on one backend\"\n  ]\n}\n"
+    },
+    {
+      "command": "python tests/spectator_lifecycle_regression.py",
+      "exitCode": 0,
+      "passed": true,
+      "output": "SPECTATOR_LIFECYCLE_REGRESSION_PASS\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom local carrom_classic",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom local carrom_cat",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js carrom local carrom_cat fail-cat",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"game\": \"carrom\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"[game] [BaseLogic] Server logic cannot be paused\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js crazy8 online",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"game\": \"crazy8\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"warnings\": [\n    \"resync requested\",\n    \"[game] Texture width 125.00000000000001 is float, rounded to 126\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/browser_multigame_smoke.js tablesoccer online",
+      "exitCode": 0,
+      "passed": true,
+      "output": "before-shot [ 0 ] true [ 0 ] [2,1] [2,1] []\nafter-shot [ 0 ] [ 0 ] [5,3] [5,3]\n{\n  \"game\": \"tablesoccer\",\n  \"started\": true,\n  \"turn\": [\n    0\n  ],\n  \"flags\": [\n    \"Red.c.h\",\n    \"Blue.c.h\"\n  ],\n  \"warnings\": [\n    \"[game] [TimerGroup] [tg1] clearTimer - Timer 1 is not in this group\",\n    \"[game] Texture width 121.99999999999999 is float, rounded to 122\"\n  ],\n  \"errors\": []\n}\n"
+    },
+    {
+      "command": "node tests/carrom_theme_selection.js",
+      "exitCode": 0,
+      "passed": true,
+      "output": "carrom_theme_selection: OK (server selection, allowlist, ownership, guest/offline fallback, timeout)\n"
+    },
+    {
+      "command": "python tests/carrom_store_regression.py",
+      "exitCode": 0,
+      "passed": true,
+      "output": "carrom_store_regression: OK (HTTP sessions, free equip, return to classic, account isolation, Redis branch persistence, unchanged wallet)\n"
+    },
+    {
+      "command": "node tests/striker_move_regression.js",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\n  \"ok\": true,\n  \"bundleIntegrityVerified\": true,\n  \"seat0MoveAccepted\": true,\n  \"seat0StrikerMoved\": true,\n  \"seat1MoveAccepted\": true,\n  \"seat1StrikerMoved\": true,\n  \"browserHoverDoesNotEmitTouchMove\": true,\n  \"browserTouchUsesSamiDevBottomOrigin\": true,\n  \"browserMouseKeepsDomTopOrigin\": true,\n  \"before0\": [\n    540,\n    885.6\n  ],\n  \"after0\": [\n    378.564,\n    885.6\n  ],\n  \"before1\": [\n    540,\n    194.4\n  ],\n  \"after1\": [\n    378.56399999999996,\n    194.4\n  ]\n}\n"
+    },
+    {
+      "command": "python tests/original_assets.py",
+      "exitCode": 0,
+      "passed": true,
+      "output": "{\"ok\": true, \"mediaFilesVerified\": 165, \"oldMediaReused\": 0, \"localAssetIndexesVerified\": 3, \"legacyHostHooks\": 0}\n"
+    },
+    {
+      "command": "python start_dev.py --check",
+      "exitCode": 0,
+      "passed": true,
+      "output": "[SamiDev GameHost] http://127.0.0.1:34185 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-177c9dfa store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/pool-integration/SamiDev_Platform_V25\nBuild:    samidev-v25-bfa11fb492fd3792\nGameHost: http://127.0.0.1:34185  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:49819/platform/?build=samidev-v25-bfa11fb492fd3792\nCHECK PASSED: all four games and all platform files are served by this project.\n"
+    }
+  ]
+}

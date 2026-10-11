@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "checks": [
+    "Origin, HttpOnly, hashed session storage and private API caching",
+    "Admin privilege boundaries and strict ban values",
+    "Logout revokes unused ticket and active WebSocket before next command",
+    "Unbanning never revives old sessions",
+    "Password policy, PBKDF2 cost, account rate limit and malformed avatars",
+    "Four-game catalogue and persisted pool theme equipment"
+  ],
+  "limits": [
+    "Memory backend tested; Redis deployment and mobile devices not exercised"
+  ]
+}

@@ -1,0 +1,685 @@
+{
+	"skeleton": {
+		"hash": "wy+A0wVAiJk",
+		"spine": "4.1.24",
+		"x": -933.27,
+		"y": -576.92,
+		"width": 1613.27,
+		"height": 971.93
+	},
+	"bones": [
+		{
+			"name": "root"
+		},
+		{
+			"name": "arrow",
+			"parent": "root",
+			"length": 57.42,
+			"rotation": 180,
+			"x": -3.46,
+			"y": -0.18
+		},
+		{
+			"name": "skip",
+			"parent": "root"
+		},
+		{
+			"name": "fx_bg",
+			"parent": "skip"
+		},
+		{
+			"name": "icon",
+			"parent": "skip",
+			"scaleX": 0.7201,
+			"scaleY": 0.7201
+		},
+		{
+			"name": "skip_hand",
+			"parent": "root",
+			"x": -560.08
+		},
+		{
+			"name": "fx_bg2",
+			"parent": "skip_hand",
+			"scaleX": 0.6355,
+			"scaleY": 0.6355
+		},
+		{
+			"name": "icon2",
+			"parent": "skip_hand",
+			"scaleX": 0.7201,
+			"scaleY": 0.7201
+		}
+	],
+	"slots": [
+		{
+			"name": "BG_guide",
+			"bone": "root"
+		},
+		{
+			"name": "fx_bg",
+			"bone": "fx_bg",
+			"attachment": "fx_bg"
+		},
+		{
+			"name": "fx_bg2",
+			"bone": "fx_bg2",
+			"attachment": "fx_bg"
+		},
+		{
+			"name": "path",
+			"bone": "root"
+		},
+		{
+			"name": "arrow",
+			"bone": "arrow"
+		},
+		{
+			"name": "skip",
+			"bone": "icon",
+			"attachment": "skip"
+		},
+		{
+			"name": "skip2",
+			"bone": "icon2",
+			"attachment": "skip"
+		},
+		{
+			"name": "bright",
+			"bone": "icon",
+			"color": "ffffff00",
+			"attachment": "skip_bright"
+		},
+		{
+			"name": "bright2",
+			"bone": "icon2",
+			"color": "ffffff00",
+			"attachment": "skip_bright"
+		}
+	],
+
+	"skins": [
+		{
+			"name": "default",
+			"attachments": {
+				"bright": {
+					"skip_bright": {
+						"x": -1.62,
+						"y": 3.24,
+						"scaleX": 3.7835,
+						"scaleY": 3.7835,
+						"width": 72,
+						"height": 76
+					}
+				},
+				"bright2": {
+					"skip_bright": {
+						"x": -1.62,
+						"y": 3.24,
+						"scaleX": 3.7835,
+						"scaleY": 3.7835,
+						"width": 72,
+						"height": 76
+					}
+				},
+				"path": {
+					"path": {
+						"type": "path",
+						"lengths": [
+							536.09,
+							1108.43
+						],
+						"vertexCount": 6,
+						"vertices": [
+							321.76,
+							-0.77,
+							-8.3,
+							-0.15,
+							-338.35,
+							0.47,
+							-214.32,
+							1.29,
+							-544.38,
+							1.91,
+							-874.43,
+							2.53
+						]
+					}
+				}
+			}
+		},
+		{
+			"name": "blue",
+			"attachments": {
+				"arrow": {
+					"arrow": {
+						"name": "arrow_blue",
+						"x": 0.5,
+						"y": 0.5,
+						"width": 87,
+						"height": 133
+					}
+				},
+				"fx_bg": {
+					"fx_bg": {
+						"name": "blue_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"fx_bg2": {
+					"fx_bg": {
+						"name": "blue_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"skip": {
+					"skip": {
+						"name": "skip_blue",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 120
+					}
+				},
+				"skip2": {
+					"skip": {
+						"name": "skip_blue",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 120
+					}
+				}
+			}
+		},
+		{
+			"name": "green",
+			"attachments": {
+				"arrow": {
+					"arrow": {
+						"name": "arrow_green",
+						"x": 0.86,
+						"y": 0.35,
+						"width": 86,
+						"height": 132
+					}
+				},
+				"fx_bg": {
+					"fx_bg": {
+						"name": "green_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"fx_bg2": {
+					"fx_bg": {
+						"name": "green_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"skip": {
+					"skip": {
+						"name": "skip_green",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 121
+					}
+				},
+				"skip2": {
+					"skip": {
+						"name": "skip_green",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 121
+					}
+				}
+			}
+		},
+		{
+			"name": "red",
+			"attachments": {
+				"arrow": {
+					"arrow": {
+						"name": "arrow_red",
+						"x": 0.86,
+						"y": 0.35,
+						"width": 87,
+						"height": 133
+					}
+				},
+				"fx_bg": {
+					"fx_bg": {
+						"name": "red_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"fx_bg2": {
+					"fx_bg": {
+						"name": "red_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 192,
+						"height": 148
+					}
+				},
+				"skip": {
+					"skip": {
+						"name": "skip_red",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 120
+					}
+				},
+				"skip2": {
+					"skip": {
+						"name": "skip_red",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 120
+					}
+				}
+			}
+		},
+		{
+			"name": "yellow",
+			"attachments": {
+				"arrow": {
+					"arrow": {
+						"name": "arrow_yellow",
+						"x": 0.86,
+						"y": 0.35,
+						"width": 87,
+						"height": 133
+					}
+				},
+				"fx_bg": {
+					"fx_bg": {
+						"name": "yellow_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 194,
+						"height": 151
+					}
+				},
+				"fx_bg2": {
+					"fx_bg": {
+						"name": "yellow_glow",
+						"y": -80.49,
+						"scaleX": 6.298,
+						"scaleY": 6.298,
+						"width": 194,
+						"height": 151
+					}
+				},
+				"skip": {
+					"skip": {
+						"name": "skip_yellow",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 121
+					}
+				},
+				"skip2": {
+					"skip": {
+						"name": "skip_yellow",
+						"y": 0.5,
+						"scaleX": 2.0342,
+						"scaleY": 2.0342,
+						"width": 115,
+						"height": 121
+					}
+				}
+			}
+		}
+	],
+	"animations": {
+		"arrow_single": {
+			"slots": {
+				"fx_bg": {
+					"attachment": [
+						{}
+					]
+				},
+				"fx_bg2": {
+					"attachment": [
+						{}
+					]
+				},
+				"skip": {
+					"rgba": [
+						{
+							"color": "ffffffff"
+						}
+					]
+				},
+				"skip2": {
+					"rgba": [
+						{
+							"color": "ffffffff"
+						}
+					]
+				}
+			},
+			"bones": {
+				"icon": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999
+						}
+					]
+				},
+				"icon2": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999
+						}
+					]
+				}
+			}
+		},
+		"skip": {
+			"slots": {
+				"arrow": {
+					"attachment": [
+						{}
+					]
+				},
+				"bright": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.0833,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.3167,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"fx_bg": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1667,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 1.1667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 1.3333,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"fx_bg2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						}
+					]
+				},
+				"skip": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.0833,
+							"color": "ffffffff"
+						}
+					]
+				},
+				"skip2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						}
+					]
+				}
+			},
+			"bones": {
+				"icon": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999,
+							"curve": "stepped"
+						},
+						{
+							"time": 0.0833,
+							"x": 1.999,
+							"y": 1.999
+						},
+						{
+							"time": 0.2,
+							"x": 0.806,
+							"y": 0.806
+						},
+						{
+							"time": 0.3167,
+							"x": 1.473,
+							"y": 1.473
+						},
+						{
+							"time": 0.4167,
+							"x": 1.217,
+							"y": 1.217
+						},
+						{
+							"time": 0.5,
+							"x": 1.274,
+							"y": 1.274
+						},
+						{
+							"time": 1.3333,
+							"x": 1.369,
+							"y": 1.369
+						}
+					]
+				},
+				"fx_bg": {
+					"scale": [
+						{
+							"x": -0.03,
+							"y": -0.03
+						},
+						{
+							"time": 0.1667
+						}
+					]
+				},
+				"fx_bg2": {
+					"scale": [
+						{
+							"x": -0.03,
+							"y": -0.03
+						}
+					]
+				},
+				"icon2": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999
+						}
+					]
+				}
+			}
+		},
+		"skip_playerhands": {
+			"slots": {
+				"arrow": {
+					"attachment": [
+						{}
+					]
+				},
+				"bright2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1333,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.2667,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"fx_bg": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						}
+					]
+				},
+				"fx_bg2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.1,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.5833,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.75,
+							"color": "ffffff00"
+						}
+					]
+				},
+				"skip": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						}
+					]
+				},
+				"skip2": {
+					"rgba": [
+						{
+							"color": "ffffff00"
+						},
+						{
+							"time": 0.05,
+							"color": "ffffffff",
+							"curve": "stepped"
+						},
+						{
+							"time": 0.6667,
+							"color": "ffffffff"
+						},
+						{
+							"time": 0.8333,
+							"color": "ffffff00"
+						}
+					]
+				}
+			},
+			"bones": {
+				"icon": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999
+						}
+					]
+				},
+				"fx_bg": {
+					"scale": [
+						{
+							"x": -0.03,
+							"y": -0.03
+						}
+					]
+				},
+				"fx_bg2": {
+					"scale": [
+						{
+							"x": -0.03,
+							"y": -0.03
+						},
+						{
+							"time": 0.1,
+							"x": 0.632,
+							"y": 0.632
+						}
+					]
+				},
+				"icon2": {
+					"scale": [
+						{
+							"x": 1.999,
+							"y": 1.999
+						},
+						{
+							"time": 0.05,
+							"x": 0.885,
+							"y": 0.885
+						},
+						{
+							"time": 0.1,
+							"x": 1.074,
+							"y": 1.074
+						},
+						{
+							"time": 0.1833,
+							"x": 0.915,
+							"y": 0.915
+						}
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,246 @@
+[
+  {
+    "path": "game/images/game.webp",
+    "source": "generated board and discs + newly drawn functional sprites"
+  },
+  {
+    "path": "game/images/themes/classic-preview.webp",
+    "source": "new board composite"
+  },
+  {
+    "path": "game/images/themes/cat-atlas.webp",
+    "source": "generated board and discs + newly drawn functional sprites"
+  },
+  {
+    "path": "game/images/themes/cat-preview.webp",
+    "source": "new board composite"
+  },
+  {
+    "path": "game/games/crazy8/images/MainSheet.webp",
+    "source": "generated card surfaces + newly drawn numbers and rule symbols"
+  },
+  {
+    "path": "game/games/crazy8/images/CardBackSheet.webp",
+    "source": "generated original card back"
+  },
+  {
+    "path": "game/scene-reactions/reactions.webp",
+    "source": "generated reaction sheet"
+  },
+  {
+    "path": "game/scene-reactions/gift_icon.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-avatars/lobby_avatar_empty_seat.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-avatars/lobby_avatar_join.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-avatars/scene_avatars_bot.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-avatars/scene_avatars_owner_badge.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/IAPButton/iap_button_icon.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_clear.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_coin.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_equipped.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_favorite.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_loading.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_pip.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-ui/ShopWidget/shop_widget_search.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/scene-avatars/player_indicator.png",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/games/crazy8/scene-reactions/reactions.webp",
+    "source": "generated reaction sheet"
+  },
+  {
+    "path": "game/games/crazy8/scene-reactions/gift_icon.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-avatars/lobby_avatar_empty_seat.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-avatars/lobby_avatar_join.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-avatars/scene_avatars_bot.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-avatars/scene_avatars_owner_badge.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/IAPButton/iap_button_icon.png",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_clear.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_coin.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_equipped.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_not_favorite.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_loading.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_pip.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_search.webp",
+    "source": "new source-authored vector icon"
+  },
+  {
+    "path": "game/games/crazy8/scene-avatars/player_indicator.png",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/images/default-avatar.png",
+    "source": "new source-authored default avatar"
+  },
+  {
+    "path": "game/player-profile-sheet.svg",
+    "source": "new source-authored vector icons"
+  },
+  {
+    "path": "game/platform/assets/profile/star.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/trophy.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/reputation.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/saudi-emblem.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/calendar.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/camera.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/chevron.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/settings.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/edit.svg",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/profile-sheet.svg",
+    "source": "new source-authored profile sheet"
+  },
+  {
+    "path": "game/platform/assets/profile/raster/star.webp",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/raster/trophy.webp",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/raster/reputation-flame.webp",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/raster/palm-swords.webp",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/platform/assets/profile/raster/prestige.webp",
+    "source": "new source-authored profile icon"
+  },
+  {
+    "path": "game/games/crazy8/anim/arrow_single.webp",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/games/crazy8/anim/numbers.webp",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/games/crazy8/anim/reverse.webp",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/games/crazy8/anim/skip.webp",
+    "source": "new vector-derived animation frames, original frame layout retained"
+  },
+  {
+    "path": "game/images/table-background.webp",
+    "source": "generated textile background"
+  },
+  {
+    "path": "game/games/crazy8/images/table-background.webp",
+    "source": "generated textile background"
+  }
+]

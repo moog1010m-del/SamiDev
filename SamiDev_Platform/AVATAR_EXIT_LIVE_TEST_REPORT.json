@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "avatar": {
+    "opponentWithoutPlatformCookieCanFetchAvatar": true,
+    "responseIsImageBytes": true,
+    "rosterCarriesAccountIdInsideRoom": true,
+    "publicLobbyHidesAccountId": true
+  },
+  "exit": {
+    "nativeResignMove": 4,
+    "opponentReceivesGameOverBeforeLeave": true,
+    "silentDisconnectOnThreeDotExit": false
+  },
+  "mainJsModified": false
+}

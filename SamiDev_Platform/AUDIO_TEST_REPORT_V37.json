@@ -1,0 +1,863 @@
+{
+  "passed": true,
+  "release": "V37",
+  "effectsVerified": 105,
+  "sourceRecordings": 15,
+  "allDecoded": true,
+  "flutterMatches": true,
+  "localAssetIndexesVerified": 4,
+  "clippedEffects": 0,
+  "retainedFiles": [
+    "game/games/tablesoccer/images/bg-music-standard.m4a",
+    "game/games/tablesoccer/sounds/ahem1.m4a",
+    "game/games/tablesoccer/sounds/ahem2.m4a",
+    "game/games/tablesoccer/sounds/ahem3.m4a",
+    "game/games/tablesoccer/sounds/ahem4.m4a"
+  ],
+  "effects": [
+    {
+      "file": "game/games/pool/sounds/ball1.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -5.08,
+      "truePeakDbFS4x": -5.07,
+      "onsetMs": 1.07,
+      "bytes": 4998
+    },
+    {
+      "file": "game/games/pool/sounds/ball_soft1.m4a",
+      "seconds": 0.1858,
+      "peakDbFS": -10.08,
+      "truePeakDbFS4x": -10.05,
+      "onsetMs": 1.09,
+      "bytes": 3858
+    },
+    {
+      "file": "game/games/pool/sounds/rail1.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -8.01,
+      "truePeakDbFS4x": -7.95,
+      "onsetMs": 1.29,
+      "bytes": 4893
+    },
+    {
+      "file": "game/games/pool/sounds/rail_soft1.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -13.01,
+      "truePeakDbFS4x": -13.0,
+      "onsetMs": 1.25,
+      "bytes": 4153
+    },
+    {
+      "file": "game/games/pool/sounds/pocket1.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -5.97,
+      "truePeakDbFS4x": -5.95,
+      "onsetMs": 4.06,
+      "bytes": 5455
+    },
+    {
+      "file": "game/games/pool/sounds/sunk1.m4a",
+      "seconds": 0.5805,
+      "peakDbFS": -8.86,
+      "truePeakDbFS4x": -8.86,
+      "onsetMs": 4.42,
+      "bytes": 10741
+    },
+    {
+      "file": "game/games/pool/sounds/ball2.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -4.95,
+      "truePeakDbFS4x": -4.82,
+      "onsetMs": 1.04,
+      "bytes": 4644
+    },
+    {
+      "file": "game/games/pool/sounds/ball_soft2.m4a",
+      "seconds": 0.1858,
+      "peakDbFS": -10.08,
+      "truePeakDbFS4x": -9.98,
+      "onsetMs": 1.04,
+      "bytes": 3912
+    },
+    {
+      "file": "game/games/pool/sounds/rail2.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -8.0,
+      "truePeakDbFS4x": -7.95,
+      "onsetMs": 1.25,
+      "bytes": 4821
+    },
+    {
+      "file": "game/games/pool/sounds/rail_soft2.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -13.01,
+      "truePeakDbFS4x": -12.93,
+      "onsetMs": 1.22,
+      "bytes": 4169
+    },
+    {
+      "file": "game/games/pool/sounds/pocket2.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -6.03,
+      "truePeakDbFS4x": -6.03,
+      "onsetMs": 4.24,
+      "bytes": 5402
+    },
+    {
+      "file": "game/games/pool/sounds/sunk2.m4a",
+      "seconds": 0.5805,
+      "peakDbFS": -9.08,
+      "truePeakDbFS4x": -9.08,
+      "onsetMs": 4.33,
+      "bytes": 10084
+    },
+    {
+      "file": "game/games/pool/sounds/ball3.m4a",
+      "seconds": 0.2322,
+      "peakDbFS": -5.18,
+      "truePeakDbFS4x": -5.17,
+      "onsetMs": 1.0,
+      "bytes": 4555
+    },
+    {
+      "file": "game/games/pool/sounds/ball_soft3.m4a",
+      "seconds": 0.1858,
+      "peakDbFS": -9.96,
+      "truePeakDbFS4x": -9.88,
+      "onsetMs": 1.02,
+      "bytes": 3933
+    },
+    {
+      "file": "game/games/pool/sounds/rail3.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -8.02,
+      "truePeakDbFS4x": -7.99,
+      "onsetMs": 1.2,
+      "bytes": 4696
+    },
+    {
+      "file": "game/games/pool/sounds/rail_soft3.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -12.99,
+      "truePeakDbFS4x": -12.94,
+      "onsetMs": 1.18,
+      "bytes": 4067
+    },
+    {
+      "file": "game/games/pool/sounds/pocket3.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -4.57,
+      "truePeakDbFS4x": -4.57,
+      "onsetMs": 4.06,
+      "bytes": 5473
+    },
+    {
+      "file": "game/games/pool/sounds/sunk3.m4a",
+      "seconds": 0.5805,
+      "peakDbFS": -9.05,
+      "truePeakDbFS4x": -9.04,
+      "onsetMs": 3.29,
+      "bytes": 9977
+    },
+    {
+      "file": "game/games/pool/sounds/cue_soft1.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -6.48,
+      "truePeakDbFS4x": -6.48,
+      "onsetMs": 4.08,
+      "bytes": 2902
+    },
+    {
+      "file": "game/games/pool/sounds/cue_hard1.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -3.17,
+      "truePeakDbFS4x": -3.16,
+      "onsetMs": 4.06,
+      "bytes": 2946
+    },
+    {
+      "file": "game/games/pool/sounds/cue_hard2.m4a",
+      "seconds": 0.1393,
+      "peakDbFS": -2.48,
+      "truePeakDbFS4x": -2.48,
+      "onsetMs": 4.06,
+      "bytes": 3266
+    },
+    {
+      "file": "game/games/pool/sounds/rack.m4a",
+      "seconds": 0.6269,
+      "peakDbFS": -6.7,
+      "truePeakDbFS4x": -6.69,
+      "onsetMs": 1.04,
+      "bytes": 10793
+    },
+    {
+      "file": "game/sounds/disc-hit-soft.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -10.31,
+      "truePeakDbFS4x": -10.17,
+      "onsetMs": 0.86,
+      "bytes": 4459
+    },
+    {
+      "file": "game/sounds/disc-hit-deep.m4a",
+      "seconds": 0.2322,
+      "peakDbFS": -6.26,
+      "truePeakDbFS4x": -6.08,
+      "onsetMs": 3.99,
+      "bytes": 4693
+    },
+    {
+      "file": "game/sounds/disc-hit-bright.m4a",
+      "seconds": 0.2322,
+      "peakDbFS": -5.13,
+      "truePeakDbFS4x": -5.12,
+      "onsetMs": 30.45,
+      "bytes": 4516
+    },
+    {
+      "file": "game/sounds/disc-rail-tap.m4a",
+      "seconds": 0.1858,
+      "peakDbFS": -8.02,
+      "truePeakDbFS4x": -7.8,
+      "onsetMs": 4.06,
+      "bytes": 3951
+    },
+    {
+      "file": "game/sounds/pocket-drop-soft.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -7.06,
+      "truePeakDbFS4x": -6.98,
+      "onsetMs": 1.86,
+      "bytes": 6821
+    },
+    {
+      "file": "game/sounds/pocket-drop-deep.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -5.39,
+      "truePeakDbFS4x": -5.24,
+      "onsetMs": 4.04,
+      "bytes": 5970
+    },
+    {
+      "file": "game/sounds/pocket-soft-pop.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -6.61,
+      "truePeakDbFS4x": -6.57,
+      "onsetMs": 1.97,
+      "bytes": 4750
+    },
+    {
+      "file": "game/sounds/striker-slide.m4a",
+      "seconds": 0.4644,
+      "peakDbFS": -10.07,
+      "truePeakDbFS4x": -9.98,
+      "onsetMs": 2.15,
+      "bytes": 9308
+    },
+    {
+      "file": "game/sounds/striker_short.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -8.13,
+      "truePeakDbFS4x": -7.93,
+      "onsetMs": 3.99,
+      "bytes": 4052
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/ball_long1.m4a",
+      "seconds": 0.3483,
+      "peakDbFS": -5.35,
+      "truePeakDbFS4x": -5.35,
+      "onsetMs": 4.15,
+      "bytes": 6335
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/ball_long2.m4a",
+      "seconds": 0.3483,
+      "peakDbFS": -5.44,
+      "truePeakDbFS4x": -5.14,
+      "onsetMs": 4.01,
+      "bytes": 6167
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/ball_long3.m4a",
+      "seconds": 0.3483,
+      "peakDbFS": -5.3,
+      "truePeakDbFS4x": -5.29,
+      "onsetMs": 4.15,
+      "bytes": 6093
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/ball_short1.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -7.03,
+      "truePeakDbFS4x": -7.02,
+      "onsetMs": 4.04,
+      "bytes": 6169
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/ball_short2.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -6.97,
+      "truePeakDbFS4x": -6.97,
+      "onsetMs": 4.26,
+      "bytes": 5916
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/token_hit1.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -6.23,
+      "truePeakDbFS4x": -6.08,
+      "onsetMs": 0.86,
+      "bytes": 5395
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/token_hit2.m4a",
+      "seconds": 0.2554,
+      "peakDbFS": -6.18,
+      "truePeakDbFS4x": -6.0,
+      "onsetMs": 3.99,
+      "bytes": 4898
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/token_hit3.m4a",
+      "seconds": 0.2322,
+      "peakDbFS": -6.11,
+      "truePeakDbFS4x": -6.1,
+      "onsetMs": 30.45,
+      "bytes": 4686
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/token_slide1.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -11.0,
+      "truePeakDbFS4x": -10.87,
+      "onsetMs": 1.25,
+      "bytes": 5821
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/token_slide2.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -11.12,
+      "truePeakDbFS4x": -10.95,
+      "onsetMs": 3.99,
+      "bytes": 5442
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/post1.m4a",
+      "seconds": 0.1858,
+      "peakDbFS": -6.01,
+      "truePeakDbFS4x": -6.0,
+      "onsetMs": 1.41,
+      "bytes": 4051
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/goal1.m4a",
+      "seconds": 0.5805,
+      "peakDbFS": -7.08,
+      "truePeakDbFS4x": -5.59,
+      "onsetMs": 4.04,
+      "bytes": 9801
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/whistle1.m4a",
+      "seconds": 0.5341,
+      "peakDbFS": -5.11,
+      "truePeakDbFS4x": -5.07,
+      "onsetMs": 4.81,
+      "bytes": 9033
+    },
+    {
+      "file": "game/games/crazy8/sounds/card-draw.m4a",
+      "seconds": 0.1625,
+      "peakDbFS": -9.02,
+      "truePeakDbFS4x": -9.01,
+      "onsetMs": 3.97,
+      "bytes": 3589
+    },
+    {
+      "file": "game/games/crazy8/sounds/card-place.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -7.54,
+      "truePeakDbFS4x": -7.49,
+      "onsetMs": 3.99,
+      "bytes": 5499
+    },
+    {
+      "file": "game/games/crazy8/sounds/card-special.m4a",
+      "seconds": 0.3019,
+      "peakDbFS": -7.09,
+      "truePeakDbFS4x": -7.07,
+      "onsetMs": 1.16,
+      "bytes": 5421
+    },
+    {
+      "file": "game/games/crazy8/sounds/card-shuffle.m4a",
+      "seconds": 0.8127,
+      "peakDbFS": -10.25,
+      "truePeakDbFS4x": -10.16,
+      "onsetMs": 4.24,
+      "bytes": 15134
+    },
+    {
+      "file": "game/games/crazy8/sounds/card-warning.m4a",
+      "seconds": 0.3715,
+      "peakDbFS": -15.95,
+      "truePeakDbFS4x": -15.94,
+      "onsetMs": 0.29,
+      "bytes": 6716
+    },
+    {
+      "file": "game/games/crazy8/scene-avatars/turn_audio.m4a",
+      "seconds": 0.5108,
+      "peakDbFS": -14.56,
+      "truePeakDbFS4x": -14.12,
+      "onsetMs": 0.29,
+      "bytes": 8729
+    },
+    {
+      "file": "game/games/crazy8/scene-reactions/bells.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/games/crazy8/scene-reactions/whoosh1.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/games/crazy8/scene-reactions/whoosh2.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/games/crazy8/scene-settings/select.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/crazy8/scene-settings/switch_off.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.98,
+      "truePeakDbFS4x": -13.92,
+      "onsetMs": 4.38,
+      "bytes": 2919
+    },
+    {
+      "file": "game/games/crazy8/scene-settings/switch_on.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/crazy8/scene-settings/woosh_close.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/games/crazy8/scene-settings/woosh_open.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/games/crazy8/scene-ui/IAPButton/iap_button_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/games/crazy8/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/pool/scene-avatars/turn_audio.m4a",
+      "seconds": 0.5108,
+      "peakDbFS": -14.56,
+      "truePeakDbFS4x": -14.12,
+      "onsetMs": 0.29,
+      "bytes": 8729
+    },
+    {
+      "file": "game/games/pool/scene-settings/select.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/pool/scene-settings/switch_off.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.98,
+      "truePeakDbFS4x": -13.92,
+      "onsetMs": 4.38,
+      "bytes": 2919
+    },
+    {
+      "file": "game/games/pool/scene-settings/switch_on.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/pool/scene-settings/woosh_close.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/games/pool/scene-settings/woosh_open.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/games/pool/scene-ui/IAPButton/iap_button_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/games/pool/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/pool/sounds/tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/tablesoccer/scene-avatars/turn_audio.m4a",
+      "seconds": 0.5108,
+      "peakDbFS": -14.56,
+      "truePeakDbFS4x": -14.12,
+      "onsetMs": 0.29,
+      "bytes": 8729
+    },
+    {
+      "file": "game/games/tablesoccer/scene-reactions/bells.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/games/tablesoccer/scene-reactions/whoosh1.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/games/tablesoccer/scene-reactions/whoosh2.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/games/tablesoccer/scene-ui/IAPButton/iap_button_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/games/tablesoccer/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/tap_disabled.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/whoosh.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/you_lose1.m4a",
+      "seconds": 0.9288,
+      "peakDbFS": -13.03,
+      "truePeakDbFS4x": -12.88,
+      "onsetMs": 0.34,
+      "bytes": 14930
+    },
+    {
+      "file": "game/games/tablesoccer/sounds/you_won1.m4a",
+      "seconds": 0.8359,
+      "peakDbFS": -9.22,
+      "truePeakDbFS4x": -9.21,
+      "onsetMs": 0.29,
+      "bytes": 13713
+    },
+    {
+      "file": "game/scene-avatars/turn_audio.m4a",
+      "seconds": 0.5108,
+      "peakDbFS": -14.56,
+      "truePeakDbFS4x": -14.12,
+      "onsetMs": 0.29,
+      "bytes": 8729
+    },
+    {
+      "file": "game/scene-reactions/bells.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/scene-reactions/whoosh1.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/scene-reactions/whoosh2.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/scene-settings/select.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/scene-settings/switch_off.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.98,
+      "truePeakDbFS4x": -13.92,
+      "onsetMs": 4.38,
+      "bytes": 2919
+    },
+    {
+      "file": "game/scene-settings/switch_on.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/scene-settings/woosh_close.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    },
+    {
+      "file": "game/scene-settings/woosh_open.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/scene-ui/IAPButton/iap_button_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/scene-ui/ShopWidget/shop_widget_error.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/scene-ui/ShopWidget/shop_widget_favorite.m4a",
+      "seconds": 0.6037,
+      "peakDbFS": -11.81,
+      "truePeakDbFS4x": -11.81,
+      "onsetMs": 0.29,
+      "bytes": 10097
+    },
+    {
+      "file": "game/scene-ui/ShopWidget/shop_widget_tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/sounds/round-loss.m4a",
+      "seconds": 0.9288,
+      "peakDbFS": -13.03,
+      "truePeakDbFS4x": -12.88,
+      "onsetMs": 0.34,
+      "bytes": 14930
+    },
+    {
+      "file": "game/sounds/round-win.m4a",
+      "seconds": 0.8359,
+      "peakDbFS": -9.22,
+      "truePeakDbFS4x": -9.21,
+      "onsetMs": 0.29,
+      "bytes": 13713
+    },
+    {
+      "file": "game/sounds/tap.m4a",
+      "seconds": 0.1161,
+      "peakDbFS": -13.64,
+      "truePeakDbFS4x": -13.57,
+      "onsetMs": 4.33,
+      "bytes": 2944
+    },
+    {
+      "file": "game/sounds/tap_disabled.m4a",
+      "seconds": 0.209,
+      "peakDbFS": -15.25,
+      "truePeakDbFS4x": -15.21,
+      "onsetMs": 4.04,
+      "bytes": 4307
+    },
+    {
+      "file": "game/sounds/woosh1.m4a",
+      "seconds": 0.2786,
+      "peakDbFS": -12.07,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 12.36,
+      "bytes": 5284
+    },
+    {
+      "file": "game/sounds/woosh2.m4a",
+      "seconds": 0.3251,
+      "peakDbFS": -12.08,
+      "truePeakDbFS4x": -12.05,
+      "onsetMs": 13.29,
+      "bytes": 5716
+    }
+  ],
+  "limitations": [
+    "4x oversampled peak measurement, not a listening test",
+    "No APK build or physical-phone audition performed"
+  ]
+}

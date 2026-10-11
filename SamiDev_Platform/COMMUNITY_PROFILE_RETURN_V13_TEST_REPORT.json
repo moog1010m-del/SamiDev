@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "version": "V13",
+  "features": {
+    "communityMemberFullProfile": true,
+    "communityChatAvatarFullProfile": true,
+    "publicProfileRealStats": [
+      "accountAgeDays",
+      "wins",
+      "reputation"
+    ],
+    "profileActions": [
+      "friend",
+      "reputation",
+      "report"
+    ],
+    "returnToCommunityAfterGameOver": true,
+    "returnToCommunityAfterExit": true,
+    "communityIdentityPersistsAcrossReconnect": true
+  },
+  "mainJsSha256": "a1fc9c5b3d1da91ea6999951eae0691f2346139e10ea16567914542b2afda45c",
+  "tests": [
+    "community_hub_regression.py",
+    "player_profile_social_regression.py",
+    "profile_ui_regression.py",
+    "player_profile_click_regression.py",
+    "profile_game_avatar_regression.py",
+    "avatar_exit_regression.py",
+    "browser_runtime_race_regression.js",
+    "client_resync_regression.js",
+    "gamehost_conformance.js",
+    "community_profile_return_regression.py"
+  ],
+  "gamehostChecks": "369/369"
+}

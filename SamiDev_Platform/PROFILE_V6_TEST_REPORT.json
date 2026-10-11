@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "checks": {
+    "player_profile_social_regression": "PASS",
+    "live_profile_http_test": "PASS",
+    "profile_ui_regression": "PASS",
+    "profile_win_stats_regression": "PASS",
+    "profile_game_avatar_regression": "PASS",
+    "avatar_exit_regression": "PASS",
+    "browser_runtime_race_regression": "PASS",
+    "client_resync_regression": "PASS",
+    "timeout_afk_regression": "PASS",
+    "gamehost_conformance": "369/369",
+    "turn_authority_regression": "PASS",
+    "alarm_authority_regression": "PASS",
+    "state_checkpoint_regression": "PASS",
+    "store_sequence_regression": "PASS",
+    "store_authority_epoch_regression": "PASS"
+  },
+  "mainJsSha256": "f4c0ceb9e4eedfcf161848d33f673dfd26ce848be9ce556c01e3d23410351d2b",
+  "note": "security_lifecycle/invite live tests require a running server on 127.0.0.1:8088; the new social/profile HTTP paths were validated with an aiohttp live test server."
+}

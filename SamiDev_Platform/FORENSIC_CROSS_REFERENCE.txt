@@ -1,0 +1,1667 @@
+game/browser-runtime.js:15: [surfaceChanged]     surfaceCreated: null, surfaceChanged: null, drawFrame: null, touch: null, mouse: null,
+game/browser-runtime.js:19: [turn]     activePointers: new Map(), localHost: {hotseat:true, moves:[], alarms:new Map(), currentSeat:0, lastTurnKey:'', started:false},
+game/browser-runtime.js:19: [alarm]     activePointers: new Map(), localHost: {hotseat:true, moves:[], alarms:new Map(), currentSeat:0, lastTurnKey:'', started:false},
+game/browser-runtime.js:20: [authority]     network: {online:false, roomId:null, roster:[], seat:null, snapshotBusy:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityChec
+game/browser-runtime.js:20: [revision]     network: {online:false, roomId:null, roster:[], seat:null, snapshotBusy:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityChec
+game/browser-runtime.js:20: [snapshot]     network: {online:false, roomId:null, roster:[], seat:null, snapshotBusy:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityChec
+game/browser-runtime.js:26: [turn]     if (typeof uri !== 'string') return uri;
+game/browser-runtime.js:26: [return]     if (typeof uri !== 'string') return uri;
+game/browser-runtime.js:29: [turn]     return uri;
+game/browser-runtime.js:29: [return]     return uri;
+game/browser-runtime.js:34: [turn]     if (window.__textAssets && Object.prototype.hasOwnProperty.call(window.__textAssets, path)) return window.__textAssets[path];
+game/browser-runtime.js:34: [return]     if (window.__textAssets && Object.prototype.hasOwnProperty.call(window.__textAssets, path)) return window.__textAssets[path];
+game/browser-runtime.js:36: [turn]     try { xhr.open('GET', path, false); xhr.send(null); } catch (e) { console.warn('loadFileAsString failed', path, e); return '{}'; }
+game/browser-runtime.js:36: [catch]     try { xhr.open('GET', path, false); xhr.send(null); } catch (e) { console.warn('loadFileAsString failed', path, e); return '{}'; }
+game/browser-runtime.js:36: [return]     try { xhr.open('GET', path, false); xhr.send(null); } catch (e) { console.warn('loadFileAsString failed', path, e); return '{}'; }
+game/browser-runtime.js:37: [turn]     if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 0) return xhr.responseText;
+game/browser-runtime.js:37: [return]     if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 0) return xhr.responseText;
+game/browser-runtime.js:39: [turn]     return '{}';
+game/browser-runtime.js:39: [return]     return '{}';
+game/browser-runtime.js:46: [turn]     return `rgba(${r},${g},${b},${a})`;
+game/browser-runtime.js:46: [return]     return `rgba(${r},${g},${b},${a})`;
+game/browser-runtime.js:52: [turn]     return {width:c.width, height:c.height};
+game/browser-runtime.js:52: [return]     return {width:c.width, height:c.height};
+game/browser-runtime.js:71: [turn]     return c;
+game/browser-runtime.js:71: [return]     return c;
+game/browser-runtime.js:74: [turn]   const idFor = (map, obj) => { const id = state.nextHandle++; map.set(id, obj); return id; };
+game/browser-runtime.js:74: [return]   const idFor = (map, obj) => { const id = state.nextHandle++; map.set(id, obj); return id; };
+game/browser-runtime.js:104: [turn]       return;
+game/browser-runtime.js:104: [return]       return;
+game/browser-runtime.js:120: [turn]       return {width:img.naturalWidth||img.width,height:img.naturalHeight||img.height};
+game/browser-runtime.js:120: [return]       return {width:img.naturalWidth||img.width,height:img.naturalHeight||img.height};
+game/browser-runtime.js:125: [turn]     return {width:2,height:2};
+game/browser-runtime.js:125: [return]     return {width:2,height:2};
+game/browser-runtime.js:134: [catch]     } catch { text=''; }
+game/browser-runtime.js:135: [turn]     return uploadCanvas(gl.TEXTURE_2D,0,makeTextCanvas(text,opts||{}));
+game/browser-runtime.js:135: [return]     return uploadCanvas(gl.TEXTURE_2D,0,makeTextCanvas(text,opts||{}));
+game/browser-runtime.js:166: [turn]     load(uri){ const id=audioId++; const a=new Audio(norm(uri)); audios.set(id,a); return id; },
+game/browser-runtime.js:166: [return]     load(uri){ const id=audioId++; const a=new Audio(norm(uri)); audios.set(id,a); return id; },
+game/browser-runtime.js:168: [catch]     play(id,volume=1){ const a=audios.get(id); if(a){a.volume=Math.max(0,Math.min(1,volume));a.currentTime=0;a.play().catch(()=>{});} },
+game/browser-runtime.js:169: [catch]     playMusic(uri,volume=1){ const a=new Audio(norm(uri)); a.loop=true;a.volume=volume;a.play().catch(()=>{}); window.__music=a; },
+game/browser-runtime.js:178: [turn]     return s;
+game/browser-runtime.js:178: [return]     return s;
+game/browser-runtime.js:182: [turn]     try { const v=localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+game/browser-runtime.js:182: [catch]     try { const v=localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+game/browser-runtime.js:182: [return]     try { const v=localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+game/browser-runtime.js:185: [catch]     try { localStorage.setItem(key, JSON.stringify(value ?? {})); } catch {}
+game/browser-runtime.js:189: [turn]   const setHostTimer=(fn,ms,repeat=false)=>{ const id=timerId++; const real=repeat?setInterval(fn,ms):setTimeout(()=>{timers.delete(id);fn();},ms); timers.set(id,{real,repeat}); re
+game/browser-runtime.js:189: [setTimeout]   const setHostTimer=(fn,ms,repeat=false)=>{ const id=timerId++; const real=repeat?setInterval(fn,ms):setTimeout(()=>{timers.delete(id);fn();},ms); timers.set(id,{real,repeat}); re
+game/browser-runtime.js:189: [setInterval]   const setHostTimer=(fn,ms,repeat=false)=>{ const id=timerId++; const real=repeat?setInterval(fn,ms):setTimeout(()=>{timers.delete(id);fn();},ms); timers.set(id,{real,repeat}); re
+game/browser-runtime.js:189: [return]   const setHostTimer=(fn,ms,repeat=false)=>{ const id=timerId++; const real=repeat?setInterval(fn,ms):setTimeout(()=>{timers.delete(id);fn();},ms); timers.set(id,{real,repeat}); re
+game/browser-runtime.js:190: [turn]   const clearHostTimer=(id)=>{ const t=timers.get(id); if(!t)return; t.repeat?clearInterval(t.real):clearTimeout(t.real); timers.delete(id); };
+game/browser-runtime.js:190: [return]   const clearHostTimer=(id)=>{ const t=timers.get(id); if(!t)return; t.repeat?clearInterval(t.real):clearTimeout(t.real); timers.delete(id); };
+game/browser-runtime.js:201: [turn]     getInventory:()=>[], [HOST_PLAYER_ID_METHOD]:(seat)=> { const r=state.network.roster?.find?.(x=>x&&x.seat===seat); return Number.isInteger(seat)&&seat>=0?(r?.name||`Player ${se
+game/browser-runtime.js:201: [return]     getInventory:()=>[], [HOST_PLAYER_ID_METHOD]:(seat)=> { const r=state.network.roster?.find?.(x=>x&&x.seat===seat); return Number.isInteger(seat)&&seat>=0?(r?.name||`Player ${se
+game/browser-runtime.js:202: [catch]     haptic:{isVibrationSupported:()=>typeof navigator!=='undefined'&&typeof navigator.vibrate==='function',vibrate:(ms=20)=>{try{navigator.vibrate?.(ms);}catch(_){}},vibratePattern
+game/browser-runtime.js:206: [surfaceChanged]     setOnSurfaceChangedListener:(f)=>state.surfaceChanged=f,
+game/browser-runtime.js:212: [catch]     fetchAudio:(uri,ok,fail)=>{ try{ const id=audioId++; const a=new Audio(norm(uri)); audios.set(id,a); ok?.(uri,{audio_id:id}); }catch(e){fail?.(uri,e);} },
+game/browser-runtime.js:215: [turn]       if(!img){ fail?.(uri,'not preloaded'); return; }
+game/browser-runtime.js:215: [return]       if(!img){ fail?.(uri,'not preloaded'); return; }
+game/browser-runtime.js:222: [alarm]     alarm:{set:(ms,id)=>scheduleLogicAlarm(ms,id)},
+game/browser-runtime.js:223: [turn]     session:{changeTurn:(turn,msg)=>{ try{ state.gameLogic?.changeTurn?.(turn,msg); }catch(e){console.warn('changeTurn',e);} },gameOver:(...a)=>console.log('[web-host] gameOver',..
+game/browser-runtime.js:223: [catch]     session:{changeTurn:(turn,msg)=>{ try{ state.gameLogic?.changeTurn?.(turn,msg); }catch(e){console.warn('changeTurn',e);} },gameOver:(...a)=>console.log('[web-host] gameOver',..
+game/browser-runtime.js:224: [resync]     sendMove:(move)=>state.network.online?window.SamiDevNetwork?.sendMove?.(move):ackLocalMove(move), resetSynchronizationStream:()=>state.network.online?window.SamiDevNetwork?.req
+game/browser-runtime.js:233: [turn]       if(typeof state.menuClick !== 'function') return false;
+game/browser-runtime.js:233: [return]       if(typeof state.menuClick !== 'function') return false;
+game/browser-runtime.js:234: [turn]       try { state.menuClick(String(id)); state.frameRequested=true; return true; }
+game/browser-runtime.js:234: [return]       try { state.menuClick(String(id)); state.frameRequested=true; return true; }
+game/browser-runtime.js:235: [turn]       catch(e){ console.warn('[SamiDev UI] menu action failed', id, e); return false; }
+game/browser-runtime.js:235: [catch]       catch(e){ console.warn('[SamiDev UI] menu action failed', id, e); return false; }
+game/browser-runtime.js:235: [return]       catch(e){ console.warn('[SamiDev UI] menu action failed', id, e); return false; }
+game/browser-runtime.js:237: [turn]     openHelp(){ return this.invokeMenu('howto'); },
+game/browser-runtime.js:237: [return]     openHelp(){ return this.invokeMenu('howto'); },
+game/browser-runtime.js:238: [turn]     toggleSound(){ return this.invokeMenu('toggleSound'); },
+game/browser-runtime.js:238: [return]     toggleSound(){ return this.invokeMenu('toggleSound'); },
+game/browser-runtime.js:239: [turn]     isMuted(){ return !!hostBridge.game_preferences?.mute; },
+game/browser-runtime.js:239: [return]     isMuted(){ return !!hostBridge.game_preferences?.mute; },
+game/browser-runtime.js:240: [turn]     getPreferences(){ return {...(hostBridge.game_preferences || {})}; },
+game/browser-runtime.js:240: [return]     getPreferences(){ return {...(hostBridge.game_preferences || {})}; },
+game/browser-runtime.js:243: [resize]   function resize() {
+game/browser-runtime.js:247: [turn]     // Returning false lets startup wait for a usable surface instead of hiding the loader
+game/browser-runtime.js:247: [return]     // Returning false lets startup wait for a usable surface instead of hiding the loader
+game/browser-runtime.js:249: [resize]     // observed by ResizeObserver below, so a later valid size cannot be missed.
+game/browser-runtime.js:249: [ResizeObserver]     // observed by ResizeObserver below, so a later valid size cannot be missed.
+game/browser-runtime.js:250: [turn]     if(rect.width < 8 || rect.height < 8) return false;
+game/browser-runtime.js:250: [return]     if(rect.width < 8 || rect.height < 8) return false;
+game/browser-runtime.js:255: [resize]     // ResizeObserver is installed before main.js finishes loading. It may observe a perfectly
+game/browser-runtime.js:255: [ResizeObserver]     // ResizeObserver is installed before main.js finishes loading. It may observe a perfectly
+game/browser-runtime.js:256: [surfaceChanged]     // valid canvas before main.js has registered surfaceChanged. Do NOT mark that measurement
+game/browser-runtime.js:257: [resize]     // initialized: otherwise the real startup resize would be deduplicated and the game would
+game/browser-runtime.js:258: [surfaceChanged]     // stay at WebGL's white clear color without ever receiving its first surfaceChanged().
+game/browser-runtime.js:259: [turn]     if(typeof state.surfaceChanged!=='function') return false;
+game/browser-runtime.js:259: [surfaceChanged]     if(typeof state.surfaceChanged!=='function') return false;
+game/browser-runtime.js:259: [return]     if(typeof state.surfaceChanged!=='function') return false;
+game/browser-runtime.js:261: [resize]     // Browsers can emit duplicate resize events with exactly the same physical surface.
+game/browser-runtime.js:262: [surfaceChanged]     // main.js treats every surfaceChanged as a full client sync; while paused that can also
+game/browser-runtime.js:263: [resync]     // trigger a resync. Deduplicating here prevents timer/UI resets and console floods.
+game/browser-runtime.js:264: [turn]     if(state.surface.initialized && state.surface.w===w && state.surface.h===h && state.surface.menuY===menuY) return true;
+game/browser-runtime.js:264: [return]     if(state.surface.initialized && state.surface.w===w && state.surface.h===h && state.surface.menuY===menuY) return true;
+game/browser-runtime.js:271: [_syncCalledFlag]     // and sets _syncCalledFlag=true. That flag is specifically used by the 500ms
+game/browser-runtime.js:272: [turn]     // animationCompleted() turn timer to suppress stale post-shot transitions after an
+game/browser-runtime.js:273: [resize]     // authoritative sync. A visual viewport resize is not an authoritative state sync, so
+game/browser-runtime.js:274: [surfaceChanged]     // preserve a false flag across surfaceChanged; otherwise a resize can cancel the local
+game/browser-runtime.js:274: [resize]     // preserve a false flag across surfaceChanged; otherwise a resize can cancel the local
+game/browser-runtime.js:275: [turn]     // next-turn transition and make both clients display "opponent's turn".
+game/browser-runtime.js:277: [_syncCalledFlag]     const syncFlagBefore=logic?._syncCalledFlag;
+game/browser-runtime.js:278: [surfaceChanged]     state.surfaceChanged?.(w,h,0,menuY);
+game/browser-runtime.js:279: [snapshot]     if(state.network.online && logic && syncFlagBefore===false && logic._syncCalledFlag===true && !state.network.snapshotBusy){
+game/browser-runtime.js:279: [_syncCalledFlag]     if(state.network.online && logic && syncFlagBefore===false && logic._syncCalledFlag===true && !state.network.snapshotBusy){
+game/browser-runtime.js:280: [_syncCalledFlag]       logic._syncCalledFlag=false;
+game/browser-runtime.js:281: [turn]       if(runtimeDebug) console.debug('[SamiDev Sync] visual resize preserved pending turn transition');
+game/browser-runtime.js:281: [resize]       if(runtimeDebug) console.debug('[SamiDev Sync] visual resize preserved pending turn transition');
+game/browser-runtime.js:284: [turn]     return true;
+game/browser-runtime.js:284: [return]     return true;
+game/browser-runtime.js:289: [resize]     while(!resize()){
+game/browser-runtime.js:291: [requestAnimationFrame]       await new Promise(resolve=>requestAnimationFrame(resolve));
+game/browser-runtime.js:297: [turn]     return {id:ev.pointerId ?? 0, x:(ev.clientX-r.left)*(canvas.width/Math.max(1,r.width)), y:(ev.clientY-r.top)*(canvas.height/Math.max(1,r.height))};
+game/browser-runtime.js:297: [return]     return {id:ev.pointerId ?? 0, x:(ev.clientX-r.left)*(canvas.width/Math.max(1,r.width)), y:(ev.clientY-r.top)*(canvas.height/Math.max(1,r.height))};
+game/browser-runtime.js:306: [turn]     return {id:p.id, x:p.x, y:canvas.height-p.y};
+game/browser-runtime.js:306: [return]     return {id:p.id, x:p.x, y:canvas.height-p.y};
+game/browser-runtime.js:310: [turn]     if(!state.touch) return;
+game/browser-runtime.js:310: [return]     if(!state.touch) return;
+game/browser-runtime.js:314: [snapshot]     // Pass an immutable snapshot to main.js; gesture processing may retain/mutate points.
+game/browser-runtime.js:316: [catch]     try { state.touch({action,pointers}); } catch(e){ console.warn('[web-host] touch',e); }
+game/browser-runtime.js:322: [turn]     if(!state.mouse) return;
+game/browser-runtime.js:322: [return]     if(!state.mouse) return;
+game/browser-runtime.js:324: [catch]     try { state.mouse({x:p.x,y:p.y,mask,button:ev.button??0,buttons:ev.buttons??0,alt:!!ev.altKey,control:!!ev.ctrlKey,shift:!!ev.shiftKey}); } catch(e){ console.warn('[web-host] m
+game/browser-runtime.js:330: [catch]     canvas.addEventListener('pointerdown',ev=>{ ev.preventDefault(); try{canvas.setPointerCapture(ev.pointerId);}catch{}; emitTouch(0,ev); emitMouse('down',ev); unlockAudio(); },{p
+game/browser-runtime.js:340: [catch]     canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); emitTouch(1,ev); emitMouse('up',ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; },{passive:false});
+game/browser-runtime.js:349: [catch]     if(window.__music && window.__music.paused) window.__music.play().catch(()=>{});
+game/browser-runtime.js:352: [alarm]   function scheduleLogicAlarm(ms,id){
+game/browser-runtime.js:353: [turn]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:353: [return]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:354: [alarm]     const old=state.localHost.alarms.get(id); if(old) clearTimeout(old);
+game/browser-runtime.js:355: [setTimeout]     const h=setTimeout(()=>{
+game/browser-runtime.js:356: [alarm]       state.localHost.alarms.delete(id);
+game/browser-runtime.js:358: [turn]         if(logic.gameOver || !logic._pendingAlarm || logic._nextAlarmId!==id) return;
+game/browser-runtime.js:358: [alarm]         if(logic.gameOver || !logic._pendingAlarm || logic._nextAlarmId!==id) return;
+game/browser-runtime.js:358: [return]         if(logic.gameOver || !logic._pendingAlarm || logic._nextAlarmId!==id) return;
+game/browser-runtime.js:359: [alarm]         logic.alarm({__alarmId:id,__alarmState:logic._alarmState},id);
+game/browser-runtime.js:361: [alarm]       }catch(e){ console.warn('[web-host] alarm',id,e); }
+game/browser-runtime.js:361: [catch]       }catch(e){ console.warn('[web-host] alarm',id,e); }
+game/browser-runtime.js:363: [alarm]     state.localHost.alarms.set(id,h);
+game/browser-runtime.js:367: [alarm]     // In authoritative online mode the server owns alarm execution.
+game/browser-runtime.js:368: [alarm]     // BaseLogic still tracks _localAlarmTime/_localAlarmDuration internally for UI,
+game/browser-runtime.js:369: [alarm]     // but the browser must NOT fire logic.alarm() on its own.
+game/browser-runtime.js:370: [alarm]     logic.onSetAlarm=authoritativeOnline
+game/browser-runtime.js:371: [alarm]       ? ((ms,id)=>{ if(runtimeDebug) console.debug('[SamiDev Sync] client alarm armed (server-owned)',{id,ms}); })
+game/browser-runtime.js:372: [alarm]       : ((ms,id)=>scheduleLogicAlarm(ms,id));
+game/browser-runtime.js:375: [turn]       logic.onTurnChange?.receive?.(()=>{ state.frameRequested=true; });
+game/browser-runtime.js:377: [catch]     }catch(e){ console.warn('[web-host] signal hook',e); }
+game/browser-runtime.js:380: [turn]   function cloneMove(v){ try{return structuredClone(v);}catch{ try{return JSON.parse(JSON.stringify(v));}catch{return v;} } }
+game/browser-runtime.js:380: [catch]   function cloneMove(v){ try{return structuredClone(v);}catch{ try{return JSON.parse(JSON.stringify(v));}catch{return v;} } }
+game/browser-runtime.js:380: [return]   function cloneMove(v){ try{return structuredClone(v);}catch{ try{return JSON.parse(JSON.stringify(v));}catch{return v;} } }
+game/browser-runtime.js:383: [turn]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:383: [return]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:388: [catch]       queueMicrotask(()=>{ try{logic.move(logic.localSeat??0,packet);}catch(e){console.warn('[web-host] info ack',e);} });
+game/browser-runtime.js:389: [turn]       return;
+game/browser-runtime.js:389: [return]       return;
+game/browser-runtime.js:395: [catch]       catch(e){ console.warn('[web-host] move ack',e); }
+game/browser-runtime.js:401: [turn]     const logic=state.gameLogic; if(!logic) return false;
+game/browser-runtime.js:401: [return]     const logic=state.gameLogic; if(!logic) return false;
+game/browser-runtime.js:402: [sequence]     const n=Array.isArray(logic._sequence)?(logic._sequence[seat]||0):0;
+game/browser-runtime.js:404: [turn]     try { const ok=logic.move(seat,packet); state.localHost.moves.push(packet); state.frameRequested=true; return ok; }
+game/browser-runtime.js:404: [return]     try { const ok=logic.move(seat,packet); state.localHost.moves.push(packet); state.frameRequested=true; return ok; }
+game/browser-runtime.js:405: [turn]     catch(e){ console.warn('[web-host] inject move',seat,data,e); return false; }
+game/browser-runtime.js:405: [catch]     catch(e){ console.warn('[web-host] inject move',seat,data,e); return false; }
+game/browser-runtime.js:405: [return]     catch(e){ console.warn('[web-host] inject move',seat,data,e); return false; }
+game/browser-runtime.js:412: [turn]       if(!logic || logic.gameOver || !logic.started || !Array.isArray(logic.turn) || logic.turn.length===0) return;
+game/browser-runtime.js:412: [return]       if(!logic || logic.gameOver || !logic.started || !Array.isArray(logic.turn) || logic.turn.length===0) return;
+game/browser-runtime.js:415: [catch]     }catch(e){ console.warn('[web-host] striker visual restore',e); }
+game/browser-runtime.js:423: [resync]   function localResync(){
+game/browser-runtime.js:424: [turn]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:424: [return]     const logic=state.gameLogic; if(!logic) return;
+game/browser-runtime.js:425: [resync]     // In local mode there is no upstream snapshot. Clear the resync latch and re-emit a sync
+game/browser-runtime.js:425: [snapshot]     // In local mode there is no upstream snapshot. Clear the resync latch and re-emit a sync
+game/browser-runtime.js:428: [resync]       logic._awaitingResync=false;
+game/browser-runtime.js:432: [resync]     }catch(e){console.warn('[web-host] resync',e);}
+game/browser-runtime.js:432: [catch]     }catch(e){console.warn('[web-host] resync',e);}
+game/browser-runtime.js:435: [turn]   function followTurnIfSafe(){
+game/browser-runtime.js:437: [turn]     if(!logic || !state.localHost.hotseat || logic.gameOver || !logic.started || !Array.isArray(logic.turn) || logic.turn.length===0) return;
+game/browser-runtime.js:437: [return]     if(!logic || !state.localHost.hotseat || logic.gameOver || !logic.started || !Array.isArray(logic.turn) || logic.turn.length===0) return;
+game/browser-runtime.js:438: [turn]     const seat=logic.turn[0];
+game/browser-runtime.js:439: [turn]     if(!Number.isInteger(seat) || seat<0 || seat===logic.localSeat) return;
+game/browser-runtime.js:439: [return]     if(!Number.isInteger(seat) || seat<0 || seat===logic.localSeat) return;
+game/browser-runtime.js:440: [turn]     if(logic._localMoves?.length) return;
+game/browser-runtime.js:440: [return]     if(logic._localMoves?.length) return;
+game/browser-runtime.js:441: [turn]     try{ if(logic.animator?.isAnimatingWorld?.()) return; }catch{}
+game/browser-runtime.js:441: [catch]     try{ if(logic.animator?.isAnimatingWorld?.()) return; }catch{}
+game/browser-runtime.js:441: [return]     try{ if(logic.animator?.isAnimatingWorld?.()) return; }catch{}
+game/browser-runtime.js:442: [turn]     if(logic.paused) return;
+game/browser-runtime.js:442: [return]     if(logic.paused) return;
+game/browser-runtime.js:445: [turn]     // Hot-seat: make the active turn look like the local player so the original input path stays intact.
+game/browser-runtime.js:446: [catch]     try{ typeof logic.onSync==='function' ? logic.onSync(seat) : logic.onLocalSeatUpdated?.emit?.(seat); }catch(e){ console.warn('[web-host] seat sync',e); }
+game/browser-runtime.js:452: [turn]     const b=document.getElementById('web-local-badge'); if(!b) return;
+game/browser-runtime.js:452: [return]     const b=document.getElementById('web-local-badge'); if(!b) return;
+game/browser-runtime.js:467: [turn]     if(new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search).get('clean')==='1') return;
+game/browser-runtime.js:467: [return]     if(new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search).get('clean')==='1') return;
+game/browser-runtime.js:471: [turn]     b.onclick=()=>{ if(state.network.online)return; const l=state.gameLogic;if(!l)return; const seats=Math.max(1,l.seats||2); l._localSeat=((l.localSeat??0)+1)%seats; state.localHo
+game/browser-runtime.js:471: [return]     b.onclick=()=>{ if(state.network.online)return; const l=state.gameLogic;if(!l)return; const seats=Math.max(1,l.seats||2); l._localSeat=((l.localSeat??0)+1)%seats; state.localHo
+game/browser-runtime.js:475: [resync]   window.__carromWebHost={injectMove, resync:localResync, setSeat:(s)=>{if(state.gameLogic){state.gameLogic._localSeat=Number(s);updateWebBadge();}}, state};
+game/browser-runtime.js:481: [catch]       try{ animating=!!logic.animator?.isAnimatingWorld?.(); }catch{}
+game/browser-runtime.js:482: [turn]       if(!animating) return true;
+game/browser-runtime.js:482: [return]       if(!animating) return true;
+game/browser-runtime.js:485: [turn]         return false;
+game/browser-runtime.js:485: [return]         return false;
+game/browser-runtime.js:487: [setTimeout]       await new Promise(r=>setTimeout(r,16));
+game/browser-runtime.js:492: [turn]     if(!Array.isArray(history) || history.length===0) return true;
+game/browser-runtime.js:492: [return]     if(!Array.isArray(history) || history.length===0) return true;
+game/browser-runtime.js:496: [sequence]       const curSeq=Number(logic._sequence?.[entry.seat]);
+game/browser-runtime.js:497: [sequence]       // packet.n is the pre-move sequence. If the snapshot already contains this
+game/browser-runtime.js:497: [snapshot]       // packet.n is the pre-move sequence. If the snapshot already contains this
+game/browser-runtime.js:498: [sequence]       // move, replaying it would manufacture a sequence mismatch and another resync.
+game/browser-runtime.js:498: [resync]       // move, replaying it would manufacture a sequence mismatch and another resync.
+game/browser-runtime.js:503: [turn]           return false;
+game/browser-runtime.js:503: [return]           return false;
+game/browser-runtime.js:510: [turn]           return false;
+game/browser-runtime.js:510: [return]           return false;
+game/browser-runtime.js:513: [catch]       }catch(e){
+game/browser-runtime.js:515: [turn]         return false;
+game/browser-runtime.js:515: [return]         return false;
+game/browser-runtime.js:517: [turn]       if(!await waitUntilWorldSettles(logic)) return false;
+game/browser-runtime.js:517: [return]       if(!await waitUntilWorldSettles(logic)) return false;
+game/browser-runtime.js:519: [turn]     return true;
+game/browser-runtime.js:519: [return]     return true;
+game/browser-runtime.js:523: [turn]     if(!msg || !Number.isInteger(msg.seat) || !msg.packet) return true;
+game/browser-runtime.js:523: [return]     if(!msg || !Number.isInteger(msg.seat) || !msg.packet) return true;
+game/browser-runtime.js:525: [sequence]     const curSeq=Number(logic._sequence?.[msg.seat]);
+game/browser-runtime.js:527: [sequence]     // behind the restored sequence is an already-included echo and must be ignored.
+game/browser-runtime.js:529: [turn]       if(packetN<curSeq) return true;
+game/browser-runtime.js:529: [return]       if(packetN<curSeq) return true;
+game/browser-runtime.js:532: [turn]         return false;
+game/browser-runtime.js:532: [return]         return false;
+game/browser-runtime.js:537: [turn]       if(!ok) return false;
+game/browser-runtime.js:537: [return]       if(!ok) return false;
+game/browser-runtime.js:539: [turn]       return true;
+game/browser-runtime.js:539: [return]       return true;
+game/browser-runtime.js:540: [catch]     }catch(e){
+game/browser-runtime.js:542: [turn]       return false;
+game/browser-runtime.js:542: [return]       return false;
+game/browser-runtime.js:546: [authority]   const AUTHORITY_GRACE_MS=900;
+game/browser-runtime.js:547: [authority]   const AUTHORITY_RETRY_MS=120;
+game/browser-runtime.js:548: [authority]   const AUTHORITY_MAX_WAIT_MS=5000;
+game/browser-runtime.js:551: [turn]     if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+game/browser-runtime.js:551: [return]     if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
+game/browser-runtime.js:552: [turn]     return a.every((v,i)=>Number(v)===Number(b[i]));
+game/browser-runtime.js:552: [return]     return a.every((v,i)=>Number(v)===Number(b[i]));
+game/browser-runtime.js:555: [authority]   function authorityMismatch(logic,msg){
+game/browser-runtime.js:557: [sequence]     if(Array.isArray(msg?.sequence) && !sameNumberArray(msg.sequence,logic?._sequence)) fields.push('sequence');
+game/browser-runtime.js:558: [turn]     if(Array.isArray(msg?.turn) && !sameNumberArray(msg.turn,logic?.turn)) fields.push('turn');
+game/browser-runtime.js:560: [turn]     return fields;
+game/browser-runtime.js:560: [return]     return fields;
+game/browser-runtime.js:563: [authority]   function scheduleAuthorityCheck(logic,net,msg,{ordered=false,source='authority'}={}){
+game/browser-runtime.js:564: [turn]     if(!msg || typeof msg!=='object') return;
+game/browser-runtime.js:564: [return]     if(!msg || typeof msg!=='object') return;
+game/browser-runtime.js:565: [authority]     const epoch=Number(msg.authorityEpoch);
+game/browser-runtime.js:566: [revision]     const revision=Number(msg.revision);
+game/browser-runtime.js:567: [authority]     const currentPending=state.network.pendingAuthority;
+game/browser-runtime.js:568: [revision]     if(Number.isInteger(epoch) && Number.isInteger(revision) && currentPending &&
+game/browser-runtime.js:569: [authority]        Number.isInteger(currentPending.authorityEpoch) && Number.isInteger(currentPending.revision) &&
+game/browser-runtime.js:569: [revision]        Number.isInteger(currentPending.authorityEpoch) && Number.isInteger(currentPending.revision) &&
+game/browser-runtime.js:570: [authority]        epoch===currentPending.authorityEpoch && revision<currentPending.revision){
+game/browser-runtime.js:570: [revision]        epoch===currentPending.authorityEpoch && revision<currentPending.revision){
+game/browser-runtime.js:571: [turn]       return;
+game/browser-runtime.js:571: [return]       return;
+game/browser-runtime.js:573: [revision]     if(ordered && Number.isInteger(epoch) && Number.isInteger(revision)){
+game/browser-runtime.js:574: [authority]       if(Number.isInteger(state.network.authorityEpoch)){
+game/browser-runtime.js:575: [turn]         if(epoch<state.network.authorityEpoch) return;
+game/browser-runtime.js:575: [authority]         if(epoch<state.network.authorityEpoch) return;
+game/browser-runtime.js:575: [return]         if(epoch<state.network.authorityEpoch) return;
+game/browser-runtime.js:576: [authority]         if(epoch>state.network.authorityEpoch){
+game/browser-runtime.js:577: [authority]           state.network.authorityEpoch=epoch;
+game/browser-runtime.js:578: [authority]           state.network.authorityRevision=-1;
+game/browser-runtime.js:578: [revision]           state.network.authorityRevision=-1;
+game/browser-runtime.js:581: [authority]         state.network.authorityEpoch=epoch;
+game/browser-runtime.js:583: [turn]       if(revision<=state.network.authorityRevision) return;
+game/browser-runtime.js:583: [authority]       if(revision<=state.network.authorityRevision) return;
+game/browser-runtime.js:583: [revision]       if(revision<=state.network.authorityRevision) return;
+game/browser-runtime.js:583: [return]       if(revision<=state.network.authorityRevision) return;
+game/browser-runtime.js:584: [authority]       state.network.authorityRevision=revision;
+game/browser-runtime.js:584: [revision]       state.network.authorityRevision=revision;
+game/browser-runtime.js:586: [authority]     state.network.pendingAuthority={
+game/browser-runtime.js:587: [turn]       turn:Array.isArray(msg.turn)?msg.turn.slice():undefined,
+game/browser-runtime.js:588: [sequence]       sequence:Array.isArray(msg.sequence)?msg.sequence.slice():undefined,
+game/browser-runtime.js:590: [authority]       authorityEpoch:Number.isInteger(epoch)?epoch:undefined,
+game/browser-runtime.js:591: [revision]       revision:Number.isInteger(revision)?revision:undefined,
+game/browser-runtime.js:595: [authority]     armAuthorityCheck(logic,net,AUTHORITY_RETRY_MS);
+game/browser-runtime.js:598: [authority]   function armAuthorityCheck(logic,net,delay){
+game/browser-runtime.js:599: [turn]     if(state.network.authorityCheckTimer!==null) return;
+game/browser-runtime.js:599: [authority]     if(state.network.authorityCheckTimer!==null) return;
+game/browser-runtime.js:599: [return]     if(state.network.authorityCheckTimer!==null) return;
+game/browser-runtime.js:600: [authority]     state.network.authorityCheckTimer=setTimeout(()=>{
+game/browser-runtime.js:600: [setTimeout]     state.network.authorityCheckTimer=setTimeout(()=>{
+game/browser-runtime.js:601: [authority]       state.network.authorityCheckTimer=null;
+game/browser-runtime.js:602: [authority]       evaluateAuthority(logic,net);
+game/browser-runtime.js:606: [authority]   function evaluateAuthority(logic,net){
+game/browser-runtime.js:607: [authority]     const pending=state.network.pendingAuthority;
+game/browser-runtime.js:608: [turn]     if(!pending) return;
+game/browser-runtime.js:608: [return]     if(!pending) return;
+game/browser-runtime.js:609: [authority]     const mismatch=authorityMismatch(logic,pending);
+game/browser-runtime.js:611: [authority]       state.network.pendingAuthority=null;
+game/browser-runtime.js:612: [turn]       return;
+game/browser-runtime.js:612: [return]       return;
+game/browser-runtime.js:616: [catch]     try{ animating=!!logic.animator?.isAnimatingWorld?.(); }catch{}
+game/browser-runtime.js:618: [resync]     const unsafe=hasPendingLocal || !!logic._awaitingResync || state.network.snapshotBusy || animating;
+game/browser-runtime.js:618: [snapshot]     const unsafe=hasPendingLocal || !!logic._awaitingResync || state.network.snapshotBusy || animating;
+game/browser-runtime.js:620: [turn]     // Authority can arrive just before the matching local 500ms turn/animation timer. Give
+game/browser-runtime.js:620: [authority]     // Authority can arrive just before the matching local 500ms turn/animation timer. Give
+game/browser-runtime.js:623: [authority]     if(age<AUTHORITY_GRACE_MS || (unsafe && age<AUTHORITY_MAX_WAIT_MS)){
+game/browser-runtime.js:624: [authority]       armAuthorityCheck(logic,net,AUTHORITY_RETRY_MS);
+game/browser-runtime.js:625: [turn]       return;
+game/browser-runtime.js:625: [return]       return;
+game/browser-runtime.js:628: [snapshot]     console.warn('[SamiDev Sync] authoritative state mismatch; requesting snapshot',{
+game/browser-runtime.js:629: [turn]       fields:mismatch,source:pending.source,revision:pending.revision,server:{turn:pending.turn,sequence:pending.sequence,gameOver:pending.gameOver},local:{turn:logic.turn,sequence
+game/browser-runtime.js:629: [sequence]       fields:mismatch,source:pending.source,revision:pending.revision,server:{turn:pending.turn,sequence:pending.sequence,gameOver:pending.gameOver},local:{turn:logic.turn,sequence
+game/browser-runtime.js:629: [revision]       fields:mismatch,source:pending.source,revision:pending.revision,server:{turn:pending.turn,sequence:pending.sequence,gameOver:pending.gameOver},local:{turn:logic.turn,sequence
+game/browser-runtime.js:631: [resync]     const sent=net.requestResync();
+game/browser-runtime.js:633: [turn]       // Keep the mismatch until the returned authoritative snapshot is actually applied
+game/browser-runtime.js:633: [snapshot]       // Keep the mismatch until the returned authoritative snapshot is actually applied
+game/browser-runtime.js:633: [return]       // Keep the mismatch until the returned authoritative snapshot is actually applied
+game/browser-runtime.js:634: [snapshot]       // and rechecked. Clearing it here would hide a stale/deferred snapshot and could leave
+game/browser-runtime.js:635: [turn]       // the client permanently on the wrong turn with no later revision to wake the check.
+game/browser-runtime.js:635: [revision]       // the client permanently on the wrong turn with no later revision to wake the check.
+game/browser-runtime.js:636: [resync]       pending.resyncRequestedAt=performance.now();
+game/browser-runtime.js:637: [authority]       armAuthorityCheck(logic,net,250);
+game/browser-runtime.js:639: [authority]       armAuthorityCheck(logic,net,250);
+game/browser-runtime.js:648: [resync]       // resync_state is applied asynchronously while animations settle. Queue socket
+game/browser-runtime.js:650: [snapshot]       if(state.network.snapshotBusy){
+game/browser-runtime.js:652: [turn]         return;
+game/browser-runtime.js:652: [return]         return;
+game/browser-runtime.js:657: [catch]       }catch(e){ console.warn('[SamiDev] incoming move',e,msg); }
+game/browser-runtime.js:658: [authority]       if(msg?.authority) scheduleAuthorityCheck(logic,net,msg.authority,{source:'move'});
+game/browser-runtime.js:669: [turn]         if(logic.localSeat===0 && logic.started && (!logic.turn || logic.turn.length===0) && !logic.gameOver){
+game/browser-runtime.js:672: [catch]       }catch(e){ console.warn('[SamiDev] begin match',e); }
+game/browser-runtime.js:678: [resync]       if(b){ b.textContent='SamiDev • RESYNC'; b.style.background='rgba(150,20,20,.85)'; }
+game/browser-runtime.js:679: [resync]       if(!state.network.snapshotBusy) net.requestResync();
+game/browser-runtime.js:679: [snapshot]       if(!state.network.snapshotBusy) net.requestResync();
+game/browser-runtime.js:682: [resync]     net.on('resync_state', async msg=>{
+game/browser-runtime.js:683: [snapshot]       if(state.network.snapshotBusy){
+game/browser-runtime.js:684: [resync]         console.info('[SamiDev Sync] ignored duplicate resync_state while applying one');
+game/browser-runtime.js:685: [turn]         return;
+game/browser-runtime.js:685: [return]         return;
+game/browser-runtime.js:687: [snapshot]       state.network.snapshotBusy=true;
+game/browser-runtime.js:691: [snapshot]         if(!msg || !msg.snapshot || typeof msg.snapshot!=='object') throw new Error('missing authoritative snapshot');
+game/browser-runtime.js:693: [catch]         try{ logic.pause?.(); }catch(_){}
+game/browser-runtime.js:694: [snapshot]         logic.deserialize(cloneMove(msg.snapshot),seat);
+game/browser-runtime.js:696: [resync]         logic._awaitingResync=false;
+game/browser-runtime.js:704: [snapshot]           // snapshotBusy, so a live move cannot get stranded in deferredMoves.
+game/browser-runtime.js:714: [snapshot]           state.network.snapshotBusy=false;
+game/browser-runtime.js:715: [catch]           try{ await logic.resume?.(true); }catch(_){}
+game/browser-runtime.js:716: [catch]           try{ synchronizeClientView(logic); }catch(_){}
+game/browser-runtime.js:720: [resync]           console.info('[SamiDev Sync] in-place resync applied',{snapshotMoveCount:msg.snapshotMoveCount,moveCount:msg.moveCount,replayed:Array.isArray(msg.history)?msg.history.len
+game/browser-runtime.js:720: [snapshot]           console.info('[SamiDev Sync] in-place resync applied',{snapshotMoveCount:msg.snapshotMoveCount,moveCount:msg.moveCount,replayed:Array.isArray(msg.history)?msg.history.len
+game/browser-runtime.js:721: [resync]           // A live GameHost resync carries current invariants too. Replace an older pending
+game/browser-runtime.js:722: [authority]           // authority expectation even when its revision is equal (accepted moves do not bump
+game/browser-runtime.js:722: [revision]           // authority expectation even when its revision is equal (accepted moves do not bump
+game/browser-runtime.js:723: [authority]           // authorityRevision), then verify the snapshot we just applied against that state.
+game/browser-runtime.js:723: [revision]           // authorityRevision), then verify the snapshot we just applied against that state.
+game/browser-runtime.js:723: [snapshot]           // authorityRevision), then verify the snapshot we just applied against that state.
+game/browser-runtime.js:724: [turn]           if(Array.isArray(msg.turn) && Array.isArray(msg.sequence)){
+game/browser-runtime.js:724: [sequence]           if(Array.isArray(msg.turn) && Array.isArray(msg.sequence)){
+game/browser-runtime.js:725: [authority]             scheduleAuthorityCheck(logic,net,msg,{source:'resync_state'});
+game/browser-runtime.js:725: [resync]             scheduleAuthorityCheck(logic,net,msg,{source:'resync_state'});
+game/browser-runtime.js:726: [authority]           } else if(state.network.pendingAuthority) {
+game/browser-runtime.js:727: [authority]             armAuthorityCheck(logic,net,AUTHORITY_RETRY_MS);
+game/browser-runtime.js:730: [catch]       }catch(e){
+game/browser-runtime.js:732: [resync]         console.warn('[SamiDev Sync] in-place resync failed',e,msg);
+game/browser-runtime.js:734: [snapshot]         state.network.snapshotBusy=false;
+game/browser-runtime.js:735: [resync]         // Do not loop synchronously. requestResync() is coalesced and only runs after
+game/browser-runtime.js:737: [resync]         if(needsRetry) net.requestResync();
+game/browser-runtime.js:741: [authority]     net.on('authority_alarm', msg=>{
+game/browser-runtime.js:741: [alarm]     net.on('authority_alarm', msg=>{
+game/browser-runtime.js:743: [alarm]         const id=Number(msg?.alarmId);
+game/browser-runtime.js:744: [turn]         if(!Number.isInteger(id)) return;
+game/browser-runtime.js:744: [return]         if(!Number.isInteger(id)) return;
+game/browser-runtime.js:745: [alarm]         const expected=Number(logic.nextAlarmId ?? logic._nextAlarmId);
+game/browser-runtime.js:746: [alarm]         // A valid authoritative alarm always carries the reveal generated by server BaseLogic.alarm().
+game/browser-runtime.js:747: [authority]         // Never pass an empty/stale authority event into client BaseLogic: that path deliberately resyncs.
+game/browser-runtime.js:747: [resync]         // Never pass an empty/stale authority event into client BaseLogic: that path deliberately resyncs.
+game/browser-runtime.js:749: [authority]           console.warn('[SamiDev Sync] ignored authority alarm without reveal',{id,expected,msg});
+game/browser-runtime.js:749: [alarm]           console.warn('[SamiDev Sync] ignored authority alarm without reveal',{id,expected,msg});
+game/browser-runtime.js:750: [turn]           return;
+game/browser-runtime.js:750: [return]           return;
+game/browser-runtime.js:753: [authority]           console.info('[SamiDev Sync] ignored stale authority alarm',{id,expected});
+game/browser-runtime.js:753: [alarm]           console.info('[SamiDev Sync] ignored stale authority alarm',{id,expected});
+game/browser-runtime.js:754: [turn]           return;
+game/browser-runtime.js:754: [return]           return;
+game/browser-runtime.js:757: [alarm]         const ok=logic.alarm(reveal,id);
+game/browser-runtime.js:758: [authority]         if(!ok && logic._pendingAlarm) console.warn('[SamiDev] authority alarm rejected',{id,expected,msg});
+game/browser-runtime.js:758: [alarm]         if(!ok && logic._pendingAlarm) console.warn('[SamiDev] authority alarm rejected',{id,expected,msg});
+game/browser-runtime.js:759: [authority]         scheduleAuthorityCheck(logic,net,msg,{ordered:true,source:'authority_alarm'});
+game/browser-runtime.js:759: [alarm]         scheduleAuthorityCheck(logic,net,msg,{ordered:true,source:'authority_alarm'});
+game/browser-runtime.js:760: [authority]       }catch(e){ console.warn('[SamiDev] authority alarm',e,msg); }
+game/browser-runtime.js:760: [alarm]       }catch(e){ console.warn('[SamiDev] authority alarm',e,msg); }
+game/browser-runtime.js:760: [catch]       }catch(e){ console.warn('[SamiDev] authority alarm',e,msg); }
+game/browser-runtime.js:769: [snapshot]     // Server-authoritative mode: clients never publish official snapshots. Compare every
+game/browser-runtime.js:769: [publish]     // Server-authoritative mode: clients never publish official snapshots. Compare every
+game/browser-runtime.js:770: [sequence]     // authoritative invariant that the gateway provides, not sequence alone. The check is
+game/browser-runtime.js:772: [authority]     net.on('authority_state', msg=>{
+game/browser-runtime.js:773: [authority]       try{ scheduleAuthorityCheck(logic,net,msg,{ordered:true,source:'authority_state'}); }
+game/browser-runtime.js:774: [authority]       catch(e){ console.warn('[SamiDev] authority state',e); }
+game/browser-runtime.js:774: [catch]       catch(e){ console.warn('[SamiDev] authority state',e); }
+game/browser-runtime.js:791: [turn]     return state.gameLogic;
+game/browser-runtime.js:791: [return]     return state.gameLogic;
+game/browser-runtime.js:825: [catch]       try { for(let seat=0;seat<seats;seat++) logic.enter?.(seat); } catch(e){console.warn('enter',e);}
+game/browser-runtime.js:831: [catch]       try { logic.resume?.(); } catch(e){console.warn('resume',e);}
+game/browser-runtime.js:835: [snapshot]         if(startData?.snapshot){
+game/browser-runtime.js:837: [snapshot]             logic.deserialize(cloneMove(startData.snapshot),localSeat);
+game/browser-runtime.js:839: [snapshot]           }catch(e){ console.warn('[SamiDev] snapshot restore failed; replaying history',e); await replayHistory(logic,startData.history||[]); }
+game/browser-runtime.js:839: [catch]           }catch(e){ console.warn('[SamiDev] snapshot restore failed; replaying history',e); await replayHistory(logic,startData.history||[]); }
+game/browser-runtime.js:843: [catch]         try { synchronizeClientView(logic); } catch(e){console.warn('sync',e);}
+game/browser-runtime.js:846: [catch]         try { synchronizeClientView(logic); } catch(e){console.warn('sync',e);}
+game/browser-runtime.js:847: [setTimeout]         setTimeout(()=>{
+game/browser-runtime.js:849: [turn]             if(logic.started && (!logic.turn || logic.turn.length===0) && !logic.gameOver) injectMove(0,{m:0});
+game/browser-runtime.js:851: [turn]             followTurnIfSafe();
+game/browser-runtime.js:853: [catch]           }catch(e){console.warn('[local-host] first round',e);}
+game/browser-runtime.js:860: [requestAnimationFrame]       requestAnimationFrame(loop);
+game/browser-runtime.js:861: [catch]     } catch(e) {
+game/browser-runtime.js:872: [turn]       followTurnIfSafe();
+game/browser-runtime.js:878: [catch]         } catch (e) {
+game/browser-runtime.js:886: [catch]     catch(e){ console.error('render error',e); window.__renderError=String(e?.stack||e); }
+game/browser-runtime.js:887: [requestAnimationFrame]     requestAnimationFrame(loop);
+game/browser-runtime.js:889: [resize]   window.addEventListener('resize',resize);
+game/browser-runtime.js:890: [resize]   if(typeof ResizeObserver==='function'){
+game/browser-runtime.js:890: [ResizeObserver]   if(typeof ResizeObserver==='function'){
+game/browser-runtime.js:891: [resize]     const surfaceObserver=new ResizeObserver(()=>{ try{ resize(); }catch(e){ console.warn('[SamiDev] resize observer',e); } });
+game/browser-runtime.js:891: [ResizeObserver]     const surfaceObserver=new ResizeObserver(()=>{ try{ resize(); }catch(e){ console.warn('[SamiDev] resize observer',e); } });
+game/browser-runtime.js:891: [catch]     const surfaceObserver=new ResizeObserver(()=>{ try{ resize(); }catch(e){ console.warn('[SamiDev] resize observer',e); } });
+game/browser-runtime.js:903: [catch]     try{ location.reload(); }catch(_){}
+game/samidev-network.js:22: [resync]     // Coalesce resync requests so one transient mismatch cannot create a resync storm.
+game/samidev-network.js:23: [resync]     resyncInFlight: false,
+game/samidev-network.js:24: [resync]     resyncSentAt: 0,
+game/samidev-network.js:33: [turn]     if (!list) return;
+game/samidev-network.js:33: [return]     if (!list) return;
+game/samidev-network.js:35: [catch]       try { fn(payload); } catch (e) { console.error('[SamiDev Network] listener', type, e); }
+game/samidev-network.js:42: [turn]     return () => off(type, fn);
+game/samidev-network.js:42: [return]     return () => off(type, fn);
+game/samidev-network.js:47: [turn]     if (!list) return;
+game/samidev-network.js:47: [return]     if (!list) return;
+game/samidev-network.js:57: [turn]       if (!ticket) return base;
+game/samidev-network.js:57: [return]       if (!ticket) return base;
+game/samidev-network.js:60: [turn]       return u.toString();
+game/samidev-network.js:60: [return]       return u.toString();
+game/samidev-network.js:61: [turn]     } catch (_) { return base; }
+game/samidev-network.js:61: [catch]     } catch (_) { return base; }
+game/samidev-network.js:61: [return]     } catch (_) { return base; }
+game/samidev-network.js:65: [turn]     if (!state.ws || state.ws.readyState !== WebSocket.OPEN) return false;
+game/samidev-network.js:65: [WebSocket]     if (!state.ws || state.ws.readyState !== WebSocket.OPEN) return false;
+game/samidev-network.js:65: [return]     if (!state.ws || state.ws.readyState !== WebSocket.OPEN) return false;
+game/samidev-network.js:67: [turn]     return true;
+game/samidev-network.js:67: [return]     return true;
+game/samidev-network.js:71: [turn]     if (!state.roomId || !state.token) return;
+game/samidev-network.js:71: [return]     if (!state.roomId || !state.token) return;
+game/samidev-network.js:72: [catch]     try { sessionStorage.setItem('samidev_reconnect', JSON.stringify({roomId:state.roomId, token:state.token, ts:Date.now()})); } catch (_) {}
+game/samidev-network.js:73: [turn]     if(window.__SAMIDEV_QUERY !== undefined) return;
+game/samidev-network.js:73: [return]     if(window.__SAMIDEV_QUERY !== undefined) return;
+game/samidev-network.js:134: [resync]       case 'resync_state':
+game/samidev-network.js:136: [snapshot]         // apply the snapshot/history without another request being emitted in parallel.
+game/samidev-network.js:137: [resync]         state.resyncInFlight = false;
+game/samidev-network.js:138: [resync]         state.resyncSentAt = 0;
+game/samidev-network.js:139: [resync]         emit('resync_state', msg);
+game/samidev-network.js:141: [authority]       case 'authority_state':
+game/samidev-network.js:142: [authority]         emit('authority_state', msg);
+game/samidev-network.js:144: [authority]       case 'authority_alarm':
+game/samidev-network.js:144: [alarm]       case 'authority_alarm':
+game/samidev-network.js:145: [authority]         emit('authority_alarm', msg);
+game/samidev-network.js:145: [alarm]         emit('authority_alarm', msg);
+game/samidev-network.js:147: [snapshot]       case 'snapshot_ignored':
+game/samidev-network.js:148: [snapshot]         emit('snapshot_ignored', msg);
+game/samidev-network.js:170: [catch]         try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
+game/samidev-network.js:195: [catch]       } catch (_) {}
+game/samidev-network.js:205: [WebSocket]     const ws = new WebSocket(socketUrl());
+game/samidev-network.js:209: [setTimeout]       const timeout = setTimeout(() => reject(new Error('انتهت مهلة الاتصال بالسيرفر')), 8000);
+game/samidev-network.js:223: [catch]       catch (e) { console.warn('[SamiDev Network] bad message', e); }
+game/samidev-network.js:227: [resync]       state.resyncInFlight = false;
+game/samidev-network.js:228: [resync]       state.resyncSentAt = 0;
+game/samidev-network.js:235: [setTimeout]         setTimeout(() => {
+game/samidev-network.js:236: [catch]           try { location.reload(); } catch (_) {}
+game/samidev-network.js:248: [turn]       if (state.started) return;
+game/samidev-network.js:248: [return]       if (state.started) return;
+game/samidev-network.js:265: [turn]       return await startPromise;
+game/samidev-network.js:265: [return]       return await startPromise;
+game/samidev-network.js:273: [turn]     return send({type: 'move', packet});
+game/samidev-network.js:273: [return]     return send({type: 'move', packet});
+game/samidev-network.js:277: [turn]     return send({type: 'runtime_ready'});
+game/samidev-network.js:277: [return]     return send({type: 'runtime_ready'});
+game/samidev-network.js:280: [snapshot]   function sendSnapshot(snapshot, moveCount = state.moveCount) {
+game/samidev-network.js:281: [turn]     if (!snapshot || typeof snapshot !== 'object') return false;
+game/samidev-network.js:281: [snapshot]     if (!snapshot || typeof snapshot !== 'object') return false;
+game/samidev-network.js:281: [return]     if (!snapshot || typeof snapshot !== 'object') return false;
+game/samidev-network.js:282: [turn]     return send({type: 'snapshot', state: snapshot, moveCount});
+game/samidev-network.js:282: [snapshot]     return send({type: 'snapshot', state: snapshot, moveCount});
+game/samidev-network.js:282: [return]     return send({type: 'snapshot', state: snapshot, moveCount});
+game/samidev-network.js:285: [resync]   function requestResync() {
+game/samidev-network.js:289: [turn]     if (state.resyncInFlight && now - state.resyncSentAt < 1500) return false;
+game/samidev-network.js:289: [resync]     if (state.resyncInFlight && now - state.resyncSentAt < 1500) return false;
+game/samidev-network.js:289: [return]     if (state.resyncInFlight && now - state.resyncSentAt < 1500) return false;
+game/samidev-network.js:290: [resync]     const sent = send({type: 'resync'});
+game/samidev-network.js:292: [resync]       state.resyncInFlight = true;
+game/samidev-network.js:293: [resync]       state.resyncSentAt = now;
+game/samidev-network.js:295: [turn]     return sent;
+game/samidev-network.js:295: [return]     return sent;
+game/samidev-network.js:299: [turn]     return send({type: 'ping', t: Date.now()});
+game/samidev-network.js:299: [return]     return send({type: 'ping', t: Date.now()});
+game/samidev-network.js:304: [turn]     if (!value) return false;
+game/samidev-network.js:304: [return]     if (!value) return false;
+game/samidev-network.js:306: [turn]     return send({type:'chat_send', text:value.slice(0, max)});
+game/samidev-network.js:306: [return]     return send({type:'chat_send', text:value.slice(0, max)});
+game/samidev-network.js:310: [turn]     return send({type:'chat_history'});
+game/samidev-network.js:310: [return]     return send({type:'chat_history'});
+game/samidev-network.js:314: [WebSocket]     if (!state.roomId || !state.ws || state.ws.readyState !== WebSocket.OPEN) throw new Error('لا يوجد اتصال بغرفة');
+game/samidev-network.js:316: [turn]     if (inviteRequest) return inviteRequest.promise;
+game/samidev-network.js:316: [return]     if (inviteRequest) return inviteRequest.promise;
+game/samidev-network.js:319: [setTimeout]     const timer = setTimeout(() => {
+game/samidev-network.js:320: [turn]       if (!inviteRequest) return;
+game/samidev-network.js:320: [return]       if (!inviteRequest) return;
+game/samidev-network.js:332: [turn]     return promise;
+game/samidev-network.js:332: [return]     return promise;
+game/samidev-network.js:336: [WebSocket]     if (!state.roomId || !state.ws || state.ws.readyState !== WebSocket.OPEN) {
+game/samidev-network.js:338: [catch]       try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
+game/samidev-network.js:339: [WebSocket]       if (closeSocket && state.ws && state.ws.readyState < WebSocket.CLOSING) state.ws.close(1000, 'left room');
+game/samidev-network.js:340: [turn]       return {ok: true, alreadyLeft: true};
+game/samidev-network.js:340: [return]       return {ok: true, alreadyLeft: true};
+game/samidev-network.js:345: [turn]       const finish = value => { if (done) return; done = true; offLeft(); offError(); clearTimeout(timer); resolve(value); };
+game/samidev-network.js:345: [return]       const finish = value => { if (done) return; done = true; offLeft(); offError(); clearTimeout(timer); resolve(value); };
+game/samidev-network.js:348: [setTimeout]       const timer = setTimeout(() => finish({ok: false, timeout: true}), 2500);
+game/samidev-network.js:351: [catch]     try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
+game/samidev-network.js:352: [WebSocket]     if (closeSocket && state.ws && state.ws.readyState < WebSocket.CLOSING) state.ws.close(1000, 'left room');
+game/samidev-network.js:353: [turn]     return result;
+game/samidev-network.js:353: [return]     return result;
+game/samidev-network.js:364: [snapshot]     sendSnapshot,
+game/samidev-network.js:365: [resync]     requestResync,
+game/chat-ui.js:18: [turn]     return roster.find(p => p && Number(p.seat) === Number(seat)) || null;
+game/chat-ui.js:18: [return]     return roster.find(p => p && Number(p.seat) === Number(seat)) || null;
+game/chat-ui.js:23: [turn]     return (parts.slice(0, 2).map(x => x[0] || '').join('') || 'P').toUpperCase();
+game/chat-ui.js:23: [return]     return (parts.slice(0, 2).map(x => x[0] || '').join('') || 'P').toUpperCase();
+game/chat-ui.js:30: [turn]     return wrap;
+game/chat-ui.js:30: [return]     return wrap;
+game/chat-ui.js:34: [turn]     if (!list) return;
+game/chat-ui.js:34: [return]     if (!list) return;
+game/chat-ui.js:59: [turn]     if (!unreadBadge) return;
+game/chat-ui.js:59: [return]     if (!unreadBadge) return;
+game/chat-ui.js:65: [turn]     if (!msg || typeof msg !== 'object') return;
+game/chat-ui.js:65: [return]     if (!msg || typeof msg !== 'object') return;
+game/chat-ui.js:67: [turn]     if (id && seen.has(id)) return;
+game/chat-ui.js:67: [return]     if (id && seen.has(id)) return;
+game/chat-ui.js:92: [turn]     if (!errorBox) return;
+game/chat-ui.js:92: [return]     if (!errorBox) return;
+game/chat-ui.js:96: [setTimeout]     showError.timer = setTimeout(() => errorBox?.classList.remove('show'), 2200);
+game/chat-ui.js:101: [turn]     if (!value) return;
+game/chat-ui.js:101: [return]     if (!value) return;
+game/chat-ui.js:104: [turn]       return;
+game/chat-ui.js:104: [return]       return;
+game/chat-ui.js:108: [catch]     try { input.focus({preventScroll:true}); } catch (_) { input.focus(); }
+game/chat-ui.js:112: [turn]     if (!root) return;
+game/chat-ui.js:112: [return]     if (!root) return;
+game/chat-ui.js:122: [turn]     if (!visible || !isMobileLayout()) return;
+game/chat-ui.js:122: [return]     if (!visible || !isMobileLayout()) return;
+game/chat-ui.js:132: [requestAnimationFrame]       requestAnimationFrame(() => {
+game/chat-ui.js:133: [catch]         try { input?.focus({preventScroll:true}); } catch (_) { input?.focus(); }
+game/chat-ui.js:139: [turn]     if (!mobileOpen) return;
+game/chat-ui.js:139: [return]     if (!mobileOpen) return;
+game/chat-ui.js:143: [catch]     try { input?.blur(); } catch (_) {}
+game/chat-ui.js:147: [resize]   let gameResizePending = false;
+game/chat-ui.js:149: [resize]   function notifyGameResize() {
+game/chat-ui.js:150: [turn]     if (gameResizePending) return;
+game/chat-ui.js:150: [resize]     if (gameResizePending) return;
+game/chat-ui.js:150: [return]     if (gameResizePending) return;
+game/chat-ui.js:151: [resize]     gameResizePending = true;
+game/chat-ui.js:152: [requestAnimationFrame]     requestAnimationFrame(() => {
+game/chat-ui.js:153: [resize]       gameResizePending = false;
+game/chat-ui.js:154: [resize]       window.dispatchEvent(new Event('resize'));
+game/chat-ui.js:159: [turn]     if (!root) return;
+game/chat-ui.js:159: [return]     if (!root) return;
+game/chat-ui.js:165: [resize]     // Never emit another resize from the resize handler itself. Doing so creates
+game/chat-ui.js:166: [resync]     // an endless RAF -> resize -> syncLayout loop that repeatedly resynchronizes
+game/chat-ui.js:166: [resize]     // an endless RAF -> resize -> syncLayout loop that repeatedly resynchronizes
+game/chat-ui.js:186: [catch]       try { input?.blur(); } catch (_) {}
+game/chat-ui.js:189: [resize]     notifyGameResize();
+game/chat-ui.js:193: [turn]     if (root) return;
+game/chat-ui.js:193: [return]     if (root) return;
+game/chat-ui.js:347: [setTimeout]     input.addEventListener('blur', () => { root.classList.remove('focused'); setTimeout(updateViewport, 70); });
+game/chat-ui.js:367: [resize]     window.visualViewport?.addEventListener('resize', updateViewport, {passive:true});
+game/chat-ui.js:369: [resize]     window.addEventListener('resize', syncLayout, {passive:true});
+game/chat-ui.js:370: [resize]     mobileQuery.addEventListener?.('change', () => { syncLayout(); notifyGameResize(); });
+backend/app.py:59: [WebSocket]     ws: web.WebSocketResponse
+backend/app.py:78: [turn]             return False
+backend/app.py:78: [return]             return False
+backend/app.py:80: [turn]         return True
+backend/app.py:80: [return]         return True
+backend/app.py:122: [except]             except Exception as e:
+backend/app.py:140: [except]         except asyncio.CancelledError:
+backend/app.py:142: [except]         except Exception as e:
+backend/app.py:145: [authority]     async def _ensure_authority(self, rid: str, renew: bool = False) -> dict[str, Any]:
+backend/app.py:147: [authority]         lease = await self.store.get_authority(rid)
+backend/app.py:150: [authority]             lease = await self.store.claim_authority(rid, preferred, renew=False)
+backend/app.py:152: [authority]             lease = await self.store.claim_authority(rid, preferred, renew=True)
+backend/app.py:154: [authority]             lease = await self.store.claim_authority(rid, str(lease["shard"]), renew=True)
+backend/app.py:156: [authority]         authority = await self.gamehost.ensure_room(
+backend/app.py:157: [snapshot]             rid, start["settings"], int(start["capacity"]), start.get("snapshot"),
+backend/app.py:158: [authority]             shard=str(lease["shard"]), authority_epoch=int(lease["epoch"]), connection_epochs=epochs,
+backend/app.py:160: [authority]         authority["lease"] = lease
+backend/app.py:161: [authority]         await self._persist_live_authority(rid, authority)
+backend/app.py:162: [turn]         return authority
+backend/app.py:162: [authority]         return authority
+backend/app.py:162: [return]         return authority
+backend/app.py:164: [authority]     async def _authority_lease(self, rid: str) -> dict[str, Any]:
+backend/app.py:165: [authority]         lease = await self.store.get_authority(rid)
+backend/app.py:167: [authority]             authority = await self._ensure_authority(rid, renew=lease is not None)
+backend/app.py:168: [authority]             lease = authority["lease"]
+backend/app.py:169: [turn]         return lease
+backend/app.py:169: [return]         return lease
+backend/app.py:171: [authority]     async def _persist_live_authority(self, rid: str, authority: dict[str, Any]) -> None:
+backend/app.py:172: [snapshot]         """Persist a safe live GameHost checkpoint without ever trusting a browser snapshot."""
+backend/app.py:173: [sequence]         sequence = authority.get("sequence")
+backend/app.py:173: [authority]         sequence = authority.get("sequence")
+backend/app.py:174: [sequence]         if isinstance(sequence, list):
+backend/app.py:175: [sequence]             await self.store.sync_sequence(rid, sequence)
+backend/app.py:176: [authority]         snapshot = authority.get("snapshot")
+backend/app.py:176: [snapshot]         snapshot = authority.get("snapshot")
+backend/app.py:177: [snapshot]         if not isinstance(snapshot, dict):
+backend/app.py:178: [turn]             return
+backend/app.py:178: [return]             return
+backend/app.py:182: [authority]             revision = int(authority.get("authorityRevision", authority.get("revision", 0)) or 0)
+backend/app.py:182: [revision]             revision = int(authority.get("authorityRevision", authority.get("revision", 0)) or 0)
+backend/app.py:183: [except]         except (TypeError, ValueError):
+backend/app.py:184: [revision]             revision = 0
+backend/app.py:185: [revision]         await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+backend/app.py:185: [snapshot]         await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+backend/app.py:187: [resync]     async def _authoritative_resync(self, rid: str) -> dict[str, Any]:
+backend/app.py:189: [resync]         fallback = await self.store.resync(rid)
+backend/app.py:191: [authority]             lease = await self._authority_lease(rid)
+backend/app.py:193: [authority]             await self._persist_live_authority(rid, live)
+backend/app.py:194: [resync]             payload = await self.store.resync(rid)
+backend/app.py:196: [authority]                 "authorityEpoch": live.get("authorityEpoch", lease.get("epoch")),
+backend/app.py:197: [authority]                 "revision": live.get("authorityRevision"),
+backend/app.py:197: [revision]                 "revision": live.get("authorityRevision"),
+backend/app.py:198: [turn]                 "turn": live.get("turn") or [],
+backend/app.py:200: [snapshot]                 "snapshotDeferred": bool(live.get("snapshotDeferred")),
+backend/app.py:202: [turn]             return payload
+backend/app.py:202: [return]             return payload
+backend/app.py:203: [except]         except Exception as e:
+backend/app.py:204: [resync]             # Resync remains available during a transient GameHost/SSE outage. The browser keeps
+backend/app.py:205: [authority]             # its authority mismatch pending and will retry if this stored checkpoint is stale.
+backend/app.py:206: [resync]             print("[SamiDev] live resync fallback", type(e).__name__, e)
+backend/app.py:207: [turn]             return fallback
+backend/app.py:207: [return]             return fallback
+backend/app.py:211: [authority]         if event_type not in {"authority_state", "authority_alarm"}:
+backend/app.py:211: [alarm]         if event_type not in {"authority_state", "authority_alarm"}:
+backend/app.py:212: [turn]             return
+backend/app.py:212: [return]             return
+backend/app.py:215: [turn]             return
+backend/app.py:215: [return]             return
+backend/app.py:218: [authority]             epoch = int(event.get("authorityEpoch"))
+backend/app.py:219: [revision]             revision = int(event.get("revision"))
+backend/app.py:220: [except]         except (TypeError, ValueError):
+backend/app.py:221: [turn]             return
+backend/app.py:221: [return]             return
+backend/app.py:222: [snapshot]         snapshot = event.get("snapshot")
+backend/app.py:225: [authority]             # authority revision once, so exactly one gateway republishes it cluster-wide.
+backend/app.py:225: [revision]             # authority revision once, so exactly one gateway republishes it cluster-wide.
+backend/app.py:225: [publish]             # authority revision once, so exactly one gateway republishes it cluster-wide.
+backend/app.py:226: [authority]             if not await self.store.accept_authority_event(rid, shard, epoch, revision):
+backend/app.py:226: [revision]             if not await self.store.accept_authority_event(rid, shard, epoch, revision):
+backend/app.py:227: [turn]                 return
+backend/app.py:227: [return]                 return
+backend/app.py:228: [sequence]             authority_sequence = event.get("sequence")
+backend/app.py:228: [authority]             authority_sequence = event.get("sequence")
+backend/app.py:229: [sequence]             if isinstance(authority_sequence, list):
+backend/app.py:229: [authority]             if isinstance(authority_sequence, list):
+backend/app.py:230: [sequence]                 await self.store.sync_sequence(rid, authority_sequence)
+backend/app.py:230: [authority]                 await self.store.sync_sequence(rid, authority_sequence)
+backend/app.py:233: [snapshot]             # Snapshot persistence is optional for an event. Never drop a valid alarm just
+backend/app.py:233: [alarm]             # Snapshot persistence is optional for an event. Never drop a valid alarm just
+backend/app.py:235: [snapshot]             if isinstance(snapshot, dict):
+backend/app.py:236: [revision]                 await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+backend/app.py:236: [snapshot]                 await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+backend/app.py:237: [authority]             if event_type == "authority_alarm":
+backend/app.py:237: [alarm]             if event_type == "authority_alarm":
+backend/app.py:240: [turn]                     return
+backend/app.py:240: [return]                     return
+backend/app.py:242: [authority]                     "type": "authority_alarm",
+backend/app.py:242: [alarm]                     "type": "authority_alarm",
+backend/app.py:244: [alarm]                     "alarmId": event.get("alarmId"),
+backend/app.py:245: [authority]                     "authorityEpoch": epoch,
+backend/app.py:246: [revision]                     "revision": revision,
+backend/app.py:247: [turn]                     "turn": event.get("turn") or [],
+backend/app.py:248: [sequence]                     "sequence": event.get("sequence") or [],
+backend/app.py:252: [fanout]                 await self.fanout_personalized(rid, base, reveal_by_seat)
+backend/app.py:254: [fanout]                 await self.fanout(rid, {
+backend/app.py:255: [authority]                     "type": "authority_state",
+backend/app.py:258: [authority]                     "authorityEpoch": epoch,
+backend/app.py:259: [revision]                     "revision": revision,
+backend/app.py:260: [turn]                     "turn": event.get("turn") or [],
+backend/app.py:261: [sequence]                     "sequence": event.get("sequence") or [],
+backend/app.py:265: [except]         except Exception as e:
+backend/app.py:266: [authority]             print("[SamiDev] authority event", type(e).__name__, e)
+backend/app.py:270: [turn]             return
+backend/app.py:270: [return]             return
+backend/app.py:292: [turn]             return
+backend/app.py:292: [return]             return
+backend/app.py:298: [publish]             await self.store.publish_node(old_node, {"control": "close_connection", "connId": old_conn})
+backend/app.py:301: [turn]         return {k: v for k, v in data.items() if k not in {"replacedNodeId", "replacedConnId"}}
+backend/app.py:301: [return]         return {k: v for k, v in data.items() if k not in {"replacedNodeId", "replacedConnId"}}
+backend/app.py:310: [turn]             return c.name
+backend/app.py:310: [return]             return c.name
+backend/app.py:311: [turn]         return str(msg.get("name") or "Player")
+backend/app.py:311: [return]         return str(msg.get("name") or "Player")
+backend/app.py:321: [turn]         return text
+backend/app.py:321: [return]         return text
+backend/app.py:325: [turn]             return
+backend/app.py:325: [return]             return
+backend/app.py:331: [turn]         return {"type": "room_state", **{k: state[k] for k in ("roomId", "capacity", "settings", "started", "begun", "roster", "moveCount")}}
+backend/app.py:331: [return]         return {"type": "room_state", **{k: state[k] for k in ("roomId", "capacity", "settings", "started", "begun", "roster", "moveCount")}}
+backend/app.py:333: [fanout]     async def fanout(self, rid: str, payload: dict[str, Any], include_local: bool = True) -> None:
+backend/app.py:341: [publish]                     await self.store.publish_node(node, event)
+backend/app.py:343: [fanout]     async def fanout_personalized(self, rid: str, base_payload: dict[str, Any], reveal_by_seat: dict[str, Any]) -> None:
+backend/app.py:359: [publish]                     await self.store.publish_node(node, event)
+backend/app.py:366: [turn]             return
+backend/app.py:366: [return]             return
+backend/app.py:369: [turn]             return
+backend/app.py:369: [return]             return
+backend/app.py:381: [turn]             await asyncio.gather(*sends, return_exceptions=True)
+backend/app.py:381: [except]             await asyncio.gather(*sends, return_exceptions=True)
+backend/app.py:381: [return]             await asyncio.gather(*sends, return_exceptions=True)
+backend/app.py:386: [turn]             return
+backend/app.py:386: [return]             return
+backend/app.py:394: [except]             except StoreError:
+backend/app.py:401: [publish]                     await self.store.publish_node(node, {"roomId": rid, "payload": {"type": "__samidev_start_local"}})
+backend/app.py:409: [except]                 except StoreError:
+backend/app.py:423: [fanout]             await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+backend/app.py:424: [turn]             return
+backend/app.py:424: [return]             return
+backend/app.py:434: [fanout]             await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+backend/app.py:440: [turn]             return
+backend/app.py:440: [return]             return
+backend/app.py:452: [authority]                 lease = await self._authority_lease(c.room_id)
+backend/app.py:454: [authority]                     await self.gamehost.claim_connection(c.room_id, c.seat, c.connection_epoch, shard=str(lease["shard"]), authority_epoch=int(lease["epoch"]))
+backend/app.py:455: [except]                 except GameHostError as e:
+backend/app.py:457: [authority]                         authority = await self._ensure_authority(c.room_id, renew=True)
+backend/app.py:458: [authority]                         lease = authority["lease"]
+backend/app.py:459: [authority]                         await self.gamehost.claim_connection(c.room_id, c.seat, c.connection_epoch, shard=str(lease["shard"]), authority_epoch=int(lease["epoch"]))
+backend/app.py:465: [fanout]             await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+backend/app.py:471: [turn]             return
+backend/app.py:471: [return]             return
+backend/app.py:475: [turn]             return
+backend/app.py:475: [return]             return
+backend/app.py:490: [fanout]             await self.fanout(c.room_id, {"type": "chat_message", **entry})
+backend/app.py:491: [turn]             return
+backend/app.py:491: [return]             return
+backend/app.py:495: [turn]             return
+backend/app.py:495: [return]             return
+backend/app.py:501: [turn]             return
+backend/app.py:501: [return]             return
+backend/app.py:515: [fanout]                     await self.fanout(rid, await self.room_state_event(rid))
+backend/app.py:516: [except]                 except StoreError:
+backend/app.py:518: [turn]             return
+backend/app.py:518: [return]             return
+backend/app.py:522: [fanout]             await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+backend/app.py:525: [authority]                 authority = await self._ensure_authority(c.room_id)
+backend/app.py:526: [authority]                 if not authority.get("server"):
+backend/app.py:527: [authority]                     raise StoreError("AUTHORITY_FAILED", "تعذر تشغيل GameLogic في وضع السيرفر")
+backend/app.py:528: [fanout]                 await self.fanout(c.room_id, {
+backend/app.py:530: [authority]                     "authority": {"server": True, "mainJsSha256": authority.get("mainJsSha256")},
+backend/app.py:532: [turn]             return
+backend/app.py:532: [return]             return
+backend/app.py:544: [authority]             lease = await self._authority_lease(c.room_id)
+backend/app.py:546: [authority]                 authority = await self.gamehost.move(
+backend/app.py:548: [authority]                     authority_epoch=int(lease["epoch"]), connection_epoch=c.connection_epoch,
+backend/app.py:550: [except]             except GameHostError as e:
+backend/app.py:552: [authority]                     restored = await self._ensure_authority(c.room_id, renew=True)
+backend/app.py:554: [authority]                     authority = await self.gamehost.move(
+backend/app.py:556: [authority]                         authority_epoch=int(lease["epoch"]), connection_epoch=c.connection_epoch,
+backend/app.py:561: [authority]             if not authority.get("accepted"):
+backend/app.py:562: [sequence]                 seq = authority.get("sequence") or []
+backend/app.py:562: [authority]                 seq = authority.get("sequence") or []
+backend/app.py:572: [turn]                     await self.error(c, "MOVE_REJECTED", "GameLogic رفض الحركة", turn=authority.get("turn") or [])
+backend/app.py:572: [authority]                     await self.error(c, "MOVE_REJECTED", "GameLogic رفض الحركة", turn=authority.get("turn") or [])
+backend/app.py:573: [turn]                 return
+backend/app.py:573: [return]                 return
+backend/app.py:575: [authority]             official_packet = authority.get("packet") if isinstance(authority.get("packet"), dict) else packet
+backend/app.py:587: [except]                 except StoreError as e:
+backend/app.py:588: [sequence]                     # Store sequence is defense-in-depth; GameLogic remains the authority.
+backend/app.py:588: [authority]                     # Store sequence is defense-in-depth; GameLogic remains the authority.
+backend/app.py:592: [turn]                         return
+backend/app.py:592: [return]                         return
+backend/app.py:596: [authority]             snapshot = authority.get("snapshot")
+backend/app.py:596: [snapshot]             snapshot = authority.get("snapshot")
+backend/app.py:597: [snapshot]             if isinstance(snapshot, dict):
+backend/app.py:598: [authority]                 await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0))
+backend/app.py:598: [revision]                 await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0))
+backend/app.py:598: [snapshot]                 await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0))
+backend/app.py:604: [authority]                 "authority": {
+backend/app.py:605: [turn]                     "turn": authority.get("turn") or [],
+backend/app.py:605: [authority]                     "turn": authority.get("turn") or [],
+backend/app.py:606: [sequence]                     "sequence": authority.get("sequence") or [],
+backend/app.py:606: [authority]                     "sequence": authority.get("sequence") or [],
+backend/app.py:607: [authority]                     "gameOver": bool(authority.get("gameOver")),
+backend/app.py:608: [authority]                     "authorityEpoch": authority.get("authorityEpoch"),
+backend/app.py:609: [authority]                     "revision": authority.get("authorityRevision"),
+backend/app.py:609: [revision]                     "revision": authority.get("authorityRevision"),
+backend/app.py:610: [authority]                     "lastValidAnim": authority.get("lastValidAnim"),
+backend/app.py:613: [authority]             reveal_by_seat = authority.get("revealBySeat") if isinstance(authority.get("revealBySeat"), dict) else {}
+backend/app.py:615: [fanout]                 await self.fanout_personalized(c.room_id, payload, reveal_by_seat)
+backend/app.py:617: [fanout]                 await self.fanout(c.room_id, payload)
+backend/app.py:618: [turn]             return
+backend/app.py:618: [return]             return
+backend/app.py:620: [snapshot]         if kind == "snapshot":
+backend/app.py:621: [snapshot]             # Client snapshots are deliberately non-authoritative. Never write them to Redis.
+backend/app.py:622: [snapshot]             await self.send(c, {"type": "snapshot_ignored", "reason": "server_authoritative"})
+backend/app.py:623: [turn]             return
+backend/app.py:623: [return]             return
+backend/app.py:625: [resync]         if kind == "resync":
+backend/app.py:626: [resync]             await self.send(c, {"type": "resync_state", **await self._authoritative_resync(c.room_id)})
+backend/app.py:627: [turn]             return
+backend/app.py:627: [return]             return
+backend/app.py:631: [WebSocket]     async def websocket(self, request: web.Request) -> web.StreamResponse:
+backend/app.py:634: [turn]             return web.Response(status=403, text="Origin not allowed")
+backend/app.py:634: [return]             return web.Response(status=403, text="Origin not allowed")
+backend/app.py:644: [turn]             return web.Response(status=401, text="Game authentication required")
+backend/app.py:644: [return]             return web.Response(status=401, text="Game authentication required")
+backend/app.py:645: [WebSocket]         ws = web.WebSocketResponse(heartbeat=25, receive_timeout=90, max_msg_size=MAX_WS_MESSAGE, compress=False, autoping=True)
+backend/app.py:672: [except]                     except Exception:
+backend/app.py:677: [except]                     except StoreError as e:
+backend/app.py:679: [except]                     except Exception as e:
+backend/app.py:691: [fanout]                     await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+backend/app.py:692: [except]                 except Exception:
+backend/app.py:694: [turn]         return ws
+backend/app.py:694: [return]         return ws
+backend/app.py:700: [except]             except Exception: redis_ok = False
+backend/app.py:701: [turn]         return web.json_response({"ok": redis_ok, "service": "SamiDev Realtime"})
+backend/app.py:701: [return]         return web.json_response({"ok": redis_ok, "service": "SamiDev Realtime"})
+backend/app.py:727: [turn]         return web.Response(text=text, content_type="text/plain")
+backend/app.py:727: [return]         return web.Response(text=text, content_type="text/plain")
+backend/app.py:732: [turn]         return web.Response(text=body, content_type="application/javascript", headers={"Cache-Control": "no-store"})
+backend/app.py:732: [return]         return web.Response(text=body, content_type="application/javascript", headers={"Cache-Control": "no-store"})
+backend/app.py:735: [turn]         return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-cache, max-age=0, must-revalidate"})
+backend/app.py:735: [return]         return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-cache, max-age=0, must-revalidate"})
+backend/app.py:751: [turn]         return web.FileResponse(path, headers={"Cache-Control": cache_control})
+backend/app.py:751: [return]         return web.FileResponse(path, headers={"Cache-Control": cache_control})
+backend/app.py:760: [turn]         return await handler(request)
+backend/app.py:760: [return]         return await handler(request)
+backend/app.py:761: [except]     except PlatformError as e:
+backend/app.py:762: [turn]         return web.json_response({"ok": False, "error": e.code, "message": e.message}, status=e.status)
+backend/app.py:762: [return]         return web.json_response({"ok": False, "error": e.code, "message": e.message}, status=e.status)
+backend/app.py:784: [WebSocket]     app.router.add_get("/ws", SERVICE.websocket)
+backend/app.py:794: [turn]     return app
+backend/app.py:794: [return]     return app
+backend/app.py:801: [except]     except Exception:
+backend/store.py:26: [turn]     return rid
+backend/store.py:26: [return]     return rid
+backend/store.py:31: [turn]         return None
+backend/store.py:31: [return]         return None
+backend/store.py:35: [turn]     return token
+backend/store.py:35: [return]     return token
+backend/store.py:39: [turn]     return int(time.time() * 1000)
+backend/store.py:39: [return]     return int(time.time() * 1000)
+backend/store.py:44: [turn]     return s[:24]
+backend/store.py:44: [return]     return s[:24]
+backend/store.py:50: [except]     except (TypeError, ValueError):
+backend/store.py:51: [turn]         return default
+backend/store.py:51: [return]         return default
+backend/store.py:52: [turn]     return max(lo, min(hi, n))
+backend/store.py:52: [return]     return max(lo, min(hi, n))
+backend/store.py:67: [turn]     return settings
+backend/store.py:67: [return]     return settings
+backend/store.py:71: [turn]     return "".join(secrets.choice(ROOM_ALPHABET) for _ in range(6))
+backend/store.py:71: [return]     return "".join(secrets.choice(ROOM_ALPHABET) for _ in range(6))
+backend/store.py:75: [turn]     return secrets.token_urlsafe(24)
+backend/store.py:75: [return]     return secrets.token_urlsafe(24)
+backend/store.py:80: [turn]     return secrets.token_urlsafe(18)
+backend/store.py:80: [return]     return secrets.token_urlsafe(18)
+backend/store.py:87: [turn]     return token
+backend/store.py:87: [return]     return token
+backend/store.py:90: [except] class StoreError(Exception):
+backend/store.py:119: [sequence]     sequence: list[int] = field(default_factory=list)
+backend/store.py:123: [snapshot]     snapshot: dict[str, Any] | None = None
+backend/store.py:124: [snapshot]     snapshot_move_count: int = -1
+backend/store.py:125: [revision]     snapshot_revision: int = -1
+backend/store.py:125: [snapshot]     snapshot_revision: int = -1
+backend/store.py:126: [authority]     authority_shard: str | None = None
+backend/store.py:127: [authority]     authority_epoch: int = 0
+backend/store.py:128: [authority]     authority_revision: int = -1
+backend/store.py:128: [revision]     authority_revision: int = -1
+backend/store.py:132: [sequence]         self.sequence = [0] * self.capacity
+backend/store.py:151: [turn]         return [
+backend/store.py:151: [return]         return [
+backend/store.py:162: [turn]         return {
+backend/store.py:162: [return]         return {
+backend/store.py:169: [sequence]             "sequence": list(room.sequence),
+backend/store.py:189: [turn]             return data
+backend/store.py:189: [return]             return data
+backend/store.py:235: [turn]             return data
+backend/store.py:235: [return]             return data
+backend/store.py:251: [turn]             return out
+backend/store.py:251: [return]             return out
+backend/store.py:266: [turn]             return {"inviteToken": token, "expiresIn": max(30, int(ttl_seconds))}
+backend/store.py:266: [return]             return {"inviteToken": token, "expiresIn": max(30, int(ttl_seconds))}
+backend/store.py:301: [turn]             return data
+backend/store.py:301: [return]             return data
+backend/store.py:307: [turn]         return self._room_payload(room)
+backend/store.py:307: [return]         return self._room_payload(room)
+backend/store.py:315: [turn]         return {
+backend/store.py:315: [return]         return {
+backend/store.py:321: [snapshot]             "history": [e for e in room.history if int(e.get("moveIndex", -1)) >= room.snapshot_move_count] if room.snapshot is not None else list(room.history),
+backend/store.py:322: [snapshot]             "snapshot": room.snapshot,
+backend/store.py:323: [snapshot]             "snapshotMoveCount": room.snapshot_move_count,
+backend/store.py:325: [sequence]             "sequence": list(room.sequence),
+backend/store.py:339: [turn]         return [room.players.get(i).connection_epoch if room.players.get(i) else 0 for i in range(room.capacity)]
+backend/store.py:339: [return]         return [room.players.get(i).connection_epoch if room.players.get(i) else 0 for i in range(room.capacity)]
+backend/store.py:350: [turn]                 return True
+backend/store.py:350: [return]                 return True
+backend/store.py:351: [turn]             return False
+backend/store.py:351: [return]             return False
+backend/store.py:363: [turn]                 return {"seat": seat, "packet": packet, "moveIndex": room.move_count, "infoAck": True, "infoOnly": True}
+backend/store.py:363: [return]                 return {"seat": seat, "packet": packet, "moveIndex": room.move_count, "infoAck": True, "infoOnly": True}
+backend/store.py:368: [sequence]             expected = room.sequence[seat]
+backend/store.py:371: [sequence]             room.sequence[seat] += 1
+backend/store.py:378: [turn]             return entry
+backend/store.py:378: [return]             return entry
+backend/store.py:391: [turn]             return message
+backend/store.py:391: [return]             return message
+backend/store.py:397: [turn]         return list(room.chat[-CHAT_HISTORY_MAX:])
+backend/store.py:397: [return]         return list(room.chat[-CHAT_HISTORY_MAX:])
+backend/store.py:399: [revision]     async def set_snapshot(self, room_id: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+backend/store.py:399: [snapshot]     async def set_snapshot(self, room_id: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+backend/store.py:403: [turn]                 return
+backend/store.py:403: [return]                 return
+backend/store.py:404: [snapshot]             if move_count < room.snapshot_move_count or move_count > room.move_count:
+backend/store.py:405: [turn]                 return
+backend/store.py:405: [return]                 return
+backend/store.py:406: [revision]             if move_count == room.snapshot_move_count and revision < room.snapshot_revision:
+backend/store.py:406: [snapshot]             if move_count == room.snapshot_move_count and revision < room.snapshot_revision:
+backend/store.py:407: [turn]                 return
+backend/store.py:407: [return]                 return
+backend/store.py:408: [snapshot]             room.snapshot = state
+backend/store.py:409: [snapshot]             room.snapshot_move_count = move_count
+backend/store.py:410: [revision]             room.snapshot_revision = revision
+backend/store.py:410: [snapshot]             room.snapshot_revision = revision
+backend/store.py:412: [resync]     async def resync(self, room_id: str) -> dict[str, Any]:
+backend/store.py:416: [turn]         return {
+backend/store.py:416: [return]         return {
+backend/store.py:417: [snapshot]             "snapshot": room.snapshot,
+backend/store.py:418: [snapshot]             "snapshotMoveCount": room.snapshot_move_count,
+backend/store.py:419: [revision]             "snapshotRevision": room.snapshot_revision,
+backend/store.py:419: [snapshot]             "snapshotRevision": room.snapshot_revision,
+backend/store.py:420: [snapshot]             "history": [e for e in room.history if int(e.get("moveIndex", -1)) >= room.snapshot_move_count] if room.snapshot is not None else list(room.history),
+backend/store.py:422: [sequence]             "sequence": list(room.sequence),
+backend/store.py:425: [sequence]     async def sync_sequence(self, room_id: str, sequence: list[int]) -> None:
+backend/store.py:426: [sequence]         """Advance persisted per-seat sequence to the authoritative GameHost values.
+backend/store.py:428: [turn]         Server-generated auto moves (for example a missed-turn m:3) advance BaseLogic
+backend/store.py:429: [sequence]         sequence without passing through append_move(). Never move a stored sequence
+backend/store.py:430: [authority]         backwards; delayed authority events are therefore harmless.
+backend/store.py:435: [turn]                 return
+backend/store.py:435: [return]                 return
+backend/store.py:436: [sequence]             for seat, value in enumerate(sequence[: room.capacity]):
+backend/store.py:437: [sequence]                 if isinstance(value, int) and value > room.sequence[seat]:
+backend/store.py:438: [sequence]                     room.sequence[seat] = value
+backend/store.py:441: [authority]     async def claim_authority(self, room_id: str, preferred_shard: str, renew: bool = False) -> dict[str, Any]:
+backend/store.py:446: [authority]             if room.authority_shard is None:
+backend/store.py:447: [authority]                 room.authority_shard = preferred_shard
+backend/store.py:448: [authority]                 room.authority_epoch = 1
+backend/store.py:449: [authority]                 room.authority_revision = -1
+backend/store.py:449: [revision]                 room.authority_revision = -1
+backend/store.py:451: [authority]                 room.authority_shard = preferred_shard
+backend/store.py:452: [authority]                 room.authority_epoch += 1
+backend/store.py:453: [authority]                 room.authority_revision = -1
+backend/store.py:453: [revision]                 room.authority_revision = -1
+backend/store.py:454: [turn]             return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:454: [authority]             return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:454: [revision]             return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:454: [return]             return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:456: [authority]     async def get_authority(self, room_id: str) -> dict[str, Any] | None:
+backend/store.py:458: [authority]         if not room or not room.authority_shard:
+backend/store.py:459: [turn]             return None
+backend/store.py:459: [return]             return None
+backend/store.py:460: [turn]         return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:460: [authority]         return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:460: [revision]         return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:460: [return]         return {"shard": room.authority_shard, "epoch": room.authority_epoch, "revision": room.authority_revision}
+backend/store.py:462: [authority]     async def accept_authority_event(self, room_id: str, shard: str, epoch: int, revision: int) -> bool:
+backend/store.py:462: [revision]     async def accept_authority_event(self, room_id: str, shard: str, epoch: int, revision: int) -> bool:
+backend/store.py:465: [authority]             if not room or room.authority_shard != shard or room.authority_epoch != epoch or revision <= room.authority_revision:
+backend/store.py:465: [revision]             if not room or room.authority_shard != shard or room.authority_epoch != epoch or revision <= room.authority_revision:
+backend/store.py:466: [turn]                 return False
+backend/store.py:466: [return]                 return False
+backend/store.py:467: [authority]             room.authority_revision = revision
+backend/store.py:467: [revision]             room.authority_revision = revision
+backend/store.py:468: [turn]             return True
+backend/store.py:468: [return]             return True
+backend/store.py:472: [turn]             return True
+backend/store.py:472: [return]             return True
+backend/store.py:480: [turn]             return count <= limit
+backend/store.py:480: [return]             return count <= limit
+backend/store.py:494: [sequence]                 room.sequence[seat] = 0
+backend/store.py:497: [turn]                     return {"roomDeleted": True, "seatFreed": True}
+backend/store.py:497: [return]                     return {"roomDeleted": True, "seatFreed": True}
+backend/store.py:499: [turn]                 return {"roomDeleted": False, "seatFreed": True}
+backend/store.py:499: [return]                 return {"roomDeleted": False, "seatFreed": True}
+backend/store.py:503: [turn]             return {"roomDeleted": False, "seatFreed": False}
+backend/store.py:503: [return]             return {"roomDeleted": False, "seatFreed": False}
+backend/store.py:509: [turn]                 return
+backend/store.py:509: [return]                 return
+backend/store.py:519: [turn]             return set()
+backend/store.py:519: [return]             return set()
+backend/store.py:520: [turn]         return {p.node_id for p in room.players.values() if p.connected}
+backend/store.py:520: [return]         return {p.node_id for p in room.players.values() if p.connected}
+backend/store.py:538: [WebSocket]     Room state lives in Redis, while WebSocket connections stay on gateway nodes.
+backend/store.py:548: [except]         except ImportError as e:
+backend/store.py:554: [turn]     def kroom(self, rid: str) -> str: return f"{self.prefix}:room:{rid}"
+backend/store.py:554: [return]     def kroom(self, rid: str) -> str: return f"{self.prefix}:room:{rid}"
+backend/store.py:555: [turn]     def kplayers(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:players"
+backend/store.py:555: [return]     def kplayers(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:players"
+backend/store.py:556: [turn]     def kseq(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:seq"
+backend/store.py:556: [return]     def kseq(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:seq"
+backend/store.py:557: [turn]     def khistory(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:history"
+backend/store.py:557: [return]     def khistory(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:history"
+backend/store.py:558: [turn]     def kready(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:ready"
+backend/store.py:558: [return]     def kready(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:ready"
+backend/store.py:559: [turn]     def knodes(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:nodes"
+backend/store.py:559: [return]     def knodes(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:nodes"
+backend/store.py:560: [turn]     def ktoken(self, token: str) -> str: return f"{self.prefix}:token:{token}"
+backend/store.py:560: [return]     def ktoken(self, token: str) -> str: return f"{self.prefix}:token:{token}"
+backend/store.py:561: [turn]     def kinvite(self, token: str) -> str: return f"{self.prefix}:invite:{token}"
+backend/store.py:561: [return]     def kinvite(self, token: str) -> str: return f"{self.prefix}:invite:{token}"
+backend/store.py:562: [turn]     def kchat(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:chat"
+backend/store.py:562: [return]     def kchat(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:chat"
+backend/store.py:563: [turn]     def node_channel(self, node_id: str) -> str: return f"{self.prefix}:node:{node_id}"
+backend/store.py:563: [return]     def node_channel(self, node_id: str) -> str: return f"{self.prefix}:node:{node_id}"
+backend/store.py:564: [turn]     def krate(self, key: str) -> str: return f"{self.prefix}:rate:{key}"
+backend/store.py:564: [return]     def krate(self, key: str) -> str: return f"{self.prefix}:rate:{key}"
+backend/store.py:565: [turn]     def kroom_index(self) -> str: return f"{self.prefix}:rooms:index"
+backend/store.py:565: [return]     def kroom_index(self) -> str: return f"{self.prefix}:rooms:index"
+backend/store.py:568: [turn]         return bool(await self.r.ping())
+backend/store.py:568: [return]         return bool(await self.r.ping())
+backend/store.py:584: [turn]             if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
+backend/store.py:584: [return]             if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
+backend/store.py:585: [authority]             redis.call('HSET', KEYS[1], 'capacity', ARGV[1], 'settings', ARGV[2], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1
+backend/store.py:585: [revision]             redis.call('HSET', KEYS[1], 'capacity', ARGV[1], 'settings', ARGV[2], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1
+backend/store.py:585: [snapshot]             redis.call('HSET', KEYS[1], 'capacity', ARGV[1], 'settings', ARGV[2], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1
+backend/store.py:591: [turn]             return 1
+backend/store.py:591: [return]             return 1
+backend/store.py:598: [turn]                 return data
+backend/store.py:598: [return]                 return data
+backend/store.py:614: [turn]                     if not raw then return {0, '', '', 0} end
+backend/store.py:614: [return]                     if not raw then return {0, '', '', 0} end
+backend/store.py:629: [turn]                     return {1, oldNode, oldConn, epoch}
+backend/store.py:629: [return]                     return {1, oldNode, oldConn, epoch}
+backend/store.py:643: [turn]                         return data
+backend/store.py:643: [return]                         return data
+backend/store.py:649: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-10} end
+backend/store.py:649: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-10} end
+backend/store.py:650: [turn]         if redis.call('HGET', KEYS[1], 'started') == '1' then return {-11} end
+backend/store.py:650: [return]         if redis.call('HGET', KEYS[1], 'started') == '1' then return {-11} end
+backend/store.py:660: [turn]         if seat < 0 then return {-12} end
+backend/store.py:660: [return]         if seat < 0 then return {-12} end
+backend/store.py:668: [turn]         return {seat, count >= cap and 1 or 0}
+backend/store.py:668: [return]         return {seat, count >= cap and 1 or 0}
+backend/store.py:680: [turn]         return data
+backend/store.py:680: [return]         return data
+backend/store.py:686: [turn]             return []
+backend/store.py:686: [return]             return []
+backend/store.py:702: [except]             except Exception:
+backend/store.py:711: [except]                     except Exception: player = None
+backend/store.py:728: [turn]         return out
+backend/store.py:728: [return]         return out
+backend/store.py:735: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:735: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:736: [turn]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:736: [return]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:738: [turn]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:738: [return]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:739: [turn]         if redis.call('HGET', KEYS[1], 'started') == '1' then return -13 end
+backend/store.py:739: [return]         if redis.call('HGET', KEYS[1], 'started') == '1' then return -13 end
+backend/store.py:741: [turn]         if redis.call('HLEN', KEYS[2]) >= cap then return -14 end
+backend/store.py:741: [return]         if redis.call('HLEN', KEYS[2]) >= cap then return -14 end
+backend/store.py:743: [turn]         return 1
+backend/store.py:743: [return]         return 1
+backend/store.py:750: [turn]         return {"inviteToken": token, "expiresIn": ttl}
+backend/store.py:750: [return]         return {"inviteToken": token, "expiresIn": ttl}
+backend/store.py:762: [turn]         if redis.call('GET', KEYS[1]) ~= ARGV[1] then return {-15} end
+backend/store.py:762: [return]         if redis.call('GET', KEYS[1]) ~= ARGV[1] then return {-15} end
+backend/store.py:763: [turn]         if redis.call('EXISTS', KEYS[2]) == 0 then return {-10} end
+backend/store.py:763: [return]         if redis.call('EXISTS', KEYS[2]) == 0 then return {-10} end
+backend/store.py:764: [turn]         if redis.call('HGET', KEYS[2], 'started') == '1' then return {-11} end
+backend/store.py:764: [return]         if redis.call('HGET', KEYS[2], 'started') == '1' then return {-11} end
+backend/store.py:774: [turn]         if seat < 0 then return {-12} end
+backend/store.py:774: [return]         if seat < 0 then return {-12} end
+backend/store.py:783: [turn]         return {seat, count >= cap and 1 or 0}
+backend/store.py:783: [return]         return {seat, count >= cap and 1 or 0}
+backend/store.py:794: [turn]         return data
+backend/store.py:794: [return]         return data
+backend/store.py:808: [turn]         return {
+backend/store.py:808: [return]         return {
+backend/store.py:815: [sequence]             "sequence": [int(seq_raw.get(str(i), 0)) for i in range(capacity)],
+backend/store.py:823: [snapshot]         meta = await self.r.hmget(self.kroom(rid), "snapshot", "snapshotMoveCount", "moveCount")
+backend/store.py:824: [snapshot]         snapshot_raw, snapshot_count_raw, move_count_raw = meta
+backend/store.py:825: [snapshot]         snapshot = json.loads(snapshot_raw) if snapshot_raw else None
+backend/store.py:826: [snapshot]         snapshot_count = int(snapshot_count_raw or -1)
+backend/store.py:828: [snapshot]         history = all_history if snapshot is None else [e for e in all_history if int(e.get("moveIndex", -1)) >= snapshot_count]
+backend/store.py:829: [snapshot]         state.update({"seat": seat, "history": history, "snapshot": snapshot, "snapshotMoveCount": snapshot_count, "moveCount": int(move_count_raw or 0)})
+backend/store.py:830: [turn]         return state
+backend/store.py:830: [return]         return state
+backend/store.py:846: [turn]         return out
+backend/store.py:846: [return]         return out
+backend/store.py:850: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:850: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:851: [turn]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:851: [return]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:853: [turn]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:853: [return]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:858: [turn]           redis.call('HSET', KEYS[1], 'begun', '1'); return 1
+backend/store.py:858: [return]           redis.call('HSET', KEYS[1], 'begun', '1'); return 1
+backend/store.py:860: [turn]         return 0
+backend/store.py:860: [return]         return 0
+backend/store.py:867: [turn]         return ret == 1
+backend/store.py:867: [return]         return ret == 1
+backend/store.py:876: [turn]             return {"seat": seat, "packet": packet, "moveIndex": state["moveCount"], "infoAck": True, "infoOnly": True}
+backend/store.py:876: [return]             return {"seat": seat, "packet": packet, "moveIndex": state["moveCount"], "infoAck": True, "infoOnly": True}
+backend/store.py:882: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 or redis.call('HGET', KEYS[1], 'started') ~= '1' or redis.call('HGET', KEYS[1], 'begun') ~= '1' then return {-20,0,0} end
+backend/store.py:882: [return]         if redis.call('EXISTS', KEYS[1]) == 0 or redis.call('HGET', KEYS[1], 'started') ~= '1' or redis.call('HGET', KEYS[1], 'begun') ~= '1' then return {-20,0,0} end
+backend/store.py:886: [turn]         if expected ~= actual then return {-21, expected, mc} end
+backend/store.py:886: [return]         if expected ~= actual then return {-21, expected, mc} end
+backend/store.py:891: [turn]         return {mc, expected + 1, mc + 1}
+backend/store.py:891: [return]         return {mc, expected + 1, mc + 1}
+backend/store.py:898: [turn]         return {"seat": seat, "packet": packet, "moveIndex": code}
+backend/store.py:898: [return]         return {"seat": seat, "packet": packet, "moveIndex": code}
+backend/store.py:903: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:903: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
+backend/store.py:904: [turn]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:904: [return]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
+backend/store.py:906: [turn]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:906: [return]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
+backend/store.py:910: [turn]         return 1
+backend/store.py:910: [return]         return 1
+backend/store.py:918: [turn]         return message
+backend/store.py:918: [return]         return message
+backend/store.py:930: [except]             except Exception:
+backend/store.py:932: [turn]         return out
+backend/store.py:932: [return]         return out
+backend/store.py:934: [revision]     async def set_snapshot(self, rid: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+backend/store.py:934: [snapshot]     async def set_snapshot(self, rid: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+backend/store.py:936: [snapshot]         local current = tonumber(redis.call('HGET', KEYS[1], 'snapshotMoveCount') or '-1')
+backend/store.py:937: [revision]         local currentRevision = tonumber(redis.call('HGET', KEYS[1], 'snapshotRevision') or '-1')
+backend/store.py:937: [snapshot]         local currentRevision = tonumber(redis.call('HGET', KEYS[1], 'snapshotRevision') or '-1')
+backend/store.py:940: [revision]         local incomingRevision = tonumber(ARGV[3])
+backend/store.py:941: [turn]         if incoming < current or incoming > total then return 0 end
+backend/store.py:941: [return]         if incoming < current or incoming > total then return 0 end
+backend/store.py:942: [turn]         if incoming == current and incomingRevision < currentRevision then return 0 end
+backend/store.py:942: [revision]         if incoming == current and incomingRevision < currentRevision then return 0 end
+backend/store.py:942: [return]         if incoming == current and incomingRevision < currentRevision then return 0 end
+backend/store.py:943: [revision]         redis.call('HSET', KEYS[1], 'snapshot', ARGV[2], 'snapshotMoveCount', incoming, 'snapshotRevision', incomingRevision)
+backend/store.py:943: [snapshot]         redis.call('HSET', KEYS[1], 'snapshot', ARGV[2], 'snapshotMoveCount', incoming, 'snapshotRevision', incomingRevision)
+backend/store.py:944: [turn]         return 1
+backend/store.py:944: [return]         return 1
+backend/store.py:946: [revision]         await self.r.eval(script, 1, self.kroom(rid), str(move_count), json.dumps(state, separators=(",", ":")), str(revision))
+backend/store.py:948: [resync]     async def resync(self, rid: str) -> dict[str, Any]:
+backend/store.py:950: [revision]         revision_raw = await self.r.hget(self.kroom(rid), "snapshotRevision")
+backend/store.py:950: [snapshot]         revision_raw = await self.r.hget(self.kroom(rid), "snapshotRevision")
+backend/store.py:951: [revision]         state["snapshotRevision"] = int(revision_raw or -1)
+backend/store.py:951: [snapshot]         state["snapshotRevision"] = int(revision_raw or -1)
+backend/store.py:952: [turn]         return {k: state[k] for k in ("snapshot", "snapshotMoveCount", "snapshotRevision", "history", "moveCount", "sequence")}
+backend/store.py:952: [sequence]         return {k: state[k] for k in ("snapshot", "snapshotMoveCount", "snapshotRevision", "history", "moveCount", "sequence")}
+backend/store.py:952: [revision]         return {k: state[k] for k in ("snapshot", "snapshotMoveCount", "snapshotRevision", "history", "moveCount", "sequence")}
+backend/store.py:952: [snapshot]         return {k: state[k] for k in ("snapshot", "snapshotMoveCount", "snapshotRevision", "history", "moveCount", "sequence")}
+backend/store.py:952: [return]         return {k: state[k] for k in ("snapshot", "snapshotMoveCount", "snapshotRevision", "history", "moveCount", "sequence")}
+backend/store.py:954: [sequence]     async def sync_sequence(self, rid: str, sequence: list[int]) -> None:
+backend/store.py:956: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return 0 end
+backend/store.py:956: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return 0 end
+backend/store.py:964: [turn]         return 1
+backend/store.py:964: [return]         return 1
+backend/store.py:966: [sequence]         await self.r.eval(script, 1, self.kseq(rid), json.dumps(sequence, separators=(",", ":")))
+backend/store.py:969: [authority]     async def claim_authority(self, rid: str, preferred_shard: str, renew: bool = False) -> dict[str, Any]:
+backend/store.py:971: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-1, '', 0, -1} end
+backend/store.py:971: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-1, '', 0, -1} end
+backend/store.py:972: [authority]         local shard = redis.call('HGET', KEYS[1], 'authorityShard') or ''
+backend/store.py:973: [authority]         local epoch = tonumber(redis.call('HGET', KEYS[1], 'authorityEpoch') or '0')
+backend/store.py:976: [authority]           redis.call('HSET', KEYS[1], 'authorityShard', shard, 'authorityEpoch', epoch, 'authorityRevision', '-1')
+backend/store.py:976: [revision]           redis.call('HSET', KEYS[1], 'authorityShard', shard, 'authorityEpoch', epoch, 'authorityRevision', '-1')
+backend/store.py:979: [authority]           redis.call('HSET', KEYS[1], 'authorityShard', shard, 'authorityEpoch', epoch, 'authorityRevision', '-1')
+backend/store.py:979: [revision]           redis.call('HSET', KEYS[1], 'authorityShard', shard, 'authorityEpoch', epoch, 'authorityRevision', '-1')
+backend/store.py:981: [authority]         local revision = tonumber(redis.call('HGET', KEYS[1], 'authorityRevision') or '-1')
+backend/store.py:981: [revision]         local revision = tonumber(redis.call('HGET', KEYS[1], 'authorityRevision') or '-1')
+backend/store.py:982: [turn]         return {1, shard, epoch, revision}
+backend/store.py:982: [revision]         return {1, shard, epoch, revision}
+backend/store.py:982: [return]         return {1, shard, epoch, revision}
+backend/store.py:987: [turn]         return {"shard": str(ret[1]), "epoch": int(ret[2]), "revision": int(ret[3])}
+backend/store.py:987: [revision]         return {"shard": str(ret[1]), "epoch": int(ret[2]), "revision": int(ret[3])}
+backend/store.py:987: [return]         return {"shard": str(ret[1]), "epoch": int(ret[2]), "revision": int(ret[3])}
+backend/store.py:989: [authority]     async def get_authority(self, rid: str) -> dict[str, Any] | None:
+backend/store.py:990: [authority]         shard, epoch, revision = await self.r.hmget(self.kroom(rid), "authorityShard", "authorityEpoch", "authorityRevision")
+backend/store.py:990: [revision]         shard, epoch, revision = await self.r.hmget(self.kroom(rid), "authorityShard", "authorityEpoch", "authorityRevision")
+backend/store.py:992: [turn]             return None
+backend/store.py:992: [return]             return None
+backend/store.py:993: [turn]         return {"shard": shard, "epoch": int(epoch or 0), "revision": int(revision or -1)}
+backend/store.py:993: [revision]         return {"shard": shard, "epoch": int(epoch or 0), "revision": int(revision or -1)}
+backend/store.py:993: [return]         return {"shard": shard, "epoch": int(epoch or 0), "revision": int(revision or -1)}
+backend/store.py:995: [authority]     async def accept_authority_event(self, rid: str, shard: str, epoch: int, revision: int) -> bool:
+backend/store.py:995: [revision]     async def accept_authority_event(self, rid: str, shard: str, epoch: int, revision: int) -> bool:
+backend/store.py:997: [turn]         if redis.call('HGET', KEYS[1], 'authorityShard') ~= ARGV[1] then return 0 end
+backend/store.py:997: [authority]         if redis.call('HGET', KEYS[1], 'authorityShard') ~= ARGV[1] then return 0 end
+backend/store.py:997: [return]         if redis.call('HGET', KEYS[1], 'authorityShard') ~= ARGV[1] then return 0 end
+backend/store.py:998: [turn]         if tonumber(redis.call('HGET', KEYS[1], 'authorityEpoch') or '0') ~= tonumber(ARGV[2]) then return 0 end
+backend/store.py:998: [authority]         if tonumber(redis.call('HGET', KEYS[1], 'authorityEpoch') or '0') ~= tonumber(ARGV[2]) then return 0 end
+backend/store.py:998: [return]         if tonumber(redis.call('HGET', KEYS[1], 'authorityEpoch') or '0') ~= tonumber(ARGV[2]) then return 0 end
+backend/store.py:999: [authority]         local current = tonumber(redis.call('HGET', KEYS[1], 'authorityRevision') or '-1')
+backend/store.py:999: [revision]         local current = tonumber(redis.call('HGET', KEYS[1], 'authorityRevision') or '-1')
+backend/store.py:1000: [turn]         if tonumber(ARGV[3]) <= current then return 0 end
+backend/store.py:1000: [return]         if tonumber(ARGV[3]) <= current then return 0 end
+backend/store.py:1001: [authority]         redis.call('HSET', KEYS[1], 'authorityRevision', ARGV[3])
+backend/store.py:1001: [revision]         redis.call('HSET', KEYS[1], 'authorityRevision', ARGV[3])
+backend/store.py:1002: [turn]         return 1
+backend/store.py:1002: [return]         return 1
+backend/store.py:1004: [turn]         return int(await self.r.eval(script, 1, self.kroom(rid), shard, str(epoch), str(revision))) == 1
+backend/store.py:1004: [revision]         return int(await self.r.eval(script, 1, self.kroom(rid), shard, str(epoch), str(revision))) == 1
+backend/store.py:1004: [return]         return int(await self.r.eval(script, 1, self.kroom(rid), shard, str(epoch), str(revision))) == 1
+backend/store.py:1008: [turn]             return True
+backend/store.py:1008: [return]             return True
+backend/store.py:1012: [turn]         return n
+backend/store.py:1012: [return]         return n
+backend/store.py:1015: [turn]         return n <= limit
+backend/store.py:1015: [return]         return n <= limit
+backend/store.py:1025: [turn]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-10,0,0} end
+backend/store.py:1025: [return]         if redis.call('EXISTS', KEYS[1]) == 0 then return {-10,0,0} end
+backend/store.py:1026: [turn]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return {-11,0,0} end
+backend/store.py:1026: [return]         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return {-11,0,0} end
+backend/store.py:1028: [turn]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return {-12,0,0} end
+backend/store.py:1028: [return]         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return {-12,0,0} end
+backend/store.py:1039: [turn]             return {1,1,1}
+backend/store.py:1039: [return]             return {1,1,1}
+backend/store.py:1041: [turn]           return {1,1,0}
+backend/store.py:1041: [return]           return {1,1,0}
+backend/store.py:1045: [turn]         return {1,0,0}
+backend/store.py:1045: [return]         return {1,0,0}
+backend/store.py:1061: [turn]         return {"roomDeleted": bool(int(ret[2])), "seatFreed": bool(int(ret[1]))}
+backend/store.py:1061: [return]         return {"roomDeleted": bool(int(ret[2])), "seatFreed": bool(int(ret[1]))}
+backend/store.py:1065: [turn]         local raw = redis.call('HGET', KEYS[1], ARGV[1]); if not raw then return 0 end
+backend/store.py:1065: [return]         local raw = redis.call('HGET', KEYS[1], ARGV[1]); if not raw then return 0 end
+backend/store.py:1066: [turn]         local p = cjson.decode(raw); if p['connId'] ~= ARGV[2] then return 0 end
+backend/store.py:1066: [return]         local p = cjson.decode(raw); if p['connId'] ~= ARGV[2] then return 0 end
+backend/store.py:1068: [turn]         redis.call('HSET', KEYS[1], ARGV[1], cjson.encode(p)); redis.call('SREM', KEYS[2], ARGV[1]); return 1
+backend/store.py:1068: [return]         redis.call('HSET', KEYS[1], ARGV[1], cjson.encode(p)); redis.call('SREM', KEYS[2], ARGV[1]); return 1
+backend/store.py:1073: [turn]         return set(await self.r.smembers(self.knodes(rid)))
+backend/store.py:1073: [return]         return set(await self.r.smembers(self.knodes(rid)))
+backend/store.py:1075: [publish]     async def publish_node(self, node_id: str, event: dict[str, Any]) -> None:
+backend/store.py:1076: [publish]         await self.r.publish(self.node_channel(node_id), json.dumps(event, separators=(",", ":")))
+backend/store.py:1086: [except]                     except Exception:
+backend/store.py:1092: [turn]         return
+backend/store.py:1092: [return]         return
+backend/gamehost_client.py:12: [except] class GameHostError(Exception):
+backend/gamehost_client.py:24: [authority]     A room gets a persisted shard lease + authority epoch in the store. Rendezvous hashing
+backend/gamehost_client.py:41: [turn]         return max(self.base_urls, key=lambda u: hashlib.sha256(f"{rid}|{u}".encode()).digest())
+backend/gamehost_client.py:41: [return]         return max(self.base_urls, key=lambda u: hashlib.sha256(f"{rid}|{u}".encode()).digest())
+backend/gamehost_client.py:44: [turn]         return shard in self.base_urls
+backend/gamehost_client.py:44: [return]         return shard in self.base_urls
+backend/gamehost_client.py:48: [turn]         return {"X-SamiDev-Service-Key": self.service_key}
+backend/gamehost_client.py:48: [return]         return {"X-SamiDev-Service-Key": self.service_key}
+backend/gamehost_client.py:67: [except]             except (asyncio.CancelledError, Exception):
+backend/gamehost_client.py:84: [turn]                 return data
+backend/gamehost_client.py:84: [return]                 return data
+backend/gamehost_client.py:85: [except]         except GameHostError:
+backend/gamehost_client.py:87: [except]         except Exception as e:
+backend/gamehost_client.py:91: [turn]         results = await asyncio.gather(*(self._json("GET", u, "/health") for u in self.base_urls), return_exceptions=True)
+backend/gamehost_client.py:91: [except]         results = await asyncio.gather(*(self._json("GET", u, "/health") for u in self.base_urls), return_exceptions=True)
+backend/gamehost_client.py:91: [return]         results = await asyncio.gather(*(self._json("GET", u, "/health") for u in self.base_urls), return_exceptions=True)
+backend/gamehost_client.py:92: [except]         bad = [r for r in results if isinstance(r, Exception)]
+backend/gamehost_client.py:95: [turn]         return {"ok": True, "shards": results}
+backend/gamehost_client.py:95: [return]         return {"ok": True, "shards": results}
+backend/gamehost_client.py:102: [snapshot]         snapshot: dict[str, Any] | None = None,
+backend/gamehost_client.py:105: [authority]         authority_epoch: int = 1,
+backend/gamehost_client.py:109: [turn]         return await self._json("POST", base, "/v1/room/init", {
+backend/gamehost_client.py:109: [return]         return await self._json("POST", base, "/v1/room/init", {
+backend/gamehost_client.py:113: [snapshot]             "snapshot": snapshot,
+backend/gamehost_client.py:114: [authority]             "authorityEpoch": authority_epoch,
+backend/gamehost_client.py:118: [authority]     async def claim_connection(self, room_id: str, seat: int, connection_epoch: int, *, shard: str, authority_epoch: int) -> dict[str, Any]:
+backend/gamehost_client.py:119: [turn]         return await self._json("POST", shard, "/v1/room/claim-connection", {
+backend/gamehost_client.py:119: [return]         return await self._json("POST", shard, "/v1/room/claim-connection", {
+backend/gamehost_client.py:123: [authority]             "authorityEpoch": authority_epoch,
+backend/gamehost_client.py:126: [authority]     async def move(self, room_id: str, seat: int, packet: dict[str, Any], *, shard: str, authority_epoch: int, connection_epoch: int) -> dict[str, Any]:
+backend/gamehost_client.py:127: [turn]         return await self._json("POST", shard, "/v1/room/move", {
+backend/gamehost_client.py:127: [return]         return await self._json("POST", shard, "/v1/room/move", {
+backend/gamehost_client.py:131: [authority]             "authorityEpoch": authority_epoch,
+backend/gamehost_client.py:137: [turn]         return await self._json("GET", base, f"/v1/room/{room_id}")
+backend/gamehost_client.py:137: [return]         return await self._json("GET", base, f"/v1/room/{room_id}")
+backend/gamehost_client.py:145: [/events]                     async with s.get(base_url + "/events") as r:
+backend/gamehost_client.py:155: [except]                             except Exception:
+backend/gamehost_client.py:161: [except]                                 except Exception as e:
+backend/gamehost_client.py:163: [except]             except asyncio.CancelledError:
+backend/gamehost_client.py:165: [except]             except Exception as e:
+gamehost/runtime.js:12: [turn]   if (value === undefined) return undefined;
+gamehost/runtime.js:12: [return]   if (value === undefined) return undefined;
+gamehost/runtime.js:13: [turn]   return structuredClone(value);
+gamehost/runtime.js:13: [return]   return structuredClone(value);
+gamehost/runtime.js:17: [turn]   if (incoming === undefined) return base;
+gamehost/runtime.js:17: [return]   if (incoming === undefined) return base;
+gamehost/runtime.js:18: [turn]   if (base === undefined) return cloneJson(incoming);
+gamehost/runtime.js:18: [return]   if (base === undefined) return cloneJson(incoming);
+gamehost/runtime.js:28: [turn]     return out;
+gamehost/runtime.js:28: [return]     return out;
+gamehost/runtime.js:30: [turn]   return cloneJson(incoming);
+gamehost/runtime.js:30: [return]   return cloneJson(incoming);
+gamehost/runtime.js:57: [turn]     const f = function () { return 0; };
+gamehost/runtime.js:57: [return]     const f = function () { return 0; };
+gamehost/runtime.js:60: [turn]     return f;
+gamehost/runtime.js:60: [return]     return f;
+gamehost/runtime.js:64: [turn]     return String(u || '').replace(/^~\//, '').replace(/^carrom\//, '');
+gamehost/runtime.js:64: [return]     return String(u || '').replace(/^~\//, '').replace(/^carrom\//, '');
+gamehost/runtime.js:71: [turn]     if (rel.startsWith('..') || path.isAbsolute(rel)) return '{}';
+gamehost/runtime.js:71: [return]     if (rel.startsWith('..') || path.isAbsolute(rel)) return '{}';
+gamehost/runtime.js:72: [turn]     try { return fs.readFileSync(p, 'utf8'); }
+gamehost/runtime.js:72: [return]     try { return fs.readFileSync(p, 'utf8'); }
+gamehost/runtime.js:73: [turn]     catch { return '{}'; }
+gamehost/runtime.js:73: [catch]     catch { return '{}'; }
+gamehost/runtime.js:73: [return]     catch { return '{}'; }
+gamehost/runtime.js:85: [setTimeout]       setTimeout, clearTimeout, setInterval, clearInterval,
+gamehost/runtime.js:85: [setInterval]       setTimeout, clearTimeout, setInterval, clearInterval,
+gamehost/runtime.js:91: [turn]     return vm.createContext(sandbox, { name: 'SamiDevSharedGameLogic' });
+gamehost/runtime.js:91: [return]     return vm.createContext(sandbox, { name: 'SamiDevSharedGameLogic' });
+gamehost/runtime.js:95: [turn]     return {
+gamehost/runtime.js:95: [return]     return {
+gamehost/runtime.js:115: [alarm]       alarm: { set: () => {} },
+gamehost/runtime.js:116: [turn]       session: { changeTurn: () => {}, gameOver: () => {} },
+gamehost/runtime.js:119: [surfaceChanged]       setOnSurfaceChangedListener: () => {},
+gamehost/runtime.js:147: [turn]     return p;
+gamehost/runtime.js:147: [return]     return p;
+gamehost/runtime.js:167: [turn]     return effects;
+gamehost/runtime.js:167: [return]     return effects;
+gamehost/runtime.js:178: [turn]       return;
+gamehost/runtime.js:178: [return]       return;
+gamehost/runtime.js:187: [turn]     if (typeof fn !== 'function') return 0;
+gamehost/runtime.js:187: [return]     if (typeof fn !== 'function') return 0;
+gamehost/runtime.js:192: [turn]       if (room.destroyed) return;
+gamehost/runtime.js:192: [return]       if (room.destroyed) return;
+gamehost/runtime.js:194: [turn]         turn: Array.isArray(room.logic?.turn) ? [...room.logic.turn] : [],
+gamehost/runtime.js:195: [sequence]         sequence: Array.isArray(room.logic?._sequence) ? [...room.logic._sequence] : [],
+gamehost/runtime.js:197: [alarm]         nextAlarmId: Number(room.logic?._nextAlarmId || 0),
+gamehost/runtime.js:203: [catch]       } catch (e) {
+gamehost/runtime.js:205: [turn]         return;
+gamehost/runtime.js:205: [return]         return;
+gamehost/runtime.js:208: [turn]         turn: Array.isArray(room.logic?.turn) ? [...room.logic.turn] : [],
+gamehost/runtime.js:209: [sequence]         sequence: Array.isArray(room.logic?._sequence) ? [...room.logic._sequence] : [],
+gamehost/runtime.js:211: [alarm]         nextAlarmId: Number(room.logic?._nextAlarmId || 0),
+gamehost/runtime.js:216: [authority]             type: 'authority_state',
+gamehost/runtime.js:221: [catch]         } catch (e) {
+gamehost/runtime.js:226: [setTimeout]     const handle = repeat ? setInterval(fire, delay) : setTimeout(fire, delay);
+gamehost/runtime.js:226: [setInterval]     const handle = repeat ? setInterval(fire, delay) : setTimeout(fire, delay);
+gamehost/runtime.js:229: [turn]     return id;
+gamehost/runtime.js:229: [return]     return id;
+gamehost/runtime.js:235: [turn]     if (!item) return;
+gamehost/runtime.js:235: [return]     if (!item) return;
+gamehost/runtime.js:236: [catch]     try { item.repeat ? clearInterval(item.handle) : clearTimeout(item.handle); } catch (_) {}
+gamehost/runtime.js:241: [alarm]   _alarmInfo(room, id) {
+gamehost/runtime.js:243: [turn]     if (!item) return undefined;
+gamehost/runtime.js:243: [return]     if (!item) return undefined;
+gamehost/runtime.js:245: [turn]     return [remaining, item.duration];
+gamehost/runtime.js:245: [return]     return [remaining, item.duration];
+gamehost/runtime.js:248: [alarm]   _pruneStaleAlarms(room) {
+gamehost/runtime.js:249: [alarm]     const expected = Number(room.logic?._nextAlarmId);
+gamehost/runtime.js:250: [alarm]     const pending = !!room.logic?._pendingAlarm;
+gamehost/runtime.js:253: [catch]         try { clearTimeout(item.handle); } catch (_) {}
+gamehost/runtime.js:255: [alarm]         this._record(room, 'alarm_pruned', { id, expected, pending });
+gamehost/runtime.js:260: [alarm]   _scheduleAlarm(room, ms, id) {
+gamehost/runtime.js:261: [alarm]     const alarmId = Number(id);
+gamehost/runtime.js:262: [alarm]     const isPhys = Boolean(room.logic?.IsPhysicsAlarm?.(alarmId));
+gamehost/runtime.js:263: [alarm]     // BaseLogic only has one authoritative pending alarm at a time.
+gamehost/runtime.js:264: [alarm]     // Cancel older host timers immediately when a newer alarm of the same category replaces them.
+gamehost/runtime.js:266: [alarm]       if (otherId !== alarmId) {
+gamehost/runtime.js:267: [alarm]         const otherIsPhys = Boolean(room.logic?.IsPhysicsAlarm?.(otherId));
+gamehost/runtime.js:269: [catch]           try { clearTimeout(item.handle); } catch (_) {}
+gamehost/runtime.js:271: [alarm]           this._record(room, 'alarm_superseded', { id: otherId, by: alarmId });
+gamehost/runtime.js:275: [alarm]     const old = room.timers.get(alarmId);
+gamehost/runtime.js:278: [setTimeout]     const handle = setTimeout(() => {
+gamehost/runtime.js:279: [alarm]       room.timers.delete(alarmId);
+gamehost/runtime.js:280: [turn]       if (room.destroyed) return;
+gamehost/runtime.js:280: [return]       if (room.destroyed) return;
+gamehost/runtime.js:282: [alarm]       // BaseLogic and never broadcast it if it is no longer the pending alarm.
+gamehost/runtime.js:283: [alarm]       // Physics alarms (0xFFFFFF03 etc) are handled by PhysicsLogic.alarm() and are not tracked by _pendingAlarm.
+gamehost/runtime.js:284: [alarm]       if (!isPhys && (!room.logic?._pendingAlarm || Number(room.logic?._nextAlarmId) !== alarmId)) {
+gamehost/runtime.js:285: [alarm]         this._record(room, 'stale_alarm_ignored', {
+gamehost/runtime.js:286: [alarm]           id: alarmId,
+gamehost/runtime.js:287: [alarm]           expected: Number(room.logic?._nextAlarmId),
+gamehost/runtime.js:288: [alarm]           pending: !!room.logic?._pendingAlarm,
+gamehost/runtime.js:290: [turn]         return;
+gamehost/runtime.js:290: [return]         return;
+gamehost/runtime.js:296: [alarm]         this._beginEffects(room, 'alarm', { id: alarmId });
+gamehost/runtime.js:297: [alarm]         accepted = room.logic.alarm(null, alarmId);
+gamehost/runtime.js:299: [alarm]         this._record(room, 'alarm_fired', { id: alarmId, accepted });
+gamehost/runtime.js:300: [catch]       } catch (e) {
+gamehost/runtime.js:302: [alarm]         this._record(room, 'alarm_error', { id: alarmId, error: String(e.stack || e) });
+gamehost/runtime.js:303: [turn]         return;
+gamehost/runtime.js:303: [return]         return;
+gamehost/runtime.js:305: [alarm]       // Rejected alarms are stale/protocol-invalid by definition. Broadcasting them causes
+gamehost/runtime.js:306: [resync]       // clients to call BaseLogic.alarm(undefined/old-id), which intentionally triggers resync.
+gamehost/runtime.js:306: [alarm]       // clients to call BaseLogic.alarm(undefined/old-id), which intentionally triggers resync.
+gamehost/runtime.js:308: [alarm]         this._record(room, 'rejected_alarm_suppressed', { id: alarmId });
+gamehost/runtime.js:309: [turn]         return;
+gamehost/runtime.js:309: [return]         return;
+gamehost/runtime.js:313: [alarm]         this._record(room, 'alarm_without_reveal_suppressed', { id: alarmId });
+gamehost/runtime.js:314: [turn]         return;
+gamehost/runtime.js:314: [return]         return;
+gamehost/runtime.js:318: [authority]           type: 'authority_alarm',
+gamehost/runtime.js:318: [alarm]           type: 'authority_alarm',
+gamehost/runtime.js:320: [alarm]           alarmId,
+gamehost/runtime.js:324: [catch]       } catch (e) {
+gamehost/runtime.js:328: [alarm]     room.timers.set(alarmId, {
+gamehost/runtime.js:334: [alarm]     this._record(room, 'alarm_set', { ms: delay, id: alarmId });
+gamehost/runtime.js:340: [alarm]     p.alarm = { set: (ms, id) => this._scheduleAlarm(room, ms, id) };
+gamehost/runtime.js:342: [turn]       changeTurn: (turn, message) => {
+gamehost/runtime.js:343: [turn]         room.lastTurn = Array.isArray(turn) ? [...turn] : [];
+gamehost/runtime.js:344: [turn]         this._record(room, 'host_change_turn', { turn: room.lastTurn, message });
+gamehost/runtime.js:352: [alarm]     // Generic SamiDev timers are distinct from BaseLogic authoritative alarms.
+gamehost/runtime.js:353: [turn]     // Carrom's native animationCompleted(true) uses this path to finish a missed turn.
+gamehost/runtime.js:357: [resync]     p.resetSynchronizationStream = () => this._record(room, 'host_resync');
+gamehost/runtime.js:358: [turn]     return p;
+gamehost/runtime.js:358: [return]     return p;
+gamehost/runtime.js:377: [turn]       lastTurn: [],
+gamehost/runtime.js:384: [alarm]     g.onSetAlarm = (ms, id) => this._scheduleAlarm(room, ms, id);
+gamehost/runtime.js:385: [alarm]     g.onGetAlarm = (id) => this._alarmInfo(room, id);
+gamehost/runtime.js:387: [turn]     g.onTurnChanged = (turn, message) => {
+gamehost/runtime.js:388: [turn]       room.lastTurn = Array.isArray(turn) ? [...turn] : [];
+gamehost/runtime.js:389: [turn]       this._record(room, 'turn_changed', { turn: room.lastTurn, message });
+gamehost/runtime.js:401: [turn]       if (gameState && typeof g.nextTurnAfterShotCompleted === 'function') {
+gamehost/runtime.js:403: [turn]           g.nextTurnAfterShotCompleted(gameState);
+gamehost/runtime.js:404: [catch]         } catch (e) {
+gamehost/runtime.js:405: [turn]           this._record(room, 'turn_advance_error', { error: String(e.stack || e) });
+gamehost/runtime.js:408: [turn]       return true;
+gamehost/runtime.js:408: [return]       return true;
+gamehost/runtime.js:410: [turn]     // The shipped Carrom bundle leaves BaseLogic._turnExpire() empty and expects the
+gamehost/runtime.js:413: [turn]     g._turnExpire = () => {
+gamehost/runtime.js:414: [turn]       const seat = Array.isArray(g.turn) ? Number(g.turn[0]) : -1;
+gamehost/runtime.js:415: [turn]       if (!Number.isInteger(seat) || seat < 0 || g.gameOver) return;
+gamehost/runtime.js:415: [return]       if (!Number.isInteger(seat) || seat < 0 || g.gameOver) return;
+gamehost/runtime.js:417: [turn]       this._record(room, 'turn_expire_auto_move', { seat, sequence: Number(g._sequence?.[seat] || 0) });
+gamehost/runtime.js:417: [sequence]       this._record(room, 'turn_expire_auto_move', { seat, sequence: Number(g._sequence?.[seat] || 0) });
+gamehost/runtime.js:425: [turn]     return room;
+gamehost/runtime.js:425: [return]     return room;
+gamehost/runtime.js:430: [turn]     return room.logic.move(seat, packet) === true;
+gamehost/runtime.js:430: [return]     return room.logic.move(seat, packet) === true;
+gamehost/runtime.js:439: [catch]     } catch (e) {
+gamehost/runtime.js:444: [turn]     return { accepted, revealBySeat: effects.revealBySeat };
+gamehost/runtime.js:444: [return]     return { accepted, revealBySeat: effects.revealBySeat };
+gamehost/runtime.js:447: [snapshot]   deserialize(room, snapshot) {
+gamehost/runtime.js:449: [turn]     return room.logic.deserialize(structuredClone(snapshot), undefined);
+gamehost/runtime.js:449: [snapshot]     return room.logic.deserialize(structuredClone(snapshot), undefined);
+gamehost/runtime.js:449: [return]     return room.logic.deserialize(structuredClone(snapshot), undefined);
+gamehost/runtime.js:452: [snapshot]   _snapshotSafe(room) {
+gamehost/runtime.js:463: [turn]     return !g.executingPM && !g.isExecutingQueuedAnimations && pending === 0 && lastValidAnim >= noAnimations;
+gamehost/runtime.js:463: [return]     return !g.executingPM && !g.isExecutingQueuedAnimations && pending === 0 && lastValidAnim >= noAnimations;
+gamehost/runtime.js:466: [snapshot]   describeRoom(room, includeSnapshot = false) {
+gamehost/runtime.js:469: [snapshot]     const snapshotSafe = this._snapshotSafe(room);
+gamehost/runtime.js:475: [turn]       turn: Array.isArray(g.turn) ? [...g.turn] : [],
+gamehost/runtime.js:476: [sequence]       sequence: Array.isArray(g._sequence) ? [...g._sequence] : [],
+gamehost/runtime.js:477: [alarm]       pendingAlarm: !!g._pendingAlarm,
+gamehost/runtime.js:478: [alarm]       nextAlarmId: Number(g._nextAlarmId || 0),
+gamehost/runtime.js:479: [alarm]       alarmState: Number(g._alarmState || 0),
+gamehost/runtime.js:483: [snapshot]       snapshotSafe,
+gamehost/runtime.js:485: [snapshot]     if (includeSnapshot && snapshotSafe) {
+gamehost/runtime.js:492: [snapshot]       const snapshot = structuredClone(g.serialize());
+gamehost/runtime.js:502: [snapshot]       if (snapshot && snapshot.p === 1) {
+gamehost/runtime.js:503: [snapshot]         const alarm = this._alarmInfo(room, snapshot.a);
+gamehost/runtime.js:503: [alarm]         const alarm = this._alarmInfo(room, snapshot.a);
+gamehost/runtime.js:504: [alarm]         if (alarm) {
+gamehost/runtime.js:505: [snapshot]           snapshot.x = alarm[0];
+gamehost/runtime.js:505: [alarm]           snapshot.x = alarm[0];
+gamehost/runtime.js:506: [snapshot]           snapshot.z = alarm[1];
+gamehost/runtime.js:506: [alarm]           snapshot.z = alarm[1];
+gamehost/runtime.js:509: [snapshot]       out.snapshot = snapshot;
+gamehost/runtime.js:510: [snapshot]     } else if (includeSnapshot) {
+gamehost/runtime.js:511: [snapshot]       out.snapshotDeferred = true;
+gamehost/runtime.js:513: [turn]     return out;
+gamehost/runtime.js:513: [return]     return out;
+gamehost/runtime.js:521: [catch]       try { item.repeat ? clearInterval(item.handle) : clearTimeout(item.handle); } catch (_) {}
+gamehost/server.js:38: [turn]   return a.length === b.length && a.length > 0 && crypto.timingSafeEqual(a, b);
+gamehost/server.js:38: [return]   return a.length === b.length && a.length > 0 && crypto.timingSafeEqual(a, b);
+gamehost/server.js:42: [turn]   if (authorized(req)) return true;
+gamehost/server.js:42: [return]   if (authorized(req)) return true;
+gamehost/server.js:44: [turn]   return false;
+gamehost/server.js:44: [return]   return false;
+gamehost/server.js:51: [catch]     try { res.write(raw); } catch { sseClients.delete(res); }
+gamehost/server.js:56: [authority]   room.authorityRevision = Number(room.authorityRevision || 0) + 1;
+gamehost/server.js:56: [revision]   room.authorityRevision = Number(room.authorityRevision || 0) + 1;
+gamehost/server.js:60: [authority]     authorityEpoch: room.authorityEpoch,
+gamehost/server.js:61: [authority]     revision: room.authorityRevision,
+gamehost/server.js:61: [revision]     revision: room.authorityRevision,
+gamehost/server.js:65: [snapshot] function roomSummary(room, snapshot = true) {
+gamehost/server.js:66: [turn]   return {
+gamehost/server.js:66: [return]   return {
+gamehost/server.js:68: [authority]     authorityEpoch: room.authorityEpoch,
+gamehost/server.js:69: [authority]     authorityRevision: room.authorityRevision,
+gamehost/server.js:69: [revision]     authorityRevision: room.authorityRevision,
+gamehost/server.js:70: [snapshot]     ...factory.describeRoom(room, snapshot),
+gamehost/server.js:83: [turn]   if (!chunks.length) return {};
+gamehost/server.js:83: [return]   if (!chunks.length) return {};
+gamehost/server.js:86: [turn]   return parsed;
+gamehost/server.js:86: [return]   return parsed;
+gamehost/server.js:92: [turn]   return roomId;
+gamehost/server.js:92: [return]   return roomId;
+gamehost/server.js:97: [authority]   if (!Number.isInteger(n) || n < 1) throw Object.assign(new Error('invalid authority epoch'), { statusCode: 400, code: 'BAD_AUTHORITY_EPOCH' });
+gamehost/server.js:98: [turn]   return n;
+gamehost/server.js:98: [return]   return n;
+gamehost/server.js:102: [turn]   if (!Array.isArray(values)) return;
+gamehost/server.js:102: [return]   if (!Array.isArray(values)) return;
+gamehost/server.js:111: [authority]   const requestedEpoch = normalizeEpoch(body.authorityEpoch, 1);
+gamehost/server.js:114: [authority]   if (room && requestedEpoch < room.authorityEpoch) {
+gamehost/server.js:115: [authority]     throw Object.assign(new Error('stale authority epoch'), { statusCode: 409, code: 'STALE_AUTHORITY' });
+gamehost/server.js:117: [authority]   if (room && requestedEpoch > room.authorityEpoch) {
+gamehost/server.js:133: [authority]     room.authorityEpoch = requestedEpoch;
+gamehost/server.js:134: [authority]     room.authorityRevision = 0;
+gamehost/server.js:134: [revision]     room.authorityRevision = 0;
+gamehost/server.js:140: [snapshot]     if (body.snapshot && typeof body.snapshot === 'object') {
+gamehost/server.js:141: [snapshot]       factory.deserialize(room, body.snapshot);
+gamehost/server.js:147: [turn]   return room;
+gamehost/server.js:147: [return]   return room;
+gamehost/server.js:155: [turn]       return json(res, 200, { ok: true, service: 'SamiDev Authoritative Game Host', rooms: rooms.size, mainJsSha256: factory.sha256 });
+gamehost/server.js:155: [return]       return json(res, 200, { ok: true, service: 'SamiDev Authoritative Game Host', rooms: rooms.size, mainJsSha256: factory.sha256 });
+gamehost/server.js:158: [/events]     if (u.pathname === '/events' || u.pathname.startsWith('/v1/')) {
+gamehost/server.js:159: [turn]       if (!requireInternalAuth(req, res)) return;
+gamehost/server.js:159: [return]       if (!requireInternalAuth(req, res)) return;
+gamehost/server.js:162: [/events]     if (req.method === 'GET' && u.pathname === '/events') {
+gamehost/server.js:170: [turn]       return;
+gamehost/server.js:170: [return]       return;
+gamehost/server.js:175: [turn]       if (!room) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:175: [return]       if (!room) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:177: [turn]       return json(res, 200, { ok: true, ...roomSummary(room, true) });
+gamehost/server.js:177: [return]       return json(res, 200, { ok: true, ...roomSummary(room, true) });
+gamehost/server.js:184: [turn]       return json(res, 200, { ok: true });
+gamehost/server.js:184: [return]       return json(res, 200, { ok: true });
+gamehost/server.js:186: [turn]     if (req.method !== 'POST') return json(res, 404, { ok: false, code: 'NOT_FOUND' });
+gamehost/server.js:186: [return]     if (req.method !== 'POST') return json(res, 404, { ok: false, code: 'NOT_FOUND' });
+gamehost/server.js:191: [turn]       return json(res, 200, { ok: true, ...roomSummary(room, true) });
+gamehost/server.js:191: [return]       return json(res, 200, { ok: true, ...roomSummary(room, true) });
+gamehost/server.js:196: [turn]       if (!room) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:196: [return]       if (!room) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:197: [authority]       const authorityEpoch = normalizeEpoch(body.authorityEpoch, room.authorityEpoch);
+gamehost/server.js:198: [turn]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:198: [authority]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:198: [return]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:202: [turn]         return json(res, 400, { ok: false, code: 'BAD_CONNECTION_CLAIM' });
+gamehost/server.js:202: [return]         return json(res, 400, { ok: false, code: 'BAD_CONNECTION_CLAIM' });
+gamehost/server.js:206: [turn]       return json(res, 200, { ok: true, roomId, seat, connectionEpoch: room.connectionEpochs[seat], authorityEpoch: room.authorityEpoch });
+gamehost/server.js:206: [authority]       return json(res, 200, { ok: true, roomId, seat, connectionEpoch: room.connectionEpochs[seat], authorityEpoch: room.authorityEpoch });
+gamehost/server.js:206: [return]       return json(res, 200, { ok: true, roomId, seat, connectionEpoch: room.connectionEpochs[seat], authorityEpoch: room.authorityEpoch });
+gamehost/server.js:213: [turn]         if (!body.settings || !body.capacity) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:213: [return]         if (!body.settings || !body.capacity) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
+gamehost/server.js:216: [authority]       const authorityEpoch = normalizeEpoch(body.authorityEpoch, room.authorityEpoch);
+gamehost/server.js:217: [turn]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:217: [authority]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:217: [return]       if (authorityEpoch !== room.authorityEpoch) return json(res, 409, { ok: false, code: 'STALE_AUTHORITY' });
+gamehost/server.js:223: [turn]         return json(res, 400, { ok: false, code: 'BAD_MOVE' });
+gamehost/server.js:223: [return]         return json(res, 400, { ok: false, code: 'BAD_MOVE' });
+gamehost/server.js:226: [turn]         return json(res, 409, { ok: false, code: 'STALE_CONNECTION', message: 'connection epoch is no longer current' });
+gamehost/server.js:226: [return]         return json(res, 409, { ok: false, code: 'STALE_CONNECTION', message: 'connection epoch is no longer current' });
+gamehost/server.js:229: [sequence]       const beforeSeq = Array.isArray(room.logic._sequence) ? room.logic._sequence[seat] : null;
+gamehost/server.js:238: [catch]       } catch (e) {
+gamehost/server.js:240: [except]         console.error('[SamiDev GameHost] GAMELOGIC_EXCEPTION', roomId, String(e.stack || e));
+gamehost/server.js:247: [turn]       return json(res, 200, {
+gamehost/server.js:247: [return]       return json(res, 200, {
+gamehost/server.js:250: [except]         code: error ? 'GAMELOGIC_EXCEPTION' : (accepted ? 'ACCEPTED' : 'REJECTED_BY_GAMELOGIC'),
+gamehost/server.js:253: [authority]         authorityEpoch: room.authorityEpoch,
+gamehost/server.js:254: [authority]         authorityRevision: room.authorityRevision,
+gamehost/server.js:254: [revision]         authorityRevision: room.authorityRevision,
+gamehost/server.js:262: [turn]     return json(res, 404, { ok: false, code: 'NOT_FOUND' });
+gamehost/server.js:262: [return]     return json(res, 404, { ok: false, code: 'NOT_FOUND' });
+gamehost/server.js:263: [catch]   } catch (e) {
+gamehost/server.js:268: [turn]     return json(res, status, { ok: false, code, message: status >= 500 ? 'internal GameHost error' : String(e.message || e) });
+gamehost/server.js:268: [return]     return json(res, status, { ok: false, code, message: status >= 500 ? 'internal GameHost error' : String(e.message || e) });
+gamehost/server.js:279: [setInterval] const sweep = setInterval(() => {
+gamehost/server.js:294: [setTimeout]   setTimeout(() => process.exit(1), 3000).unref();
+game/main.js:1: [turn] "use strict";(()=>{var XR=Object.create;var Wf=Object.defineProperty;var YR=Object.getOwnPropertyDescriptor;var zR=Object.getOwnPropertyNames;var WR=Object.getPrototypeOf,HR=Object
+game/main.js:1: [revision] "use strict";(()=>{var XR=Object.create;var Wf=Object.defineProperty;var YR=Object.getOwnPropertyDescriptor;var zR=Object.getOwnPropertyNames;var WR=Object.getPrototypeOf,HR=Object
+game/main.js:1: [catch] "use strict";(()=>{var XR=Object.create;var Wf=Object.defineProperty;var YR=Object.getOwnPropertyDescriptor;var zR=Object.getOwnPropertyNames;var WR=Object.getPrototypeOf,HR=Object
+game/main.js:1: [return] "use strict";(()=>{var XR=Object.create;var Wf=Object.defineProperty;var YR=Object.getOwnPropertyDescriptor;var zR=Object.getOwnPropertyNames;var WR=Object.getPrototypeOf,HR=Object
+game/main.js:4: [turn] \t\t\t\t`);throw SamiDev.log(s,5),new Error(s)}}return i},r.__getShaderDef=function(e,t){var i="";Object.prototype.toString.call(e)==="[object Array]"?i=e.join(`
+game/main.js:4: [return] \t\t\t\t`);throw SamiDev.log(s,5),new Error(s)}}return i},r.__getShaderDef=function(e,t){var i="";Object.prototype.toString.call(e)==="[object Array]"?i=e.join(`
+game/main.js:5: [turn] `):i=e;var n="";return t!==void 0&&Object.keys(t).forEach(function(o){n="".concat(n,"#define ").concat(o," ").concat(t[o],`
+game/main.js:5: [return] `):i=e;var n="";return t!==void 0&&Object.keys(t).forEach(function(o){n="".concat(n,"#define ").concat(o," ").concat(t[o],`
+game/main.js:9: [turn] \t\t\t`);throw SamiDev.log(l,5),new Error(l)}if(GL.useProgram(this._shaderProgram),e.uniforms)for(var u in e.uniforms){var h=e.uniforms[u],c=h.type,f=h.value,d=AM.Uniform.Init({locat
+game/main.js:9: [return] \t\t\t`);throw SamiDev.log(l,5),new Error(l)}if(GL.useProgram(this._shaderProgram),e.uniforms)for(var u in e.uniforms){var h=e.uniforms[u],c=h.type,f=h.value,d=AM.Uniform.Init({locat
+game/main.js:22: [turn] `,uniforms:{uProjection:{type:"m4v",value:od.Matrix4.create()},uTransform:{type:"m4v",value:od.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,0,1])}},attributes:[
+game/main.js:22: [return] `,uniforms:{uProjection:{type:"m4v",value:od.Matrix4.create()},uTransform:{type:"m4v",value:od.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,0,1])}},attributes:[
+game/main.js:39: [turn] `,uniforms:{uProjection:{type:"m4v",value:eS.Matrix4.create()},uTransform:{type:"m4v",value:eS.Matrix4.create()},uGlobalTint:{type:"4fv",value:new Float32Array([1,1,1,1])}},attribu
+game/main.js:39: [return] `,uniforms:{uProjection:{type:"m4v",value:eS.Matrix4.create()},uTransform:{type:"m4v",value:eS.Matrix4.create()},uGlobalTint:{type:"4fv",value:new Float32Array([1,1,1,1])}},attribu
+game/main.js:78: [turn] \t\t\t`),attributes:["aPosition","aColor","aTexture","aTextureIndex"],uniforms:{uProjection:{type:"m4v",value:GM.Matrix4.create()},uTextureSampler:{type:"tArray",value:null}}})||th
+game/main.js:78: [return] \t\t\t`),attributes:["aPosition","aColor","aTexture","aTextureIndex"],uniforms:{uProjection:{type:"m4v",value:GM.Matrix4.create()},uTextureSampler:{type:"tArray",value:null}}})||th
+game/main.js:107: [turn] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:YM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:107: [return] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:YM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [turn] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [sequence] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [resync] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [surfaceChanged] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [requestAnimationFrame] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [alarm] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [catch] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:136: [return] \t\t\t\t`,attributes:["aPosition","aColor","aTexture"],uniforms:{uProjection:{type:"m4v",value:QM.Matrix4.create()},uTextureSampler:{type:"t",value:null}}})||this;return t._texture
+game/main.js:137: [turn] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:137: [sequence] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:137: [surfaceChanged] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:137: [resize] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:137: [catch] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:137: [return] `+i:""))}remove(e){e=this.pathPrefix+e;let t=this.assets[e];return t.dispose&&t.dispose(),delete this.assets[e],t}removeAll(){for(let e in this.assets){let t=this.assets[e];t.dispo
+game/main.js:189: [turn] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:eN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uResolution:{type:"2fv",value:new Float32Array([1,1])},uA
+game/main.js:189: [return] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:eN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uResolution:{type:"2fv",value:new Float32Array([1,1])},uA
+game/main.js:223: [turn] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:oN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uAA:{type:"1f",value:.1}},attributes:["aPosition","aUV","
+game/main.js:223: [return] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:oN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uAA:{type:"1f",value:.1}},attributes:["aPosition","aUV","
+game/main.js:262: [turn] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:uN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uThickness:{type:"1f",value:.1}},attributes:["aPosition",
+game/main.js:262: [return] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:uN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uThickness:{type:"1f",value:.1}},attributes:["aPosition",
+game/main.js:296: [turn] \t\t\t\treturn mat2(
+game/main.js:296: [return] \t\t\t\treturn mat2(
+game/main.js:321: [turn] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:dN.Matrix4.create()},uProgress:{type:"1f",value:0},uTextureAlpha:{type:"1f",value:1},uTextureSampler:{type:"t",value:null}},attribut
+game/main.js:321: [catch] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:dN.Matrix4.create()},uProgress:{type:"1f",value:0},uTextureAlpha:{type:"1f",value:1},uTextureSampler:{type:"t",value:null}},attribut
+game/main.js:321: [return] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:dN.Matrix4.create()},uProgress:{type:"1f",value:0},uTextureAlpha:{type:"1f",value:1},uTextureSampler:{type:"t",value:null}},attribut
+game/main.js:356: [turn] \t\t\t\t\treturn pow(fract(p.x*p.y), 5.);
+game/main.js:356: [return] \t\t\t\t\treturn pow(fract(p.x*p.y), 5.);
+game/main.js:369: [turn] \t\t\t\t}`,attributes:["aPosition","aAlpha","aY"],uniforms:{uProjection:{type:"m4v",value:SN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uColorExternal:
+game/main.js:369: [return] \t\t\t\t}`,attributes:["aPosition","aAlpha","aY"],uniforms:{uProjection:{type:"m4v",value:SN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,1,1,1])},uColorExternal:
+game/main.js:397: [turn] \t\t\t\t\treturn pow(fract(p.x*p.y), 5.);
+game/main.js:397: [return] \t\t\t\t\treturn pow(fract(p.x*p.y), 5.);
+game/main.js:410: [turn] \t\t\t\t}`,attributes:["aPosition","aUV"],uniforms:{uProjection:{type:"m4v",value:EN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,.5,1,1])},uColorExternal:{type:"
+game/main.js:410: [return] \t\t\t\t}`,attributes:["aPosition","aUV"],uniforms:{uProjection:{type:"m4v",value:EN.Matrix4.create()},uColor:{type:"4fv",value:new Float32Array([1,.5,1,1])},uColorExternal:{type:"
+game/main.js:445: [turn] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:DN.Matrix4.create()},uWidth:{type:"1f",value:1},uHeight:{type:"1f",value:1},uOuterRadius:{type:"1f",value:1},uInnerRadius:{type:"1f"
+game/main.js:445: [return] \t\t\t`,uniforms:{uProjection:{type:"m4v",value:DN.Matrix4.create()},uWidth:{type:"1f",value:1},uHeight:{type:"1f",value:1},uOuterRadius:{type:"1f",value:1},uInnerRadius:{type:"1f"
+game/main.js:481: [turn] \t`,attributes:["aPosition","aUV"],uniforms:{uProjection:{type:"m4v",value:VN.Matrix4.create()},uUvMatrix:{type:"m3v",value:zx.Matrix3.create()},uTextureWidthFactor:{type:"1f",valu
+game/main.js:481: [resize] \t`,attributes:["aPosition","aUV"],uniforms:{uProjection:{type:"m4v",value:VN.Matrix4.create()},uUvMatrix:{type:"m3v",value:zx.Matrix3.create()},uTextureWidthFactor:{type:"1f",valu
+game/main.js:481: [return] \t`,attributes:["aPosition","aUV"],uniforms:{uProjection:{type:"m4v",value:VN.Matrix4.create()},uUvMatrix:{type:"m3v",value:zx.Matrix3.create()},uTextureWidthFactor:{type:"1f",valu
+game/main.js:499: [turn] \t\t\t\t\treturn outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+game/main.js:499: [return] \t\t\t\t\treturn outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+game/main.js:538: [turn] \t\t\t`;return t=r.call(this,{vertex:`precision mediump float;
+game/main.js:538: [return] \t\t\t`;return t=r.call(this,{vertex:`precision mediump float;
+game/main.js:553: [turn] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [resync] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [surfaceChanged] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [resize] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [alarm] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [catch] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:553: [return] \t\t\t`,fragment:i,uniforms:{uProjection:{type:"m4v",value:s1.Matrix4.create()},uTransform:{type:"m4v",value:s1.Matrix4.create()},uTextureWidth:{type:"1f",value:1},uTextureHeight:{
+game/main.js:555: [turn] \t\t\t\t\t\t\t\t\t\t executing queued animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}}}for(var g=void 0,d=1;d<
+game/main.js:555: [return] \t\t\t\t\t\t\t\t\t\t executing queued animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}}}for(var g=void 0,d=1;d<
+game/main.js:557: [turn] \t\t\t\t\t\t\t executing queued animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}if(h!==void 0){for(var _=void 0
+game/main.js:557: [return] \t\t\t\t\t\t\t executing queued animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}if(h!==void 0){for(var _=void 0
+game/main.js:559: [turn] \t\t\t\t\t\t\t\t animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}}}else if(this.vMode===ae.ServerNoTrust){this.
+game/main.js:559: [alarm] \t\t\t\t\t\t\t\t animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}}}else if(this.vMode===ae.ServerNoTrust){this.
+game/main.js:559: [return] \t\t\t\t\t\t\t\t animation moves up to `).concat(t),this.svLogLevel),this.executeQueuedAnimationMoves(t),this.disagreements+=1;return}}}else if(this.vMode===ae.ServerNoTrust){this.
+game/main.js:561: [turn] \t\t\t\t\t\t\t`).concat(JSON.stringify(a[s]),", anim ").concat(n,", pos valid due to the tolerance"));else return SamiDev.log("[PhysicsLogic] compareServerClientExecution - i=".conca
+game/main.js:561: [return] \t\t\t\t\t\t\t`).concat(JSON.stringify(a[s]),", anim ").concat(n,", pos valid due to the tolerance"));else return SamiDev.log("[PhysicsLogic] compareServerClientExecution - i=".conca
+game/main.js:562: [turn] \t\t\t\t\t\t\t`).concat(JSON.stringify(a[s]),", anim ").concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var l=t.serverWorld!==void 0?t.serverWorld.r:this.getRotationsToV
+game/main.js:562: [return] \t\t\t\t\t\t\t`).concat(JSON.stringify(a[s]),", anim ").concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var l=t.serverWorld!==void 0?t.serverWorld.r:this.getRotationsToV
+game/main.js:564: [turn] \t\t\t\t\t\t\t `).concat(n,", rot valid due to the tolerance"));else return SamiDev.log("[PhysicsLogic] compareServerClientExecution - i=".concat(s,", rot0=").concat(l[s],", rot1=").
+game/main.js:564: [return] \t\t\t\t\t\t\t `).concat(n,", rot valid due to the tolerance"));else return SamiDev.log("[PhysicsLogic] compareServerClientExecution - i=".concat(s,", rot0=").concat(l[s],", rot1=").
+game/main.js:565: [turn] \t\t\t\t\t\t\t `).concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var h=t.serverWorld!==void 0?t.serverWorld.e:this.getExtraValidationInfo(),c=t.world[i].e;return this.v
+game/main.js:565: [resize] \t\t\t\t\t\t\t `).concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var h=t.serverWorld!==void 0?t.serverWorld.e:this.getExtraValidationInfo(),c=t.world[i].e;return this.v
+game/main.js:565: [catch] \t\t\t\t\t\t\t `).concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var h=t.serverWorld!==void 0?t.serverWorld.e:this.getExtraValidationInfo(),c=t.world[i].e;return this.v
+game/main.js:565: [except] \t\t\t\t\t\t\t `).concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var h=t.serverWorld!==void 0?t.serverWorld.e:this.getExtraValidationInfo(),c=t.world[i].e;return this.v
+game/main.js:565: [return] \t\t\t\t\t\t\t `).concat(n," NOT valid with tolerance"),this.svLogLevel),!1}}var h=t.serverWorld!==void 0?t.serverWorld.e:this.getExtraValidationInfo(),c=t.world[i].e;return this.v
+game/main.js:585: [turn] return color;
+game/main.js:585: [return] return color;
+game/main.js:596: [turn] return color;
+game/main.js:596: [return] return color;
+game/main.js:602: [turn] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [resync] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [_syncCalledFlag] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [resize] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [alarm] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [catch] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+game/main.js:602: [return] `,attributes:["aPosition","aTexture"],uniforms:{uResolution:{type:"2fv",value:new Float32Array([1200,1900])},uDirection:{type:"2fv",value:new Float32Array([1,0])},uProjection:{type
+deploy/nginx/nginx.conf:48: [turn]             return 302 /platform/;
+deploy/nginx/nginx.conf:48: [return]             return 302 /platform/;
+deploy/nginx/nginx.conf:109: [turn]             return 404;
+deploy/nginx/nginx.conf:109: [return]             return 404;

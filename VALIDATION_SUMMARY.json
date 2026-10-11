@@ -1,0 +1,74 @@
+{
+  "release": "V30",
+  "generatedAt": "2026-10-10T12:04:49.729491+00:00",
+  "passedCommands": [
+    "python3 tests/runtime_branding.py",
+    "python3 tests/original_assets.py",
+    "node tests/crazy8_runtime.js (6463 checks; 60 matches)",
+    "node tests/multigame_runtime.js (102 checks; carrom and tablesoccer)",
+    "node tests/pool_runtime.js (39 checks)",
+    "python3 tests/crazy8_ws.py (5 seat modes; real backend)",
+    "python3 tests/mobile_table_ws.py (4 games; real backend)",
+    "node tests/waiting_room_ui.mjs (Happy DOM; 4 games)",
+    "SD_MOBILE=1 SD_VIEWPORT=390x844 node tests/browser_multigame_smoke.js crazy8 online (mocked WebGL/audio)",
+    "python3 start_dev.py --check --no-browser"
+  ],
+  "sourceChecks": [
+    "Engine byte comparison against V29: 3 engines identical, 3 display text literals in crazy8 only",
+    "425 web assets audited and synchronized to Flutter",
+    "70 raster images reviewed as contact sheets and with OCR; 11 SVG text sources scanned",
+    "All dictionary keys preserved; 25 localized display values changed, plus HTML and three engine display literals"
+  ],
+  "inheritedV29Checks": [
+    "node tests/waiting_room_ui.mjs (Happy DOM 20.14.6; all 4 games)",
+    "python3 tests/mobile_table_ws.py (real memory backend and Node host; all 4 games)",
+    "python3 tests/platform_ui_http.py (Happy DOM + real account/community APIs)",
+    "python3 tests/mobile_tunnel_auth.py",
+    "python3 tests/player_profile_social_regression.py",
+    "python3 tests/player_profile_click_regression.py",
+    "python3 tests/profile_game_avatar_regression.py",
+    "python3 tests/community_profile_return_regression.py",
+    "node tests/game_menu_actions.js",
+    "node tests/browser_multigame_smoke.js (Table Soccer; mocked WebGL/audio)",
+    "python3 start_dev.py --check --no-browser",
+    "node --check changed game JavaScript files"
+  ],
+  "inheritedV28Checks": [
+    "python3 tests/mobile_tunnel_auth.py",
+    "python3 start_dev.py --check --public-origin https://mobile.example.test --no-browser",
+    "python3 tests/release_security.py (6 groups)"
+  ],
+  "inheritedV27Checks": [
+    "python3 tests/verify_game_security.py (13 suites)",
+    "python3 tests/release_security.py (6 groups)",
+    "node tests/crazy8_runtime.js (7354 checks, 60 matches)",
+    "python3 tests/crazy8_ws.py",
+    "python3 tests/pool_ws.py",
+    "node tests/pool_runtime.js (39 checks)",
+    "python3 tests/turn_finish_ws.py",
+    "node tests/card_audio.js",
+    "node tests/crazy8_afk_rules.js",
+    "node tests/terminal_sync_race.js",
+    "node tests/game_menu_actions.js",
+    "node tests/browser_multigame_smoke.js pool online pool_emerald",
+    "SD_MOBILE=1 SD_VIEWPORT=390x844 node tests/browser_multigame_smoke.js pool online pool_emerald",
+    "node tests/browser_multigame_smoke.js crazy8 online",
+    "SD_AFK=1 node tests/browser_multigame_smoke.js crazy8 online",
+    "SD_AFK=1 node tests/browser_multigame_smoke.js pool online",
+    "node tests/inventory_ui.mjs (happy-dom 20.14.6)",
+    "python3 tests/platform_ui_http.py (happy-dom 20.14.6; real backend APIs)",
+    "python3 tests/community_hub_regression.py",
+    "python3 tests/community_chat_security_v18_regression.py",
+    "python3 tests/original_assets.py"
+  ],
+  "notRun": [
+    "Flutter analyzer/tests",
+    "APK/IPA builds or physical-device validation",
+    "Exhaustive visual similarity or ownership certification"
+  ],
+  "notes": [
+    "Runtime brand names and display labels removed; stable legacy translation/card keys intentionally preserved and listed in audit.",
+    "No engine logic or multiplayer protocol changes.",
+    "Byte-level patch verification includes the binary image migration."
+  ]
+}

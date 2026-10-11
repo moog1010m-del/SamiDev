@@ -1,0 +1,14 @@
+{
+  "pendingSnapshotDeferred": true,
+  "pendingStateUnchanged": true,
+  "oneWorldStillDeferred": true,
+  "stableSnapshotProduced": true,
+  "stableSerializePure": true,
+  "finalState": {
+    "noAnimations": 1,
+    "lastState": 1,
+    "lastValidAnim": 1,
+    "pending": 0
+  },
+  "ok": true
+}

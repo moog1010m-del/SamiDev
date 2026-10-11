@@ -1,0 +1,9 @@
+{
+  "name": "samidev-authoritative-gamehost",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SamiDev headless authoritative host for Carrom GameLogic",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node server.js" }
+}

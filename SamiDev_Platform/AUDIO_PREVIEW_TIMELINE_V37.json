@@ -1,0 +1,156 @@
+[
+  {
+    "group": "البلياردو",
+    "label": "ضربة العصا",
+    "startSeconds": 0.25,
+    "durationSeconds": 0.116,
+    "file": "game/games/pool/sounds/cue_hard1.m4a"
+  },
+  {
+    "group": "البلياردو",
+    "label": "تصادم قوي",
+    "startSeconds": 0.866,
+    "durationSeconds": 0.255,
+    "file": "game/games/pool/sounds/ball1.m4a"
+  },
+  {
+    "group": "البلياردو",
+    "label": "تصادم خفيف",
+    "startSeconds": 1.622,
+    "durationSeconds": 0.186,
+    "file": "game/games/pool/sounds/ball_soft1.m4a"
+  },
+  {
+    "group": "البلياردو",
+    "label": "حافة الطاولة",
+    "startSeconds": 2.307,
+    "durationSeconds": 0.279,
+    "file": "game/games/pool/sounds/rail1.m4a"
+  },
+  {
+    "group": "البلياردو",
+    "label": "دخول الجيب",
+    "startSeconds": 3.086,
+    "durationSeconds": 0.302,
+    "file": "game/games/pool/sounds/pocket1.m4a"
+  },
+  {
+    "group": "الكيرم",
+    "label": "تصادم القطع",
+    "startSeconds": 4.488,
+    "durationSeconds": 0.232,
+    "file": "game/sounds/disc-hit-deep.m4a"
+  },
+  {
+    "group": "الكيرم",
+    "label": "ضربة خشبية",
+    "startSeconds": 5.22,
+    "durationSeconds": 0.232,
+    "file": "game/sounds/disc-hit-bright.m4a"
+  },
+  {
+    "group": "الكيرم",
+    "label": "انزلاق المضرب",
+    "startSeconds": 5.952,
+    "durationSeconds": 0.209,
+    "file": "game/sounds/striker_short.m4a"
+  },
+  {
+    "group": "الكيرم",
+    "label": "دخول القرص",
+    "startSeconds": 6.661,
+    "durationSeconds": 0.279,
+    "file": "game/sounds/pocket-drop-deep.m4a"
+  },
+  {
+    "group": "كرة الطاولة",
+    "label": "ركلة قصيرة",
+    "startSeconds": 8.04,
+    "durationSeconds": 0.325,
+    "file": "game/games/tablesoccer/sounds/ball_short1.m4a"
+  },
+  {
+    "group": "كرة الطاولة",
+    "label": "ركلة قوية",
+    "startSeconds": 8.865,
+    "durationSeconds": 0.348,
+    "file": "game/games/tablesoccer/sounds/ball_long1.m4a"
+  },
+  {
+    "group": "كرة الطاولة",
+    "label": "المرمى",
+    "startSeconds": 9.713,
+    "durationSeconds": 0.58,
+    "file": "game/games/tablesoccer/sounds/goal1.m4a"
+  },
+  {
+    "group": "كرة الطاولة",
+    "label": "الصفارة",
+    "startSeconds": 10.794,
+    "durationSeconds": 0.534,
+    "file": "game/games/tablesoccer/sounds/whistle1.m4a"
+  },
+  {
+    "group": "كريزي 8",
+    "label": "سحب ورقة",
+    "startSeconds": 12.428,
+    "durationSeconds": 0.163,
+    "file": "game/games/crazy8/sounds/card-draw.m4a"
+  },
+  {
+    "group": "كريزي 8",
+    "label": "وضع ورقة",
+    "startSeconds": 13.09,
+    "durationSeconds": 0.302,
+    "file": "game/games/crazy8/sounds/card-place.m4a"
+  },
+  {
+    "group": "كريزي 8",
+    "label": "ورقة خاصة",
+    "startSeconds": 13.892,
+    "durationSeconds": 0.302,
+    "file": "game/games/crazy8/sounds/card-special.m4a"
+  },
+  {
+    "group": "كريزي 8",
+    "label": "خلط الأوراق",
+    "startSeconds": 14.694,
+    "durationSeconds": 0.813,
+    "file": "game/games/crazy8/sounds/card-shuffle.m4a"
+  },
+  {
+    "group": "كريزي 8",
+    "label": "تنبيه الحماية",
+    "startSeconds": 16.007,
+    "durationSeconds": 0.372,
+    "file": "game/games/crazy8/sounds/card-warning.m4a"
+  },
+  {
+    "group": "الواجهة والنتيجة",
+    "label": "زر",
+    "startSeconds": 17.478,
+    "durationSeconds": 0.116,
+    "file": "game/sounds/tap.m4a"
+  },
+  {
+    "group": "الواجهة والنتيجة",
+    "label": "بدء الدور",
+    "startSeconds": 18.094,
+    "durationSeconds": 0.511,
+    "file": "game/scene-avatars/turn_audio.m4a"
+  },
+  {
+    "group": "الواجهة والنتيجة",
+    "label": "فوز",
+    "startSeconds": 19.105,
+    "durationSeconds": 0.836,
+    "file": "game/sounds/round-win.m4a"
+  },
+  {
+    "group": "الواجهة والنتيجة",
+    "label": "خسارة",
+    "startSeconds": 20.441,
+    "durationSeconds": 0.929,
+    "file": "game/sounds/round-loss.m4a"
+  }
+]
