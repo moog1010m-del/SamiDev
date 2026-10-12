@@ -8,8 +8,15 @@ class ProfileDecoration extends StatelessWidget {
   const ProfileDecoration(this.name,{super.key,this.size=22});
   final String name;
   final double size;
-  @override Widget build(BuildContext context)=>ExcludeSemantics(child:Image.asset(
-    'assets/runtime/platform/assets/profile/raster/$name.webp',width:size,height:size,fit:BoxFit.contain));
+  @override Widget build(BuildContext context){
+    const cells={'star':Offset(0,0),'reputation-flame':Offset(1,0),'trophy':Offset(2,0),'calendar':Offset(3,0),'friend':Offset(0,1),'collection':Offset(1,1),'report':Offset(2,1)};
+    final cell=cells[name];
+    if(cell==null)return ExcludeSemantics(child:Image.asset('assets/runtime/platform/assets/profile/raster/$name.webp',width:size,height:size,fit:BoxFit.contain));
+    return ExcludeSemantics(child:SizedBox(width:size,height:size,child:ClipRect(child:OverflowBox(
+      alignment:Alignment.topLeft,minWidth:size*4,maxWidth:size*4,minHeight:size*2,maxHeight:size*2,
+      child:Transform.translate(offset:Offset(-cell.dx*size,-cell.dy*size),child:Image.asset(
+        'assets/runtime/platform/assets/profile/identity/profile-atlas.png',width:size*4,height:size*2,fit:BoxFit.fill))))));
+  }
 }
 class ProfileStars extends StatelessWidget {
   const ProfileStars({super.key,this.size=17,this.count=5});
@@ -51,7 +58,7 @@ class PlayerProfileSheet extends StatefulWidget {
 class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
   Map<String,dynamic>? user;
   String? error;
-  bool loading=true,busy=false,reporting=false;
+  bool loading=true,busy=false,reporting=false,full=false;
   final report=TextEditingController();
   Future<Map<String,dynamic>> request(String path,{Map<String,dynamic>? body}) async {
     final response=await widget.api.request(body==null?'GET':'POST',path,body:body==null?null:utf8.encode(jsonEncode(body)));
@@ -93,17 +100,21 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
     final remaining=(u?['reputationDailyRemaining'] as num?)?.toInt()??0;
     return ConstrainedBox(constraints:BoxConstraints(maxHeight:MediaQuery.sizeOf(context).height*.85),child:SingleChildScrollView(
       padding:EdgeInsets.fromLTRB(20,0,20,24+MediaQuery.viewInsetsOf(context).bottom),child:Column(mainAxisSize:MainAxisSize.min,children:[
-        Row(children:[const Expanded(child:Text('بطاقة اللاعب',style:TextStyle(fontWeight:FontWeight.w700,fontSize:18))),IconButton(tooltip:'إغلاق',onPressed:()=>Navigator.pop(context),icon:const Icon(Icons.close))]),
+        Row(children:[Expanded(child:Text(full?'الملف الشخصي':'بطاقة اللاعب',style:const TextStyle(fontWeight:FontWeight.w700,fontSize:18))),IconButton(tooltip:full?'العودة إلى البطاقة المختصرة':'إغلاق',onPressed:()=>full?setState(()=>full=false):Navigator.pop(context),icon:Icon(full?Icons.arrow_back:Icons.close))]),
         if(loading)const Padding(padding:EdgeInsets.all(32),child:CircularProgressIndicator()),
         if(u!=null)...[
-          Container(width:double.infinity,padding:const EdgeInsets.symmetric(vertical:20),decoration:BoxDecoration(
-            borderRadius:BorderRadius.circular(20),gradient:LinearGradient(colors:[colors.primaryContainer,colors.surfaceContainerLow])),
-            child:Column(children:[PlayerAvatar(api:widget.api,user:u,radius:48,framed:true),const SizedBox(height:12),
-              Row(mainAxisAlignment:MainAxisAlignment.center,children:[ProfileDecoration(u['nameBadge']=='badge_crown'?'trophy':(u['nameBadge']=='badge_fire'?'reputation-flame':'palm-swords'),size:30),const SizedBox(width:8),Flexible(child:Text(u['displayName']?.toString()??u['username']?.toString()??'لاعب',textAlign:TextAlign.center,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w700)))]),
-              const SizedBox(height:7),ProfileStars(size:23,count:(u['starsCount'] as num?)?.toInt()??5),if(u['username']!=null)Padding(padding:const EdgeInsets.only(top:7),child:Text('@${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(color:colors.onSurfaceVariant))),
-            ])),
+          ClipRRect(borderRadius:BorderRadius.circular(16),child:Image.asset(
+            'assets/runtime/platform/assets/profile/identity/samidev-night-cover.png',
+            width:double.infinity,height:145,fit:BoxFit.cover)),
+          Transform.translate(offset:const Offset(0,-52),child:PlayerAvatar(api:widget.api,user:u,radius:58,framed:true)),
+          Transform.translate(offset:const Offset(0,-32),child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[
+            Flexible(child:Text(u['displayName']?.toString()??u['username']?.toString()??'لاعب',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w700))),
+            const SizedBox(width:6),ProfileStars(size:18,count:(u['starsCount'] as num?)?.toInt()??0),
+            const SizedBox(width:6),ProfileDecoration(u['nameBadge']=='badge_crown'?'trophy':(u['nameBadge']=='badge_fire'?'reputation-flame':'palm-swords'),size:22),
+          ])),
+          if(u['username']!=null)Text('@${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[
-            stat('لاعب منذ','${u['accountAgeDays']??0} يوم',const Icon(Icons.calendar_today_outlined,size:18)),
+            stat('لاعب منذ','${u['accountAgeDays']??0} يوم',const ProfileDecoration('calendar',size:18)),
             stat('الفوز','${u['wins']??0}',const ProfileDecoration('trophy')),
             stat('السمعة','${u['reputation']??0}',const ProfileDecoration('reputation-flame')),
           ])),
@@ -114,7 +125,10 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           ]),
           if(reporting)...[TextField(controller:report,maxLength:500,maxLines:3,decoration:const InputDecoration(labelText:'وصف المشكلة',border:OutlineInputBorder())),FilledButton(onPressed:busy?null:()=>action('report'),child:const Text('إرسال للإدارة'))],
           if(busy)const Padding(padding:EdgeInsets.all(12),child:LinearProgressIndicator()),
-          ProfileDetails(user:u),
+          const SizedBox(height:12),
+          if(!full)SizedBox(width:double.infinity,child:OutlinedButton(
+            onPressed:()=>setState(()=>full=true),child:const Text('الملف الكامل والمقتنيات والإحصاءات'))),
+          if(full)ProfileDetails(user:u),
         ],
         if(error!=null)...[Padding(padding:const EdgeInsets.all(12),child:Text(error!,style:TextStyle(color:colors.error))),if(u==null&&!loading)TextButton(onPressed:load,child:const Text('إعادة المحاولة'))],
       ])));

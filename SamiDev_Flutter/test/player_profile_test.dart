@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:samidev/runtime/api.dart';
 import 'package:samidev/runtime/policy.dart';
 import 'package:samidev/ui/player_profile.dart';
+import 'package:samidev/ui/profile_details.dart';
 import 'session_test.dart' show MemoryVault;
 
 class ProfileApi extends PlatformApi {
@@ -31,6 +32,13 @@ void main(){
       expect(find.byType(ProfileStars),findsOneWidget);expect(find.byType(PlayerAvatar),findsOneWidget);
       await tester.ensureVisible(find.text('إضافة صديق'));await tester.tap(find.text('إضافة صديق'));await tester.pumpAndSettle();
       expect(api.calls,contains('POST /api/friends/request'));expect(find.text('تم إرسال الطلب'),findsOneWidget);
+      expect(find.byType(ProfileDetails),findsNothing);
+      await tester.ensureVisible(find.text('الملف الكامل والمقتنيات والإحصاءات'));
+      await tester.tap(find.text('الملف الكامل والمقتنيات والإحصاءات'));await tester.pumpAndSettle();
+      expect(find.byType(ProfileDetails),findsOneWidget);
+      await tester.ensureVisible(find.byTooltip('العودة إلى البطاقة المختصرة'));
+      await tester.tap(find.byTooltip('العودة إلى البطاقة المختصرة'));await tester.pumpAndSettle();
+      expect(find.byType(ProfileDetails),findsNothing);
       expect(tester.takeException(),isNull);
       await tester.ensureVisible(find.byTooltip('إغلاق'));await tester.tap(find.byTooltip('إغلاق'));await tester.pumpAndSettle();
       expect(find.byType(PlayerProfileSheet),findsNothing);
