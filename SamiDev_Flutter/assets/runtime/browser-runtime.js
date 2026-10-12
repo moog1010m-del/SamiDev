@@ -693,12 +693,28 @@
     }
   }
 
+  function nextIncomingSequence(logic, seat){
+    let expected=Number(logic._sequence?.[seat]);
+    if(!isPool || !Number.isInteger(expected)) return expected;
+    // Pool pauses BaseLogic while the remote cue rotates/power animates. Moves
+    // already delivered to its queue have not incremented _sequence yet. Count
+    // only the contiguous queued packets so a real missing move still resyncs.
+    for(const item of logic._queue || []){
+      const [queuedSeat,packet]=Array.isArray(item.data)?item.data:[];
+      if(queuedSeat!==seat || !packet || !Number.isInteger(packet.n) || !packet.m) continue;
+      if(packet.n<expected) continue;
+      if(packet.n>expected) break;
+      expected++;
+    }
+    return expected;
+  }
+
   async function replayHistory(logic, history){
     if(!Array.isArray(history) || history.length===0) return true;
     for(const entry of history){
       if(!entry || !Number.isInteger(entry.seat) || !entry.packet) continue;
       const packetN=Number(entry.packet.n);
-      const curSeq=Number(logic._sequence?.[entry.seat]);
+      const curSeq=nextIncomingSequence(logic,entry.seat);
       // packet.n is the pre-move sequence. If the snapshot already contains this
       // move, replaying it would manufacture a sequence mismatch and another resync.
       if(Number.isInteger(packetN) && Number.isInteger(curSeq)){
@@ -727,7 +743,7 @@
   function applyDeferredMove(logic, msg){
     if(!msg || !Number.isInteger(msg.seat) || !msg.packet) return true;
     const packetN=Number(msg.packet.n);
-    const curSeq=Number(logic._sequence?.[msg.seat]);
+    const curSeq=nextIncomingSequence(logic,msg.seat);
     // deserialize() clears optimistic local moves, so a deferred packet whose n is
     // behind the restored sequence is an already-included echo and must be ignored.
     if(Number.isInteger(packetN) && Number.isInteger(curSeq)){
@@ -860,7 +876,7 @@
       // Socket echoes can arrive after a newer authoritative snapshot. Do not
       // replay an already-consumed packet or apply an out-of-order shot.
       const packetN=Number(msg?.packet?.n);
-      const expected=Number(logic._sequence?.[msg?.seat]);
+      const expected=nextIncomingSequence(logic,msg?.seat);
       const hasSequence=Number.isInteger(packetN)&&Number.isInteger(expected);
       // Local pool/card moves increment their sequence optimistically. Their
       // matching echoes carry the pre-move sequence and may reveal private cards.
@@ -913,6 +929,12 @@
 
     async function applyResyncState(msg){
       if(state.network.finished && !msg?.gameOver) return;
+      // A slow resync reply can arrive after newer live packets. Rewinding to it
+      // loses their queued cue animation and makes the next shot look like a gap.
+      if(isPool && Number.isInteger(msg?.moveCount) && msg.moveCount<Number(net.state?.moveCount)){
+        net.requestResync();
+        return;
+      }
       if(state.network.snapshotBusy){
         // A terminal checkpoint can arrive during history/animation replay. Keep
         // it, rather than losing the only notification that the match has ended.

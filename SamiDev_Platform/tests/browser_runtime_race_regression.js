@@ -91,6 +91,7 @@ vm.runInContext(resizeSource + '\nthis.__resize=resize; this.__ensureInitialSurf
   const authState = {network:{authorityRevision:-1,authorityEpoch:null,pendingAuthority:null,authorityCheckTimer:null,snapshotBusy:false}};
   const authCtx = {
     state: authState,
+    isPool: false,
     performance: {now: () => authNow},
     setTimeout(fn, ms) { timers.push({fn,ms}); return timers.length; },
     console: {warn(){}, info(){}, debug(){}},

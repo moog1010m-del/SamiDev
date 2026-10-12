@@ -8,7 +8,7 @@ const capacity=Number(process.env.SD_SEATS)||2;
 const nativeAvatars=new Set();
 const requestedTheme=process.argv[4]||'carrom_classic', failCatAtlas=process.argv[5]==='fail-cat';
 const requestedCue=process.env.SD_CUE||'pool_cue_classic';
-const afk=process.env.SD_AFK==='1';const online=true;const clientSeat=Number(process.env.SD_POOL_SEAT||0);const scenario=process.env.SD_POOL_SCENARIO||'all';let factory,room,deliver,emit,resyncCount=0;const sentPackets=[];
+const afk=process.env.SD_AFK==='1';const online=true;const clientSeat=Number(process.env.SD_POOL_SEAT||0);const scenario=process.env.SD_POOL_SCENARIO||'all';let factory,room,deliver,emit,resyncCount=0;const sentPackets=[];let moveCount=0;
 const noop=()=>{};
 const gl=new Proxy({texImage2D:(...args)=>{const img=args.at(-1);if(typeof img?.src==='string')nativeUploads.push(img.src);},getParameter:()=>4096,getShaderParameter:()=>true,getProgramParameter:()=>true,getExtension:()=>null,getShaderInfoLog:()=>'',getProgramInfoLog:()=>''},{get:(o,k)=>k in o?o[k]:(/^[A-Z_0-9]+$/.test(k)?(o[k]=Object.keys(o).length):(...args)=>k.startsWith('create')?{}:0)});
 const ctx2d=new Proxy({measureText:s=>({width:String(s).length*20})},{get:(o,k)=>o[k]||noop});
@@ -51,12 +51,13 @@ if(online){
  deliver=(seat,packet)=>{
   const official=structuredClone(packet),result=factory.processMove(room,seat,official);
   if(!result.accepted){errors.push('server rejected '+JSON.stringify(packet));return false;}
+  base.SamiDevNetwork.state.moveCount=++moveCount;
   emit('move',{seat,packet:official,reveal:result.revealBySeat?.[String(clientSeat<0?0:clientSeat)],authority:factory.describeRoom(room,false)});return true;
  };
  base.SamiDevNetwork={state:{roomId:'VMTEST',seat:clientSeat,capacity,roster:[]},on:(name,fn)=>{if(!handlers.has(name))handlers.set(name,[]);handlers.get(name).push(fn);},
   connectFromLocation:async()=>({roomId:'VMTEST',settings,capacity,seat:clientSeat,spectator:clientSeat<0,cosmetics:{'0':{pool_theme:requestedTheme,pool_cue:requestedCue},'1':{pool_theme:'pool_midnight'}},roster:Array.from({length:capacity},(_,seat)=>({seat,name:'لاعب باسم طويل للتجربة '+seat})),history:[],...(game==='pool'?{snapshot:factory.describeRoom(room,true).snapshot}:game==='crazy8'?{snapshot:factory.describeRoom(room,true).snapshot._samidev_clientViews['0']}: {})}),runtimeReady:()=>emit('begin_match',{}),
   sendMove:packet=>{sentPackets.push(structuredClone(packet));queueMicrotask(()=>deliver(clientSeat,packet));return true;},
-  requestResync:()=>{if(game==='pool'){resyncCount++;if(resyncCount<8)base.setTimeout(()=>emit('resync_state',{...factory.describeRoom(room,true),history:[]}),50);else errors.push('pool resync loop');}else warnings.push('resync requested');return true;}};
+  requestResync:()=>{if(game==='pool'){resyncCount++;if(resyncCount<8)base.setTimeout(()=>emit('resync_state',{...factory.describeRoom(room,true),history:[],moveCount}),50);else errors.push('pool resync loop');}else warnings.push('resync requested');return true;}};
 }
 (async()=>{try{
  vm.runInContext(fs.readFileSync(path.join(root,'samidev-games.js'),'utf8'),context);
@@ -85,9 +86,12 @@ if(online){
  if(scenario!=='placement'){
   let completed=0;g.onPreAnimationFinished.receive(()=>completed++);
   const before=Array.from(g.table.cueBall.position);
+  const staleCheckpoint={...factory.describeRoom(room,true),history:[],moveCount};
   const shot={a:1,st:.8,an:-Math.PI/2,sp:[0,0]};
   if(clientSeat===0)assert(g.localMove(shot));else{
-   assert(deliver(0,{i:'remote-preview',n:room.logic._sequence[0],m:{a:3,an:.7}}));
+   for(const [i,an] of [.7,.9,1.1,1.3].entries())assert(deliver(0,{i:'remote-preview-'+i,n:room.logic._sequence[0],m:{a:3,an}}));
+   emit('resync_state',staleCheckpoint);
+   assert(deliver(0,{i:'remote-power',n:room.logic._sequence[0],m:{a:4,st:.8}}));
    assert(deliver(0,{i:'remote-break',n:room.logic._sequence[0],m:shot}));
   }
   await pump(1);
@@ -95,7 +99,7 @@ if(online){
   assert(g.preshooting||g.animator.isAnimatingWorld()||g._queue.some(item=>item.data?.[1]?.m?.a===1),'native cue/physics animation started or queued behind aim');
   checkpoint();await pump(1);
   assert(g.preshooting||g.animator.isAnimatingWorld()||g._queue.some(item=>item.data?.[1]?.m?.a===1),'early checkpoint must preserve the cue/physics animation');
-  for(let i=0;i<120&&!g.animator.isAnimatingWorld();i++)await pump(1);
+  for(let i=0;i<600&&!g.animator.isAnimatingWorld();i++)await pump(1);
   assert(g.animator.isAnimatingWorld(),'balls enter actual physics animation');
   const samples=new Set();const sample=()=>samples.add(Array.from(g.table.cueBall.position).map(n=>n.toFixed(2)).join(','));
   for(let i=0;i<20;i++){sample();await pump(1);}

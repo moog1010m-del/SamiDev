@@ -1,6 +1,6 @@
 {
   "release": "V37",
-  "buildId": "samidev-v37-ea2b855421f1f58a",
+  "buildId": "samidev-v37-d50a3f9e5b93a563",
   "games": [
     "carrom",
     "tablesoccer",
@@ -16,7 +16,7 @@
     "profile-details.css": "266b5c252cb0d40ed3861c994208065bf02369dd64260f51448e22a0e99ad618",
     "profile-details.js": "3ddaa34dae3bb0f6e3e95ccad93e1e2075fd65cbe5d61a047ef112de9324c979",
     "index.html": "537e54dce63e030e03673634665b433e11efdd6a4110c62092e6bd295d97d7fd",
-    "browser-runtime.js": "a73e966601c77bcc31d66bb235ce162390129163cd34969112b9802dabe443a1",
+    "browser-runtime.js": "29854886c7c01aea977028a32b67473448d29abe20a48653fdf4b7bfaa27cf68",
     "match-reward-ui.js": "fff9a0efd8b9d88a5aed0d6ed37d478673ee8a902d23d857741e217f7bc53758",
     "chat-ui.js": "cf27123f0f5b6fc3b0d60b548a7a5f4ece40401a1dec66e39318d5386e58336c",
     "chat-polish.css": "6af1264c6fc76c7a638fba1991a85f5138c3fbae517e75111e75854b7f88ff1f",

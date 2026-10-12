@@ -1,0 +1,24 @@
+'use strict';
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const source=fs.readFileSync(require('path').join(__dirname,'../game/browser-runtime.js'),'utf8');
+const helper=source.slice(source.indexOf('  function nextIncomingSequence('),source.indexOf('  async function replayHistory('));
+const bridge=source.slice(source.indexOf('  function installNetworkBridge('),source.indexOf('  async function prepareAssetsAndLogic('));
+const handlers=new Map();let resyncs=0;
+const net={state:{moveCount:4},on:(type,handler)=>handlers.set(type,handler),requestResync:()=>{resyncs++;return true;}};
+const logic={_sequence:[1,0],_queue:[],localSeat:1,move(seat,packet){this._queue.push({type:0,data:[seat,packet]});return true;}};
+const context={isPool:true,isCrazy8:false,window:{SamiDevNetwork:net},state:{network:{snapshotBusy:false,finished:false}},cloneMove:structuredClone,console:{warn(){}}};
+vm.createContext(context);vm.runInContext(helper+bridge+'\nthis.install=installNetworkBridge;',context);context.install(logic);
+const move=n=>handlers.get('move')({seat:0,packet:{i:'p'+n,n,m:{a:3,an:.5}}});
+(async()=>{
+ move(1);move(2);move(2);
+ assert.equal(logic._queue.length,2,'a repeated queued packet does not replay');
+ assert.equal(resyncs,0,'contiguous packets wait for native cue animation without resync');
+ move(4);
+ assert.equal(resyncs,1,'an actual missing packet still requests a checkpoint');
+ assert.equal(logic._queue.length,2,'a future shot is not inserted out of order');
+ move(3);assert.equal(logic._queue.length,3);
+ await handlers.get('resync_state')({moveCount:2,snapshot:{}});
+ assert.equal(resyncs,2,'an outdated reply requests a fresh checkpoint');
+ assert.equal(logic._queue.length,3,'outdated snapshot leaves newer queued moves intact');
+ console.log('pool_move_queue_regression: OK (queued moves, duplicate, real gap, stale resync)');
+})().catch(e=>{console.error(e);process.exitCode=1;});

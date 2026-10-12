@@ -25,7 +25,7 @@ assert(browser.includes("fields.push('sequence')"));
 assert(browser.includes("fields.push('turn')"));
 assert(browser.includes("fields.push('gameOver')"));
 assert(browser.includes('const hasPendingLocal=Array.isArray(logic._localMoves)&&logic._localMoves.length>0;'));
-assert(browser.includes('age<AUTHORITY_GRACE_MS || (unsafe && age<AUTHORITY_MAX_WAIT_MS)'));
+assert(browser.includes('age<AUTHORITY_GRACE_MS || (unsafe && age<(isPool?20000:AUTHORITY_MAX_WAIT_MS))'));
 assert(browser.includes("scheduleAuthorityCheck(logic,net,msg,{ordered:true,source:'authority_state'})"));
 
 // Resync history must skip packets already represented by the authoritative snapshot,
@@ -49,7 +49,7 @@ assert(browser.includes("emitTouch(1,ev)"));
 // are coalesced instead of emitting repeated commands.
 const sent = [];
 const context = {
-  window: { __SAMIDEV_CLIENT_CONFIG: {} },
+  window: { __SAMIDEV_CLIENT_CONFIG: {}, SamiDevGames: {current:()=>({id:'carrom'})} },
   location: { protocol: 'http:', host: 'localhost', href: 'http://localhost/game/', search: '' },
   history: { replaceState() {} },
   sessionStorage: { getItem() { return null; }, setItem() {}, removeItem() {} },
@@ -79,11 +79,12 @@ assert.strictEqual(sent.length, 2);
 
 
 // Execute the exact replay/deferred helpers extracted from browser-runtime.js.
-const helperStart = browser.indexOf('  async function replayHistory(logic, history){');
+const helperStart = browser.indexOf('  function nextIncomingSequence(logic, seat){');
 const helperEnd = browser.indexOf('  function installNetworkBridge(logic){', helperStart);
 assert(helperStart >= 0 && helperEnd > helperStart);
 const helperSource = browser.slice(helperStart, helperEnd);
 const helperCtx = {
+  isPool: false,
   console: { warn() {}, info() {} },
   state: { frameRequested: false },
   cloneMove: v => v == null ? v : JSON.parse(JSON.stringify(v)),

@@ -16,8 +16,8 @@
       "sha256": "621f82752ce3aa97220d141a48a50f06b18fc49a6204c40eb08f1aef133482d6"
     },
     "browser-runtime.js": {
-      "size": 70609,
-      "sha256": "a73e966601c77bcc31d66bb235ce162390129163cd34969112b9802dabe443a1"
+      "size": 71660,
+      "sha256": "29854886c7c01aea977028a32b67473448d29abe20a48653fdf4b7bfaa27cf68"
     },
     "carrom-themes.js": {
       "size": 1683,
@@ -2313,7 +2313,7 @@
     },
     "platform/build.json": {
       "size": 2239,
-      "sha256": "8705fec658c7db54fa22bb6cda19a64b7fb4863429b291a614dda44ad30db14b"
+      "sha256": "2b07d010a0e15c0c7c62df7670e8efa4bcfe3dbf86abd1c8dcb9e93d7ae9c7bc"
     },
     "platform/index.html": {
       "size": 35799,
