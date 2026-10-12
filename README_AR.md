@@ -1,3 +1,5 @@
+تقييم المزامنة واختبار السعة والإصلاحات في [SYNC_CAPACITY_REVIEW_AR.md](SamiDev_Platform/SYNC_CAPACITY_REVIEW_AR.md).
+
 > النسخة الحالية: **V37 — تحديث مؤثرات Freesound**. اقرأ `RELEASE_V37_AR.md` أولًا. تتضمن الحزمة جميع تعديلات الواجهة V36.
 
 إعداد التخزين الجديد للإنتاج وترحيل بيانات Redis موثقان في

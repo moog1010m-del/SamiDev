@@ -31,7 +31,16 @@ try {
  try{await peer.waitForFunction(()=>window.shotTrace.samples.some(s=>s.anim),{},{timeout:15000});}catch(e){fs.writeFileSync(out+'/failed-trace.json',JSON.stringify(await peer.evaluate(()=>window.shotTrace)));throw e;}
  await peer.waitForFunction(()=>{const g=window.__gameLogic;return window.shotTrace.samples.some(s=>s.anim)&&!g.animator.isAnimatingWorld()&&!g.preshooting&&!window.__samidevGameState.network.snapshotBusy;},{},{timeout:30000});
  for(let i=0;i<pages.length;i++){const trace=await pages[i].evaluate(()=>window.shotTrace);fs.writeFileSync(out+'/pool-shot-'+i+'.json',JSON.stringify(trace));const positions=new Set(trace.samples.filter(s=>s.anim).map(s=>s.p.map(n=>n.toFixed(1)).join(',')));assert(positions.size>20,'player '+i+' sees intermediate positions');const frames=trace.samples.filter(s=>s.anim).map(s=>s.renderFrames);assert(Math.max(...frames)-Math.min(...frames)>20,'native scene renders throughout the shot');intermediatePositions.push(positions.size);}
- assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,intermediatePositions,checks:["Aim and power burst reaches the opponent in order","Both players render intermediate ball positions","No sequence-gap resync skips the remote shot"],artifacts:out}));
+ // Corrupt one replica while the socket stays OPEN and no new shot is sent.
+ // The periodic public authority probe must restore the turn without refresh.
+ const expectedTurn=await peer.evaluate(()=>[...window.__gameLogic.turn]);
+ assert.equal(expectedTurn.length,1);
+ await peer.evaluate(()=>{const g=window.__gameLogic;g.turn.splice(0,g.turn.length,1-g.turn[0]);});
+ await peer.waitForFunction(expected=>{
+   const g=window.__gameLogic,s=window.__samidevGameState;
+   return JSON.stringify(g.turn)===JSON.stringify(expected)&&!s.network.snapshotBusy&&!g._awaitingResync;
+ },expectedTurn,{timeout:15000});
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,intermediatePositions,checks:["Aim and power burst reaches the opponent in order","Both players render intermediate ball positions","No sequence-gap resync skips the remote shot","A lost turn recovers by heartbeat without page refresh or a new move"],artifacts:out}));
 } finally {
  for(const page of pages)if(!page.isClosed())await page.evaluate(()=>window.SamiDevNetwork?.leaveRoom({closeSocket:true})).catch(()=>{});
  await browser.close();

@@ -1,0 +1,137 @@
+{
+  "requestedPlayers": 10000,
+  "activeRoomsRequested": 5000,
+  "gateways": 3,
+  "gamehosts": 3,
+  "durationSeconds": 20.0,
+  "scope": "authenticated WebSockets; legal carrom striker moves; authority probes; no physics/TLS/rendering/login",
+  "clientsAtBarrier": 10000,
+  "activeRoomsAtBarrier": 5000,
+  "rampSeconds": 40.69,
+  "clientsAfterHold": 10000,
+  "setupMs": {
+    "count": 5000,
+    "p50": 139.04,
+    "p95": 416.34,
+    "max": 886.79
+  },
+  "moveFanoutMs": {
+    "count": 10822,
+    "p50": 3206.6,
+    "p95": 4195.05,
+    "max": 5196.93
+  },
+  "heartbeatMs": {
+    "count": 23214,
+    "p50": 1538.45,
+    "p95": 2964.5,
+    "max": 3266.3
+  },
+  "errors": {
+    "active:RuntimeError:DESYNC": 785
+  },
+  "ok": false,
+  "meetsLocalLatencyTarget": false,
+  "gamehostMetrics": [
+    {
+      "ok": true,
+      "requests": 16721,
+      "moves": 5571,
+      "accepted": 5289,
+      "rejected": 282,
+      "roomsCreated": 1680,
+      "events": 2775,
+      "errors": 0,
+      "rooms": 1680,
+      "memory": {
+        "rss": 658407424,
+        "heapTotal": 621842432,
+        "heapUsed": 516841632,
+        "external": 2708961,
+        "arrayBuffers": 438716
+      },
+      "eventLoopDelayMs": {
+        "mean": 21.401475899796885,
+        "p95": 29.163519,
+        "max": 100.335615
+      },
+      "recentMoveMs": {
+        "count": 2048,
+        "p50": 0.027641000000585336,
+        "p95": 0.0885809999963385,
+        "max": 1.632340000003751
+      }
+    },
+    {
+      "ok": true,
+      "requests": 16952,
+      "moves": 5648,
+      "accepted": 5393,
+      "rejected": 255,
+      "roomsCreated": 1707,
+      "events": 2810,
+      "errors": 0,
+      "rooms": 1707,
+      "memory": {
+        "rss": 665260032,
+        "heapTotal": 627871744,
+        "heapUsed": 544653320,
+        "external": 2747997,
+        "arrayBuffers": 477752
+      },
+      "eventLoopDelayMs": {
+        "mean": 21.32425828879892,
+        "p95": 28.246015,
+        "max": 76.742655
+      },
+      "recentMoveMs": {
+        "count": 2048,
+        "p50": 0.028703000003588386,
+        "p95": 0.11559100000158651,
+        "max": 8.692303999996511
+      }
+    },
+    {
+      "ok": true,
+      "requests": 16172,
+      "moves": 5388,
+      "accepted": 5140,
+      "rejected": 248,
+      "roomsCreated": 1613,
+      "events": 2664,
+      "errors": 0,
+      "rooms": 1613,
+      "memory": {
+        "rss": 642371584,
+        "heapTotal": 606113792,
+        "heapUsed": 468917936,
+        "external": 2549228,
+        "arrayBuffers": 209403
+      },
+      "eventLoopDelayMs": {
+        "mean": 21.435011557966103,
+        "p95": 30.949375,
+        "max": 73.072639
+      },
+      "recentMoveMs": {
+        "count": 2048,
+        "p50": 0.028953000000910833,
+        "p95": 0.1126570000051288,
+        "max": 22.243133999996644
+      }
+    }
+  ],
+  "gatewayMetrics": [
+    "# TYPE samidev_connections gauge\nsamidev_connections 3333\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 3333\n# TYPE samidev_messages_in counter\nsamidev_messages_in 19622\n# TYPE samidev_messages_out counter\nsamidev_messages_out 49236\n# TYPE samidev_moves counter\nsamidev_moves 5066\n# TYPE samidev_errors counter\nsamidev_errors 267\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 0\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 63.005\n# TYPE samidev_errors_by_code counter\nsamidev_errors_by_code{code=\"DESYNC\"} 267\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 206.665\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 708.059\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 429.369\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 45.136\n",
+    "# TYPE samidev_connections gauge\nsamidev_connections 3334\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 3334\n# TYPE samidev_messages_in counter\nsamidev_messages_in 20021\n# TYPE samidev_messages_out counter\nsamidev_messages_out 49241\n# TYPE samidev_moves counter\nsamidev_moves 5401\n# TYPE samidev_errors counter\nsamidev_errors 270\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 0\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 63.010\n# TYPE samidev_errors_by_code counter\nsamidev_errors_by_code{code=\"DESYNC\"} 270\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 501.905\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 976.873\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 228.675\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 35.337\n",
+    "# TYPE samidev_connections gauge\nsamidev_connections 3333\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 3333\n# TYPE samidev_messages_in counter\nsamidev_messages_in 20178\n# TYPE samidev_messages_out counter\nsamidev_messages_out 49702\n# TYPE samidev_moves counter\nsamidev_moves 5355\n# TYPE samidev_errors counter\nsamidev_errors 248\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 0\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 63.018\n# TYPE samidev_errors_by_code counter\nsamidev_errors_by_code{code=\"DESYNC\"} 248\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 121.572\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 464.620\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 301.384\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 22.562\n"
+  ],
+  "environment": {
+    "cpuQuotaCores": 4,
+    "memoryLimitGiB": 32,
+    "singleMachine": true,
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "date": "2026-10-12"
+  }
+}

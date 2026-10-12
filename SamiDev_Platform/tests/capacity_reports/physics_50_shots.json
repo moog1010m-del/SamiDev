@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "reports": [
+    {
+      "game": "carrom",
+      "shots": 50,
+      "synchronousShotMs": {
+        "p50": 7.829904999999997,
+        "p95": 12.41292900000002,
+        "max": 13.511637000000007
+      },
+      "cpuMs": {
+        "mean": 10.16346,
+        "p50": 8.755,
+        "p95": 24.522,
+        "max": 28.747
+      },
+      "revealBytes": {
+        "p50": 896,
+        "p95": 896
+      },
+      "scope": "original server physics; isolated first shots; excludes network, checkpoints, auth and production hardware"
+    },
+    {
+      "game": "pool",
+      "shots": 50,
+      "synchronousShotMs": {
+        "p50": 31.35275200000001,
+        "p95": 40.51671600000009,
+        "max": 66.88403800000003
+      },
+      "cpuMs": {
+        "mean": 38.75414,
+        "p50": 34.006,
+        "p95": 75.464,
+        "max": 134.742
+      },
+      "revealBytes": {
+        "p50": 86711,
+        "p95": 91298
+      },
+      "scope": "original server physics; isolated first shots; excludes network, checkpoints, auth and production hardware"
+    }
+  ],
+  "environment": {
+    "cpuQuotaCores": 4,
+    "memoryLimitGiB": 32,
+    "singleMachine": true,
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "date": "2026-10-12"
+  }
+}

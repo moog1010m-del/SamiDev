@@ -106,6 +106,9 @@ vm.runInContext(resizeSource + '\nthis.__resize=resize; this.__ensureInitialSurf
   };
   const mismatch = Array.from(authCtx.__authorityMismatch(clientLogic,{sequence:[2,0],turn:[1],gameOver:false}));
   assert.deepStrictEqual(mismatch, ['turn'], 'same sequence with different turn must be detected');
+  assert.deepStrictEqual(Array.from(authCtx.__authorityMismatch({...clientLogic,lastValidAnim:0},
+    {sequence:[2,0],turn:[0],lastValidAnim:1})), ['animation'],
+    'missed animation validation must recover even when turn and sequence match');
 
   let resyncs = 0;
   const net = {requestResync(){resyncs++; return true;}};
@@ -137,6 +140,22 @@ vm.runInContext(resizeSource + '\nthis.__resize=resize; this.__ensureInitialSurf
   authState.network.authorityCheckTimer = null;
   authCtx.__evaluateAuthority(clientLogic,net);
   assert.strictEqual(resyncs, beforeForced + 1, 'long-lived mismatch must recover even if animation never settles');
+
+  // Periodic equal authority probes must not indefinitely reset a stuck pool's
+  // reconciliation deadline; an older epoch must not rewind the expectation.
+  authCtx.isPool = true;
+  authState.network.pendingAuthority = null;
+  authState.network.authorityCheckTimer = null;
+  authNow = 10000;
+  const probe = {authorityEpoch:1,revision:10,sequence:[2,0],turn:[1],gameOver:false};
+  authCtx.__scheduleAuthorityCheck(clientLogic,net,probe,{source:'heartbeat'});
+  for (authNow = 15000; authNow <= 30000; authNow += 5000)
+    authCtx.__scheduleAuthorityCheck(clientLogic,net,probe,{source:'heartbeat'});
+  assert.strictEqual(authState.network.pendingAuthority.receivedAt, 10000);
+  const beforeProbeRecovery = resyncs;
+  authNow = 31000;
+  authCtx.__evaluateAuthority(clientLogic,net);
+  assert.strictEqual(resyncs, beforeProbeRecovery+1, 'heartbeat probes must force recovery after bounded grace');
 
   console.log(JSON.stringify({
     ok:true,

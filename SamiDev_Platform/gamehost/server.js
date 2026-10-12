@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
+const {monitorEventLoopDelay, performance} = require('perf_hooks');
 const { URL } = require('url');
 const { GameRuntimeFactory } = require('./runtime');
 
@@ -27,6 +28,9 @@ const gameHashes = Object.fromEntries([...factories].map(([id,f]) => [id,f.sha25
 const rooms = new Map();
 const sseClients = new Set();
 const metrics = { requests: 0, moves: 0, accepted: 0, rejected: 0, roomsCreated: 0, events: 0, errors: 0 };
+const eventLoopDelay = monitorEventLoopDelay({resolution:20});
+eventLoopDelay.enable();
+const moveDurations = [];
 
 function json(res, status, data) {
   const raw = JSON.stringify(data);
@@ -56,7 +60,10 @@ function emitEvent(event) {
   metrics.events++;
   const raw = `data: ${JSON.stringify(event)}\n\n`;
   for (const res of [...sseClients]) {
-    try { res.write(raw); } catch { sseClients.delete(res); }
+    // A disconnected/slow gateway must reconnect and reconcile instead of buffering
+    // an unbounded stream of physics checkpoints in the Node process.
+    try { res.write(raw); if (res.writableLength > 2 * 1024 * 1024) { sseClients.delete(res); res.destroy(); } }
+    catch { sseClients.delete(res); res.destroy(); }
   }
 }
 
@@ -176,6 +183,12 @@ async function handler(req, res) {
     if (u.pathname === '/events' || u.pathname.startsWith('/v1/')) {
       if (!requireInternalAuth(req, res)) return;
     }
+    if (req.method === 'GET' && u.pathname === '/v1/metrics') {
+      const sorted = [...moveDurations].sort((a,b)=>a-b);
+      return json(res, 200, {ok:true, ...metrics, rooms:rooms.size, memory:process.memoryUsage(),
+        eventLoopDelayMs:{mean:eventLoopDelay.mean/1e6,p95:eventLoopDelay.percentile(95)/1e6,max:eventLoopDelay.max/1e6},
+        recentMoveMs:{count:sorted.length,p50:sorted[Math.floor(sorted.length*.5)]||0,p95:sorted[Math.floor(sorted.length*.95)]||0,max:sorted.at(-1)||0}});
+    }
 
     if (req.method === 'GET' && u.pathname === '/events') {
       res.writeHead(200, {
@@ -188,10 +201,16 @@ async function handler(req, res) {
       return;
     }
     if (req.method === 'GET' && u.pathname.startsWith('/v1/room/')) {
-      const roomId = normalizeRoomId(decodeURIComponent(u.pathname.slice('/v1/room/'.length)));
+      const authorityOnly = u.pathname.endsWith('/authority');
+      const roomId = normalizeRoomId(decodeURIComponent(u.pathname.slice('/v1/room/'.length).replace(/\/authority$/, '')));
       const room = rooms.get(roomId);
       if (!room) return json(res, 404, { ok: false, code: 'ROOM_NOT_LOADED' });
       room.lastUsed = Date.now();
+      if (authorityOnly) return json(res, 200, {ok:true, roomId,
+        authorityEpoch:room.authorityEpoch, revision:room.authorityRevision,
+        turn:[...room.logic.turn], sequence:[...room.logic._sequence],
+        lastValidAnim:Number.isFinite(room.logic.lastValidAnim)?room.logic.lastValidAnim:null,
+        gameOver:!!room.logic.gameOver, nextAlarmId:Number(room.logic._nextAlarmId || 0)});
       return json(res, 200, { ok: true, ...roomSummary(room, true) });
     }
     if (req.method === 'DELETE' && u.pathname.startsWith('/v1/room/')) {
@@ -249,10 +268,12 @@ async function handler(req, res) {
       let revealBySeat = {};
       let rejectionReason;
       let error = false;
+      const moveStart = performance.now();
       try {
         room.opDepth++;
         const result = room.factory.processMove(room, seat, packet);
         accepted = result.accepted;
+        if (accepted) room.authorityRevision++;
         revealBySeat = result.revealBySeat || {};
         rejectionReason = result.rejectionReason;
       } catch (e) {
@@ -260,6 +281,8 @@ async function handler(req, res) {
         console.error('[SamiDev GameHost] GAMELOGIC_EXCEPTION', roomId, String(e.stack || e));
       } finally {
         room.opDepth--;
+        moveDurations.push(performance.now()-moveStart);
+        if(moveDurations.length>2048) moveDurations.shift();
       }
       room.lastUsed = Date.now();
       const desc = room.factory.describeRoom(room, true);
@@ -308,9 +331,18 @@ const sweep = setInterval(() => {
   }
 }, 60000);
 sweep.unref();
+const streamHeartbeat = setInterval(() => {
+  for (const res of [...sseClients]) {
+    try { res.write(': heartbeat\n\n'); if (res.writableLength > 2 * 1024 * 1024) { sseClients.delete(res); res.destroy(); } }
+    catch { sseClients.delete(res); res.destroy(); }
+  }
+}, 10000);
+streamHeartbeat.unref();
 
 function shutdown() {
   clearInterval(sweep);
+  clearInterval(streamHeartbeat);
+  for (const res of sseClients) res.end();
   for (const room of rooms.values()) room.factory.destroyRoom(room);
   server.close(() => process.exit(0));
   setTimeout(() => process.exit(1), 3000).unref();

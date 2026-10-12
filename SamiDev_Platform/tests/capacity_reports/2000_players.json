@@ -1,0 +1,105 @@
+{
+  "requestedPlayers": 2000,
+  "activeRoomsRequested": 1000,
+  "gateways": 2,
+  "gamehosts": 2,
+  "durationSeconds": 20.0,
+  "scope": "authenticated WebSockets; legal carrom striker moves; authority probes; no physics/TLS/rendering/login",
+  "clientsAtBarrier": 2000,
+  "activeRoomsAtBarrier": 1000,
+  "rampSeconds": 8.13,
+  "clientsAfterHold": 2000,
+  "setupMs": {
+    "count": 1000,
+    "p50": 92.41,
+    "p95": 271.74,
+    "max": 346.84
+  },
+  "moveFanoutMs": {
+    "count": 9093,
+    "p50": 54.18,
+    "p95": 589.42,
+    "max": 1143.55
+  },
+  "heartbeatMs": {
+    "count": 18186,
+    "p50": 19.86,
+    "p95": 211.76,
+    "max": 564.4
+  },
+  "errors": {},
+  "ok": true,
+  "meetsLocalLatencyTarget": false,
+  "gamehostMetrics": [
+    {
+      "ok": true,
+      "requests": 10894,
+      "moves": 5017,
+      "accepted": 5017,
+      "rejected": 0,
+      "roomsCreated": 497,
+      "events": 497,
+      "errors": 0,
+      "rooms": 497,
+      "memory": {
+        "rss": 220061696,
+        "heapTotal": 170692608,
+        "heapUsed": 165649928,
+        "external": 2811425,
+        "arrayBuffers": 541180
+      },
+      "eventLoopDelayMs": {
+        "mean": 20.419437514031486,
+        "p95": 21.643263,
+        "max": 49.709055
+      },
+      "recentMoveMs": {
+        "count": 2048,
+        "p50": 0.0411309999981313,
+        "p95": 0.19018100000175764,
+        "max": 2.675179999998363
+      }
+    },
+    {
+      "ok": true,
+      "requests": 11008,
+      "moves": 5076,
+      "accepted": 5076,
+      "rejected": 0,
+      "roomsCreated": 503,
+      "events": 503,
+      "errors": 0,
+      "rooms": 503,
+      "memory": {
+        "rss": 225677312,
+        "heapTotal": 171216896,
+        "heapUsed": 167513432,
+        "external": 3400947,
+        "arrayBuffers": 1130702
+      },
+      "eventLoopDelayMs": {
+        "mean": 20.431296569472966,
+        "p95": 21.774335,
+        "max": 50.003967
+      },
+      "recentMoveMs": {
+        "count": 2048,
+        "p50": 0.05296900000030291,
+        "p95": 0.22431200000210083,
+        "max": 1.4227460000001884
+      }
+    }
+  ],
+  "gatewayMetrics": [
+    "# TYPE samidev_connections gauge\nsamidev_connections 1000\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 1000\n# TYPE samidev_messages_in counter\nsamidev_messages_in 16301\n# TYPE samidev_messages_out counter\nsamidev_messages_out 27862\n# TYPE samidev_moves counter\nsamidev_moves 5208\n# TYPE samidev_errors counter\nsamidev_errors 0\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 0\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 29.560\n# TYPE samidev_errors_by_code counter\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 111.386\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 7.531\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 15.034\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 6.078\n",
+    "# TYPE samidev_connections gauge\nsamidev_connections 1000\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 1000\n# TYPE samidev_messages_in counter\nsamidev_messages_in 15978\n# TYPE samidev_messages_out counter\nsamidev_messages_out 27819\n# TYPE samidev_moves counter\nsamidev_moves 4885\n# TYPE samidev_errors counter\nsamidev_errors 0\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 0\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 29.552\n# TYPE samidev_errors_by_code counter\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 11.598\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 9.980\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 19.140\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 5.215\n"
+  ],
+  "environment": {
+    "cpuQuotaCores": 4,
+    "memoryLimitGiB": 32,
+    "singleMachine": true,
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "date": "2026-10-12"
+  }
+}

@@ -136,6 +136,7 @@ class MemRoom:
     begun: bool = False
     sequence: list[int] = field(default_factory=list)
     history: list[dict[str, Any]] = field(default_factory=list)
+    committed_moves: dict[str, dict[str, Any]] = field(default_factory=dict)
     chat: list[dict[str, Any]] = field(default_factory=list)
     move_count: int = 0
     snapshot: dict[str, Any] | None = None
@@ -390,7 +391,7 @@ class MemoryStore:
                 return True
             return False
 
-    async def append_move(self, room_id: str, seat: int, packet: dict[str, Any], conn_id: str | None = None, connection_epoch: int | None = None) -> dict[str, Any]:
+    async def append_move(self, room_id: str, seat: int, packet: dict[str, Any], conn_id: str | None = None, connection_epoch: int | None = None, *, authority_epoch: int | None = None, authority_shard: str | None = None) -> dict[str, Any]:
         async with self.lock:
             room = self.rooms.get(room_id)
             if not room or not room.started or not room.begun:
@@ -406,10 +407,23 @@ class MemoryStore:
             if not isinstance(n, int) or not isinstance(move_id, str):
                 raise StoreError("BAD_MOVE", "حركة ناقصة")
             expected = room.sequence[seat]
-            if n != expected:
+            trusted = authority_epoch is not None
+            commit_key = f'{authority_epoch}:{seat}:{n}'
+            if trusted:
+                if room.authority_epoch != authority_epoch or room.authority_shard != authority_shard:
+                    raise StoreError('STALE_AUTHORITY', 'تم استبدال خادم المباراة')
+                if commit_key in room.committed_moves:
+                    return room.committed_moves[commit_key]
+            if not trusted and n != expected:
                 raise StoreError("DESYNC", json.dumps({"expected": expected, "actual": n, "moveCount": room.move_count}))
-            room.sequence[seat] += 1
+            # Only the internal gateway supplies this authority lease after GameHost
+            # accepts a move. Timers/resync may already have advanced store sequence.
+            room.sequence[seat] = max(expected, n + 1)
             entry = {"seat": seat, "packet": packet, "moveIndex": room.move_count}
+            if trusted:
+                room.committed_moves[commit_key] = entry
+                if len(room.committed_moves) > MAX_HISTORY:
+                    room.committed_moves.pop(next(iter(room.committed_moves)))
             room.move_count += 1
             room.history.append(entry)
             if len(room.history) > MAX_HISTORY:
@@ -633,6 +647,7 @@ class RedisStore:
         self.redis_mod = redis
         self.r = redis.from_url(url, decode_responses=True, health_check_interval=20)
         self.prefix = prefix
+        self.last_touch: dict[str, float] = {}
 
     def kroom(self, rid: str) -> str: return f"{self.prefix}:room:{rid}"
     def kplayers(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:players"
@@ -644,6 +659,8 @@ class RedisStore:
     def ktoken(self, token: str) -> str: return f"{self.prefix}:token:{token}"
     def kinvite(self, token: str) -> str: return f"{self.prefix}:invite:{token}"
     def kchat(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:chat"
+    def kcommits(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:commits"
+    def kcommit_order(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:commit-order"
     def node_channel(self, node_id: str) -> str: return f"{self.prefix}:node:{node_id}"
     def krate(self, key: str) -> str: return f"{self.prefix}:rate:{key}"
     def kroom_index(self) -> str: return f"{self.prefix}:rooms:index"
@@ -652,11 +669,16 @@ class RedisStore:
         return bool(await self.r.ping())
 
     async def _touch(self, rid: str) -> None:
-        keys = [self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.khistory(rid), self.kready(rid), self.knodes(rid), self.kspectators(rid), self.kchat(rid)]
+        now = time.monotonic()
+        if now - self.last_touch.get(rid, 0) < 30: return
+        keys = [self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.khistory(rid), self.kready(rid), self.knodes(rid), self.kspectators(rid), self.kchat(rid), self.kcommits(rid), self.kcommit_order(rid)]
         p = self.r.pipeline(transaction=False)
         for key in keys:
             p.expire(key, ROOM_TTL_SECONDS)
         await p.execute()
+        if len(self.last_touch) >= 8192:
+            self.last_touch.pop(next(iter(self.last_touch)))
+        self.last_touch[rid] = now
 
     async def create_room(self, name: str, settings: dict[str, int], node_id: str, conn_id: str, account_id: str | None = None, community_id: str = "majlis") -> dict[str, Any]:
         capacity = game_capacity(settings)
@@ -666,6 +688,7 @@ class RedisStore:
             player = {"token": token, "name": sanitize_name(name), "seat": 0, "nodeId": node_id, "connId": conn_id, "accountId": account_id, "connected": True, "ready": False, "disconnectedAt": None, "connectionEpoch": 1}
             script = """
             if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
+            redis.call('DEL', KEYS[2], KEYS[3], KEYS[5], KEYS[6], KEYS[7], KEYS[8], KEYS[9], KEYS[10], KEYS[11])
             redis.call('HSET', KEYS[1], 'capacity', ARGV[1], 'settings', ARGV[2], 'communityId', ARGV[8], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1', 'authorityShard', '', 'authorityEpoch', '0', 'authorityRevision', '-1', 'profileResultClaimed', '0', 'finished', '0', 'createdAt', ARGV[3])
             redis.call('HSET', KEYS[2], '0', ARGV[4])
             for i=0,tonumber(ARGV[1])-1 do redis.call('HSET', KEYS[3], tostring(i), '0') end
@@ -674,8 +697,9 @@ class RedisStore:
             redis.call('EXPIRE', KEYS[1], ARGV[6]); redis.call('EXPIRE', KEYS[2], ARGV[6]); redis.call('EXPIRE', KEYS[3], ARGV[6]); redis.call('EXPIRE', KEYS[5], ARGV[6])
             return 1
             """
-            ok = await self.r.eval(script, 5, self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.ktoken(token), self.knodes(rid), str(capacity), json.dumps(settings, separators=(",", ":")), str(now_ms()), json.dumps(player, separators=(",", ":")), f"{rid}:0", str(TOKEN_TTL_SECONDS), node_id, str(community_id or "majlis")[:32])
+            ok = await self.r.eval(script, 11, self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.ktoken(token), self.knodes(rid), self.khistory(rid), self.kready(rid), self.kchat(rid), self.kspectators(rid), self.kcommits(rid), self.kcommit_order(rid), str(capacity), json.dumps(settings, separators=(",", ":")), str(now_ms()), json.dumps(player, separators=(",", ":")), f"{rid}:0", str(TOKEN_TTL_SECONDS), node_id, str(community_id or "majlis")[:32])
             if int(ok) == 1:
+                self.last_touch.pop(rid, None)
                 await self.r.zadd(self.kroom_index(), {rid: now_ms()})
                 data = await self.get_room_state(rid)
                 data.update({"seat": 0, "token": token, "connectionEpoch": 1})
@@ -901,11 +925,16 @@ class RedisStore:
         return data
 
     async def get_room_state(self, rid: str) -> dict[str, Any]:
-        meta = await self.r.hgetall(self.kroom(rid))
-        if not meta:
+        fields = ('capacity','settings','createdAt','communityId','started','begun','finished','moveCount')
+        pipe = self.r.pipeline(transaction=False)
+        pipe.hmget(self.kroom(rid), *fields)
+        pipe.hgetall(self.kplayers(rid))
+        pipe.hgetall(self.kseq(rid))
+        values, raw_players, seq_raw = await pipe.execute()
+        meta = dict(zip(fields, values))
+        if not meta['capacity']:
             raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         capacity = int(meta["capacity"])
-        raw_players = await self.r.hgetall(self.kplayers(rid))
         roster: list[dict[str, Any]] = []
         for seat in range(capacity):
             raw = raw_players.get(str(seat))
@@ -917,7 +946,6 @@ class RedisStore:
                 "connected": bool(p and p.get("connected")),
                 "ready": bool(p and p.get("ready")),
             })
-        seq_raw = await self.r.hgetall(self.kseq(rid))
         return {
             "roomId": rid,
             "createdAt": int(meta.get("createdAt") or 0),
@@ -982,14 +1010,13 @@ class RedisStore:
             raise StoreError("NOT_IN_ROOM", "اللاعب غير موجود في غرفة")
         return ret == 1
 
-    async def append_move(self, rid: str, seat: int, packet: dict[str, Any], conn_id: str | None = None, connection_epoch: int | None = None) -> dict[str, Any]:
+    async def append_move(self, rid: str, seat: int, packet: dict[str, Any], conn_id: str | None = None, connection_epoch: int | None = None, *, authority_epoch: int | None = None, authority_shard: str | None = None) -> dict[str, Any]:
         if conn_id is not None and connection_epoch is not None:
             await self.assert_connection(rid, seat, conn_id, connection_epoch)
-        state = await self.get_room_state(rid)
-        if not state.get("begun"):
-            raise StoreError("MATCH_NOT_READY", "المباراة لم تصبح جاهزة بعد")
         if "__info" in packet:
-            return {"seat": seat, "packet": packet, "moveIndex": state["moveCount"], "infoAck": True, "infoOnly": True}
+            begun, move_count = await self.r.hmget(self.kroom(rid), 'begun', 'moveCount')
+            if begun != '1': raise StoreError('MATCH_NOT_READY', 'المباراة لم تصبح جاهزة بعد')
+            return {"seat": seat, "packet": packet, "moveIndex": int(move_count or 0), "infoAck": True, "infoOnly": True}
         n = packet.get("n"); move_id = packet.get("i")
         if not isinstance(n, int) or not isinstance(move_id, str):
             raise StoreError("BAD_MOVE", "حركة ناقصة")
@@ -999,17 +1026,32 @@ class RedisStore:
         local expected = tonumber(redis.call('HGET', KEYS[2], ARGV[1]) or '0')
         local actual = tonumber(ARGV[2])
         local mc = tonumber(redis.call('HGET', KEYS[1], 'moveCount') or '0')
-        if expected ~= actual then return {-21, expected, mc} end
-        redis.call('HINCRBY', KEYS[2], ARGV[1], 1)
+        local trusted = ARGV[5] ~= ''
+        local commitKey = ARGV[5] .. ':' .. ARGV[1] .. ':' .. ARGV[2]
+        if trusted then
+          if redis.call('HGET', KEYS[1], 'authorityEpoch') ~= ARGV[5] or redis.call('HGET', KEYS[1], 'authorityShard') ~= ARGV[6] then return {-22,0,0} end
+          local previous = redis.call('HGET', KEYS[4], commitKey)
+          if previous then return {tonumber(previous), expected, mc} end
+        elseif expected ~= actual then return {-21, expected, mc} end
+        redis.call('HSET', KEYS[2], ARGV[1], math.max(expected, actual + 1))
         local entry = cjson.decode(ARGV[3]); entry['moveIndex'] = mc
         redis.call('RPUSH', KEYS[3], cjson.encode(entry)); redis.call('LTRIM', KEYS[3], -tonumber(ARGV[4]), -1)
+        if trusted then
+          redis.call('HSET', KEYS[4], commitKey, mc)
+          redis.call('RPUSH', KEYS[5], commitKey)
+          redis.call('EXPIRE', KEYS[4], ARGV[7]); redis.call('EXPIRE', KEYS[5], ARGV[7])
+          if redis.call('LLEN', KEYS[5]) > tonumber(ARGV[4]) then
+            redis.call('HDEL', KEYS[4], redis.call('LPOP', KEYS[5]))
+          end
+        end
         redis.call('HINCRBY', KEYS[1], 'moveCount', 1)
         return {mc, expected + 1, mc + 1}
         """
-        ret = await self.r.eval(script, 3, self.kroom(rid), self.kseq(rid), self.khistory(rid), str(seat), str(n), json.dumps(entry_base, separators=(",", ":")), str(MAX_HISTORY))
+        ret = await self.r.eval(script, 5, self.kroom(rid), self.kseq(rid), self.khistory(rid), self.kcommits(rid), self.kcommit_order(rid), str(seat), str(n), json.dumps(entry_base, separators=(",", ":")), str(MAX_HISTORY), str(authority_epoch) if authority_epoch is not None else '', authority_shard or '', str(ROOM_TTL_SECONDS))
         code = int(ret[0])
         if code == -20: raise StoreError("MATCH_NOT_READY", "المباراة لم تصبح جاهزة بعد")
         if code == -21: raise StoreError("DESYNC", json.dumps({"expected": int(ret[1]), "actual": n, "moveCount": int(ret[2])}))
+        if code == -22: raise StoreError('STALE_AUTHORITY', 'تم استبدال خادم المباراة')
         await self._touch(rid)
         return {"seat": seat, "packet": packet, "moveIndex": code}
 
@@ -1244,8 +1286,11 @@ class RedisStore:
 
     async def node_listener(self, node_id: str):
         pubsub = self.r.pubsub(ignore_subscribe_messages=True)
-        await pubsub.subscribe(self.node_channel(node_id))
         try:
+            await pubsub.execute_command('CLIENT', 'SETNAME', f'samidev:{self.prefix}:node:{node_id}')
+            await pubsub.parse_response(block=True)  # consume SETNAME's OK before Pub/Sub messages
+            await pubsub.subscribe(self.node_channel(node_id))
+            yield {'control': 'stream_ready'}
             async for msg in pubsub.listen():
                 if msg.get("type") == "message":
                     try:

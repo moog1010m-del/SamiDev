@@ -30,6 +30,10 @@
   let startResolve, startReject;
   let startPromise = new Promise((resolve, reject) => { startResolve = resolve; startReject = reject; });
   let inviteRequest = null;
+  let healthTimer = null;
+  let lastServerMessageAt = 0;
+  const pendingMoves = new Map();
+  let runtimeIsReady = false;
 
   function emit(type, payload) {
     const list = listeners.get(type);
@@ -52,11 +56,11 @@
     if (i >= 0) list.splice(i, 1);
   }
 
-  function socketUrl() {
+  function socketUrl(ticketOverride) {
     const base = window.__SAMIDEV_WS_URL || `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`;
     try {
       const q = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
-      const ticket = q.get('ticket');
+      const ticket = ticketOverride ?? q.get('ticket');
       if (!ticket) return base;
       const u = new URL(base, location.href);
       u.searchParams.set('ticket', ticket);
@@ -91,6 +95,7 @@
   }
 
   function handleMessage(msg) {
+    lastServerMessageAt = Date.now();
     if (['created','joined','watching'].includes(msg.type)) {
       state.gameId = msg.settings?.gameId || 'carrom';
       if (state.gameId !== window.SamiDevGames.current().id) {
@@ -164,6 +169,7 @@
         emit('begin_match', msg);
         break;
       case 'move':
+        if (msg.seat === state.seat && msg.packet?.i) pendingMoves.delete(msg.packet.i);
         if (!msg.infoAck && Number.isInteger(msg.moveIndex)) {
           state.lastMoveIndex = Math.max(state.lastMoveIndex, msg.moveIndex);
           state.moveCount = Math.max(state.moveCount, msg.moveIndex + 1);
@@ -174,6 +180,7 @@
         emit('desync', msg);
         break;
       case 'resync_state':
+        pendingMoves.clear();
         // The server has answered the outstanding request. Browser runtime may now
         // apply the snapshot/history without another request being emitted in parallel.
         state.resyncInFlight = false;
@@ -185,6 +192,11 @@
         break;
       case 'authority_alarm':
         emit('authority_alarm', msg);
+        break;
+      case 'sync_required':
+        if (state.started) requestResync();
+        if (!state.begun && state.roomId) send({type:'ping', t:Date.now(), waiting:true});
+        emit('sync_required', msg);
         break;
       case 'spectator_resync':
         emit('spectator_resync', msg);
@@ -225,9 +237,62 @@
         if (!state.started && startReject) startReject(new Error(msg.message || msg.code || 'Network error'));
         break;
       case 'pong':
+        if (msg.authority && state.started) emit('authority_probe', msg.authority);
+        if (msg.syncUnavailable) emit('sync_unavailable', msg);
         emit('pong', msg);
         break;
     }
+  }
+
+  function startHealthMonitor() {
+    if (healthTimer !== null) clearInterval(healthTimer);
+    lastServerMessageAt = Date.now();
+    healthTimer = setInterval(() => {
+      if (!state.connected || state.intentionalClose) return;
+      if (Date.now() - lastServerMessageAt > 20000) {
+        // Mobile networks can leave a socket OPEN even though nothing can reach it.
+        state.ws?.close(4000, 'heartbeat timeout');
+        return;
+      }
+      send({type:'ping', t:Date.now(), authority:state.started, waiting:!!state.roomId&&!state.begun});
+      if (runtimeIsReady && state.started && !state.begun && !state.roster[state.seat]?.ready) runtimeReady();
+      if (state.started && [...pendingMoves.values()].some(sentAt => Date.now()-sentAt > 8000)) requestResync();
+    }, 5000 + Math.floor(Math.random() * 1000));
+  }
+
+  async function freshBrowserTicket(communityId) {
+    // Flutter supplies its ticket through the native gateway; the web can renew
+    // the single-use ticket with its secure session cookie after a failed attempt.
+    if (window.__SAMIDEV_QUERY !== undefined) return undefined;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    try {
+      const response = await fetch('/api/game-ticket', {method:'POST', credentials:'same-origin',
+        headers:{'Content-Type':'application/json'}, body:JSON.stringify({communityId}), signal:controller.signal});
+      if (response.status === 401) throw new Error('انتهت الجلسة، سجّل الدخول مجددًا');
+      if (!response.ok) throw new Error('تعذر تجديد اتصال اللعبة');
+      return (await response.json()).ticket;
+    } finally { clearTimeout(timer); }
+  }
+
+  function openSocket(url) {
+    return new Promise((resolve, reject) => {
+      const ws = new WebSocket(url);
+      let done = false;
+      const finish = (error) => {
+        if (done) return;
+        done = true; clearTimeout(timer);
+        ws.removeEventListener('open', opened); ws.removeEventListener('error', failed); ws.removeEventListener('close', failed);
+        if (error) { try { ws.close(); } catch (_) {} reject(error); }
+        else resolve(ws);
+      };
+      const opened = () => finish();
+      const failed = () => finish(new Error('تعذر الاتصال بـ SamiDev Game Server'));
+      const timer = setTimeout(() => finish(new Error('انتهت مهلة الاتصال بالسيرفر')), 8000);
+      ws.addEventListener('open', opened);
+      ws.addEventListener('error', failed);
+      ws.addEventListener('close', failed);
+    });
   }
 
   async function connectFromLocation(progress) {
@@ -250,28 +315,30 @@
     const settings = window.SamiDevGames.settings(q);
 
     progress?.('الاتصال بـ SamiDev Game Server...');
-    const ws = new WebSocket(socketUrl());
+    let ws, lastError, renewedTicket;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        if (attempt > 0) {
+          progress?.('إعادة الاتصال بخادم اللعبة...');
+          await new Promise(resolve => setTimeout(resolve, 500 * attempt + Math.floor(Math.random() * 500)));
+          renewedTicket = await freshBrowserTicket(q.get('community') || 'majlis');
+        }
+        ws = await openSocket(socketUrl(renewedTicket));
+        break;
+      } catch (error) { lastError = error; }
+    }
+    if (!ws) throw lastError;
     state.ws = ws;
-
-    await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('انتهت مهلة الاتصال بالسيرفر')), 8000);
-      ws.addEventListener('open', () => {
-        clearTimeout(timeout);
-        state.connected = true;
-        resolve();
-      }, {once: true});
-      ws.addEventListener('error', () => {
-        clearTimeout(timeout);
-        reject(new Error('تعذر الاتصال بـ SamiDev Game Server'));
-      }, {once: true});
-    });
+    state.connected = true;
 
     ws.addEventListener('message', ev => {
       try { handleMessage(JSON.parse(ev.data)); }
       catch (e) { console.warn('[SamiDev Network] bad message', e); }
     });
     ws.addEventListener('close', ev => {
+      if (healthTimer !== null) { clearInterval(healthTimer); healthTimer = null; }
       state.connected = false;
+      pendingMoves.clear();
       state.resyncInFlight = false;
       state.resyncSentAt = 0;
       if(ev?.code===4003){state.intentionalClose=true;try{sessionStorage.removeItem('samidev_reconnect');}catch(_){}emit('error',{code:'AUTH_REQUIRED',message:'انتهت الجلسة، سجّل الدخول مجددًا'});}
@@ -286,6 +353,7 @@
         }, delay);
       }
     });
+    startHealthMonitor();
 
     // Progress listeners are only valid while waiting for the start packet. Keeping them
     // alive after start caused later room_state broadcasts (for example runtime_ready) to
@@ -324,11 +392,17 @@
 
   function sendMove(packet) {
     if (state.spectator) return false;
-    return send({type: 'move', packet});
+    const sent = send({type: 'move', packet});
+    if (sent && packet?.i && !packet.__info) {
+      if (pendingMoves.size >= 256) pendingMoves.delete(pendingMoves.keys().next().value);
+      pendingMoves.set(packet.i, Date.now());
+    }
+    return sent;
   }
 
   function runtimeReady() {
     if (state.spectator) return false;
+    runtimeIsReady = true;
     return send({type: 'runtime_ready'});
   }
 
@@ -425,4 +499,13 @@
     createInvite,
     leaveRoom,
   };
+  if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.connected && state.started) {
+      // Give the foreground connection a new heartbeat window and reconcile the
+      // state after mobile browsers throttle timers in the background.
+      lastServerMessageAt = Date.now();
+      send({type:'ping', t:Date.now(), authority:true});
+      requestResync();
+    }
+  });
 })();

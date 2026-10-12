@@ -8,7 +8,7 @@ import secrets
 import signal
 import time
 import unicodedata
-from collections import defaultdict
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -49,6 +49,10 @@ CHAT_RATE_WINDOW = max(1, min(60, int(os.getenv("SAMIDEV_CHAT_RATE_WINDOW", "10"
 REQUIRE_GAME_AUTH = os.getenv("SAMIDEV_REQUIRE_GAME_AUTH", "1") == "1"
 
 
+class AuthUnavailable(RuntimeError):
+    """A dependency failure is not an invalid/revoked session."""
+
+
 @dataclass
 class Metrics:
     accepted: int = 0
@@ -59,6 +63,10 @@ class Metrics:
     errors: int = 0
     rate_limited: int = 0
     chat_messages: int = 0
+    errors_by_code: dict[str, int] = field(default_factory=dict)
+    listener_reconnects: int = 0
+    send_timeouts: int = 0
+    latencies: dict[str, deque] = field(default_factory=dict)
     started_at: float = field(default_factory=time.monotonic)
 
 
@@ -103,7 +111,7 @@ class SamiDevRealtime:
             raise RuntimeError("Shared platform storage requires SAMIDEV_STORE=redis")
         if STORE_MODE == "redis" and PLATFORM_STORE == "memory":
             raise RuntimeError("Shared gateways cannot use in-memory accounts")
-        self.store = RedisStore(REDIS_URL) if STORE_MODE == "redis" else MemoryStore()
+        self.store = RedisStore(REDIS_URL, prefix=os.getenv('SAMIDEV_REALTIME_PREFIX', 'sd')) if STORE_MODE == "redis" else MemoryStore()
         if PLATFORM_STORE == "postgres":
             from postgres_platform import PostgresPlatformService
             self.platform = PostgresPlatformService(DATABASE_URL, self.store.r,
@@ -118,6 +126,7 @@ class SamiDevRealtime:
         self.listener_task: asyncio.Task | None = None
         self.sweeper_task: asyncio.Task | None = None
         self.auth_task: asyncio.Task | None = None
+        self.redis_listener_ready = False
 
     async def start(self, app: web.Application) -> None:
         if PRODUCTION_MODE:
@@ -136,10 +145,18 @@ class SamiDevRealtime:
             if getattr(self.store, "distributed", False):
                 await self.store.ping()
             await self.platform.start()
+            self.gamehost.on_reconnect = self._recover_local_rooms
             await self.gamehost.start(self._on_gamehost_event)
             if getattr(self.store, "distributed", False):
                 self.listener_task = asyncio.create_task(self._listen_remote(), name="samidev-redis-listener")
+            async with asyncio.timeout(5):
+                while not all(self.gamehost.event_connected.get(url, False) for url in self.gamehost.base_urls) or (
+                    getattr(self.store, 'distributed', False) and not self.redis_listener_ready):
+                    await asyncio.sleep(.01)
         except BaseException:
+            if self.listener_task:
+                self.listener_task.cancel()
+                await asyncio.gather(self.listener_task, return_exceptions=True)
             await self.gamehost.close()
             if PLATFORM_STORE == "postgres": await self.platform.close()
             if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
@@ -153,8 +170,11 @@ class SamiDevRealtime:
             if task:
                 task.cancel()
         await asyncio.gather(*(t for t in (self.listener_task, self.sweeper_task, self.auth_task) if t), return_exceptions=True)
-        for c in list(self.connections.values()):
-            await c.ws.close(code=1001, message=b"server shutdown")
+        async def close_client(c):
+            try:
+                async with asyncio.timeout(2): await c.ws.close(code=1001, message=b'server shutdown')
+            except (TimeoutError, ConnectionError): pass
+        await asyncio.gather(*(close_client(c) for c in list(self.connections.values())), return_exceptions=True)
         await self.gamehost.close()
         if PLATFORM_STORE == "postgres": await self.platform.close()
         if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
@@ -170,14 +190,19 @@ class SamiDevRealtime:
             if not user or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != c.auth_version: return False
             c.account_role = str(user.get("role") or "user")
             return True
-        except Exception:
-            return False
+        except Exception as exc:
+            raise AuthUnavailable(type(exc).__name__) from exc
 
     async def _auth_sweeper(self):
         while True:
             await asyncio.sleep(5)
             for c in list(self.connections.values()):
-                if not await self.connection_authorized(c):
+                try:
+                    authorized = await self.connection_authorized(c)
+                except AuthUnavailable:
+                    await c.ws.close(code=1013, message=b'authentication service unavailable; retry')
+                    continue
+                if not authorized:
                     await c.ws.close(code=4003, message=b"authentication expired")
 
     async def _sweeper(self) -> None:
@@ -189,24 +214,45 @@ class SamiDevRealtime:
                 print("[SamiDev] sweeper", e)
 
     async def _listen_remote(self) -> None:
-        try:
-            async for event in self.store.node_listener(NODE_ID):
-                if not isinstance(event, dict):
-                    continue
-                if event.get("control") == "close_connection":
-                    old = self.connections.get(str(event.get("connId") or ""))
-                    if old and not old.ws.closed:
-                        await old.ws.close(code=4001, message=b"connection replaced")
-                    continue
-                payload = event.get("payload")
-                if isinstance(payload, dict) and payload.get("type") == "__samidev_start_local":
-                    await self.handle_internal_local_start(str(event.get("roomId") or ""))
-                else:
-                    await self.deliver_local(event)
-        except asyncio.CancelledError:
-            raise
-        except Exception as e:
-            print("[SamiDev] redis listener stopped", e)
+        backoff = 0.5
+        subscribed = False
+        while True:
+            try:
+                async for event in self.store.node_listener(NODE_ID):
+                    if not isinstance(event, dict): continue
+                    if event.get('control') == 'stream_ready':
+                        self.redis_listener_ready = True
+                        backoff = 0.5
+                        if subscribed:
+                            self.metrics.listener_reconnects += 1
+                            await self._recover_local_rooms()
+                        subscribed = True
+                        continue
+                    if event.get("control") == "close_connection":
+                        old = self.connections.get(str(event.get("connId") or ""))
+                        if old and not old.ws.closed:
+                            await old.ws.close(code=4001, message=b"connection replaced")
+                        continue
+                    payload = event.get("payload")
+                    if isinstance(payload, dict) and payload.get("type") == "__samidev_start_local":
+                        await self.handle_internal_local_start(str(event.get("roomId") or ""))
+                    else:
+                        await self.deliver_local(event)
+                raise ConnectionError('Redis subscription ended')
+            except asyncio.CancelledError:
+                raise
+            except Exception as e:
+                print('[SamiDev] redis listener retry', type(e).__name__)
+            finally:
+                self.redis_listener_ready = False
+            await asyncio.sleep(backoff)
+            backoff = min(5.0, backoff * 2)
+
+    async def _recover_local_rooms(self) -> None:
+        # Pub/Sub/SSE do not replay lost packets. Ask each local replica for a
+        # seat-filtered current checkpoint once the subscription is restored.
+        for rid in list(self.room_local):
+            await self.deliver_local({'roomId': rid, 'payload': {'type': 'sync_required', 'reason': 'event_stream_reconnected'}})
 
     async def _ensure_authority(self, rid: str, renew: bool = False) -> dict[str, Any]:
         start = await self.store.get_start(rid, 0)
@@ -377,8 +423,6 @@ class SamiDevRealtime:
             # authority revision once, so exactly one gateway republishes it cluster-wide.
             if not await self.store.accept_authority_event(rid, shard, epoch, revision):
                 return
-            await self._award_profile_wins(rid, event)
-            await self._award_daily_match_rewards(rid, event)
             if bool(event.get("gameOver")):
                 await self.store.mark_finished(rid)
             authority_sequence = event.get("sequence")
@@ -424,19 +468,41 @@ class SamiDevRealtime:
                 # A timeout can end a game with no later player move to repair a
                 # paused replica. Push the final seat-filtered checkpoint now.
                 await self.fanout_finished_checkpoint(rid, room, event, move_count)
+            # Gameplay/terminal state is delivered before SQL rewards. A wallet
+            # transaction must not hide a turn/result from the other player.
+            await self._award_profile_wins(rid, event)
+            await self._award_daily_match_rewards(rid, event)
         except Exception as e:
             print("[SamiDev] authority event", type(e).__name__, e)
 
     async def send(self, c: Conn, payload: dict[str, Any]) -> None:
         if c.ws.closed:
             return
-        async with c.send_lock:
-            await c.ws.send_str(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+        try:
+            async with asyncio.timeout(3):
+                async with c.send_lock:
+                    await c.ws.send_str(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+        except (TimeoutError, ConnectionError, RuntimeError):
+            self.metrics.send_timeouts += 1
+            try:
+                async with asyncio.timeout(1):
+                    await c.ws.close(code=1013, message=b'slow connection; reconnect')
+            except (TimeoutError, ConnectionError, RuntimeError): pass
+            return
         self.metrics.messages_out += 1
 
     async def error(self, c: Conn, code: str, message: str, **extra: Any) -> None:
-        self.metrics.errors += 1
+        self.record_problem(c, code)
         await self.send(c, {"type": "error", "code": code, "message": message, **extra})
+
+    def record_problem(self, c: Conn, code: str) -> None:
+        self.metrics.errors += 1
+        self.metrics.errors_by_code[code] = self.metrics.errors_by_code.get(code, 0) + 1
+        print(json.dumps({'event':'ws_error','node':NODE_ID,'roomId':c.room_id,
+            'connectionId':c.conn_id,'seat':c.seat,'code':code,'time':int(time.time()*1000)}, separators=(',', ':')))
+
+    def observe(self, stage: str, began: float) -> None:
+        self.metrics.latencies.setdefault(stage, deque(maxlen=512)).append((time.monotonic()-began)*1000)
 
     def attach(self, c: Conn, data: dict[str, Any]) -> None:
         if c.room_id:
@@ -723,7 +789,27 @@ class SamiDevRealtime:
             return
 
         if kind == "ping":
-            await self.send(c, {"type": "pong", "t": msg.get("t"), "node": NODE_ID})
+            reply = {"type": "pong", "t": msg.get("t"), "node": NODE_ID}
+            if c.room_id and msg.get('waiting') is True and await self.store.allow_rate(f'waiting-probe:{c.conn_id}', 1, 3):
+                room = await self.room_state_event(c.room_id)
+                await self.send(c, room)
+                if room['started'] and c.seat is not None:
+                    await self.send(c, {'type':'start', **await self._client_start(c.room_id, c.seat)})
+                    if room['begun']:
+                        await self.send(c, {'type':'begin_match','roomId':c.room_id})
+            if c.room_id and msg.get('authority') is True:
+                if not await self.store.allow_rate(f'authority-probe:{c.conn_id}', 1, 3):
+                    await self.send(c, reply)
+                    return
+                lease = await self.store.get_authority(c.room_id)
+                if lease:
+                    try:
+                        public_state = await self.gamehost.authority(c.room_id, shard=str(lease['shard']))
+                        reply['authority'] = {key: public_state[key] for key in
+                            ('roomId','turn','sequence','gameOver','lastValidAnim','nextAlarmId','authorityEpoch','revision') if key in public_state}
+                    except GameHostError:
+                        reply['syncUnavailable'] = True
+            await self.send(c, reply)
             return
 
         if c.spectator:
@@ -827,6 +913,7 @@ class SamiDevRealtime:
 
             # Single source of truth: the exact headless main.js decides whether this packet is legal.
             lease = await self._authority_lease(c.room_id)
+            host_began = time.monotonic()
             try:
                 authority = await self.gamehost.move(
                     c.room_id, c.seat, packet, shard=str(lease["shard"]),
@@ -848,6 +935,7 @@ class SamiDevRealtime:
                 expected = seq[c.seat] if c.seat < len(seq) else None
                 actual = packet.get("n")
                 if isinstance(expected, int) and isinstance(actual, int) and actual != expected:
+                    self.record_problem(c, 'DESYNC')
                     await self.send(c, {
                         "type": "desync", "seat": c.seat, "expected": expected,
                         "actual": actual, "moveCount": (await self.store.get_room_state(c.room_id))["moveCount"],
@@ -856,6 +944,9 @@ class SamiDevRealtime:
                 else:
                     await self.error(c, "MOVE_REJECTED", "GameLogic رفض الحركة", turn=authority.get("turn") or [])
                 return
+
+            self.observe('gamehost_move', host_began)
+            commit_began = time.monotonic()
 
             official_packet = authority.get("packet") if isinstance(authority.get("packet"), dict) else packet
             info_only = "__info" in official_packet
@@ -868,10 +959,12 @@ class SamiDevRealtime:
                 }
             else:
                 try:
-                    entry = await self.store.append_move(c.room_id, c.seat, official_packet)
+                    entry = await self.store.append_move(c.room_id, c.seat, official_packet,
+                        authority_epoch=int(lease['epoch']), authority_shard=str(lease['shard']))
                 except StoreError as e:
                     # Store sequence is defense-in-depth; GameLogic remains the authority.
                     if e.code == "DESYNC":
+                        self.record_problem(c, 'DESYNC')
                         d = json.loads(e.message)
                         await self.send(c, {"type": "desync", "seat": c.seat, **d, "source": "Store"})
                         return
@@ -883,13 +976,12 @@ class SamiDevRealtime:
                 await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0))
 
             # A normal player move can end the match without producing a separate SSE
-            # authority event. Award here as well; claim_profile_result keeps it idempotent.
-            await self._award_profile_wins(c.room_id, authority)
-            await self._award_daily_match_rewards(c.room_id, authority)
+            # authority event. Results/rewards are idempotent per account and match.
             if bool(authority.get("gameOver")):
                 await self.store.mark_finished(c.room_id)
 
             self.metrics.moves += 1
+            self.observe('commit_move', commit_began)
             payload = {
                 "type": "move",
                 **{k: v for k, v in entry.items() if k != "infoOnly"},
@@ -904,10 +996,14 @@ class SamiDevRealtime:
                 },
             }
             reveal_by_seat = authority.get("revealBySeat") if isinstance(authority.get("revealBySeat"), dict) else {}
+            fanout_began = time.monotonic()
             if reveal_by_seat:
                 await self.fanout_personalized(c.room_id, payload, reveal_by_seat)
             else:
                 await self.fanout(c.room_id, payload)
+            self.observe('fanout_move', fanout_began)
+            await self._award_profile_wins(c.room_id, authority)
+            await self._award_daily_match_rewards(c.room_id, authority)
             return
 
         if kind == "snapshot":
@@ -964,7 +1060,15 @@ class SamiDevRealtime:
         try:
             async for item in ws:
                 if item.type == WSMsgType.TEXT:
-                    if not await self.connection_authorized(c):
+                    auth_began = time.monotonic()
+                    try:
+                        authorized = await self.connection_authorized(c)
+                    except AuthUnavailable:
+                        await self.error(c, 'AUTH_SERVICE_UNAVAILABLE', 'خدمة التوثيق غير متاحة مؤقتًا؛ جارٍ إعادة الاتصال')
+                        await ws.close(code=1013, message=b'authentication service unavailable; retry')
+                        break
+                    self.observe('authenticate_message', auth_began)
+                    if not authorized:
                         await ws.close(code=4003, message=b"authentication expired")
                         break
                     self.metrics.messages_in += 1
@@ -1012,10 +1116,15 @@ class SamiDevRealtime:
         if PLATFORM_STORE == "postgres":
             try: database_ok = await asyncio.wait_for(self.platform.r.ping(), timeout=3)
             except Exception: database_ok = False
-        healthy = redis_ok and database_ok
+        streams_ok = all(self.gamehost.event_connected.get(url, False) for url in self.gamehost.base_urls)
+        listener_ok = not getattr(self.store, 'distributed', False) or self.redis_listener_ready
+        healthy = redis_ok and database_ok and streams_ok and listener_ok
         return web.json_response({"ok": healthy, "service": "SamiDev Realtime", "release": UI_BUILD["release"], "buildId": UI_BUILD["buildId"],
             "storage": {"realtime": STORE_MODE, "platform": PLATFORM_STORE},
-            "dependencies": {"redis": redis_ok, "database": database_ok}}, status=200 if healthy else 503)
+            "dependencies": {"redis": redis_ok if STORE_MODE == 'redis' else None,
+                "database": database_ok if PLATFORM_STORE == 'postgres' else None,
+                "gamehostEvents": streams_ok, "redisSubscription": listener_ok if STORE_MODE == 'redis' else None},
+            "production": PRODUCTION_MODE, "node": NODE_ID}, status=200 if healthy else 503)
 
     async def metrics_endpoint(self, request: web.Request) -> web.Response:
         m = self.metrics
@@ -1041,6 +1150,14 @@ class SamiDevRealtime:
             f"samidev_uptime_seconds {uptime:.3f}",
             "",
         ])
+        text += '# TYPE samidev_errors_by_code counter\n'
+        for code, count in sorted(m.errors_by_code.items()):
+            text += f'samidev_errors_by_code{{code={json.dumps(code)}}} {count}\n'
+        text += f'samidev_listener_reconnects {m.listener_reconnects}\nsamidev_send_timeouts {m.send_timeouts}\n'
+        for stage, samples in sorted(m.latencies.items()):
+            ordered = sorted(samples)
+            if ordered:
+                text += f'samidev_stage_recent_p95_ms{{stage={json.dumps(stage)}}} {ordered[min(len(ordered)-1,int(len(ordered)*.95))]:.3f}\n'
         return web.Response(text=text, content_type="text/plain")
 
     async def client_config(self, request: web.Request) -> web.Response:

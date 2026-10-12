@@ -1,3 +1,5 @@
+> تحديث المزامنة والسعة: راجع [SYNC_CAPACITY_REVIEW_AR.md](SYNC_CAPACITY_REVIEW_AR.md). المشغّل الآن يطلب Redis وPostgreSQL افتراضيًا؛ التجربة المؤقتة تتطلب `--storage memory` صراحةً.
+
 > أحدث تحديث: تحسينات أداء الهاتف واللمس وتكبير اللاعبين في الألعاب الثلاث في [MOBILE_FIX_AR.md](MOBILE_FIX_AR.md). تحديث الرسومات في [CARROM_FOOTBALL_REFRESH_AR.md](CARROM_FOOTBALL_REFRESH_AR.md)، وسجل المصادر في [ORIGINAL_ASSETS_AR.md](ORIGINAL_ASSETS_AR.md). تفاصيل ربط كريزي 8 في [CRAZY8_INTEGRATION_AR.md](CRAZY8_INTEGRATION_AR.md).
 
 > تحديث تصميم الكيرم والمتجر: راجع [CARROM_CLASSIC_STORE_AR.md](CARROM_CLASSIC_STORE_AR.md). الكلاسيك هو الافتراضي، والقطو قابل للتفعيل من المتجر.
@@ -13,7 +15,7 @@
 3. انتظر ظهور رسالة «SamiDev V25: served UI verified» وفتح المتصفح تلقائيًا. يظهر V25 أعلى الواجهة.
 4. سجّل الدخول أو أنشئ حسابًا، ثم ادخل إحدى المساحات. تظهر الألعاب الثلاث: **الكيرم** و**كرة الطاولة** و**كريزي 8**. اختر كريزي 8، وحدد عدد اللاعبين والإعدادات، ثم اضغط «إنشاء مباراة كريزي 8».
 
-المتطلبات: Python 3.12 وNode.js 22 أو أحدث. ملف BAT يجهّز بيئة Python ويثبّت المتطلبات؛ أول إعداد يحتاج إنترنت. اترك نافذة التشغيل مفتوحة أثناء اللعب. بيانات وضع التطوير محفوظة في الذاكرة وتُفقد عند إيقافه.
+المتطلبات: Python 3.12 وNode.js 22 أو أحدث. ملف BAT يجهّز بيئة Python ويثبّت المتطلبات؛ أول إعداد يحتاج إنترنت. اترك نافذة التشغيل مفتوحة أثناء اللعب. الوضع الافتراضي يستخدم Redis وPostgreSQL ويتطلب إعداد متغيرات الاتصال. وضع الذاكرة اختياري للتجربة فقط ويُفقد عند الإيقاف.
 
 للتشغيل اليدوي:
 
@@ -25,7 +27,7 @@ python start_dev.py
 للفحص دون فتح المتصفح، مع إيقاف الخدمات بعد الفحص:
 
 ```bash
-python start_dev.py --check
+python start_dev.py --storage memory --check
 ```
 
 المشغّل يتحقق من ملفات الواجهة المحلية ثم يقارنها بالملفات التي يرجعها السيرفر عبر HTTP؛ يرفض الملفات المختلطة أو الواجهة القديمة قبل فتح المتصفح. يفتح رابط /platform/ الخاص بالعملية الجديدة مباشرة.
@@ -74,7 +76,7 @@ python start_dev.py --check
 - اختبارات HTTP/WebSocket: تسجيل ودخول، مباريات اللعبتين، حركات وأدوار، مشاهدة وإعادة اتصال ودعوات واستعادة حالة كرة الطاولة.
 
 ```bash
-python start_dev.py --check
+python start_dev.py --storage memory --check
 python tests/start_dev_ui_check.py
 npm install --prefix tests
 python tests/platform_ui_http.py

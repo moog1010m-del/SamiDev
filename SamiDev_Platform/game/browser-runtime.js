@@ -695,11 +695,12 @@
 
   function nextIncomingSequence(logic, seat){
     let expected=Number(logic._sequence?.[seat]);
-    if(!isPool || !Number.isInteger(expected)) return expected;
-    // Pool pauses BaseLogic while the remote cue rotates/power animates. Moves
+    if(!Number.isInteger(expected)) return expected;
+    // All four engines pause BaseLogic during presentation. Moves
     // already delivered to its queue have not incremented _sequence yet. Count
     // only the contiguous queued packets so a real missing move still resyncs.
     for(const item of logic._queue || []){
+      if(item.type!==0) continue;
       const [queuedSeat,packet]=Array.isArray(item.data)?item.data:[];
       if(queuedSeat!==seat || !packet || !Number.isInteger(packet.n) || !packet.m) continue;
       if(packet.n<expected) continue;
@@ -777,6 +778,7 @@
     const fields=[];
     if(Array.isArray(msg?.sequence) && !sameNumberArray(msg.sequence,logic?._sequence)) fields.push('sequence');
     if(Array.isArray(msg?.turn) && !sameNumberArray(msg.turn,logic?.turn)) fields.push('turn');
+    if(Number.isFinite(msg?.lastValidAnim) && Number.isFinite(logic?.lastValidAnim) && msg.lastValidAnim>logic.lastValidAnim) fields.push('animation');
     if(msg && Object.prototype.hasOwnProperty.call(msg,'gameOver') && Boolean(msg.gameOver)!==Boolean(logic?.gameOver)) fields.push('gameOver');
     return fields;
   }
@@ -786,12 +788,16 @@
     const epoch=Number(msg.authorityEpoch);
     const revision=Number(msg.revision);
     const currentPending=state.network.pendingAuthority;
+    if(Number.isInteger(epoch) && Number.isInteger(state.network.authorityEpoch)){
+      if(epoch<state.network.authorityEpoch) return;
+      if(epoch===state.network.authorityEpoch && Number.isInteger(revision) && revision<state.network.authorityRevision) return;
+    }
     if(Number.isInteger(epoch) && Number.isInteger(revision) && currentPending &&
        Number.isInteger(currentPending.authorityEpoch) && Number.isInteger(currentPending.revision) &&
        epoch===currentPending.authorityEpoch && revision<currentPending.revision){
       return;
     }
-    if(ordered && Number.isInteger(epoch) && Number.isInteger(revision)){
+    if(Number.isInteger(epoch) && Number.isInteger(revision)){
       if(Number.isInteger(state.network.authorityEpoch)){
         if(epoch<state.network.authorityEpoch) return;
         if(epoch>state.network.authorityEpoch){
@@ -801,17 +807,23 @@
       } else {
         state.network.authorityEpoch=epoch;
       }
-      if(revision<=state.network.authorityRevision) return;
+      if(revision<state.network.authorityRevision || (ordered && revision===state.network.authorityRevision)) return;
       state.network.authorityRevision=revision;
     }
     state.network.pendingAuthority={
       turn:Array.isArray(msg.turn)?msg.turn.slice():undefined,
       sequence:Array.isArray(msg.sequence)?msg.sequence.slice():undefined,
       gameOver:Object.prototype.hasOwnProperty.call(msg,'gameOver')?Boolean(msg.gameOver):undefined,
+      lastValidAnim:Number.isFinite(msg.lastValidAnim)?msg.lastValidAnim:undefined,
       authorityEpoch:Number.isInteger(epoch)?epoch:undefined,
       revision:Number.isInteger(revision)?revision:undefined,
       source,
-      receivedAt:performance.now(),
+      // An identical periodic probe must not restart the grace period forever
+      // while a replica remains paused or has an optimistic move stuck in flight.
+      receivedAt:currentPending && sameNumberArray(currentPending.turn,msg.turn) &&
+        sameNumberArray(currentPending.sequence,msg.sequence) && currentPending.gameOver===msg.gameOver &&
+        currentPending.lastValidAnim===(Number.isFinite(msg.lastValidAnim)?msg.lastValidAnim:undefined) &&
+        currentPending.authorityEpoch===epoch ? currentPending.receivedAt : performance.now(),
     };
     armAuthorityCheck(logic,net,AUTHORITY_RETRY_MS);
   }
@@ -931,7 +943,7 @@
       if(state.network.finished && !msg?.gameOver) return;
       // A slow resync reply can arrive after newer live packets. Rewinding to it
       // loses their queued cue animation and makes the next shot look like a gap.
-      if(isPool && Number.isInteger(msg?.moveCount) && msg.moveCount<Number(net.state?.moveCount)){
+      if(Number.isInteger(msg?.moveCount) && msg.moveCount<Number(net.state?.moveCount)){
         net.requestResync();
         return;
       }
@@ -995,8 +1007,8 @@
           if(b){ b.style.background='rgba(0,0,0,.62)'; updateWebBadge(); }
           console.info('[SamiDev Sync] in-place resync applied',{snapshotMoveCount:msg.snapshotMoveCount,moveCount:msg.moveCount,replayed:Array.isArray(msg.history)?msg.history.length:0});
           // A live GameHost resync carries current invariants too. Replace an older pending
-          // authority expectation even when its revision is equal (accepted moves do not bump
-          // authorityRevision), then verify the snapshot we just applied against that state.
+          // authority expectation even when its revision is equal, then verify the
+          // snapshot we just applied against that state.
           if(Array.isArray(msg.turn) && Array.isArray(msg.sequence)){
             scheduleAuthorityCheck(logic,net,msg,{source:'resync_state'});
           } else if(state.network.pendingAuthority) {
@@ -1069,6 +1081,15 @@
     net.on('authority_state', msg=>{
       try{ scheduleAuthorityCheck(logic,net,msg,{ordered:true,source:'authority_state'}); }
       catch(e){ console.warn('[SamiDev] authority state',e); }
+    });
+    net.on('authority_probe', msg=>{
+      // Independent of event delivery: a missed turn event must be detected even
+      // if no later move/alarm arrives. Repeated equal revisions are valid probes.
+      scheduleAuthorityCheck(logic,net,msg,{source:'heartbeat'});
+      if(logic._awaitingResync && !state.network.snapshotBusy) net.requestResync();
+    });
+    net.on('error', msg=>{
+      if (['MOVE_REJECTED','STALE_MOVE_SEQUENCE','FUTURE_MOVE_SEQUENCE'].includes(msg?.code)) net.requestResync();
     });
   }
 

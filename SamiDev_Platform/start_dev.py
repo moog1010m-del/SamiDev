@@ -114,7 +114,11 @@ def main() -> int:
     parser.add_argument("--port", type=int, default=0, help="Fixed loopback backend port for a tunnel (default: choose a free port).")
     parser.add_argument("--public-origin", type=public_origin, help="HTTPS origin of a trusted tunnel to this loopback server; enables forwarded HTTPS and restricts Origin.")
     parser.add_argument("--no-browser", action="store_true", help="Do not open the local browser.")
+    parser.add_argument('--storage', choices=('persistent', 'memory'), default='persistent',
+        help='Persistent Redis/PostgreSQL by default; memory is an explicit disposable demo.')
     args = parser.parse_args()
+    if args.storage == 'persistent' and (not os.environ.get('SAMIDEV_DATABASE_URL') or not os.environ.get('SAMIDEV_REDIS_URL')):
+        parser.error('Persistent mode requires SAMIDEV_DATABASE_URL and SAMIDEV_REDIS_URL. For a disposable demo only, use --storage memory.')
     if not 0 <= args.port <= 65535:
         parser.error('--port must be between 1 and 65535, or 0 for automatic selection')
     try:
@@ -146,7 +150,8 @@ def main() -> int:
     be_env.pop("SAMIDEV_MAINJS_SHA256", None)
     be_env.update({
         "SAMIDEV_PRODUCTION": "0",
-        "SAMIDEV_STORE": "memory",
+        "SAMIDEV_STORE": "redis" if args.storage == 'persistent' else 'memory',
+        "SAMIDEV_PLATFORM_STORE": "postgres" if args.storage == 'persistent' else 'memory',
         "SAMIDEV_REQUIRE_GAME_AUTH": "1",
         "SAMIDEV_HOST": "127.0.0.1",
         "SAMIDEV_PORT": str(web_port),
@@ -171,6 +176,7 @@ def main() -> int:
         print(f"\nSamiDev {manifest['release']}: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool")
         print(f"Project:  {ROOT}")
         print(f"Build:    {manifest['buildId']}")
+        print('Storage: Redis + PostgreSQL (persistent)' if args.storage == 'persistent' else 'WARNING: disposable MEMORY demo. Accounts and rooms are lost when stopped.')
         print(f"GameHost: http://127.0.0.1:{gamehost_port}  games={','.join(gh.get('games', {}))}")
         print(f"Game:     {url}")
         if args.public_origin:

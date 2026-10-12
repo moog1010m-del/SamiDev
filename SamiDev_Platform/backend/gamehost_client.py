@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 import os
+import time
 from typing import Any, Awaitable, Callable
 
 import aiohttp
@@ -35,6 +36,10 @@ class GameHostClient:
         self.session: aiohttp.ClientSession | None = None
         self.listener_tasks: list[asyncio.Task] = []
         self.on_event: Callable[[dict[str, Any]], Awaitable[None]] | None = None
+        self.on_reconnect: Callable[[], Awaitable[None]] | None = None
+        self.event_connected: dict[str, bool] = {}
+        self.authority_cache: dict[str, tuple[float, dict]] = {}
+        self.authority_pending: dict[str, asyncio.Task] = {}
 
     def shard_for(self, room_id: str) -> str:
         rid = str(room_id or "").upper()
@@ -59,6 +64,9 @@ class GameHostClient:
             ]
 
     async def close(self) -> None:
+        for task in self.authority_pending.values(): task.cancel()
+        await asyncio.gather(*self.authority_pending.values(), return_exceptions=True)
+        self.authority_pending.clear()
         for task in self.listener_tasks:
             task.cancel()
         for task in self.listener_tasks:
@@ -138,16 +146,42 @@ class GameHostClient:
         base = shard or self.shard_for(room_id)
         return await self._json("GET", base, f"/v1/room/{room_id}")
 
+    async def authority(self, room_id: str, *, shard: str) -> dict[str, Any]:
+        """Small public invariants, coalesced per room; never serialize physics/cards."""
+        key = shard + '/' + room_id
+        cached = self.authority_cache.get(key)
+        if cached and time.monotonic() - cached[0] < 2:
+            return cached[1]
+        pending = self.authority_pending.get(key)
+        if pending is None:
+            pending = asyncio.create_task(self._json('GET', shard, f'/v1/room/{room_id}/authority'))
+            self.authority_pending[key] = pending
+        try:
+            result = await asyncio.shield(pending)
+            if len(self.authority_cache) >= 4096:
+                self.authority_cache.pop(next(iter(self.authority_cache)))
+            self.authority_cache[key] = (time.monotonic(), result)
+            return result
+        finally:
+            if pending.done() and self.authority_pending.get(key) is pending:
+                self.authority_pending.pop(key, None)
+
     async def _listen_events(self, base_url: str) -> None:
         backoff = 0.5
+        subscribed = False
         while True:
             try:
-                timeout = aiohttp.ClientTimeout(total=None, sock_read=None)
+                timeout = aiohttp.ClientTimeout(total=None, sock_connect=3, sock_read=30)
                 async with aiohttp.ClientSession(timeout=timeout, headers=self.headers) as s:
                     async with s.get(base_url + "/events") as r:
                         if r.status != 200:
                             raise RuntimeError(f"events status={r.status}")
                         backoff = 0.5
+                        self.event_connected[base_url] = True
+                        if subscribed and self.on_reconnect:
+                            self.authority_cache.clear()
+                            await self.on_reconnect()
+                        subscribed = True
                         async for raw in r.content:
                             line = raw.decode("utf-8", "replace").strip()
                             if not line.startswith("data:"):
@@ -165,6 +199,9 @@ class GameHostClient:
             except asyncio.CancelledError:
                 raise
             except Exception as e:
+                self.event_connected[base_url] = False
                 print("[SamiDev GameHost] event stream", base_url, type(e).__name__, e)
                 await asyncio.sleep(backoff)
                 backoff = min(5.0, backoff * 1.8)
+            finally:
+                self.event_connected[base_url] = False

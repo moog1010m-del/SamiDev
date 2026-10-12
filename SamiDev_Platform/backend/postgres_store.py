@@ -221,6 +221,13 @@ class PostgresSocialStore:
             return await getattr(self.transient, name)(*args, **kwargs)
         if not all(routes):
             raise ValueError('Mixed durable/transient command')
+        # MVCC already provides a committed snapshot for one read-only SELECT.
+        # Authentication must not pay BEGIN + lock-ID query + advisory lock +
+        # COMMIT for every packet. Reads inside an explicit write transaction
+        # still use its connection/locks and see its uncommitted changes.
+        if name in {'get','exists','hget','hgetall','smembers','sismember','lrange'} and self._transaction.get() is None:
+            async with self.pool.acquire() as conn:
+                return await self._execute(name, args, kwargs, conn)
         async with self.transaction(keys) as conn:
             return await self._execute(name, args, kwargs, conn)
 

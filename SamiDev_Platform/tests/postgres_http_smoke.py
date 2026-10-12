@@ -3,6 +3,7 @@
 Set test database/Redis URLs and SAMIDEV_GAMEHOST_SERVICE_KEY matching the host.
 """
 import asyncio
+import aiohttp
 import json
 import os
 import secrets
@@ -85,10 +86,20 @@ async def main():
         await ws.send_json({'type': 'ping', 't': 123})
         assert (await receive(ws, 'pong'))['t'] == 123
         checks.append('authenticated WebSocket, room creation and lobby identity')
-        await ws.close()
         await app.SERVICE.platform.close()
         failed = await client.get('/health')
         assert failed.status == 503 and not (await failed.json())['dependencies']['database']
+        await ws.send_json({'type':'ping','t':456})
+        async with asyncio.timeout(5):
+            while True:
+                message = await ws.receive()
+                if message.type == aiohttp.WSMsgType.CLOSE:
+                    assert message.data == 1013, message
+                    break
+                if message.type == aiohttp.WSMsgType.TEXT:
+                    packet = json.loads(message.data)
+                    if packet.get('type') == 'error': assert packet['code'] == 'AUTH_SERVICE_UNAVAILABLE'
+        checks.append('temporary auth database outage requests reconnect instead of invalidating the session')
         await app.SERVICE.platform.r.start()
         restored = await client.get('/health')
         assert restored.status == 200

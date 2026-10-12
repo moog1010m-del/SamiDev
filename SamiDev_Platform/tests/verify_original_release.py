@@ -22,7 +22,7 @@ commands = [
     [sys.executable, 'tests/carrom_store_regression.py'],
     ['node', 'tests/striker_move_regression.js'],
     [sys.executable, 'tests/original_assets.py'],
-    [sys.executable, 'start_dev.py', '--check'],
+    [sys.executable, 'start_dev.py', '--storage', 'memory', '--check'],
 ]
 report = {
     'date': datetime.date.today().isoformat(),
