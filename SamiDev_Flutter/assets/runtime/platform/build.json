@@ -1,6 +1,6 @@
 {
-  "release": "V30",
-  "buildId": "samidev-v30-b202ea6abde9e032",
+  "release": "V37",
+  "buildId": "samidev-v37-8cfa3e96562ba986",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,21 +8,21 @@
     "pool"
   ],
   "files": {
-    "platform/index.html": "6f5625704dd8f39cc247fe7358c10f0a475dfda6316ffa4bc42626886e77941e",
+    "platform/index.html": "62549a984d3663a387fe8c2bca304a9722563fbf5bfc3d0fafbf8f19b1c5e6e3",
     "platform/platform.css": "cd56801e6592bc80f777989c29054d7dedf72cd96944b7cc1e51d775027b78f1",
-    "platform/platform.js": "7c9b74fe1296af3162bead93e3bbab59e2a24ef04c4f0927d2050be475607fa9",
+    "platform/platform.js": "6d21ebd6b881618fe35ed240fb0a6ae4451ed2733b2bd1a8f39bf037daa3e8b3",
     "samidev-games.js": "9c0dece53f812f41e1264eb97d378975fc859c144c46b83f6d89c8dccb1dc525",
-    "profile-details.css": "e2865dfb1b01dc578debbeaf5f6d74ab91941c277097469f5aceb3c40068187c",
-    "profile-details.js": "697c54939e7fe3525eef40843eac7f39003d69d61980d014ffb3499283d2438f",
+    "profile-details.css": "eca05057b0914d22f54ac731991260f866ffebf02a1e383860ccd729bce05213",
+    "profile-details.js": "79d84630b04f6d90b2f2f8d00717659363c00ae12e74d16a48ec3b11b410e2fe",
     "index.html": "b448a62715b5263a6d16dca200d3f80987fd87da1887940813dc426aac2ada25",
-    "browser-runtime.js": "b45bcf9d67c9024ede2f7f67517f6f167506e3dd07409833b5eb357a4dcc0260",
-    "waiting-room.js": "5f20851a92aef1494b7176fa03640fc12353e0cb0cce7116df265b72252877df",
-    "player-profile-ui.js": "66a9e41ea590114f301c5e60862305baa8201e217bd37462f88ac76c9ad4ab7a",
+    "browser-runtime.js": "012ac612081113f616fbc76b50bd6710b8a9fb1a9e0dce6c4029af0fb0311c79",
+    "waiting-room.js": "042a6697f29931056b13347afb7d9198cd5b5845636e79dc84aa38c3f4e6c68f",
+    "player-profile-ui.js": "655b212ffb0b3ab2b2b9801efefc5536f6ff60397ebca5fa63f40c6403715f30",
     "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
     "game-touch.css": "3b46fb9faf96cbfde8954ad1304a294bf5299a4883ddaaef93ccab4151778079",
     "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
     "games/tablesoccer/index.html": "a7df3ad5b067283d7794cc9aa1e4ccce1b9ad3afbddca7d8424572bf2945d23c",
-    "games/crazy8/index.html": "821258931820ed7ae0aa807848f9ce20494feda1fea3ae21d147999b35bebf77",
+    "games/crazy8/index.html": "ea88512ea04ad91097347668ed0a3781ab74dbacda3f2cc25f1fc00a52107019",
     "games/pool/index.html": "a96e5612cfc849bc96f2374ddf82a51107c8a4348d01a1c7fcd43a548e47e45b"
   }
 }

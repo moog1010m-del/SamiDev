@@ -534,6 +534,7 @@
       const name=String(u.displayName||u.username||'Player');
       const row=document.createElement('div');row.className='community-member';row.dataset.publicProfile=String(u.id||'');row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label',`فتح ملف ${name}`);
       row.append(avatarNode(u,'community-member-avatar'));
+      const copy=document.createElement('div');copy.className='community-member-copy';
       const title=document.createElement('div');title.className='community-member-title';const strong=document.createElement('strong');strong.textContent=name;
       const emblem=profileSprite('profile-sprite-emblem community-member-emblem');
       const badgeAsset=u.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
