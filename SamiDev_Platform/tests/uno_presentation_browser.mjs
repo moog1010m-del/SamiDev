@@ -25,6 +25,27 @@ try {
  await host.screenshot({path:out+'/uno-waiting-desktop.png'});
  for(let i=1;i<4;i++)await pages[i].goto(base+'/games/crazy8/index.html?online=1&action=join&community=majlis&room='+waiting.room);
  for(const page of pages)await page.waitForFunction(()=>window.SamiDevNetwork.state.begun&&window.__gameLogic.started,{},{timeout:30000});
+ for(let seat=0;seat<4;seat++){
+  const labels=await pages[seat].evaluate(()=>({own:SamiDev.translate(['move_play',window.__gameLogic.localSeat,SamiDev.translate(['color_card','^red','^skip']),'']),draw:SamiDev.translate(['move_draw',window.__gameLogic.localSeat]),other:SamiDev.translate(['move_draw',(window.__gameLogic.localSeat+1)%4])}));
+  assert.equal(labels.own,'لعبت أحمر تخطي الدور ');assert.equal(labels.draw,'سحبت ورقة');assert(!labels.other.includes('^'));assert(labels.other.includes('لاعب'));
+ }
+ for(const page of pages)await page.evaluate(()=>{
+  window.__unoEventLabels=[];const native=SamiDev.translate;
+  SamiDev.translate=args=>{const text=native(args);if(Array.isArray(args)&&String(args[0]).startsWith('move_'))window.__unoEventLabels.push(text);return text;};
+ });
+ const active=await host.evaluate(()=>window.__gameLogic.turn[0]);
+ for(const page of pages)await page.waitForFunction(()=>!window.__gameLogic.paused,{},{timeout:15000});
+ const sequence=await pages[active].evaluate(()=>{
+  const g=window.__gameLogic,seat=g.localSeat,n=g._sequence[seat];
+  const card=g.hands[seat].find(card=>g.canPlayCard(seat,card));
+  const move=card===undefined?{d:1}:{c:card,...([8,14,15,16].includes(card>>2)?{o:card&3}:{})};
+  if(!g.localMove(move))throw new Error('legal Uno action rejected');return n;
+ });
+ for(const page of pages){
+  await page.waitForFunction(({active,sequence})=>window.__gameLogic._sequence[active]>sequence,{active,sequence},{timeout:15000});
+  await page.waitForFunction(()=>window.__unoEventLabels.length>0,{},{timeout:15000});
+  const labels=await page.evaluate(()=>window.__unoEventLabels);assert(labels.every(text=>!text.includes('^')&&!text.includes('<style=')));
+ }
  await host.locator('#sd-chat-input').fill('أهلًا، مباراة أونو جميلة');await host.locator('#sd-chat-form').evaluate(form=>form.requestSubmit());
  for(const page of pages)await page.locator('.sd-chat-text').filter({hasText:'أهلًا، مباراة أونو جميلة'}).waitFor();
  await pages[1].locator('#sd-chat-input').fill('رسالة اللاعب الآخر');await pages[1].locator('#sd-chat-form').evaluate(form=>form.requestSubmit());

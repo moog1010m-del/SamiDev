@@ -274,7 +274,14 @@
     if (!Array.isArray(args)) args=[args];
     const key=String(args[0] ?? '');
     let s=state.dict[key] ?? key.replace(/^_/, '').replaceAll('_',' ');
-    args.slice(1).forEach((v,i)=>{ s=s.replaceAll(`{${i}}`,String(v)); });
+    args.slice(1).forEach((v,i)=>{
+      if(isCrazy8 && (i===0 || key==='game_over_team'&&i===1) && /^(move_|game_over|player_won|turn$|players_hand$)/.test(key) && Number.isInteger(v)){
+        v=v===state.gameLogic?.localSeat?'أنت':state.network.roster.find(player=>player.seat===v)?.name||`اللاعب ${v+1}`;
+      }
+      if(isCrazy8 && typeof v==='string')v=v.replace(/\^(red|blue|green|yellow|reverse|skip|draw2|draw4)/g,(_,token)=>state.dict[token]||token);
+      s=s.replaceAll(`{${i}}`,String(v));
+    });
+    if(isCrazy8 && key.startsWith('move_'))s=s.replace(/^أنت لعب /,'لعبت ').replace(/^أنت سحب /,'سحبت ').replace(/^أنت اختار /,'اخترت ').replace(/^أنت انسحب$/,'انسحبت');
     return s;
   }
 
@@ -428,8 +435,9 @@
     if(rect.width < 8 || rect.height < 8) return false;
     // Keep CSS/scene geometry unchanged while limiting phone fill-rate and buffer memory.
     const mobileWeb=mobileDevice && !window.SamiDevMobile?.postMessage;
-    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? (mobileWeb?1.25:1.5) : 2,
-      mobileDevice ? Math.sqrt((mobileWeb?750000:1000000)/(rect.width*rect.height)) : Infinity);
+    const pixelCap=isCarrom?1500000:(mobileWeb?750000:1000000);
+    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? (isCarrom?2:(mobileWeb?1.25:1.5)) : 2,
+      mobileDevice ? Math.sqrt(pixelCap/(rect.width*rect.height)) : Infinity);
     state.performance.pixelRatio=dpr;
     const w=Math.max(1,Math.round(rect.width*dpr)), h=Math.max(1,Math.round(rect.height*dpr));
     const menuY=90*dpr;
@@ -1131,13 +1139,13 @@
         if(isCarrom && path==='images/game.webp' && state.carromTheme==='carrom_classic'){
           try{
             const wood=new Image();wood.decoding='async';
-            await new Promise((accept,reject)=>{wood.onload=accept;wood.onerror=reject;wood.src='/images/themes/samidev-walnut-source.png';});
+            await new Promise((accept,reject)=>{wood.onload=accept;wood.onerror=reject;wood.src='/images/themes/samidev-walnut-board.png';});
             // Preserve the native atlas and all its UVs. Replace only board_0.
-            // The original artwork occupies a 695px square of this source image.
+            // Standalone square sprite has transparent margins; no source-sheet backdrop.
             const atlas=document.createElement('canvas');atlas.width=img.width;atlas.height=img.height;
             const context=atlas.getContext('2d');context.drawImage(img,0,0);
             context.clearRect(0,0,1428,1428);
-            context.drawImage(wood,0,0,695,695,0,0,1428,1428);
+            context.drawImage(wood,0,0,wood.width,wood.height,0,0,1428,1428);
             texture=atlas;state.carromBoardArtwork='samidev-walnut';
           }catch(error){if(runtimeDebug)console.warn('[SamiDev] wood artwork fallback',error);}
         }

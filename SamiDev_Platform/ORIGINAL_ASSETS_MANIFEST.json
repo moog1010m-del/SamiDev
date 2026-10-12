@@ -1670,8 +1670,8 @@
     },
     {
       "path": "game/images/game.webp",
-      "source": "generated board and discs + newly drawn functional sprites",
-      "sha256": "125c1872dbb76bd0815e348f6b72a1835d395de42b0b17b0858a6b6b4a6a2f03"
+      "source": "Original SamiDev artwork; isolated generated walnut board / generated oak rail packed into existing native atlas, October 2026",
+      "sha256": "f566bcd679679d4c9348c867eb345559e3f4690161d3cf718350806865d3fc84"
     },
     {
       "path": "game/images/table-background.webp",
@@ -1681,8 +1681,8 @@
     },
     {
       "path": "game/images/themes/cat-atlas.webp",
-      "source": "generated board and discs + newly drawn functional sprites",
-      "sha256": "849fa30c66de0e3b847aa3e3770f5dd3d6ff666490a5b39e032ee43e460a0f71"
+      "source": "Original SamiDev artwork; isolated generated walnut board / generated oak rail packed into existing native atlas, October 2026",
+      "sha256": "c609d3058fd438949240cd29c41cfe55a009a3f9ff11d59df0df36b1bfc304b9"
     },
     {
       "path": "game/images/themes/cat-preview.webp",
@@ -1717,6 +1717,11 @@
       "type": "image",
       "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
       "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083"
+    },
+    {
+      "path": "game/images/themes/samidev-walnut-board.png",
+      "sha256": "518772111f67c1e8b08332446aab765d4672584c52c10e0cebdad2a863b63006",
+      "source": "Original SamiDev artwork; isolated generated walnut board / generated oak rail packed into existing native atlas, October 2026"
     },
     {
       "path": "game/platform/assets/profile/calendar.svg",
@@ -2142,7 +2147,7 @@
   "audioSource": "V37: 105 effects from 15 CC0 Freesound recordings; existing music and four vocal reactions retained",
   "processedOriginalAudioFiles": 105,
   "preservedOriginalPoolImages": 17,
-  "mediaCount": 236,
+  "mediaCount": 237,
   "v36GeneratedImageSources": 7,
   "v37FreesoundEffects": 105,
   "v37NewAudioFiles": 1

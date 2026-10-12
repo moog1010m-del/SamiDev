@@ -2,8 +2,8 @@
   'use strict';
   // The server owns the selection. Only bundled, allowlisted atlases may load.
   const themes = Object.freeze({
-    carrom_classic: Object.freeze({id:'carrom_classic', name:'كلاسيك', atlas:'images/game.webp?v=original-2'}),
-    carrom_cat: Object.freeze({id:'carrom_cat', name:'القطو الملكي', atlas:'images/themes/cat-atlas.webp?v=original-2'}),
+    carrom_classic: Object.freeze({id:'carrom_classic', name:'كلاسيك', atlas:'images/game.webp?v=f566bcd679679d4c'}),
+    carrom_cat: Object.freeze({id:'carrom_cat', name:'القطو الملكي', atlas:'images/themes/cat-atlas.webp?v=c609d3058fd43894'}),
   });
   const defaultTheme = themes.carrom_classic;
 

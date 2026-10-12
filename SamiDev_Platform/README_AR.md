@@ -2,6 +2,8 @@
 
 اختبار رحلة ٥٠٠ لاعب من التسجيل إلى المكافآت والشراء: [PLAYER_JOURNEY_TEST_AR.md](PLAYER_JOURNEY_TEST_AR.md).
 
+تحسين حركة وسجل أونو وترتيب الكيرم على الهاتف: [UNO_CARROM_POLISH_AR.md](UNO_CARROM_POLISH_AR.md).
+
 > أحدث تحديث: تحسينات أداء الهاتف واللمس وتكبير اللاعبين في الألعاب الثلاث في [MOBILE_FIX_AR.md](MOBILE_FIX_AR.md). تحديث الرسومات في [CARROM_FOOTBALL_REFRESH_AR.md](CARROM_FOOTBALL_REFRESH_AR.md)، وسجل المصادر في [ORIGINAL_ASSETS_AR.md](ORIGINAL_ASSETS_AR.md). تفاصيل ربط كريزي 8 في [CRAZY8_INTEGRATION_AR.md](CRAZY8_INTEGRATION_AR.md).
 
 > تحديث تصميم الكيرم والمتجر: راجع [CARROM_CLASSIC_STORE_AR.md](CARROM_CLASSIC_STORE_AR.md). الكلاسيك هو الافتراضي، والقطو قابل للتفعيل من المتجر.

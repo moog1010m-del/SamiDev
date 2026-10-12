@@ -77,7 +77,7 @@ async function carrom(boardImage,cat){const f=frames('carrom'),buffers={};for(co
  if(name==='board_0')out=boardImage;
  else if(name.startsWith('carrom_'))out=await disc(w,h,name.split('_')[1]);
  else if(name==='strike_01')out=await disc(w,h,'striker');
- else if(name==='strike_base_0')out=await raster(w,h,R(1,8,98,84,cat?'#132739':palette.dark,12,palette.gold,2)+R(8,26,84,48,'#dfcda4',6)+C(12,50,10,palette.dark)+C(88,50,10,palette.dark));
+ else if(name==='strike_base_0')out=await sharp(path.join(artDir,'carrom-slider-oak.png')).trim().resize(w,h,{fit:'fill'}).png().toBuffer();
  else if(['theme_preview','final','examples'].includes(name)){out=await fit(boardImage,w,h,8);if(name==='final'||name==='examples'){const d=await disc(Math.round(w*.075),Math.round(w*.075),'black');out=await sharp(out).composite([{input:d,left:Math.round(w*.3),top:Math.round(h*.35)}]).png().toBuffer()}}
  else if(name==='positioning'){out=await raster(w,h,R(2,17,96,65,palette.dark,14,palette.gold,2)+`<g transform="translate(20 20) scale(.6)">${symbol('arrow_side',palette.cream)}</g>`);}
  else if(name==='shoot'){out=await raster(w,h,`<g transform="translate(35 1) scale(.45)">${symbol('arrow',palette.gold)}</g><g transform="translate(30 43) scale(.55)">${symbol('finger')}</g>`);const d=await disc(Math.round(w*.32),Math.round(w*.32),'striker');out=await sharp(out).composite([{input:d,left:Math.round(w*.34),top:Math.round(h*.34)}]).png().toBuffer();}
