@@ -16,20 +16,20 @@
       "sha256": "621f82752ce3aa97220d141a48a50f06b18fc49a6204c40eb08f1aef133482d6"
     },
     "browser-runtime.js": {
-      "size": 70501,
-      "sha256": "71e83262075a9fc8c80b014698ac78f98f088592dc8c81d28424751fe08a1559"
+      "size": 70609,
+      "sha256": "a73e966601c77bcc31d66bb235ce162390129163cd34969112b9802dabe443a1"
     },
     "carrom-themes.js": {
       "size": 1683,
       "sha256": "531474ec45ea7e8c282d111e97d9caa798dcc8a77a37d808b93fe84ff18ccf3b"
     },
     "chat-polish.css": {
-      "size": 3042,
-      "sha256": "9920adca1804aa65e0efbd39c8d5c87fb02a95f20b9f910545c369d59cff79ce"
+      "size": 3697,
+      "sha256": "6af1264c6fc76c7a638fba1991a85f5138c3fbae517e75111e75854b7f88ff1f"
     },
     "chat-ui.js": {
-      "size": 19125,
-      "sha256": "0df3b2079399c678da914aa17bb8463283e09c02c9d78fcace31798583c5b218"
+      "size": 19208,
+      "sha256": "cf27123f0f5b6fc3b0d60b548a7a5f4ece40401a1dec66e39318d5386e58336c"
     },
     "crazy8-audio.js": {
       "size": 3985,
@@ -2313,19 +2313,19 @@
     },
     "platform/build.json": {
       "size": 2239,
-      "sha256": "6cd081fef38a0f1438a4a97823e1b2011c4780a809b2fa961ccc0c69d4e00a3b"
+      "sha256": "8705fec658c7db54fa22bb6cda19a64b7fb4863429b291a614dda44ad30db14b"
     },
     "platform/index.html": {
-      "size": 34918,
-      "sha256": "0d6c462ab53e89ea389374152ba7ba5959400cb6893809ffc7c88a5296b8cba8"
+      "size": 35799,
+      "sha256": "2af8a22f60a740db9b42b35f73a8bfb0a1e1f6f544c687783dde672de2afaed7"
     },
     "platform/platform.css": {
-      "size": 98407,
-      "sha256": "2ce37f89b17dddad345a424c3313d203fcf349385e7560e916c9b817b9c680fe"
+      "size": 100019,
+      "sha256": "b7b2f6000bb30283d7267535e7f9e4bc4526507d2e3e00b4551b823db91c7ca0"
     },
     "platform/platform.js": {
-      "size": 62992,
-      "sha256": "8939ece8cafaaa6a83be2684f1f4115b84e67caab5702bbf3dabee03dfabd523"
+      "size": 63448,
+      "sha256": "4da8adf1f2bf0ad5a5bad72da9655b81671a678a1e87ad9408a259a564c8272b"
     },
     "platform/profile-identity.css": {
       "size": 10976,
@@ -2340,8 +2340,8 @@
       "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
     },
     "player-profile-ui.js": {
-      "size": 33632,
-      "sha256": "dd1e18094f40d9b13b66145b813e9419657a8eec0d6ede65693fb3d1c07e5847"
+      "size": 33710,
+      "sha256": "3fcc33006aea831dd9083709eef2726d5ea05f877c14fb1232ddea4a70b1b73b"
     },
     "profile-details.css": {
       "size": 5610,

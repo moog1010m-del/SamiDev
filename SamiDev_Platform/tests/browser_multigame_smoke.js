@@ -1,7 +1,7 @@
 // API compatibility smoke only: WebGL/audio are mocked, no visual assertion.
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert');
 const game=process.argv[2]||'tablesoccer',root=path.resolve(__dirname,'..','game'),dir=game==='carrom'?root:path.join(root,'games',game);
-const warnings=[],errors=[],frames=[],timers=new Set(),resourceRequests=[],nativeUploads=[],contextRequests=[],syncRequests=[];let context;
+const warnings=[],errors=[],frames=[],timers=new Set(),resourceRequests=[],nativeUploads=[],nativeUploadObjects=[],contextRequests=[],syncRequests=[];let context;
 const mobile=process.env.SD_MOBILE==='1',layoutOnly=process.env.SD_LAYOUT_ONLY==='1';
 const [viewWidth,viewHeight]=(process.env.SD_VIEWPORT||'700x950').split('x').map(Number);
 const capacity=Number(process.env.SD_SEATS)||2;
@@ -10,7 +10,7 @@ const requestedTheme=process.argv[4]||'carrom_classic', failCatAtlas=process.arg
 const requestedCue=process.env.SD_CUE||'pool_cue_classic';
 const afk=process.env.SD_AFK==='1';const online=process.argv[3]==='online';let factory,room,deliver,resyncCount=0;
 const noop=()=>{};
-const gl=new Proxy({texImage2D:(...args)=>{const img=args.at(-1);if(typeof img?.src==='string')nativeUploads.push(img.src);},getParameter:()=>4096,getShaderParameter:()=>true,getProgramParameter:()=>true,getExtension:()=>null,getShaderInfoLog:()=>'',getProgramInfoLog:()=>''},{get:(o,k)=>k in o?o[k]:(/^[A-Z_0-9]+$/.test(k)?(o[k]=Object.keys(o).length):(...args)=>k.startsWith('create')?{}:0)});
+const gl=new Proxy({texImage2D:(...args)=>{const img=args.at(-1);nativeUploadObjects.push(img);if(typeof img?.src==='string')nativeUploads.push(img.src);},getParameter:()=>4096,getShaderParameter:()=>true,getProgramParameter:()=>true,getExtension:()=>null,getShaderInfoLog:()=>'',getProgramInfoLog:()=>''},{get:(o,k)=>k in o?o[k]:(/^[A-Z_0-9]+$/.test(k)?(o[k]=Object.keys(o).length):(...args)=>k.startsWith('create')?{}:0)});
 const ctx2d=new Proxy({measureText:s=>({width:String(s).length*20})},{get:(o,k)=>o[k]||noop});
 function elem(tag){const listeners=new Map();return {tag,listeners,style:{},classList:{add:noop,remove:noop,toggle:noop},dataset:{},appendChild(child){if(child.tag==='script'){try{let source=fs.readFileSync(path.join(dir,child.src.split('?')[0]),'utf8');source=source.replace(/(\.prototype.refresh=function\([a-z]\)\{)(var [a-z]=this\._imageRadius\*2)/,'$1globalThis.__avatarNodes.add(this);$2');vm.runInContext(source,context,{filename:'main.js'});child.onload();}catch(e){child.onerror?.(e);throw e;}}return child;},append:noop,addEventListener:(type,fn)=>{if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn);},setAttribute:noop,remove:noop,getContext:(type,options)=>{if(type!=='2d')contextRequests.push({type,options});return type==='2d'?ctx2d:gl;},getBoundingClientRect:()=>({x:0,y:0,left:0,top:0,width:viewWidth,height:viewHeight}),querySelector:()=>null,querySelectorAll:()=>[],width:viewWidth,height:viewHeight};}
 const canvas=elem('canvas'),status=elem('div');
@@ -145,7 +145,7 @@ if(online){
  }
  console.log(JSON.stringify({game,started:context.__samidevGameState.localHost.started,preview:context.__previewError,render:context.__renderError,turn:context.__gameLogic?.turn,flags:context.__gameLogic?.teamFlags,warnings,errors},null,2));
  assert(context.__samidevGameState.localHost.started&&!context.__previewError&&!context.__renderError,'browser bridge startup');
- if(game==='carrom'){const expected=failCatAtlas?'carrom_classic':requestedTheme;assert.equal(context.__samidevGameState.carromTheme,expected);const atlas=context.__samidevGameState.images.get('images/game.webp');assert(atlas&&atlas.src.includes(expected==='carrom_cat'?'cat-atlas.webp':'game.webp'),'selected atlas must be preloaded under the native texture key');assert.equal(atlas.naturalWidth,3116);assert.equal(atlas.naturalHeight,2128);assert(nativeUploads.includes(atlas.src),'selected carrom art uploaded by native renderer');assert(nativeUploads.some(uri=>uri.split('?')[0]==='images/table-background.webp'),'carrom background uploaded by native renderer');}
+ if(game==='carrom'){const expected=failCatAtlas?'carrom_classic':requestedTheme;assert.equal(context.__samidevGameState.carromTheme,expected);const atlas=context.__samidevGameState.images.get('images/game.webp');assert(atlas,'selected atlas is preloaded');if(expected==='carrom_cat')assert(atlas.src.includes('cat-atlas.webp'));else assert.equal(context.__samidevGameState.carromBoardArtwork,'samidev-walnut');assert.equal(atlas.naturalWidth||atlas.width,3116);assert.equal(atlas.naturalHeight||atlas.height,2128);assert(nativeUploadObjects.includes(atlas),'selected carrom art uploaded by native renderer');assert(nativeUploads.some(uri=>uri.split('?')[0]==='images/table-background.webp'),'carrom background uploaded by native renderer');}
  if(game==='tablesoccer'&&!layoutOnly){
   for(const uri of ['images/main.webp','images/field-img-standard.png','images/bg-img-standard.png','images/default_home.png','images/default_away.png','images/ball-standard.png'])assert(nativeUploads.includes(uri),'native football texture uploaded: '+uri);
   assert(context.SamiDev.sceneManager?.background?.sprite,'native football background composed');
@@ -154,7 +154,7 @@ if(online){
  }
  if(game==='pool'){assert(resourceRequests.every(uri=>!/^([a-z][a-z0-9+.-]*:)?\/\//i.test(uri)),'pool resources stay local');assert(!warnings.some(w=>w.includes('Missing preloaded texture')||w.includes('Invalid sprite')),'original pool sprites complete');}
  if(game==='carrom'||game==='crazy8'){
-  assert(resourceRequests.some(uri=>uri.split('?')[0]==='images/table-background.webp'),'game background loaded');
+  assert(resourceRequests.some(uri=>uri.split('?')[0]===(game==='crazy8'?'/games/crazy8/images/samidev-uno-felt.png':'images/table-background.webp')),'game background loaded');
   assert(resourceRequests.every(uri=>!/^([a-z][a-z0-9+.-]*:)?\/\//i.test(uri)),'all game resources are local');
   assert(!warnings.some(w=>w.includes('Missing preloaded texture')||w.includes('Invalid sprite')),'required sprites available');
  }
@@ -169,7 +169,7 @@ if(online){
   assert.equal(contextRequests[0].options.antialias,false);
   assert.equal(contextRequests[0].options.preserveDrawingBuffer,false);
   assert(canvas.width*canvas.height<1003000,'mobile backing buffer budget');
-  assert(context.__samidevGameState.performance.pixelRatio<=1.5);
+  assert(context.__samidevGameState.performance.pixelRatio<=1.25);
   const avatars=Array.from(nativeAvatars).filter(a=>a.parent&&a.seat>=0&&a.seat<capacity);
   assert(avatars.length>=capacity,'native players inspected');
   const ui=avatars.map(a=>({seat:a.seat,radius:a.imageRadius,fontSize:a.nameText.fontSize,name:a.nameText.text,maxNameWidth:a.maxNameWidth,x:a.x,y:a.y,parentWidth:a.parent?.width,parentHeight:a.parent?.height,ancestors:(()=>{let out=[],n=a;for(let i=0;n&&i<5;i++,n=n.parent)out.push({name:n.name,x:n.x,y:n.y,w:n.width,h:n.height,sx:n.scaleX,sy:n.scaleY,ax:n.anchorX,ay:n.anchorY});return out})()}));

@@ -7,7 +7,7 @@
   <meta name="samidev-release" content="V30">
   <title>SamiDev V25 — الكيرم وكرة الطاولة</title>
   <link rel="stylesheet" href="/profile-details.css?v=266b5c252cb0d40e">
-  <link rel="stylesheet" href="/platform/platform.css?v=2ce37f89b17dddad">
+  <link rel="stylesheet" href="/platform/platform.css?v=b7b2f6000bb30283">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=2a456d9cae921b0b">
 </head>
 <body>
@@ -119,13 +119,18 @@
             </div>
           </div>
 
-          <div class="community-layout">
-            <aside class="community-members-panel community-column">
+          <nav class="community-mobile-tabs" role="tablist" aria-label="أقسام الروم">
+            <button type="button" role="tab" id="community-tab-members" data-community-tab="members" aria-controls="community-panel-members" aria-selected="false">المتصلون</button>
+            <button type="button" role="tab" id="community-tab-games" data-community-tab="games" aria-controls="community-panel-games" aria-selected="true">المباريات</button>
+            <button type="button" role="tab" id="community-tab-chat" data-community-tab="chat" aria-controls="community-panel-chat" aria-selected="false">الشات</button>
+          </nav>
+          <div class="community-layout" data-mobile-tab="games">
+            <aside id="community-panel-members" aria-labelledby="community-tab-members" class="community-members-panel community-column">
               <div class="column-head"><div><small>الحضور</small><h3>المتصلون</h3></div><span id="community-member-count" class="count-pill">0</span></div>
               <div id="community-members" class="community-members"><div class="empty small">لا يوجد أعضاء متصلون</div></div>
             </aside>
 
-            <section class="community-games-panel community-column">
+            <section id="community-panel-games" aria-labelledby="community-tab-games" class="community-games-panel community-column">
               <div class="column-head games-head"><div><small>داخل المساحة</small><h3>غرف اللعب</h3></div><button id="refresh-rooms" class="ghost compact">تحديث</button></div>
               <div class="quick-games" aria-label="إنشاء مباراة جديدة">
                 <button id="quick-create-carrom" type="button" data-quick-game="carrom"><strong>الكيرم</strong><small>إنشاء مباراة</small></button>
@@ -136,7 +141,7 @@
               <div id="rooms" class="rooms community-game-rooms"><div class="empty">لا توجد مباريات بعد.</div></div>
             </section>
 
-            <aside class="community-chat-panel community-column">
+            <aside id="community-panel-chat" aria-labelledby="community-tab-chat" class="community-chat-panel community-column">
               <div class="column-head"><div><small>المحادثة العامة</small><h3 id="community-chat-title">شات المساحة</h3></div><span class="live-dot" title="مباشر"></span></div>
               <div id="community-chat-messages" class="community-chat-messages"><div class="empty small">ابدأ أول محادثة هنا.</div></div>
               <form id="community-chat-form" class="community-chat-form">
@@ -388,6 +393,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=7e0de8a76a875884"></script><script src="/profile-details.js?v=3ddaa34dae3bb0f6"></script><script src="/platform/platform.js?v=8939ece8cafaaa6a"></script>
+  <script src="/samidev-games.js?v=7e0de8a76a875884"></script><script src="/profile-details.js?v=3ddaa34dae3bb0f6"></script><script src="/platform/platform.js?v=4da8adf1f2bf0ad5"></script>
 </body>
 </html>

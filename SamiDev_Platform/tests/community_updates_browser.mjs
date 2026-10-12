@@ -41,6 +41,25 @@ try {
   await pages[1].locator('#community-chat-input').fill(reply);
   await pages[1].locator('#community-chat-form').evaluate(form=>form.requestSubmit());
   for(const page of pages)await page.locator('.community-chat-message').filter({hasText:reply}).waitFor({timeout:12000});
+  for(let i=0;i<pages.length;i++){
+    const page=pages[i];await page.setViewportSize({width:390,height:844});
+    await page.locator('[data-community-tab="members"]').click();
+    assert(await page.locator('.community-members-panel').isVisible());
+    assert(!await page.locator('.community-games-panel').isVisible());
+    assert(!await page.locator('.community-chat-panel').isVisible());
+    await page.locator('[data-community-tab="games"]').click();
+    assert(await page.locator('.community-games-panel').isVisible());
+    await page.locator('[data-community-tab="chat"]').click();
+    assert(await page.locator('.community-chat-panel').isVisible());
+    const own=page.locator('.community-chat-message').filter({hasText:i===0?text:reply});
+    const other=page.locator('.community-chat-message').filter({hasText:i===0?reply:text});
+    assert(await own.evaluate(row=>row.classList.contains('me')));
+    assert(!await other.evaluate(row=>row.classList.contains('me')));
+    const a=await own.boundingBox(),b=await other.boundingBox();assert(a.x+a.width>b.x+b.width,'own message aligns right');
+    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+    await page.setViewportSize({width:1440,height:900});
+    for(const panel of ['members','games','chat'])assert(await page.locator('.community-'+panel+'-panel').isVisible());
+  }
   assert.deepEqual(errors,[]);
   console.log(JSON.stringify({ok:true,checks:['Both players render the other member with a valid content element','Sent chat reaches both browsers through polling','A real pool table appears to both community viewers','Chat continues updating after table creation'],count:4}));
 } finally {

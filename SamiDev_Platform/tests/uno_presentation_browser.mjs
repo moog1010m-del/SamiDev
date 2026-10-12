@@ -27,6 +27,13 @@ try {
  for(const page of pages)await page.waitForFunction(()=>window.SamiDevNetwork.state.begun&&window.__gameLogic.started,{},{timeout:30000});
  await host.locator('#sd-chat-input').fill('أهلًا، مباراة أونو جميلة');await host.locator('#sd-chat-form').evaluate(form=>form.requestSubmit());
  for(const page of pages)await page.locator('.sd-chat-text').filter({hasText:'أهلًا، مباراة أونو جميلة'}).waitFor();
+ await pages[1].locator('#sd-chat-input').fill('رسالة اللاعب الآخر');await pages[1].locator('#sd-chat-form').evaluate(form=>form.requestSubmit());
+ await host.locator('.sd-chat-text').filter({hasText:'رسالة اللاعب الآخر'}).waitFor();
+ const own=host.locator('.sd-chat-message').filter({hasText:'أهلًا، مباراة أونو جميلة'}),other=host.locator('.sd-chat-message').filter({hasText:'رسالة اللاعب الآخر'});
+ assert(await own.evaluate(row=>row.classList.contains('me')));assert(!await other.evaluate(row=>row.classList.contains('me')));
+ const ownRect=await own.boundingBox(),otherRect=await other.boundingBox();assert(ownRect.x+ownRect.width>otherRect.x+otherRect.width);
+ const appearance=row=>{const style=getComputedStyle(row.querySelector('.sd-chat-message-body'));return [style.backgroundColor,style.borderColor,style.borderRadius];};
+ assert.deepEqual(await own.evaluate(appearance),await other.evaluate(appearance));
  assert.equal(await host.locator('#sd-chat-send svg').count(),1);
  await host.waitForFunction(()=>!window.__samidevGameState.network.snapshotBusy&&!window.__samidevGameState.unoWaitingNeedsLayout,{},{timeout:15000});
  await host.waitForTimeout(300);

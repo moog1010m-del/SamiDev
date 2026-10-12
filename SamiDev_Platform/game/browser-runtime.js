@@ -427,8 +427,9 @@
     // observed by ResizeObserver below, so a later valid size cannot be missed.
     if(rect.width < 8 || rect.height < 8) return false;
     // Keep CSS/scene geometry unchanged while limiting phone fill-rate and buffer memory.
-    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? 1.5 : 2,
-      mobileDevice ? Math.sqrt(1000000/(rect.width*rect.height)) : Infinity);
+    const mobileWeb=mobileDevice && !window.SamiDevMobile?.postMessage;
+    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? (mobileWeb?1.25:1.5) : 2,
+      mobileDevice ? Math.sqrt((mobileWeb?750000:1000000)/(rect.width*rect.height)) : Infinity);
     state.performance.pixelRatio=dpr;
     const w=Math.max(1,Math.round(rect.width*dpr)), h=Math.max(1,Math.round(rect.height*dpr));
     const menuY=90*dpr;

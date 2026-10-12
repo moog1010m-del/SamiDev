@@ -218,6 +218,12 @@
     $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}showAuth();};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
     $$('.theme-toggle').forEach(b=>b.addEventListener('click',toggleTheme));
+    $$('[data-community-tab]').forEach(button=>button.addEventListener('click',()=>{
+      const tab=button.dataset.communityTab;
+      $('.community-layout').dataset.mobileTab=tab;
+      $$('[data-community-tab]').forEach(item=>item.setAttribute('aria-selected',String(item===button)));
+      if(tab==='chat'){const box=$('#community-chat-messages');box.scrollTop=box.scrollHeight;}
+    }));
     $('#community-self-profile').onclick=()=>navigate('profile');
     $('#community-profile-page').onclick=()=>navigate('profile');
     $('#community-profile-edit').onclick=()=>{navigate('profile');requestAnimationFrame(openProfileEditor);};
@@ -577,7 +583,7 @@
     const box=$('#community-chat-messages');if(!box)return;const wasNearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;box.replaceChildren();
     if(!state.communityMessages.length){box.append(emptyBlock('ابدأ أول محادثة هنا.'));return;}
     for(const m of state.communityMessages){
-      const article=document.createElement('article');article.className='community-chat-message';article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
+      const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
       const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);article.append(bubble);box.append(article);

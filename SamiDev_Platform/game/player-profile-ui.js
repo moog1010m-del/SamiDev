@@ -384,7 +384,7 @@
     // Avatar taps are handled natively by main.js Avatar.image.onTap -> SamiDev.showProfile(seat).
     // Do not place transparent hit targets over WebGL or stop pointer propagation here.
     if(window.ResizeObserver)new ResizeObserver(positionLayer).observe(canvas);
-    setInterval(()=>{positionLayer();pollGameOver();},500);
+    setInterval(()=>{if(layer?.classList.contains("open")||ratingLayer?.classList.contains("open"))positionLayer();pollGameOver();},500);
     positionLayer();
   }
 

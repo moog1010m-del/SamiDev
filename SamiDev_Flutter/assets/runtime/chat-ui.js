@@ -42,7 +42,7 @@
     list.replaceChildren();
     for (const msg of recent) {
       const row = document.createElement('div');
-      row.className = 'sd-chat-message' + (Number(msg.seat) === Number(net()?.state?.seat) ? ' me' : '');
+      row.className = 'sd-chat-message' + (msg.seat != null && net()?.state?.seat != null && Number(net()?.state?.seat)>=0 && Number(msg.seat) === Number(net()?.state?.seat) ? ' me' : '');
       const player = playerForSeat(msg.seat);
       const av = avatarFor(player);
       row.appendChild(av);
