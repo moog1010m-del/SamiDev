@@ -3,7 +3,7 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const number = v => Math.max(0, Math.floor(Number(v) || 0));
   const count = v => number(v).toLocaleString('ar-SA');
-  const asset = v => /^\/(?:images|games|platform\/assets|room-sprites)\/[A-Za-z0-9_./-]+$/.test(String(v)) && !String(v).includes('..') ? String(v) : '';
+  const asset = v => window.SamiDevStickerArt?.cell(v)!==null && window.SamiDevStickerArt?.cell(v)!==undefined ? String(v) : /^\/(?:images|games|platform\/assets|room-sprites)\/[A-Za-z0-9_./-]+$/.test(String(v)) && !String(v).includes('..') ? String(v) : '';
   const games = [['pool','البلياردو','pool'],['carrom','الكيرم','carrom'],['tablesoccer','كرة الطاولة','football'],['crazy8','أونو','cards']];
 
   function render(root, user, {own = false} = {}) {
@@ -20,7 +20,7 @@
       <div class="sd-collection-grid"></div>
       <p class="sd-collection-empty" ${items.length ? 'hidden' : ''}>${own ? 'ستظهر هنا المقتنيات التي تجمعها أو تشتريها.' : 'لا توجد مقتنيات مملوكة للعرض بعد.'}</p>
       <button class="sd-collection-more" type="button" aria-expanded="false" ${items.length ? '' : 'hidden'}>تصفّح كل المقتنيات (${count(total)})</button>
-      <div class="sd-item-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المقتنى" hidden><button class="sd-item-close" type="button" aria-label="إغلاق تفاصيل المقتنى">×</button><img alt=""><h4></h4><p></p></div>
+      <div class="sd-item-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المقتنى" hidden><button class="sd-item-close" type="button" aria-label="إغلاق تفاصيل المقتنى">×</button><div class="sd-item-art"></div><h4></h4><p></p></div>
       </section><section class="sd-game-statistics" aria-label="إحصاءات الألعاب">
       <header class="sd-detail-heading"><h3>رحلتي في الألعاب</h3><button class="sd-profile-full" type="button" aria-expanded="false">عرض التفاصيل</button></header>
       ${games.map(([id, name, mark]) => {
@@ -46,12 +46,11 @@
       for (const item of expanded ? selected : selected.slice(0, 3)) {
         const button = document.createElement('button');
         button.type = 'button'; button.className = 'sd-owned-card';
-        button.innerHTML = `${asset(item.asset) ? `<img src="${esc(asset(item.asset))}" alt="" loading="lazy">` : '<span class="sd-owned-symbol" aria-hidden="true">✦</span>'}<strong>${esc(item.name)}</strong><small>×${count(item.quantity || 1)}</small>`;
+        button.innerHTML = `${asset(item.asset) ? window.SamiDevStickerArt.markup(asset(item.asset)) : '<span class="sd-owned-symbol" aria-hidden="true">✦</span>'}<strong>${esc(item.name)}</strong><small>×${count(item.quantity || 1)}</small>`;
         button.setAttribute('aria-label', `${item.name}، العدد ${number(item.quantity || 1)}، عرض التفاصيل`);
         button.onclick = () => {
           previousFocus = button;
-          const image = dialog.querySelector('img');
-          image.hidden = !asset(item.asset); if (asset(item.asset)) image.src = asset(item.asset);
+          const image=dialog.querySelector('.sd-item-art');image.innerHTML=window.SamiDevStickerArt.markup(asset(item.asset));
           dialog.querySelector('h4').textContent = item.name;
           dialog.querySelector('p').textContent = `العدد: ${count(item.quantity || 1)}`;
           dialog.hidden = false; dialog.querySelector('button').focus();

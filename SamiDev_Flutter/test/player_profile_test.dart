@@ -12,7 +12,7 @@ class ProfileApi extends PlatformApi {
   ProfileApi():super(RuntimePolicy('https://profile.example.test'),MemoryVault());
   final calls=<String>[];
   final user=<String,dynamic>{'id':'profile_test_123','username':'test','displayName':'لاعب الاختبار','hasAvatar':false,
-    'wins':17,'reputation':6,'accountAgeDays':23,'relation':'none','reputationDailyRemaining':4,'reputationGrantedToday':false};
+    'starsCount':1,'wins':17,'reputation':6,'accountAgeDays':23,'relation':'none','reputationDailyRemaining':4,'reputationGrantedToday':false};
   @override Future<ApiResponse> request(String method,String path,{String? query,List<int>? body}) async {
     calls.add('$method $path');
     if(path=='/api/friends/request'){expect(jsonDecode(utf8.decode(body!))['username'],'test');user['relation']='outgoing';}
@@ -29,7 +29,7 @@ void main(){
         onPressed:()=>showPlayerProfile(context,api:api,id:'profile_test_123',onUnauthorized:(){}),child:const Text('افتح البطاقة'))))));
       await tester.tap(find.text('افتح البطاقة'));await tester.pumpAndSettle();
       expect(find.text('لاعب الاختبار'),findsOneWidget);expect(find.text('17'),findsOneWidget);expect(find.text('6'),findsOneWidget);
-      expect(find.byType(ProfileStars),findsOneWidget);expect(find.byType(PlayerAvatar),findsOneWidget);
+      expect(find.byType(ProfileStars),findsOneWidget);expect(find.byWidgetPredicate((widget)=>widget is ProfileDecoration&&widget.name=='star'),findsOneWidget);expect(find.byType(PlayerAvatar),findsOneWidget);
       await tester.ensureVisible(find.text('إضافة صديق'));await tester.tap(find.text('إضافة صديق'));await tester.pumpAndSettle();
       expect(api.calls,contains('POST /api/friends/request'));expect(find.text('تم إرسال الطلب'),findsOneWidget);
       expect(find.byType(ProfileDetails),findsNothing);

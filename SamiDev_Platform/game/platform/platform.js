@@ -105,14 +105,14 @@
     const badgeAsset=user.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
     const badgeName=user.nameBadgeName||'سيفين ونخلة';
     $$('.profile-name-row .profile-sticker').forEach(el=>{
-      el.style.backgroundImage=`url('${badgeAsset}')`;
+      window.SamiDevStickerArt.render(el,badgeAsset,badgeName);
       el.setAttribute('aria-label',badgeName);
       el.setAttribute('title',badgeName);
     });
-    const userStars=Math.max(0,Math.min(5,Number(user.starsCount??5)));
-    $('#page-profile .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
-    $$('#page-profile .profile-stars .profile-sprite-star').forEach((el,i)=>{
-      el.classList.toggle('dim',i>=userStars);
+    const userStars=Math.max(0,Math.min(5,Number(user.starsCount??0)));
+    $$('#page-profile .profile-stars,.lobby-profile-stars,#profile-editor .profile-stars').forEach(root=>{
+      root.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
+      root.querySelectorAll('.profile-sprite').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
     });
     if(Array.isArray(user.showcaseItems))window.SamiDevProfileDetails?.render($('#own-profile-details'),user,{own:true});
     else refreshOwnProfile();
@@ -123,8 +123,8 @@
     const id=state.user?.id;if(!id)return;const request=++ownProfileRequest;
     try{const data=await api('/api/public-profile/'+encodeURIComponent(id));
       if(request!==ownProfileRequest||state.user?.id!==id)return;
-      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins});
-      window.SamiDevProfileDetails?.render($('#own-profile-details'),data.user,{own:true});
+      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins,starsCount:data.user.starsCount,nameBadgeAsset:data.user.nameBadgeAsset,nameBadgeName:data.user.nameBadgeName});
+      setUser(state.user);
     }catch(_){const node=$('#own-profile-details');if(node&&!node.children.length)node.textContent='تعذر تحميل المقتنيات والإحصاءات. افتح الملف مجددًا للمحاولة.';}
   }
   async function avatarDataFromFile(file){
@@ -257,6 +257,7 @@
     $('#friend-add').onsubmit=async e=>{e.preventDefault();const username=new FormData(e.currentTarget).get('username');try{const d=await api('/api/friends/request',{method:'POST',body:JSON.stringify({username})});toast(d.status==='accepted'?'تمت إضافة الصديق':'تم إرسال الطلب');e.currentTarget.reset();loadFriends();}catch(err){toast(err.message,true);}};
     $('#search-btn').onclick=searchUsers; $('#user-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchUsers();}});
     $('#admin-refresh').onclick=loadAdmin;
+    window.matchMedia('(max-width:600px)').addEventListener('change',()=>{state.storePage=0;if(state.store)renderStore();});
     $('#store-refresh').onclick=()=>loadStore(true);
     const photoInput=$('#profile-photo-input');
     const choosePhoto=()=>photoInput.click();
@@ -315,7 +316,8 @@
     wireStoreCategoryButtons();
     const data=state.store||{}, catalog=Array.isArray(data.catalog)?data.catalog:[], inventory=Array.isArray(data.inventory)?data.inventory:[], ledger=Array.isArray(data.ledger)?data.ledger:[];
     const userStars=Number(data.starsCount??state.user?.starsCount??5);
-    const selectedCat=state.storeCategory||'all';
+    const selectedCat=state.storeCategory||'profile';
+    $$('.store-category-btn').forEach(button=>button.classList.toggle('active',button.dataset.category===selectedCat));
     const balance=$('#store-balance');if(balance)balance.textContent=formatProfileStat(data.coins);
     const owned=$('#store-owned-count');if(owned)owned.textContent=`${inventory.length} مملوك`;
 
@@ -328,9 +330,11 @@
       return true;
     });
 
-    const pageCount=Math.max(1,Math.ceil(filteredCatalog.length/12));
+    if(selectedCat==='profile')filteredCatalog.sort((a,b)=>{const order=item=>item.slot==='profile_stars'?-1:(window.SamiDevStickerArt.cell(item.asset)??10);return order(a)-order(b);});
+    const pageSize=window.matchMedia("(max-width:600px)").matches?6:12;
+    const pageCount=Math.max(1,Math.ceil(filteredCatalog.length/pageSize));
     state.storePage=Math.max(0,Math.min(pageCount-1,Number(state.storePage)||0));
-    const visibleCatalog=filteredCatalog.slice(state.storePage*12,(state.storePage+1)*12);
+    const visibleCatalog=filteredCatalog.slice(state.storePage*pageSize,(state.storePage+1)*pageSize);
     const pager=$('#store-pagination');if(pager){pager.replaceChildren();pager.hidden=pageCount<=1;if(pageCount>1){
       for(const [label,delta] of [['السابق',-1],['التالي',1]]){
         const button=document.createElement('button');button.type='button';button.textContent=label;
@@ -340,54 +344,14 @@
       }
     }}
     const box=$('#store-catalog');if(box){box.replaceChildren();if(!filteredCatalog.length){box.append(emptyBlock('لا توجد عناصر متاحة في هذا القسم حاليًا.'));}else for(const item of visibleCatalog){
-      const isStar=item.slot==='profile_stars'||item.id==='profile_star';
-      const isBadge=item.slot==='name_badge';
-      const active=isBadge?(data.equipped?.name_badge||'badge_palm_swords')===item.id:(data.equipped?.[item.slot]===item.id);
-      const card=document.createElement('article');card.className='store-item-card'+(active?' is-equipped':'');
-      if(item.asset){const visual=document.createElement('img');visual.className='store-item-visual';visual.alt=String(item.name||'تصميم');visual.loading='lazy';visual.src=String(item.asset);card.append(visual);}
-      const copy=document.createElement('div');copy.className='store-item-copy';
-      const title=document.createElement('strong');title.textContent=String(item.name||item.id||'عنصر');title.title=title.textContent;
-      const desc=document.createElement('small');desc.textContent=String(item.description||'');
-      const badge=document.createElement('span');badge.className='store-item-badge';
-      if(isStar){
-        badge.textContent=userStars>=5?'الحد الأقصى (5/5 نجوم)':`${userStars}/5 نجوم مكتسبة`;
-      }else if(item.default){
-        badge.textContent='الافتراضي المجاني';
-      }else if(item.availableToAll){
-        badge.textContent='متاح للجميع';
-      }else if(item.owned){
-        badge.textContent=isBadge?'ملصق اسم مملوك':'مملوك';
-      }else{
-        badge.textContent=`سعر الشراء: ${item.price} كوينز`;
-      }
-      copy.append(badge,title,desc);
-      if(!item.owned&&!item.availableToAll&&!item.default&&item.price>0){
-        const priceLabel=document.createElement('span');priceLabel.className='store-item-price';
-        priceLabel.innerHTML=`<span class="coin-mark small" aria-hidden="true">C</span> ${formatProfileStat(item.price)} كوينز`;
-        copy.append(priceLabel);
-      }
-      card.append(copy);
-
-      const action=document.createElement('button');action.type='button';action.className='ghost compact';
-      if(isStar){
-        if(userStars>=5){
-          action.textContent='مكتمل (5 نجوم)';action.disabled=true;
-        }else{
-          action.className='ghost compact store-item-btn-buy';
-          action.textContent=`شراء · ${formatProfileStat(item.price||50)}`;
-          action.onclick=()=>buyStoreItem(item.id,action);
-        }
-      }else if(item.owned||item.availableToAll||item.default){
-        action.textContent=active?'مفعّل الآن':isBadge?'تفعيل الشارة':'تفعيل التصميم';
-        action.setAttribute('aria-pressed',String(active));
-        action.disabled=active;
-        if(!active)action.onclick=()=>equipStoreItem(item.id,action);
-      }else{
-        action.className='ghost compact store-item-btn-buy';
-        action.textContent=`شراء · ${formatProfileStat(item.price)}`;
-        action.onclick=()=>buyStoreItem(item.id,action);
-      }
-      card.append(action);box.append(card);
+      const active=(data.equipped?.[item.slot]===item.id);
+      const owned=item.owned||item.availableToAll||item.default;
+      const card=document.createElement('article');card.className='store-item-card'+(active?' is-equipped':'');card.dataset.itemId=item.id;
+      card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`معاينة ${item.name}`);
+      card.innerHTML=window.SamiDevStickerArt.markup(item.asset,'store-item-visual',item.name)+`<div class="store-item-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.description||'')}</small><div class="store-product-footer"><span class="store-item-price">${item.price?formatProfileStat(item.price)+' <span class="coin-mark small">C</span>':'مجاني'}</span><span class="store-item-badge">${active?'مفعّل':owned?'مملوك':'معاينة'}</span></div></div>`;
+      card.onclick=()=>openStoreProduct(item.id,card);
+      card.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openStoreProduct(item.id,card);}};
+      box.append(card);
     }}
     const ledgerBox=$('#store-ledger');if(ledgerBox){ledgerBox.replaceChildren();if(!ledger.length){ledgerBox.append(emptyBlock('لا توجد حركات حتى الآن.'));}else for(const entry of ledger){
       const row=document.createElement('div');row.className='store-ledger-row';const mark=document.createElement('span');mark.className='coin-mark small';mark.textContent='C';
@@ -397,29 +361,59 @@
       const amount=document.createElement('b');const n=Math.trunc(Number(entry.amount)||0),abs=Math.abs(n).toLocaleString('en-US');amount.textContent=`${n>=0?'+':'-'}${abs}`;row.append(mark,copy,amount);ledgerBox.append(row);
     }}
   }
-  async function buyStoreItem(itemId,button){
-    const item=(state.store?.catalog||[]).find(x=>x.id===itemId);
-    const itemName=item?.name||'العنصر';
-    const price=item?.price||0;
-    const balance=Number(state.store?.coins??state.user?.coins??0);
-    if(balance<price){
-      toast(`رصيد الكوينز غير كافٍ. يتطلب ${price} كوينز (رصيدك الحالي ${balance})`,true);
-      return;
+  let storeProductId=null,storeProductReturnFocus=null,storePurchaseBusy=false;
+  function closeStoreProduct(){
+    if(storePurchaseBusy)return;
+    $('#store-product-modal')?.remove();storeProductId=null;
+    if(storeProductReturnFocus?.isConnected)storeProductReturnFocus.focus();else $('#store-refresh')?.focus();
+  }
+  function openStoreProduct(itemId,origin){
+    if(storePurchaseBusy)return;
+    storeProductId=itemId;storeProductReturnFocus=origin||storeProductReturnFocus;
+    renderStoreProduct(false);
+  }
+  function renderStoreProduct(confirming=false){
+    const item=(state.store?.catalog||[]).find(row=>row.id===storeProductId);if(!item)return closeStoreProduct();
+    let modal=$('#store-product-modal');
+    if(!modal){modal=document.createElement('div');modal.id='store-product-modal';modal.className='store-product-modal';document.body.append(modal);
+      modal.addEventListener('click',event=>{if(event.target===modal)closeStoreProduct();});
+      modal.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();closeStoreProduct();}if(event.key==='Tab'){const buttons=Array.from(modal.querySelectorAll('button:not(:disabled)'));const first=buttons[0],last=buttons.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}}});
     }
+    const coins=Number(state.store?.coins??state.user?.coins??0),price=Number(item.price)||0;
+    const isStar=item.slot==='profile_stars',stars=Math.max(0,Math.min(5,Number(state.store?.starsCount??state.user?.starsCount??0)));
+    const owned=isStar?stars>=5:(item.owned||item.availableToAll||item.default);
+    const active=!isStar&&state.store?.equipped?.[item.slot]===item.id;
+    const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
+    modal.innerHTML=`<section class="store-product-sheet" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
+      <header><span>رصيدك <b>${formatProfileStat(coins)}</b> <span class="coin-mark small">C</span></span><button type="button" data-product-close aria-label="إغلاق">×</button></header>
+      <div class="store-product-art">${window.SamiDevStickerArt.markup(item.asset,'',item.name)}</div>
+      ${preview?`<div class="store-name-preview">${preview}<strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong></div>`:''}
+      <h3 id="store-product-title">${escapeHtml(item.name)}</h3><p class="store-product-description">${escapeHtml(item.description||'')}</p>
+      ${isStar?`<small class="store-star-count">تملك ${stars} من 5 نجوم. ${stars<5?'هذه العملية تضيف نجمة واحدة.':''}</small>`:''}
+      <p class="store-product-error" role="alert" hidden></p>
+      ${confirming?`<div class="store-purchase-confirm"><h4>تأكيد الشراء</h4><p>شراء ${escapeHtml(item.name)} مقابل <b>${formatProfileStat(price)} كوينز</b>؟</p><small>رصيدك بعد الشراء: ${formatProfileStat(coins-price)} كوينز</small><div><button type="button" class="ghost" data-product-back>رجوع</button><button type="button" class="primary" data-product-confirm>تأكيد الشراء</button></div></div>`:
+      `<footer><strong>${price?formatProfileStat(price)+' كوينز':'مجاني'}</strong><button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'تفعيل الملصق أو التصميم':'شراء'}</button></footer>`}
+    </section>`;
+    $('[data-product-close]',modal).onclick=closeStoreProduct;
+    $('[data-product-back]',modal)?.addEventListener('click',()=>renderStoreProduct(false));
+    $('[data-product-confirm]',modal)?.addEventListener('click',()=>buyStoreItem(item.id));
+    $('[data-product-action]',modal)?.addEventListener('click',async event=>{
+      if(owned){await equipStoreItem(item.id,event.currentTarget);renderStoreProduct(false);return;}
+      if(coins<price){const error=$('.store-product-error',modal);error.hidden=false;error.textContent='رصيدك لا يكفي لشراء هذا العنصر.';return;}
+      renderStoreProduct(true);
+    });
+    (confirming?$('[data-product-back]',modal):$('[data-product-close]',modal))?.focus();
+  }
+  async function buyStoreItem(itemId){
+    if(storePurchaseBusy||itemId!==storeProductId||!$('#store-product-modal [data-product-confirm]'))return;
+    storePurchaseBusy=true;
+    const modal=$('#store-product-modal');modal.querySelectorAll('button').forEach(button=>button.disabled=true);
     try{
-      button.disabled=true;
       const result=await api('/api/store/buy',{method:'POST',body:JSON.stringify({itemId})});
-      toast(`تم شراء ${itemName} بنجاح!`);
-      await loadStore();
-      refreshOwnProfile();
-      if(result.starsCount!==undefined&&state.user){
-        state.user.starsCount=result.starsCount;
-        setUser(state.user);
-      }
-    }catch(err){
-      button.disabled=false;
-      toast(err.message||'تعذر إتمام الشراء',true);
-    }
+      if(state.user){state.user.coins=result.coins;if(result.starsCount!==undefined)state.user.starsCount=result.starsCount;setUser(state.user);}
+      await loadStore();refreshOwnProfile();
+      toast('تم الشراء وإضافة العنصر إلى مقتنياتك');storePurchaseBusy=false;renderStoreProduct(false);
+    }catch(err){storePurchaseBusy=false;modal.querySelectorAll('button').forEach(button=>button.disabled=false);const error=$('.store-product-error',modal);error.hidden=false;error.textContent=err.message||'تعذر إتمام الشراء. حاول مجددًا.';}
   }
   async function equipStoreItem(itemId,button){
     try{
@@ -563,14 +557,14 @@
       const title=document.createElement('div');title.className='community-member-title';const strong=document.createElement('strong');strong.textContent=name;
       const emblem=profileSprite('profile-sprite-emblem community-member-emblem');
       const badgeAsset=u.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
-      if(badgeAsset)emblem.style.backgroundImage=`url('${badgeAsset}')`;
+      window.SamiDevStickerArt.render(emblem,badgeAsset,u.nameBadgeName||'ملصق الاسم');
       title.append(strong,emblem);
       const stars=document.createElement('div');stars.className='community-member-stars';
-      const userStars=Math.max(0,Math.min(5,Number(u.starsCount??5)));
+      const userStars=Math.max(0,Math.min(5,Number(u.starsCount??0)));
       stars.setAttribute('aria-label',`${userStars} نجوم`);
       for(let i=0;i<5;i++){
         const star=profileSprite('profile-sprite-star community-member-star');
-        if(i>=userStars)star.classList.add('dim');
+        star.hidden=i>=userStars;
         stars.append(star);
       }
       const meta=document.createElement('div');meta.className='community-member-meta';
@@ -611,10 +605,10 @@
     const badgeAsset=user.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
     const badgeName=user.nameBadgeName||'سيفين ونخلة';
     const modalBadge=$('#community-profile-modal .profile-sticker');
-    if(modalBadge){modalBadge.style.backgroundImage=`url('${badgeAsset}')`;modalBadge.setAttribute('aria-label',badgeName);modalBadge.setAttribute('title',badgeName);}
-    const userStars=Math.max(0,Math.min(5,Number(user.starsCount??5)));
+    if(modalBadge){window.SamiDevStickerArt.render(modalBadge,badgeAsset,badgeName);modalBadge.setAttribute('aria-label',badgeName);modalBadge.setAttribute('title',badgeName);}
+    const userStars=Math.max(0,Math.min(5,Number(user.starsCount??0)));
     $('#community-profile-modal .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
-    $$('#community-profile-modal .community-public-profile-star').forEach((el,i)=>el.classList.toggle('dim',i>=userStars));
+    $$('#community-profile-modal .community-public-profile-star').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
     $('#community-profile-handle').textContent='@'+String(user.username||'player');
     $('#community-profile-since').textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     $('#community-profile-wins').textContent=formatProfileStat(user.wins);

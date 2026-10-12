@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../runtime/api.dart';
 import 'player_profile.dart';
+import 'sticker_art.dart';
 
 class CommunityHub extends StatefulWidget {
   const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity});
@@ -105,8 +106,8 @@ class CommunityHubState extends State<CommunityHub> {
     padding:const EdgeInsets.symmetric(horizontal:18,vertical:16),child:Row(children:[
       PlayerAvatar(api:widget.api,user:user,radius:31,framed:true),const SizedBox(width:13),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Row(children:[const ProfileDecoration('palm-swords',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
-        const SizedBox(height:5),const ProfileStars(size:18),
+        Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
+        const SizedBox(height:5),ProfileStars(size:18,count:(user['starsCount'] as num?)?.toInt()??0),
         if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('@${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
         const SizedBox(height:8),Wrap(spacing:16,runSpacing:6,children:[
           Row(mainAxisSize:MainAxisSize.min,children:[const ProfileDecoration('trophy',size:18),const SizedBox(width:5),Text('فوز ${user['wins']??0}',style:const TextStyle(fontSize:12))]),

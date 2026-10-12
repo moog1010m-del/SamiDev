@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../runtime/api.dart';
 import 'profile_details.dart';
+import 'sticker_art.dart';
 
 class ProfileDecoration extends StatelessWidget {
   const ProfileDecoration(this.name,{super.key,this.size=22});
@@ -19,12 +20,12 @@ class ProfileDecoration extends StatelessWidget {
   }
 }
 class ProfileStars extends StatelessWidget {
-  const ProfileStars({super.key,this.size=17,this.count=5});
+  const ProfileStars({super.key,this.size=17,this.count=0});
   final double size;
   final int count;
-  // The web profile's decorative motif, not an invented rating or achievement.
+  // The server's purchased star count is shared by own and public profiles.
   @override Widget build(BuildContext context)=>ExcludeSemantics(child:Row(mainAxisSize:MainAxisSize.min,
-    children:List.generate(5,(i)=>Opacity(opacity:i<count?1.0:0.22,child:ProfileDecoration('star',size:size)))));
+    children:List.generate(count.clamp(0,5),(i)=>ProfileDecoration('star',size:size))));
 }
 class PlayerAvatar extends StatelessWidget {
   const PlayerAvatar({super.key,required this.api,required this.user,this.radius=27,this.framed=false});
@@ -110,7 +111,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           Transform.translate(offset:const Offset(0,-32),child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[
             Flexible(child:Text(u['displayName']?.toString()??u['username']?.toString()??'لاعب',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w700))),
             const SizedBox(width:6),ProfileStars(size:18,count:(u['starsCount'] as num?)?.toInt()??0),
-            const SizedBox(width:6),ProfileDecoration(u['nameBadge']=='badge_crown'?'trophy':(u['nameBadge']=='badge_fire'?'reputation-flame':'palm-swords'),size:22),
+            const SizedBox(width:6),StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:22),
           ])),
           if(u['username']!=null)Text('@${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[

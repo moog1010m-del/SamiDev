@@ -62,11 +62,21 @@ STORE_CATALOG.update({
     "pool_emerald": {"name":"زمرد", "description":"قماش زمردي وإطار جوز ونحاس.", "slot":"pool_theme", "category":"pool", "gameId":"pool", "asset":"/images/themes/pool-emerald-preview.webp", "price":0, "availableToAll":True, "default":False},
     "crazy8_original": {"name":"ورق SamiDev", "description":"تصميم كريزي 8 الحالي.", "slot":"crazy8_theme", "category":"crazy8", "gameId":"crazy8", "asset":"/games/crazy8/images/table-background.webp", "price":0, "availableToAll":True, "default":True},
     "soccer_original": {"name":"ملعب SamiDev", "description":"تصميم ملعب الكورة الحالي.", "slot":"tablesoccer_theme", "category":"tablesoccer", "gameId":"tablesoccer", "asset":"/games/tablesoccer/images/thumbnail-standard.png", "price":0, "availableToAll":True, "default":True},
-    "badge_palm_swords": {"name":"سيفين ونخلة", "description":"شعار السيفين والنخلة الذهبي يظهر بجانب اسمك في البروفايل والمباريات.", "slot":"name_badge", "category":"profile", "gameId":"", "asset":"/platform/assets/profile/raster/palm-swords.webp", "price":0, "availableToAll":True, "default":True},
-    "badge_crown": {"name":"التاج الملكي", "description":"ملصق التاج الذهبي الفاخر بجانب اسمك.", "slot":"name_badge", "category":"profile", "gameId":"", "asset":"/platform/assets/profile/raster/trophy.webp", "price":100, "availableToAll":False, "default":False},
-    "badge_fire": {"name":"شعلة الحماس", "description":"ملصق شعلة اللهب المتوهجة بجانب اسمك.", "slot":"name_badge", "category":"profile", "gameId":"", "asset":"/platform/assets/profile/raster/reputation-flame.webp", "price":150, "availableToAll":False, "default":False},
     "profile_star": {"name":"نجمة ذهبية", "description":"ملصق نجمة ذهبية تزين بطاقة ملفك الشخصي. يمكنك جمع حتى 5 نجوم.", "slot":"profile_stars", "category":"profile", "gameId":"", "asset":"/platform/assets/profile/raster/star.webp", "price":50, "maxQuantity":5, "availableToAll":False, "default":False},
 })
+# Original SamiDev 3x3 sticker collection; legacy IDs retain their existing ownership.
+STORE_CATALOG.update({
+    'badge_crown': {'name': 'صقر السحاب', 'description': 'جناح فيروزي وروح تحب القمم.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-0', 'price': 100, 'availableToAll': False, 'default': False},
+    'badge_orbit': {'name': 'مدار الليل', 'description': 'هلال لؤلؤي يحتضن سماء بعيدة.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-1', 'price': 150, 'availableToAll': False, 'default': False},
+    'badge_shell': {'name': 'لؤلؤة الموج', 'description': 'صدفة هادئة تحمل بريق البحر.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-2', 'price': 150, 'availableToAll': False, 'default': False},
+    'badge_fox': {'name': 'ثعلب النجوم', 'description': 'ذكاء الصحراء ولمعة السماء.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-3', 'price': 200, 'availableToAll': False, 'default': False},
+    'badge_fire': {'name': 'فانوس المجلس', 'description': 'ضوء دافئ يرافق حضورك.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-4', 'price': 150, 'availableToAll': False, 'default': False},
+    'badge_crystal': {'name': 'زهرة البلور', 'description': 'بتلات بنفسجية تفتح باب الخيال.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-5', 'price': 200, 'availableToAll': False, 'default': False},
+    'badge_leopard': {'name': 'فهد الرمال', 'description': 'حضور واثق بعيون زمردية.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-6', 'price': 250, 'availableToAll': False, 'default': False},
+    'badge_jellyfish': {'name': 'نبض البحر', 'description': 'ألوان مضيئة وإيقاع لطيف.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-7', 'price': 200, 'availableToAll': False, 'default': False},
+    'badge_palm_swords': {'name': 'بوصلة النخيل', 'description': 'نخلة ترشدك بين البحر والصحراء.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-8', 'price': 0, 'availableToAll': True, 'default': True},
+})
+STORE_CATALOG["profile_star"]["asset"] = "/platform/assets/profile/identity/profile-atlas.png#star"
 STORE_DEFAULT_EQUIPPED = {"carrom_theme":"carrom_classic", "pool_theme":"pool_midnight", "pool_cue":"pool_cue_classic", "crazy8_theme":"crazy8_original", "tablesoccer_theme":"soccer_original", "name_badge":"badge_palm_swords"}
 
 

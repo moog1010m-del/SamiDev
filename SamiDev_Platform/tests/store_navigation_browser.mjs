@@ -23,8 +23,8 @@ try {
  for(const width of [320,390,768,1280]) {
   await page.setViewportSize({width,height:900});
   const dimensions=await page.locator('.store-catalog').evaluate(n=>({cols:getComputedStyle(n).gridTemplateColumns.split(' ').length,overflow:n.scrollWidth>n.clientWidth+1}));
-  assert.equal(dimensions.cols,3);assert(!dimensions.overflow);
-  assert(await page.locator('.store-item-card').count()<=12);
+  assert.equal(dimensions.cols,width<=600?2:3);assert(!dimensions.overflow);
+  assert(await page.locator('.store-item-card').count()<=(width<=600?6:12));
  }
  await page.setViewportSize({width:390,height:900});
  const pager=page.locator('#store-pagination');
@@ -38,7 +38,7 @@ try {
  assert.equal(await page.locator('.store-item-card').count(),Math.min(12,pool.length));
  await page.locator('[data-category="all"]').click();
  await page.screenshot({path:out+'/store-mobile.png',fullPage:true});
- checks.push('Three columns at 320/390/768/1280px; twelve-item pages, filters and smaller art; no permanent reward card');
+ checks.push('Two phone columns with six-item pages; three wider columns with twelve-item pages; filters and no permanent reward card');
  await page.locator('.bottom-btn[data-page="lobby"]').click();
  await page.goto(base+'/platform/?community=majlis');await page.locator('#community-room').waitFor({state:'visible'});
  assert(!await page.locator('.bottom-nav').isVisible());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'sticker_art.dart';
 
 /// Public profile data only: owned cosmetics and server-recorded game results.
 class ProfileDetails extends StatefulWidget {
@@ -19,6 +20,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     return 'assets/runtime$path';
   }
   Widget picture(dynamic value, {double height = 65}) {
+    if(StickerArtwork.cell('$value')!=null)return StickerArtwork(asset:'$value',size:height);
     final path = asset(value);
     return path == null ? Icon(Icons.auto_awesome, size: height / 2) : Image.asset(path, height: height, fit: BoxFit.contain);
   }

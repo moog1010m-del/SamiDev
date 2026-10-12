@@ -60,6 +60,7 @@ flutter:
     - assets/runtime/platform/assets/profile/identity/
     - assets/runtime/platform/assets/profile/raster/
     - assets/runtime/platform/assets/ranks/
+    - assets/runtime/platform/assets/stickers/
     - assets/runtime/room-sprites/
     - assets/runtime/scene-avatars/
     - assets/runtime/scene-reactions/

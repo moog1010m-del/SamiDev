@@ -115,13 +115,13 @@
 
   function starsMarkup(count = 5) {
     const n = Math.max(0, Math.min(5, Number(count ?? 5)));
-    return Array.from({length:5}, (_, i) => `<span class="sdpp-icon sdpp-icon-star ${i < n ? 'active' : 'dim'}" aria-hidden="true"></span>`).join('');
+    return Array.from({length:n}, (_, i) => `<span class="sdpp-icon sdpp-icon-star ${i < n ? 'active' : 'dim'}" aria-hidden="true"></span>`).join('');
   }
 
   function badgeMarkup(user) {
     const asset = user?.nameBadgeAsset || '/platform/assets/profile/raster/palm-swords.webp';
     const name = user?.nameBadgeName || 'سيفين ونخلة';
-    return `<span class="sdpp-emblem-wrap"><img class="sdpp-emblem" src="${esc(asset)}" alt="${esc(name)}" title="${esc(name)}" loading="lazy"></span>`;
+    return `<span class="sdpp-emblem-wrap">${window.SamiDevStickerArt.markup(asset,"sdpp-emblem",name)}</span>`;
   }
 
   function showcaseMarkup(user){
