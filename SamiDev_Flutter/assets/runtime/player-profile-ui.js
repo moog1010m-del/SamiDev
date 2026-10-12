@@ -9,6 +9,7 @@
 
   let layer, card, ratingLayer, toastBox;
   let activeProfile = null;
+  let profileFull = false;
   let lastGameOver = false;
   let ratingQueue = [];
   let ratingBusy = false;
@@ -100,7 +101,7 @@
   function positionLayer() {
     const r=canvasRect();
     if(!r||!layer)return;
-    Object.assign(layer.style,{left:`${r.left}px`,top:`${r.top}px`,width:`${r.width}px`,height:`${r.height}px`});
+    Object.assign(layer.style,{left:"0",top:"0",width:"100%",height:"100dvh"});
     if(ratingLayer)Object.assign(ratingLayer.style,{left:`${r.left}px`,top:`${r.top}px`,width:`${r.width}px`,height:`${r.height}px`});
   }
 
@@ -124,11 +125,16 @@
   }
 
   function showcaseMarkup(user){
-    return '<section data-profile-details></section>';
+    const best=(user.gameStatistics||[]).filter(row=>Number(row.played)>0).sort((a,b)=>Number(b.wins)-Number(a.wins))[0];
+    const marks={pool:'pool',carrom:'carrom',tablesoccer:'football',crazy8:'cards'};
+    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'أونو'};
+    const featured=best&&marks[best.gameId]?`<div class="sd-featured-rank"><img src="/room-sprites/${marks[best.gameId]}.png" alt=""><div><strong>${names[best.gameId]}</strong><small>${esc(best.rankName)} · المستوى ${numberText(best.level)}</small></div></div>`:'';
+    return featured+'<button class="sd-open-full" data-action="full" type="button">الملف الكامل والمقتنيات والإحصاءات</button><section data-profile-details hidden></section>';
   }
 
   function renderProfile(user, player) {
     activeProfile={user,player};
+    card.classList.add("profile-showcase");
     const img=`<img class="sdpp-avatar-img" data-sd-avatar src="${user.id?'/api/avatar/'+encodeURIComponent(user.id):DEFAULT_AVATAR_URL}" alt="">`;
     const remaining=Number.isFinite(Number(user.reputationDailyRemaining))?Math.max(0,Number(user.reputationDailyRemaining)):0;
     const repDisabled=user.relation==='self'||user.reputationGrantedToday||remaining<=0;
@@ -137,9 +143,8 @@
       <div class="sdpp-cover"><span class="sdpp-cover-mark">S</span></div>
       <div class="sdpp-profile-body">
         <div class="sdpp-avatar">${img}</div>
-        <div class="sdpp-name-row"><strong>${esc(user.displayName||player?.name||'Player')}</strong>${badgeMarkup(user)}</div>
-        <div class="sdpp-stars" aria-label="${user.starsCount ?? 5} نجوم">${starsMarkup(user.starsCount)}</div>
-        <div class="sdpp-divider"></div>
+        <div class="sdpp-name-row"><strong>${esc(user.displayName||player?.name||'لاعب')}</strong><div class="sdpp-stars" aria-label="${user.starsCount ?? 0} نجوم">${starsMarkup(user.starsCount ?? 0)}</div>${badgeMarkup(user)}</div>
+        <div class="sdpp-handle">${esc(user.username ? "@"+user.username : "")}</div>
         <div class="sdpp-stats">
           <div><small>لاعب منذ</small><b>${icon('calendar')}${esc(daysText(user.accountAgeDays))}</b></div>
           <div><small>الفوز</small><b>${icon('trophy')}${esc(numberText(user.wins))}</b></div>
@@ -149,6 +154,7 @@
           <button class="sdpp-action report" data-action="report" type="button" title="إبلاغ" ${user.relation==='self'?'disabled':''}>${icon('report')}<span>إبلاغ</span></button>
           ${relationButton(user)}
           <button class="sdpp-action reputation" data-action="reputation" type="button" ${repDisabled?'disabled':''}>${icon('fire')}<span>${user.reputationGrantedToday?'مُنحت اليوم':'منح سمعة'}</span><small>${remaining}/5 اليوم</small></button>
+          <button class="sdpp-action collection" data-action="collection" type="button" aria-label="عرض المقتنيات"><span class="sdpp-icon sdpp-icon-collection" aria-hidden="true"></span></button>
         </div>
         ${showcaseMarkup(user)}
         <div id="sdpp-report-box" class="sdpp-report-box" hidden>
@@ -158,7 +164,10 @@
         </div>
       </div>`;
     wireSafeAvatarImages(card);
-    card.querySelector('.sdpp-close').onclick=closeProfile;
+    card.querySelector('.sdpp-close').onclick=()=>{if(profileFull)setProfileFull(false);else closeProfile();};
+    card.querySelector('[data-action="full"]')?.addEventListener('click',()=>setProfileFull(true));
+    card.querySelector('[data-action="collection"]')?.addEventListener("click",()=>{setProfileFull(true);card.querySelector(".sd-collection-section")?.scrollIntoView({block:"nearest"});});
+    setProfileFull(profileFull);
     window.SamiDevProfileDetails?.render(card.querySelector('[data-profile-details]'),user,{own:user.relation==='self'});
     card.querySelector('[data-action="friend"]')?.addEventListener('click',()=>friendAction());
     card.querySelector('[data-action="reputation"]')?.addEventListener('click',()=>reputationAction());
@@ -168,15 +177,23 @@
     layer.classList.add('open'); layer.setAttribute('aria-hidden','false');
   }
 
+  function setProfileFull(full){
+    profileFull=full;card.classList.toggle("sd-profile-expanded",full);
+    const details=card.querySelector("[data-profile-details]");if(details)details.hidden=!full;
+    const button=card.querySelector("[data-action=full]");if(button)button.hidden=full;
+    const close=card.querySelector(".sdpp-close");if(close){close.textContent=full?"‹":"×";close.setAttribute("aria-label",full?"العودة إلى البطاقة المختصرة":"إغلاق");}
+  }
+
   function renderGuestProfile(player) {
     activeProfile={user:null,player};
+    card.classList.remove("sd-profile-expanded");
     card.innerHTML=`
       <button class="sdpp-close" type="button" aria-label="إغلاق">${icon('close')}</button>
       <div class="sdpp-cover"><span class="sdpp-cover-mark">S</span></div>
       <div class="sdpp-profile-body">
         <div class="sdpp-avatar"><img class="sdpp-avatar-img" data-sd-avatar src="${DEFAULT_AVATAR_URL}" alt=""></div>
         <div class="sdpp-name-row"><strong>${esc(player?.name||'Player')}</strong>${badgeMarkup(null)}</div>
-        <div class="sdpp-stars" aria-label="خمس نجوم">${starsMarkup(5)}</div>
+
         <div class="sdpp-divider"></div>
         <div class="sdpp-guest-note">هذا اللاعب داخل المباراة كضيف، لذلك لا توجد بيانات حساب مرتبطة بهذه الجلسة.</div>
         <div class="sdpp-stats">
@@ -195,6 +212,7 @@
 
   async function openProfile(player) {
     if(!player?.name)return;
+    profileFull=false;
     positionLayer();
     if(!player.accountId){renderGuestProfile(player);return;}
     card.innerHTML='<div class="sdpp-loading">تحميل الملف...</div>';
@@ -299,6 +317,7 @@
 
   function build() {
     if(!canvas||layer)return;
+    const identity=document.createElement("link");identity.rel="stylesheet";identity.href="/platform/profile-identity.css";document.head.appendChild(identity);
     const style=document.createElement('style');
     style.textContent=`
       .sdpp-icon{display:inline-block;width:22px;height:22px;flex:0 0 22px;background:url('/player-profile-sheet.svg') no-repeat;background-size:1100% 100%;vertical-align:middle}.sdpp-icon-star,.sdpp-icon-trophy,.sdpp-icon-fire,.sdpp-icon-emblem{background-repeat:no-repeat;background-position:center;background-size:contain}.sdpp-icon-star{background-image:url('/platform/assets/profile/raster/star.webp')}.sdpp-icon-trophy{background-image:url('/platform/assets/profile/raster/trophy.webp')}.sdpp-icon-calendar{background-position:20% 0}.sdpp-icon-fire{background-image:url('/platform/assets/profile/raster/reputation-flame.webp')}.sdpp-icon-emblem{background-image:url('/platform/assets/profile/raster/palm-swords.webp')}.sdpp-icon-friend{background-position:50% 0}.sdpp-icon-report{background-position:60% 0}.sdpp-icon-up{background-position:70% 0}.sdpp-icon-down{background-position:80% 0}.sdpp-icon-close{background-position:90% 0}.sdpp-icon-user{background-position:100% 0}
@@ -312,6 +331,40 @@
       .sdpp-report-box{margin-top:12px;text-align:right;border:1px solid rgba(230,107,112,.22);border-radius:12px;padding:11px;background:#10171b}.sdpp-report-box label{display:block;font-size:12px;margin-bottom:6px;color:#c7d0d4}.sdpp-report-box textarea{box-sizing:border-box;width:100%;resize:vertical;border:1px solid #2c3b42;border-radius:9px;background:#080d10;color:#fff;padding:9px;font:13px/1.6 inherit;outline:none}.sdpp-report-box>div{display:flex;gap:7px;margin-top:8px}.sdpp-report-box button{border:0;border-radius:8px;padding:8px 11px;background:#26333a;color:#fff;font-family:inherit;cursor:pointer}.sdpp-report-box button.send{background:#a53238}.sdpp-guest-note{margin:2px auto 12px;max-width:290px;color:#8f9da3;font-size:11px;line-height:1.7}.sdpp-actions-guest{grid-template-columns:1fr}.sdpp-actions-guest .sdpp-action{background:#151c20}.sdpp-loading{padding:80px 24px;text-align:center;color:#9ca9ae}.sdpp-loading.error{color:#ef8c91}
       #sdpp-rating-layer{z-index:23020;align-items:center!important}.sdpp-rating-card{width:min(330px,100%);background:#0c1114;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.58);direction:rtl}.sdpp-rating-avatar{width:82px;height:82px;border-radius:50%;overflow:hidden;background:#26343a;border:2px solid #d7a743;display:grid;place-items:center;margin:0 auto 10px;font-size:24px;font-weight:800}.sdpp-rating-avatar img{width:100%;height:100%;object-fit:cover}.sdpp-rating-card strong{font-size:19px}.sdpp-rating-card p{font-size:12px;color:#94a1a7;margin:6px 0 15px}.sdpp-rating-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;direction:rtl}.sdpp-rating-actions button{min-height:48px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:#14201f;color:#fff;font-family:inherit;font-weight:750;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}.sdpp-rating-actions button:last-child{background:#171b1e}.sdpp-rating-skip{margin-top:10px;border:0;background:transparent;color:#7f8b91;font-family:inherit;cursor:pointer;padding:6px 14px}.sdpp-toast{position:fixed;z-index:24000;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,12px);opacity:0;pointer-events:none;padding:9px 13px;border-radius:10px;background:#17372d;color:#eaf7f1;font:12px system-ui;transition:.16s;max-width:min(420px,88vw);text-align:center}.sdpp-toast.show{opacity:1;transform:translate(-50%,0)}.sdpp-toast.error{background:#5d2428;color:#ffecef}
       @media(max-width:520px){#sdpp-layer.open,#sdpp-rating-layer.open{padding:10px}.sdpp-cover{height:112px}.sdpp-avatar{width:118px;height:118px;margin-top:-59px}.sdpp-profile-body{padding:0 14px 15px}.sdpp-name-row strong{font-size:20px}.sdpp-actions{grid-template-columns:54px 1fr 82px;gap:6px}.sdpp-action{font-size:12px;padding:7px 6px}.sdpp-stats b{font-size:14px}.sdpp-stats>div{padding:0 4px}}
+    `;
+    style.textContent+=`
+      #sdpp-card{background:#121719;width:min(470px,100%);border-color:#303a3f}
+      #sdpp-card.sd-profile-expanded{width:min(540px,100%)}
+      #sdpp-card [hidden]{display:none!important}
+      #sdpp-card .sdpp-cover{height:145px;background:url('/platform/assets/profile/identity/samidev-night-cover.png') center 46%/cover}
+      #sdpp-card .sdpp-cover:after,#sdpp-card .sdpp-cover-mark,#sdpp-card .sdpp-divider{display:none}
+      #sdpp-card .sdpp-avatar{width:118px;height:118px;margin-top:-59px;box-shadow:0 0 0 4px #121719;border-color:#deba6c}
+      #sdpp-card .sdpp-name-row{margin-top:18px;flex-wrap:wrap;gap:6px}
+      #sdpp-card .sdpp-name-row strong{max-width:170px;font-size:21px}
+      #sdpp-card .sdpp-stars{margin:0;gap:0}
+      #sdpp-card .sdpp-handle{margin-top:14px;color:#99a5a9;font-size:12px}
+      #sdpp-card.sd-profile-expanded .sd-featured-rank{display:none}
+      #sdpp-card .sdpp-stats{margin-top:24px;border:0;padding:10px 0}
+      #sdpp-card .sdpp-actions{margin:16px 0 0;grid-template-columns:38px minmax(90px,1fr) 44px 44px;gap:6px}
+      #sdpp-card .sdpp-actions-guest{grid-template-columns:1fr}
+      #sdpp-card .sdpp-action{height:46px;min-height:46px;padding:6px}
+      #sdpp-card .sdpp-action.report .sdpp-icon{display:inline-block}
+      #sdpp-card .sdpp-action.reputation{display:flex}
+      #sdpp-card .sdpp-action.reputation span:not(.sdpp-icon),#sdpp-card .sdpp-action.reputation small{display:none}
+      #sdpp-card .sdpp-action.collection{background:#655295}
+      #sdpp-card .sdpp-icon-collection{background:url('/platform/assets/profile/identity/profile-atlas.png') 33.333% 100%/400% 200%}
+      #sdpp-card .sdpp-action{border:0;border-radius:11px}
+      #sdpp-card .sdpp-action.friend{background:#237b89}
+      #sdpp-card .sdpp-action.reputation{background:#b4772a}
+      #sdpp-card .sdpp-icon-star,#sdpp-card .sdpp-icon-fire,#sdpp-card .sdpp-icon-trophy,#sdpp-card .sdpp-icon-calendar,#sdpp-card .sdpp-icon-friend,#sdpp-card .sdpp-icon-report{background-image:url('/platform/assets/profile/identity/profile-atlas.png');background-size:400% 200%}
+      #sdpp-card .sdpp-icon-star{background-position:0 0}
+      #sdpp-card .sdpp-icon-fire{background-position:33.333% 0}
+      #sdpp-card .sdpp-icon-trophy{background-position:66.667% 0}
+      #sdpp-card .sdpp-icon-calendar{background-position:100% 0}
+      #sdpp-card .sdpp-icon-friend{background-position:0 100%}
+      #sdpp-card .sdpp-icon-report{background-position:66.667% 100%}
+      #sdpp-card .sd-open-full{width:100%;margin:16px 0 4px;padding:8px;border:1px solid #303a3f;border-radius:999px;background:transparent;color:#65cbbc;cursor:pointer}
+      #sdpp-card .sdpp-close{color:#f1f3ef;font-size:26px}
     `;
     document.head.appendChild(style);
 

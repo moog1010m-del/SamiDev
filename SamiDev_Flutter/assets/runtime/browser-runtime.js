@@ -1082,7 +1082,23 @@
       img.decoding='async';
       const themeAtlas = selectedTheme && path === 'images/game.webp';
       let fallback = false;
-      img.onload=()=>{state.images.set(norm(path),img);resolve();};
+      img.onload=async()=>{
+        let texture=img;
+        if(isCarrom && path==='images/game.webp' && state.carromTheme==='carrom_classic'){
+          try{
+            const wood=new Image();wood.decoding='async';
+            await new Promise((accept,reject)=>{wood.onload=accept;wood.onerror=reject;wood.src='/images/themes/samidev-walnut-source.png';});
+            // Preserve the native atlas and all its UVs. Replace only board_0.
+            // The original artwork occupies a 695px square of this source image.
+            const atlas=document.createElement('canvas');atlas.width=img.width;atlas.height=img.height;
+            const context=atlas.getContext('2d');context.drawImage(img,0,0);
+            context.clearRect(0,0,1428,1428);
+            context.drawImage(wood,0,0,695,695,0,0,1428,1428);
+            texture=atlas;state.carromBoardArtwork='samidev-walnut';
+          }catch(error){if(runtimeDebug)console.warn('[SamiDev] wood artwork fallback',error);}
+        }
+        state.images.set(norm(path),texture);resolve();
+      };
       img.onerror=()=>{
         if(themeAtlas && !fallback){
           fallback=true; state.carromTheme='carrom_classic';

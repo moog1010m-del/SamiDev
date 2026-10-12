@@ -90,11 +90,19 @@ try{
     assert(!sent.some(x=>['move','runtime_ready'].includes(x.type)),game+' must stay server gated');
     assert.equal(await host.locator('.sd-waiting-board,.sd-waiting-mirror').count(),0);
     assert(await host.evaluate(()=>!!window.SamiDevProfileDetails));
+    if(game==='carrom')assert.equal(await host.evaluate(()=>window.__samidevGameState.carromBoardArtwork),'samidev-walnut');
     await host.screenshot({path:path.join(out,game+'-waiting.png')});
     await host.evaluate(()=>window.SamiDevPlayerProfileUI.openSeat(0));
+    await host.waitForSelector('#sdpp-card [data-action=full]');
+    assert.equal(await host.locator('#sdpp-card [data-profile-details]').isVisible(),false);
+    await host.screenshot({path:path.join(out,game+'-profile-compact.png')});
+    await host.locator('#sdpp-card [data-action=full]').click();
     await host.waitForSelector('#sdpp-card [data-profile-details] .sd-rank-row',{timeout:10000});
     assert.equal(await host.locator('#sdpp-card .sd-rank-row').count(),4);
     assert.equal(await host.locator('#sdpp-card .sd-owned-card').count(),3);
+    await host.screenshot({path:path.join(out,game+'-profile-full.png')});
+    await host.locator('.sdpp-close').click();
+    assert.equal(await host.locator('#sdpp-card [data-profile-details]').isVisible(),false);
     await host.locator('.sdpp-close').click();
     // The scene is reused, rather than replaced by an imitation or second logic.
     await host.evaluate(()=>{window.__waitingLogicForTest=window.__gameLogic;});
