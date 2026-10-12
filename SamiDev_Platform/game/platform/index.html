@@ -6,8 +6,9 @@
   <meta name="theme-color" content="#0b1016">
   <meta name="samidev-release" content="V30">
   <title>SamiDev V25 — الكيرم وكرة الطاولة</title>
-  <link rel="stylesheet" href="/profile-details.css?v=eca05057b0914d22">
+  <link rel="stylesheet" href="/profile-details.css?v=266b5c252cb0d40e">
   <link rel="stylesheet" href="/platform/platform.css?v=2ce37f89b17dddad">
+  <link rel="stylesheet" href="/platform/profile-identity.css?v=2a456d9cae921b0b">
 </head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
@@ -219,12 +220,13 @@
               <div class="profile-name-row">
                 <span class="profile-sprite profile-sprite-emblem profile-sticker" role="img" aria-label="ملصق النخلة والسيفين" title="ملصق النخلة والسيفين"></span>
                 <h3 id="profile-name">Player</h3>
-              </div>
-
               <div class="profile-stars" aria-label="خمس نجوم">
                 <span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span>
-              </div>
+              </div></div>
 
+
+
+              <div id="profile-identity-handle" class="community-public-profile-handle">@player</div>
               <div class="profile-stats" aria-label="إحصاءات الملف الشخصي">
                 <div class="profile-stat profile-stat-since">
                   <small>لاعب منذ</small>
@@ -307,7 +309,7 @@
     </nav>
   </div>
 
-  <div id="community-profile-modal" class="community-public-profile-modal" aria-hidden="true">
+  <div id="community-profile-modal" class="community-public-profile-modal" role="dialog" aria-modal="true" aria-labelledby="community-profile-name" aria-hidden="true">
     <div class="community-public-profile-shell">
       <article class="profile-showcase community-public-profile-card panel" aria-label="ملف اللاعب">
         <div class="profile-card-bar">
@@ -328,19 +330,22 @@
           <div class="profile-name-row">
             <span class="profile-sprite profile-sprite-emblem profile-sticker" role="img" aria-label="ملصق النخلة والسيفين"></span>
             <h3 id="community-profile-name">Player</h3>
-          </div>
-          <div id="community-profile-handle" class="community-public-profile-handle">@player</div>
           <div class="profile-stars" aria-label="خمس نجوم">
             <span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span>
-          </div>
+          </div></div>
+          <div id="community-profile-handle" class="community-public-profile-handle">@player</div>
+
           <div class="profile-stats" aria-label="إحصاءات اللاعب">
             <div class="profile-stat profile-stat-since"><small>لاعب منذ</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="community-profile-since">0 يوم</strong></div></div>
             <div class="profile-stat profile-stat-wins"><small>الفوز</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="community-profile-wins">0</strong></div></div>
             <div class="profile-stat profile-stat-reputation"><small>السمعة</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="community-profile-reputation">0</strong></div></div>
           </div>
+          <div id="community-profile-featured" class="sd-featured-rank" aria-label="اللعبة الأبرز"></div>
+          <button id="community-profile-full" class="sd-open-full" type="button">الملف الكامل والمقتنيات والإحصاءات</button>
           <div id="community-profile-actions" class="community-public-profile-actions">
-            <button id="community-profile-report" class="community-public-action report" type="button"><span class="community-action-icon report" aria-hidden="true"></span><span>إبلاغ</span></button>
-            <button id="community-profile-friend" class="community-public-action friend" type="button"><span class="community-action-icon friend" aria-hidden="true"></span><span>إضافة صديق</span></button>
+            <button id="community-profile-report" class="community-public-action report" type="button"><span class="sd-art sd-art-report" aria-hidden="true"></span><span>إبلاغ</span></button>
+            <button id="community-profile-friend" class="community-public-action friend" type="button"><span class="sd-art sd-art-friend" aria-hidden="true"></span><span>إضافة صديق</span></button>
+            <button id="community-profile-collection" class="community-public-action collection" type="button" aria-label="عرض المقتنيات"><span class="sd-art sd-art-collection" aria-hidden="true"></span><span>المقتنيات</span></button>
             <button id="community-profile-reputation-btn" class="community-public-action reputation" type="button"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><span>منح سمعة</span><small id="community-profile-reputation-left">5/5 اليوم</small></button>
           </div>
           <div id="community-profile-report-box" class="community-public-report-box hidden">
@@ -383,6 +388,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=9c0dece53f812f41"></script><script src="/profile-details.js?v=79d84630b04f6d90"></script><script src="/platform/platform.js?v=9409edb59939d831"></script>
+  <script src="/samidev-games.js?v=9c0dece53f812f41"></script><script src="/profile-details.js?v=4fc9e066574f742b"></script><script src="/platform/platform.js?v=694247b8d16c29e7"></script>
 </body>
 </html>

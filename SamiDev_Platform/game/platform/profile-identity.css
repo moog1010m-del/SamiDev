@@ -1,0 +1,55 @@
+/* SamiDev identity: original raster cover and 4x2 sprite atlas, shared compact/full order. */
+.profile-showcase{--identity-surface:#121719;--identity-panel:#1e272b;--identity-line:#303a3f;--identity-ink:#f1f3ef;--identity-muted:#99a5a9;background:var(--identity-surface)!important;color:var(--identity-ink);border:1px solid var(--identity-line);border-radius:18px;box-shadow:0 20px 70px #0004;min-height:0!important;overflow:hidden}
+.profile-workspace{display:block;width:100%;max-width:540px;margin:auto}.profile-workspace>.profile-showcase{width:100%;max-width:none}
+.profile-showcase .profile-card-bar{background:var(--identity-surface)!important;border-bottom:0;color:var(--identity-ink);height:52px}
+.profile-showcase .profile-cover{height:150px;background-image:url('/platform/assets/profile/identity/samidev-night-cover.png')!important;background-size:cover!important;background-position:50% 46%!important;background-repeat:no-repeat!important}
+.profile-showcase .profile-cover::before,.profile-showcase .profile-cover::after,.profile-cover-emblem,.profile-cover-glow{display:none!important}
+.profile-showcase .profile-showcase-body{margin-top:-58px;padding:0 18px 20px;align-items:center}
+.profile-showcase .profile-showcase-body::after{display:none}
+.profile-showcase .profile-avatar{width:124px;height:124px;border:3px solid #deba6c;background:#172329;box-shadow:0 0 0 4px var(--identity-surface);position:relative}
+.profile-showcase .profile-avatar::after{display:none}.profile-showcase .profile-avatar-wrap{margin:0}
+.profile-showcase .profile-name-row{margin-top:18px;display:flex;justify-content:center;align-items:center;gap:7px;direction:rtl;width:100%;min-height:30px}
+.profile-showcase .profile-name-row h3{font-size:23px!important;color:var(--identity-ink)!important;font-weight:700;max-width:170px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-showcase .profile-name-row .profile-stars{margin:0!important;gap:0;flex-shrink:0;direction:ltr;filter:none;display:flex;order:1}
+.profile-showcase .profile-name-row .profile-sticker{width:22px!important;height:22px!important;flex-basis:22px;order:2}
+.profile-showcase .profile-stars .profile-sprite{width:20px!important;height:20px!important;background-image:url('/platform/assets/profile/identity/profile-atlas.png')!important;background-size:400% 200%!important;background-position:0% 0%!important;filter:none}
+.profile-showcase .profile-stars .profile-sprite.dim{opacity:.22;filter:grayscale(1)}
+.community-public-profile-handle{margin:16px 0 5px!important;color:var(--identity-muted)!important;font-size:13px!important}
+.profile-showcase .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;padding:10px 0;margin:20px 0 8px;border:0;background:none!important}
+.profile-showcase .profile-stat{min-height:60px!important;padding:0 8px!important;gap:7px!important;color:var(--identity-ink)}
+.profile-showcase .profile-stat+.profile-stat{border-right:1px solid var(--identity-line)!important}
+.profile-showcase .profile-stat small{font-size:11px;color:var(--identity-muted)}.profile-showcase .profile-stat strong{font-size:17px!important;color:var(--identity-ink)!important;line-height:1.2}
+.profile-showcase .profile-stat-value{display:flex;align-items:center;justify-content:center;gap:4px}.profile-showcase .profile-stat-value .profile-sprite{width:19px!important;height:19px!important;filter:none}
+.sd-art,.profile-showcase .profile-sprite-trophy,.profile-showcase .profile-sprite-calendar,.profile-showcase .profile-sprite-reputation,.profile-showcase .profile-sprite-camera{display:inline-block;background-image:url('/platform/assets/profile/identity/profile-atlas.png')!important;background-size:400% 200%!important;background-repeat:no-repeat;width:28px;height:28px;flex:0 0 auto}
+.profile-showcase .profile-sprite-trophy{background-position:66.6667% 0%!important}.profile-showcase .profile-sprite-calendar{background-position:100% 0%!important}.profile-showcase .profile-sprite-reputation{background-position:33.3333% 0%!important}.profile-showcase .profile-sprite-camera{background-position:100% 100%!important}
+.sd-art-friend{background-position:0% 100%}.sd-art-collection{background-position:33.3333% 100%}.sd-art-report{background-position:66.6667% 100%}
+.sd-featured-rank{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;margin:13px 0 6px;padding:10px 16px;box-sizing:border-box;background:var(--identity-panel);border-radius:13px}
+.sd-featured-rank[hidden]{display:none}.sd-featured-rank>img{width:42px;height:42px;object-fit:contain}.sd-featured-rank>div{display:grid;gap:4px;text-align:right}.sd-featured-rank strong{font-size:14px;color:var(--identity-ink)}.sd-featured-rank small{font-size:11px;color:var(--identity-muted)}
+.sd-open-full{display:block;width:100%;margin:13px 0 10px;padding:8px 10px;border:1px solid var(--identity-line);border-radius:999px;background:none;color:#65cbbc;font:650 12px/1.6 system-ui;cursor:pointer}
+.community-public-profile-modal{background:#0009;backdrop-filter:blur(5px);padding:16px;align-items:center}.community-public-profile-shell{width:min(470px,100%);max-height:calc(100dvh - 32px);overflow:auto;border-radius:18px}
+.community-public-profile-card{max-width:none;background:var(--identity-surface)!important}.community-public-profile-card .profile-cover{height:145px}
+.community-public-profile-modal:not(.sd-profile-expanded) .profile-card-bar{height:0;position:relative;border:0;z-index:5}
+.community-public-profile-modal:not(.sd-profile-expanded) .profile-card-bar>strong{display:none}
+.community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-close{position:absolute;top:12px;left:12px;background:#0f1719b8;color:#f0f4ef;border:1px solid #ffffff30;border-radius:50%;width:32px;height:32px}
+.community-public-profile-actions{width:100%;display:grid!important;grid-template-columns:42px minmax(110px,1fr) 48px 48px!important;gap:7px!important;margin:12px 0 0!important;direction:ltr;order:0}
+.community-public-action{height:46px;min-height:46px;padding:6px!important;border:0!important;border-radius:11px!important;min-width:0;direction:rtl;font-size:12px!important;display:flex!important;align-items:center;justify-content:center;gap:7px!important}
+.community-public-action.friend{background:#237b89!important;color:#fff}.community-public-action.collection{background:#655295!important;color:#fff}.community-public-action.reputation{background:#b4772a!important;color:#fff}.community-public-action.report{background:var(--identity-panel)!important}
+.community-public-action.report>span:last-child,.community-public-action.collection>span:last-child,.community-public-action.reputation>span:nth-child(2),.community-public-action.reputation>small{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.community-public-action .sd-art,.community-public-action .profile-sprite{width:28px!important;height:28px!important}.community-public-action:disabled{opacity:.42}
+.community-public-action:focus-visible,.sd-open-full:focus-visible{outline:2px solid #dfbb6a;outline-offset:3px}
+.sd-profile-expanded .community-public-profile-shell{width:min(540px,100%)}.sd-profile-expanded .sd-featured-rank{display:none}.sd-profile-expanded .community-public-profile-card .profile-card-bar{position:sticky;top:0;z-index:10}
+.sd-public-extra{width:100%;padding:0!important;text-align:right}.sd-public-extra[hidden]{display:none!important}
+.profile-showcase .sd-profile-details{width:100%;--sd-rank-bg:var(--identity-panel);--sd-rank-line:var(--identity-line);--sd-rank-ink:var(--identity-ink);--sd-rank-muted:var(--identity-muted);margin-top:22px}
+.profile-showcase .sd-collection-section{border:0;padding:0;margin-bottom:26px}.profile-showcase .sd-detail-heading h3{font-size:13px;color:var(--identity-muted);font-weight:600}
+.profile-showcase .sd-owned-card{background:#0c1215;border:0;border-radius:12px;padding:10px 6px;gap:8px}.profile-showcase .sd-owned-card img{height:64px}.profile-showcase .sd-owned-card strong{font-size:11px;min-height:32px;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}.profile-showcase .sd-owned-card small{color:#5ad2c0;font-size:12px}
+.profile-showcase .sd-collection-more{border:0;border-radius:999px;background:#0c1215;color:#5fcfc0;padding:8px;font-weight:650}
+.profile-showcase .sd-rank-row{border:0;border-radius:0;margin:0;padding:17px 0;background:none;gap:12px;grid-template-columns:72px minmax(0,1fr);border-bottom:1px solid var(--identity-line)}
+.profile-showcase .sd-game-statistics{background:#0c1215;border-radius:15px;padding:14px 12px}.profile-showcase .sd-rank-row:last-of-type{border-bottom:0}.profile-showcase .sd-rank-title h4{font-size:15px;font-weight:650}.profile-showcase .sd-rank-title>span{color:var(--identity-ink);font-size:14px;font-weight:700}.profile-showcase .sd-rank-progress{height:13px;background:#303a3d}.profile-showcase .sd-rank-progress>span{background:#70b449}.profile-showcase .sd-rank-label{font-size:11px}.profile-showcase .sd-rank-label strong{font-size:12px;color:var(--identity-muted)}
+.profile-showcase .sd-profile-full{padding:4px 8px;font-size:10px;background:none;color:#68cbbb;border-color:var(--identity-line)}
+html[data-theme="light"] .profile-showcase{--identity-surface:#f9fbfa;--identity-panel:#e9f0ef;--identity-line:#cfdbd8;--identity-ink:#253734;--identity-muted:#687d78}
+html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light"] .profile-showcase .sd-game-statistics,html[data-theme="light"] .profile-showcase .sd-collection-more{background:#edf2f0}
+@media(max-width:600px){.profile-page{padding-bottom:10px}.community-public-profile-modal{padding:10px;align-items:center}.community-public-profile-shell{max-height:calc(100dvh - 20px)}.profile-showcase .profile-cover{height:140px}.profile-showcase .profile-showcase-body{padding:0 14px 18px}.profile-showcase .profile-avatar{width:118px;height:118px}.profile-showcase .profile-name-row h3{font-size:21px!important;max-width:150px}.profile-showcase .profile-stat strong{font-size:16px!important}.profile-showcase .sd-owned-card img{height:58px}.profile-showcase .sd-game-statistics{padding:12px 9px}.profile-showcase .sd-rank-title>span{font-size:12px}.profile-showcase .sd-rank-title h4{font-size:14px}.profile-showcase .profile-photo-btn{width:31px;height:31px}}
+
+.sd-profile-expanded .sd-open-full{display:none}.profile-showcase .sd-game-statistics>.sd-detail-heading{margin-bottom:5px}
+
+.profile-showcase .profile-stat{border-right:0!important}.profile-showcase .profile-stat-wins{order:0}.profile-showcase .profile-stat-since{order:1;border-right:1px solid var(--identity-line)!important}.profile-showcase .profile-stat-reputation{order:2;border-right:1px solid var(--identity-line)!important}.profile-showcase .sd-rank-progress{margin-top:10px}

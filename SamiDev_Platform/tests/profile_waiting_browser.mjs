@@ -54,7 +54,7 @@ try{
   await page.keyboard.press('Escape');assert(!await own.locator('.sd-item-detail').isVisible());
   await own.locator('select').selectOption('all');await own.locator('.sd-collection-more').click();
   const pool=own.locator('[data-game="pool"]');assert((await pool.innerText()).includes('٢٣'));
-  assert.equal(await pool.locator('.sd-rank-star').getAttribute('src'),'/platform/assets/ranks/level-003.svg');
+  assert.equal(await pool.locator('.sd-rank-star').getAttribute('aria-label'),'المستوى 3');assert.equal(await pool.locator('.sd-rank-star b').innerText(),'3');
   await own.locator('.sd-profile-full').click();assert(await pool.locator('.sd-rank-expanded').isVisible());
   for(const width of [320,390,768,1280]){
     await page.setViewportSize({width,height:900});
@@ -67,6 +67,7 @@ try{
   const visitor=await contexts[1].newPage();visitor.on('pageerror',e=>errors.push(e.message));
   await visitor.goto(base+'/platform/');await visitor.waitForFunction(()=>window.SamiDevMobilePlatform);
   await visitor.evaluate(id=>window.SamiDevMobilePlatform.openProfile(id),accounts[0].id);
+  await visitor.locator('#community-profile-full').click();
   const publicCard=visitor.locator('#sd-public-extra');await publicCard.locator('.sd-owned-card').first().waitFor();
   assert.equal(await publicCard.locator('.sd-owned-card').count(),3);
   assert.equal(await publicCard.locator('.sd-rank-row').count(),4);

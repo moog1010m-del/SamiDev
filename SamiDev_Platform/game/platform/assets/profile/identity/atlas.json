@@ -1,0 +1,10 @@
+{
+  "image": "profile-atlas.png",
+  "columns": 4,
+  "rows": 2,
+  "sprites": {
+    "star": [0, 0], "reputation": [1, 0], "trophy": [2, 0], "calendar": [3, 0],
+    "friend": [0, 1], "collection": [1, 1], "report": [2, 1], "camera": [3, 1]
+  },
+  "origin": "Original SamiDev artwork generated for this platform; no external game branding or assets."
+}

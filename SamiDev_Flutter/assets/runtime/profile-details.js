@@ -28,9 +28,9 @@
         if (!s) return `<article class="sd-rank-row"><img class="sd-game-logo" src="/room-sprites/${mark}.png" alt=""><div><h4>${name}</h4><p class="sd-history-note">السجل غير متاح حاليًا</p></div></article>`;
         const level = Math.max(1, Math.min(100, number(s.level)));
         const progress = Math.max(0, Math.min(1, Number(s.progress) || 0));
-        return `<article class="sd-rank-row" data-game="${id}"><div class="sd-game-emblem"><img class="sd-game-logo" src="/room-sprites/${mark}.png" alt=""><img class="sd-rank-star" src="/platform/assets/ranks/level-${String(level).padStart(3, '0')}.svg" alt="المستوى ${level}"></div>
-          <div class="sd-rank-info"><div class="sd-rank-title"><h4>${name}</h4><span>المستوى ${count(level)}</span></div><div class="sd-rank-label"><strong>${count(s.wins)} فوز</strong><span>${esc(s.rankName || '')}</span></div>
-          <div class="sd-rank-progress" role="progressbar" aria-label="تقدم مستوى ${name}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progress * 100)}"><span style="width:${progress * 100}%"></span></div>
+        return `<article class="sd-rank-row" data-game="${id}"><div class="sd-game-emblem"><img class="sd-game-logo" src="/room-sprites/${mark}.png" alt=""><span class="sd-rank-star" data-tier="${Math.floor((level-1)/10)}" role="img" aria-label="المستوى ${level}"><b>${level}</b></span></div>
+          <div class="sd-rank-info"><div class="sd-rank-title"><h4>${name}</h4><span>المستوى ${count(level)}</span></div>
+          <div class="sd-rank-progress" role="progressbar" aria-label="تقدم مستوى ${name}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progress * 100)}"><span style="width:${progress * 100}%"></span></div><div class="sd-rank-label"><strong>${count(s.played)} لعب · ${count(s.wins)} فوز</strong><span>${esc(s.rankName || '')}</span></div>
           <div class="sd-rank-expanded" hidden><p>${level === 100 ? 'وصلت إلى قمة المستويات' : `${count(s.winsToNextLevel)} فوز للوصول إلى المستوى ${count(level + 1)}`}</p><div class="sd-match-numbers"><span>لعب <b>${count(s.played)}</b></span><span>خسر <b>${count(s.losses)}</b></span><span>تعادل <b>${count(s.draws)}</b></span></div></div></div></article>`;
       }).join('')}
       <p class="sd-history-note" data-history hidden>يُحتسب التقدم من نتائج المباريات المسجلة لكل لعبة.${number(user.legacyWins) ? ` يوجد ${count(user.legacyWins)} فوز سابق في الإجمالي دون تفاصيل حسب اللعبة.` : ''} نجوم الرتب تُكتسب بالفوز، وهي مستقلة عن زينة النجوم المشتراة.</p></section>`;

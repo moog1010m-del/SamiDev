@@ -81,6 +81,7 @@
     const name=user.displayName||user.username;
     $('#side-name').textContent=name; $('#side-username').textContent='@'+user.username;
     $('#profile-name').textContent=name;
+    const handle=$('#profile-identity-handle');if(handle)handle.textContent='@'+String(user.username||'player');
     const sinceValue=$('#profile-since-value');if(sinceValue)sinceValue.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const wins=$('#profile-wins');if(wins)wins.textContent=formatProfileStat(user.wins);
     const reputation=$('#profile-reputation');if(reputation)reputation.textContent=formatProfileStat(user.reputation);
@@ -109,6 +110,7 @@
       el.setAttribute('title',badgeName);
     });
     const userStars=Math.max(0,Math.min(5,Number(user.starsCount??5)));
+    $('#page-profile .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
     $$('#page-profile .profile-stars .profile-sprite-star').forEach((el,i)=>{
       el.classList.toggle('dim',i>=userStars);
     });
@@ -224,9 +226,11 @@
     $('#mobile-menu').onclick=()=>navigate('lobby');
     $('#leave-community').onclick=leaveCommunity;
     const exitCommunity=$('#exit-community');if(exitCommunity)exitCommunity.onclick=leaveCommunity;
-    $('#community-profile-close').onclick=closeCommunityProfile;
+    $('#community-profile-close').onclick=()=>{$('#community-profile-modal').classList.contains('sd-profile-expanded')?setPublicProfileFull(false):closeCommunityProfile();};
     $('#community-profile-modal').addEventListener('click',e=>{if(e.target.id==='community-profile-modal')closeCommunityProfile();});
     $('#community-profile-friend').onclick=communityProfileFriendAction;
+    $('#community-profile-full').onclick=()=>setPublicProfileFull(true);
+    $('#community-profile-collection').onclick=()=>{setPublicProfileFull(true);$('#sd-public-extra .sd-collection-section')?.scrollIntoView({block:'start',behavior:'smooth'});};
     $('#community-profile-reputation-btn').onclick=communityProfileReputationAction;
     $('#community-profile-report').onclick=()=>{$('#community-profile-report-box').classList.remove('hidden');$('#community-profile-report-text').focus();};
     $('#community-profile-report-cancel').onclick=()=>$('#community-profile-report-box').classList.add('hidden');
@@ -583,7 +587,7 @@
   function closeCommunityProfile(){
     if(window.__sdNativePublicProfile){window.__sdNativePublicProfile=false;window.SamiDevMobile?.postMessage(JSON.stringify({type:'native_home'}));}
     const modal=$('#community-profile-modal');if(!modal)return;
-    modal.classList.remove('open');modal.setAttribute('aria-hidden','true');activePublicProfile=null;
+    modal.classList.remove('open','sd-profile-expanded');modal.setAttribute('aria-hidden','true');activePublicProfile=null;
     $('#community-profile-report-box')?.classList.add('hidden');if($('#community-profile-report-text'))$('#community-profile-report-text').value='';
   }
   function communityRelationLabel(user){
@@ -594,6 +598,7 @@
     return 'إضافة صديق';
   }
   function renderCommunityPublicProfile(user){
+    const keepFull=$('#community-profile-modal').classList.contains('sd-profile-expanded');
     activePublicProfile=user;
     const name=user.displayName||user.username||'Player';
     $('#community-profile-name').textContent=name;
@@ -602,6 +607,7 @@
     const modalBadge=$('#community-profile-modal .profile-sticker');
     if(modalBadge){modalBadge.style.backgroundImage=`url('${badgeAsset}')`;modalBadge.setAttribute('aria-label',badgeName);modalBadge.setAttribute('title',badgeName);}
     const userStars=Math.max(0,Math.min(5,Number(user.starsCount??5)));
+    $('#community-profile-modal .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
     $$('#community-profile-modal .community-public-profile-star').forEach((el,i)=>el.classList.toggle('dim',i>=userStars));
     $('#community-profile-handle').textContent='@'+String(user.username||'player');
     $('#community-profile-since').textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
@@ -616,7 +622,27 @@
     let extra=$('#sd-public-extra');
     if(!extra){extra=document.createElement('section');extra.id='sd-public-extra';extra.className='sd-public-extra';$('#community-profile-actions').insertAdjacentElement('afterend',extra);}
     window.SamiDevProfileDetails?.render(extra,user,{own:self});
+    renderFeaturedRank($('#community-profile-featured'),user);
+    setPublicProfileFull(keepFull);
     $('#community-profile-loading').classList.add('hidden');
+  }
+  function renderFeaturedRank(root,user){
+    if(!root)return;root.replaceChildren();
+    const rows=(user.gameStatistics||[]).filter(s=>Number(s.played)>0).sort((a,b)=>Number(b.wins)-Number(a.wins));
+    const best=rows[0];root.hidden=!best;if(!best)return;
+    const mark={pool:'pool',carrom:'carrom',tablesoccer:'football',crazy8:'cards'}[best.gameId];
+    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'كريزي 8'};
+    const img=document.createElement('img');img.src='/room-sprites/'+mark+'.png';img.alt='';
+    const info=document.createElement('div'),name=document.createElement('strong'),rank=document.createElement('small');
+    name.textContent=names[best.gameId]||'اللعبة';rank.textContent=`${best.rankName} · المستوى ${formatProfileStat(best.level)}`;
+    info.append(name,rank);root.append(img,info);
+  }
+  function setPublicProfileFull(full){
+    const modal=$('#community-profile-modal');modal.classList.toggle('sd-profile-expanded',full);
+    const extra=$('#sd-public-extra');if(extra)extra.hidden=!full;
+    $('#community-profile-full').textContent=full?'العودة إلى البطاقة المختصرة':'الملف الكامل والمقتنيات والإحصاءات';
+    const close=$('#community-profile-close');close.textContent=full?'‹':'×';close.setAttribute('aria-label',full?'العودة إلى البطاقة المختصرة':'إغلاق');
+    const title=$('#community-profile-modal .profile-card-bar strong');if(title)title.textContent=full?'الملف الشخصي':'بطاقة اللاعب';
   }
   async function openCommunityProfile(userId){
     userId=String(userId||'').trim();if(!userId)return;

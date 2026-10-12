@@ -57,6 +57,7 @@ flutter:
     - assets/runtime/imported/
     - assets/runtime/platform/
     - assets/runtime/platform/assets/profile/
+    - assets/runtime/platform/assets/profile/identity/
     - assets/runtime/platform/assets/profile/raster/
     - assets/runtime/platform/assets/ranks/
     - assets/runtime/room-sprites/
