@@ -24,7 +24,7 @@ def port():
 
 
 class Cluster:
-    def __init__(self, gateways=2, hosts=1):
+    def __init__(self, gateways=2, hosts=1, browser_origins=False):
         self.db = os.environ['SAMIDEV_TEST_DATABASE_URL']
         self.redis_url = os.environ['SAMIDEV_TEST_REDIS_URL']
         assert urlparse(self.db).hostname in {'127.0.0.1', 'localhost'}
@@ -38,6 +38,7 @@ class Cluster:
         self.folder = Path(tempfile.mkdtemp(prefix='samidev-realtime-'))
         self.r = redis.from_url(self.redis_url, decode_responses=True)
         self.base_headers = {'Origin': 'https://game.example.test', 'X-Forwarded-Proto': 'https'}
+        self.browser_origins = browser_origins
 
     async def start(self):
         env = dict(os.environ, SAMIDEV_PRODUCTION='1', SAMIDEV_REQUIRE_GAME_AUTH='1',
@@ -47,6 +48,8 @@ class Cluster:
             SAMIDEV_GAMEHOST_SERVICE_KEY=self.secret, SAMIDEV_ALLOWED_ORIGINS='https://game.example.test',
             SAMIDEV_TRUST_PROXY='1', SAMIDEV_GAMEHOST_URLS=','.join(self.hosts),
             SAMIDEV_ADMIN_USERNAME='', SAMIDEV_ADMIN_PASSWORD='')
+        if self.browser_origins:
+            env['SAMIDEV_ALLOWED_ORIGINS'] = ','.join(['https://game.example.test', *self.urls])
         # Fixture source addresses are distinct simulated clients. Production rate
         # limits remain enabled; no anonymous authentication bypass is used.
         for i, url in enumerate(self.hosts):

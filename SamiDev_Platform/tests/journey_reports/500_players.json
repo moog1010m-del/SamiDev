@@ -1,0 +1,3737 @@
+{
+  "version": 1,
+  "requestedPlayers": 500,
+  "matchesPerRewardCycle": 5,
+  "extraCapMatch": true,
+  "game": "crazy8",
+  "gateways": 3,
+  "gamehosts": 3,
+  "seed": 20261012,
+  "seconds": 254.07,
+  "counts": {
+    "registered_logged_out_logged_in": 500,
+    "community_chat_verified": 500,
+    "match_chat_delivered_to_both": 3000,
+    "legal_native_moves": 61101,
+    "naturally_completed_matches": 1500,
+    "wallets_checked_after_match": 3000,
+    "mid_match_cross_gateway_reconnect": 10,
+    "store_purchase_equip_duplicate_protected": 500,
+    "real_browser_purchase_verified": 1,
+    "public_inventory_verified": 500,
+    "persistent_return_verified": 500
+  },
+  "purchaseVariants": [
+    "badge_crown",
+    "badge_crystal",
+    "badge_fire",
+    "badge_fox",
+    "badge_jellyfish",
+    "badge_leopard",
+    "badge_orbit",
+    "badge_shell"
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 9967
+    },
+    {
+      "round": 2,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 10417
+    },
+    {
+      "round": 3,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 10862
+    },
+    {
+      "round": 4,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 9369
+    },
+    {
+      "round": 5,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 10053
+    },
+    {
+      "round": 6,
+      "simultaneousClients": 500,
+      "activeRoomsAtBarrier": 250,
+      "completedMatches": 250,
+      "totalMoves": 10433
+    }
+  ],
+  "latenciesMs": {
+    "/api/auth/register": {
+      "count": 500,
+      "p50": 282.95,
+      "p95": 454.66,
+      "p99": 560.17,
+      "max": 584.81
+    },
+    "/api/auth/logout": {
+      "count": 1500,
+      "p50": 2.75,
+      "p95": 19.73,
+      "p99": 32.92,
+      "max": 82.73
+    },
+    "/api/me": {
+      "count": 1500,
+      "p50": 4.74,
+      "p95": 51.74,
+      "p99": 70.43,
+      "max": 135.05
+    },
+    "/api/auth/login": {
+      "count": 1500,
+      "p50": 271.38,
+      "p95": 424.12,
+      "p99": 509.29,
+      "max": 875.6
+    },
+    "/api/store": {
+      "count": 5001,
+      "p50": 9.08,
+      "p95": 31.58,
+      "p99": 71.29,
+      "max": 220.84
+    },
+    "/api/communities/square/enter": {
+      "count": 1755,
+      "p50": 11.21,
+      "p95": 30.86,
+      "p99": 58.5,
+      "max": 168.53
+    },
+    "/api/communities/majlis/enter": {
+      "count": 1755,
+      "p50": 11.19,
+      "p95": 30.03,
+      "p99": 48.62,
+      "max": 188.39
+    },
+    "/api/communities/majlis/chat": {
+      "count": 250,
+      "p50": 8.04,
+      "p95": 12.04,
+      "p99": 14.47,
+      "max": 39.46
+    },
+    "/api/communities/square/chat": {
+      "count": 250,
+      "p50": 7.96,
+      "p95": 12.36,
+      "p99": 16.68,
+      "max": 17.23
+    },
+    "/api/communities/majlis": {
+      "count": 250,
+      "p50": 85.29,
+      "p95": 115.43,
+      "p99": 142.81,
+      "max": 149.15
+    },
+    "/api/communities/square": {
+      "count": 250,
+      "p50": 84.11,
+      "p95": 114.21,
+      "p99": 141.6,
+      "max": 168.32
+    },
+    "/api/game-ticket": {
+      "count": 3010,
+      "p50": 8.82,
+      "p95": 22.36,
+      "p99": 33.59,
+      "max": 123.88
+    },
+    "move_fanout": {
+      "count": 61101,
+      "p50": 84.39,
+      "p95": 283.16,
+      "p99": 418.42,
+      "max": 810.09
+    },
+    "/api/store/buy": {
+      "count": 1250,
+      "p50": 17.2,
+      "p95": 34.92,
+      "p99": 50.46,
+      "max": 103.27
+    },
+    "/api/store/equip": {
+      "count": 500,
+      "p50": 14.54,
+      "p95": 29.44,
+      "p99": 52.2,
+      "max": 57.38
+    },
+    "/api/public-profile/ZhqVjMe9AnXf2zxe": {
+      "count": 1,
+      "p50": 16.88,
+      "p95": 16.88,
+      "p99": 16.88,
+      "max": 16.88
+    },
+    "/api/public-profile/JTzu8GErZ-UxsC7d": {
+      "count": 1,
+      "p50": 17.39,
+      "p95": 17.39,
+      "p99": 17.39,
+      "max": 17.39
+    },
+    "/api/public-profile/9REJG-axEpTbCs_e": {
+      "count": 1,
+      "p50": 18.05,
+      "p95": 18.05,
+      "p99": 18.05,
+      "max": 18.05
+    },
+    "/api/public-profile/5sEdTw3Micu3rPNt": {
+      "count": 1,
+      "p50": 15.04,
+      "p95": 15.04,
+      "p99": 15.04,
+      "max": 15.04
+    },
+    "/api/public-profile/ZGEKFG3ADLwWolgj": {
+      "count": 1,
+      "p50": 20.07,
+      "p95": 20.07,
+      "p99": 20.07,
+      "max": 20.07
+    },
+    "/api/public-profile/3NsYhh-t8SdOPLtL": {
+      "count": 1,
+      "p50": 17.03,
+      "p95": 17.03,
+      "p99": 17.03,
+      "max": 17.03
+    },
+    "/api/public-profile/ssBB2sFquVbO7pkW": {
+      "count": 1,
+      "p50": 17.33,
+      "p95": 17.33,
+      "p99": 17.33,
+      "max": 17.33
+    },
+    "/api/public-profile/1ZpQykyocZnVTOwz": {
+      "count": 1,
+      "p50": 21.76,
+      "p95": 21.76,
+      "p99": 21.76,
+      "max": 21.76
+    },
+    "/api/public-profile/IRkp1YWM9REscYM5": {
+      "count": 1,
+      "p50": 18.79,
+      "p95": 18.79,
+      "p99": 18.79,
+      "max": 18.79
+    },
+    "/api/public-profile/n0z3Jtr2hQN9Ck0f": {
+      "count": 1,
+      "p50": 19.23,
+      "p95": 19.23,
+      "p99": 19.23,
+      "max": 19.23
+    },
+    "/api/public-profile/Db8Wkd4GXi52uD_z": {
+      "count": 1,
+      "p50": 21.78,
+      "p95": 21.78,
+      "p99": 21.78,
+      "max": 21.78
+    },
+    "/api/public-profile/abaKrKZrHudLemhj": {
+      "count": 1,
+      "p50": 23.24,
+      "p95": 23.24,
+      "p99": 23.24,
+      "max": 23.24
+    },
+    "/api/public-profile/QiQABq8JH_KBw-SC": {
+      "count": 1,
+      "p50": 14.63,
+      "p95": 14.63,
+      "p99": 14.63,
+      "max": 14.63
+    },
+    "/api/public-profile/JeSAoNLn6gbpLLbk": {
+      "count": 1,
+      "p50": 13.95,
+      "p95": 13.95,
+      "p99": 13.95,
+      "max": 13.95
+    },
+    "/api/public-profile/Ew36nuZhHZ5wdMc_": {
+      "count": 1,
+      "p50": 13.86,
+      "p95": 13.86,
+      "p99": 13.86,
+      "max": 13.86
+    },
+    "/api/public-profile/BDyWTVscLusCyaUg": {
+      "count": 1,
+      "p50": 16.92,
+      "p95": 16.92,
+      "p99": 16.92,
+      "max": 16.92
+    },
+    "/api/public-profile/VSuwrLkw2YujDDxq": {
+      "count": 1,
+      "p50": 16.07,
+      "p95": 16.07,
+      "p99": 16.07,
+      "max": 16.07
+    },
+    "/api/public-profile/com3CcuFGl-FZW5l": {
+      "count": 1,
+      "p50": 14.62,
+      "p95": 14.62,
+      "p99": 14.62,
+      "max": 14.62
+    },
+    "/api/public-profile/L3Y6zjLWuNu8EDw3": {
+      "count": 1,
+      "p50": 24.1,
+      "p95": 24.1,
+      "p99": 24.1,
+      "max": 24.1
+    },
+    "/api/public-profile/u6f1rOGizZPfBHnw": {
+      "count": 1,
+      "p50": 24.42,
+      "p95": 24.42,
+      "p99": 24.42,
+      "max": 24.42
+    },
+    "/api/public-profile/E2U7LdjAKgdJ_Qem": {
+      "count": 1,
+      "p50": 19.53,
+      "p95": 19.53,
+      "p99": 19.53,
+      "max": 19.53
+    },
+    "/api/public-profile/fpZZMm0fwo8Ea9M-": {
+      "count": 1,
+      "p50": 13.85,
+      "p95": 13.85,
+      "p99": 13.85,
+      "max": 13.85
+    },
+    "/api/public-profile/zbP7Iqx-1N48WMpG": {
+      "count": 1,
+      "p50": 20.34,
+      "p95": 20.34,
+      "p99": 20.34,
+      "max": 20.34
+    },
+    "/api/public-profile/diIOCbuq-JWMDLE-": {
+      "count": 1,
+      "p50": 25.23,
+      "p95": 25.23,
+      "p99": 25.23,
+      "max": 25.23
+    },
+    "/api/public-profile/OSGvBuHsUkzoKS7s": {
+      "count": 1,
+      "p50": 26.31,
+      "p95": 26.31,
+      "p99": 26.31,
+      "max": 26.31
+    },
+    "/api/public-profile/Icym7JTQmtv9IZP9": {
+      "count": 1,
+      "p50": 14.26,
+      "p95": 14.26,
+      "p99": 14.26,
+      "max": 14.26
+    },
+    "/api/public-profile/H9DI-1n5wdKcbBvr": {
+      "count": 1,
+      "p50": 15.2,
+      "p95": 15.2,
+      "p99": 15.2,
+      "max": 15.2
+    },
+    "/api/public-profile/KIR5mCGN-asbPJuo": {
+      "count": 1,
+      "p50": 11.17,
+      "p95": 11.17,
+      "p99": 11.17,
+      "max": 11.17
+    },
+    "/api/public-profile/r_t7yjXvxjxt4Ydb": {
+      "count": 1,
+      "p50": 18.12,
+      "p95": 18.12,
+      "p99": 18.12,
+      "max": 18.12
+    },
+    "/api/public-profile/IbBMSvSbBB397BbP": {
+      "count": 1,
+      "p50": 12.15,
+      "p95": 12.15,
+      "p99": 12.15,
+      "max": 12.15
+    },
+    "/api/public-profile/LDuUlDozctmZ49Wn": {
+      "count": 1,
+      "p50": 16.2,
+      "p95": 16.2,
+      "p99": 16.2,
+      "max": 16.2
+    },
+    "/api/public-profile/kbaG064EVqJg5Xb0": {
+      "count": 1,
+      "p50": 28.89,
+      "p95": 28.89,
+      "p99": 28.89,
+      "max": 28.89
+    },
+    "/api/public-profile/Q4sRhDz1MVtSsEUe": {
+      "count": 1,
+      "p50": 16.08,
+      "p95": 16.08,
+      "p99": 16.08,
+      "max": 16.08
+    },
+    "/api/public-profile/3JbjMimMEPPPBCxJ": {
+      "count": 1,
+      "p50": 17.32,
+      "p95": 17.32,
+      "p99": 17.32,
+      "max": 17.32
+    },
+    "/api/public-profile/wCrvIQ-a5p0QwmSl": {
+      "count": 1,
+      "p50": 30.88,
+      "p95": 30.88,
+      "p99": 30.88,
+      "max": 30.88
+    },
+    "/api/public-profile/_OVfrKE8OWquZCC5": {
+      "count": 1,
+      "p50": 23.09,
+      "p95": 23.09,
+      "p99": 23.09,
+      "max": 23.09
+    },
+    "/api/public-profile/bGtCqC70zGhiN1nc": {
+      "count": 1,
+      "p50": 10.45,
+      "p95": 10.45,
+      "p99": 10.45,
+      "max": 10.45
+    },
+    "/api/public-profile/AAfkjMpJiQBTxEgM": {
+      "count": 1,
+      "p50": 10.28,
+      "p95": 10.28,
+      "p99": 10.28,
+      "max": 10.28
+    },
+    "/api/public-profile/qKu5oq3FOYffuyyL": {
+      "count": 1,
+      "p50": 25.91,
+      "p95": 25.91,
+      "p99": 25.91,
+      "max": 25.91
+    },
+    "/api/public-profile/UN8MC3kJRqdTXJRx": {
+      "count": 1,
+      "p50": 12.36,
+      "p95": 12.36,
+      "p99": 12.36,
+      "max": 12.36
+    },
+    "/api/public-profile/R0fR-zmelXE3hzNY": {
+      "count": 1,
+      "p50": 13.42,
+      "p95": 13.42,
+      "p99": 13.42,
+      "max": 13.42
+    },
+    "/api/public-profile/abxy2evREJkQ1Xxu": {
+      "count": 1,
+      "p50": 24.73,
+      "p95": 24.73,
+      "p99": 24.73,
+      "max": 24.73
+    },
+    "/api/public-profile/K7YJZjyRDAd4kUc4": {
+      "count": 1,
+      "p50": 26.45,
+      "p95": 26.45,
+      "p99": 26.45,
+      "max": 26.45
+    },
+    "/api/public-profile/xRtnriLn4XfnDT6k": {
+      "count": 1,
+      "p50": 13.36,
+      "p95": 13.36,
+      "p99": 13.36,
+      "max": 13.36
+    },
+    "/api/public-profile/vjs3bGfZfTI0y_Uw": {
+      "count": 1,
+      "p50": 14.71,
+      "p95": 14.71,
+      "p99": 14.71,
+      "max": 14.71
+    },
+    "/api/public-profile/6d_mENAE8W48ZhkB": {
+      "count": 1,
+      "p50": 13.62,
+      "p95": 13.62,
+      "p99": 13.62,
+      "max": 13.62
+    },
+    "/api/public-profile/7iCkyG91iTDwJ-3u": {
+      "count": 1,
+      "p50": 13.7,
+      "p95": 13.7,
+      "p99": 13.7,
+      "max": 13.7
+    },
+    "/api/public-profile/XKJoAc5cPPnaYmjG": {
+      "count": 1,
+      "p50": 11.81,
+      "p95": 11.81,
+      "p99": 11.81,
+      "max": 11.81
+    },
+    "/api/public-profile/r5HHuKOJgkPN_gZl": {
+      "count": 1,
+      "p50": 20.46,
+      "p95": 20.46,
+      "p99": 20.46,
+      "max": 20.46
+    },
+    "/api/public-profile/JbnJdbZOaX-ZCVzb": {
+      "count": 1,
+      "p50": 24.38,
+      "p95": 24.38,
+      "p99": 24.38,
+      "max": 24.38
+    },
+    "/api/public-profile/v-g0e9ddR3vdg9DK": {
+      "count": 1,
+      "p50": 14.97,
+      "p95": 14.97,
+      "p99": 14.97,
+      "max": 14.97
+    },
+    "/api/public-profile/gtzkaTVgPEDHCg35": {
+      "count": 1,
+      "p50": 22.26,
+      "p95": 22.26,
+      "p99": 22.26,
+      "max": 22.26
+    },
+    "/api/public-profile/O3aY97W9_4wzAHCQ": {
+      "count": 1,
+      "p50": 13.87,
+      "p95": 13.87,
+      "p99": 13.87,
+      "max": 13.87
+    },
+    "/api/public-profile/EiU8Y9QhqzwfTHbZ": {
+      "count": 1,
+      "p50": 23.14,
+      "p95": 23.14,
+      "p99": 23.14,
+      "max": 23.14
+    },
+    "/api/public-profile/uIdNHGEEvv16vr7A": {
+      "count": 1,
+      "p50": 9.97,
+      "p95": 9.97,
+      "p99": 9.97,
+      "max": 9.97
+    },
+    "/api/public-profile/_VxwmNKv8AUunOhn": {
+      "count": 1,
+      "p50": 9.1,
+      "p95": 9.1,
+      "p99": 9.1,
+      "max": 9.1
+    },
+    "/api/public-profile/6aAmN8NN8Ous1c5m": {
+      "count": 1,
+      "p50": 14.1,
+      "p95": 14.1,
+      "p99": 14.1,
+      "max": 14.1
+    },
+    "/api/public-profile/JoLuJEQvXNz09oeW": {
+      "count": 1,
+      "p50": 25.65,
+      "p95": 25.65,
+      "p99": 25.65,
+      "max": 25.65
+    },
+    "/api/public-profile/G08WJSwSko6Ydtri": {
+      "count": 1,
+      "p50": 15.62,
+      "p95": 15.62,
+      "p99": 15.62,
+      "max": 15.62
+    },
+    "/api/public-profile/AOubXvXiclp5tN0t": {
+      "count": 1,
+      "p50": 21.7,
+      "p95": 21.7,
+      "p99": 21.7,
+      "max": 21.7
+    },
+    "/api/public-profile/ymFKiMTQeXFZZx3w": {
+      "count": 1,
+      "p50": 9.49,
+      "p95": 9.49,
+      "p99": 9.49,
+      "max": 9.49
+    },
+    "/api/public-profile/lWie9xEBY7sQlnR9": {
+      "count": 1,
+      "p50": 23.51,
+      "p95": 23.51,
+      "p99": 23.51,
+      "max": 23.51
+    },
+    "/api/public-profile/JTh1gSAhqnyogIsu": {
+      "count": 1,
+      "p50": 9.73,
+      "p95": 9.73,
+      "p99": 9.73,
+      "max": 9.73
+    },
+    "/api/public-profile/XqSZIH0T3ypr6HO6": {
+      "count": 1,
+      "p50": 15.7,
+      "p95": 15.7,
+      "p99": 15.7,
+      "max": 15.7
+    },
+    "/api/public-profile/U38GqF_z-qIOXK7o": {
+      "count": 1,
+      "p50": 15.8,
+      "p95": 15.8,
+      "p99": 15.8,
+      "max": 15.8
+    },
+    "/api/public-profile/_mz5dvnux18rRrYh": {
+      "count": 1,
+      "p50": 21.55,
+      "p95": 21.55,
+      "p99": 21.55,
+      "max": 21.55
+    },
+    "/api/public-profile/beuRec2Juuw0hWcu": {
+      "count": 1,
+      "p50": 20.5,
+      "p95": 20.5,
+      "p99": 20.5,
+      "max": 20.5
+    },
+    "/api/public-profile/MY5ycksGixW2B3k4": {
+      "count": 1,
+      "p50": 14.44,
+      "p95": 14.44,
+      "p99": 14.44,
+      "max": 14.44
+    },
+    "/api/public-profile/gaqFYzTu32eSQXHp": {
+      "count": 1,
+      "p50": 18.04,
+      "p95": 18.04,
+      "p99": 18.04,
+      "max": 18.04
+    },
+    "/api/public-profile/wXXD3G7NvzJUVOL-": {
+      "count": 1,
+      "p50": 18.26,
+      "p95": 18.26,
+      "p99": 18.26,
+      "max": 18.26
+    },
+    "/api/public-profile/xcLdjrNDQ_of9yhY": {
+      "count": 1,
+      "p50": 11.56,
+      "p95": 11.56,
+      "p99": 11.56,
+      "max": 11.56
+    },
+    "/api/public-profile/0SOo8eEsmZXcNxTl": {
+      "count": 1,
+      "p50": 17.62,
+      "p95": 17.62,
+      "p99": 17.62,
+      "max": 17.62
+    },
+    "/api/public-profile/Ac6ShCDm2speM-Pu": {
+      "count": 1,
+      "p50": 16.45,
+      "p95": 16.45,
+      "p99": 16.45,
+      "max": 16.45
+    },
+    "/api/public-profile/3rCuanqPRvqU5MND": {
+      "count": 1,
+      "p50": 16.13,
+      "p95": 16.13,
+      "p99": 16.13,
+      "max": 16.13
+    },
+    "/api/public-profile/7jOfxHbnIz0rdNHY": {
+      "count": 1,
+      "p50": 21.08,
+      "p95": 21.08,
+      "p99": 21.08,
+      "max": 21.08
+    },
+    "/api/public-profile/-n0D6bmZC2WQtiqa": {
+      "count": 1,
+      "p50": 14.85,
+      "p95": 14.85,
+      "p99": 14.85,
+      "max": 14.85
+    },
+    "/api/public-profile/9oVxnwr1HZ33Qsdq": {
+      "count": 1,
+      "p50": 18.53,
+      "p95": 18.53,
+      "p99": 18.53,
+      "max": 18.53
+    },
+    "/api/public-profile/PirJcwRqsXEvgIFt": {
+      "count": 1,
+      "p50": 17.02,
+      "p95": 17.02,
+      "p99": 17.02,
+      "max": 17.02
+    },
+    "/api/public-profile/YgDbhQENz4n7k41I": {
+      "count": 1,
+      "p50": 24.45,
+      "p95": 24.45,
+      "p99": 24.45,
+      "max": 24.45
+    },
+    "/api/public-profile/mVVSw9jiGyaoWk3C": {
+      "count": 1,
+      "p50": 16.29,
+      "p95": 16.29,
+      "p99": 16.29,
+      "max": 16.29
+    },
+    "/api/public-profile/NgnjUloUxW0a_lNZ": {
+      "count": 1,
+      "p50": 17.66,
+      "p95": 17.66,
+      "p99": 17.66,
+      "max": 17.66
+    },
+    "/api/public-profile/hANR7KSI80XG0C6O": {
+      "count": 1,
+      "p50": 18.17,
+      "p95": 18.17,
+      "p99": 18.17,
+      "max": 18.17
+    },
+    "/api/public-profile/1UktPGH2Qnj5XH04": {
+      "count": 1,
+      "p50": 17.03,
+      "p95": 17.03,
+      "p99": 17.03,
+      "max": 17.03
+    },
+    "/api/public-profile/NQ5OGrKW5lI6sCV3": {
+      "count": 1,
+      "p50": 26.18,
+      "p95": 26.18,
+      "p99": 26.18,
+      "max": 26.18
+    },
+    "/api/public-profile/gsL0Ci2TW0DyTTYL": {
+      "count": 1,
+      "p50": 25.98,
+      "p95": 25.98,
+      "p99": 25.98,
+      "max": 25.98
+    },
+    "/api/public-profile/Sy_Dk0zw4Vqih4ZA": {
+      "count": 1,
+      "p50": 15.21,
+      "p95": 15.21,
+      "p99": 15.21,
+      "max": 15.21
+    },
+    "/api/public-profile/-y1zCYbhROuu1ww5": {
+      "count": 1,
+      "p50": 13.58,
+      "p95": 13.58,
+      "p99": 13.58,
+      "max": 13.58
+    },
+    "/api/public-profile/RwVuvMC3TygfjGid": {
+      "count": 1,
+      "p50": 15.01,
+      "p95": 15.01,
+      "p99": 15.01,
+      "max": 15.01
+    },
+    "/api/public-profile/hPNlomUdaDR3K5Nw": {
+      "count": 1,
+      "p50": 15.86,
+      "p95": 15.86,
+      "p99": 15.86,
+      "max": 15.86
+    },
+    "/api/public-profile/ugFKwmZWbZtsAzfV": {
+      "count": 1,
+      "p50": 12.42,
+      "p95": 12.42,
+      "p99": 12.42,
+      "max": 12.42
+    },
+    "/api/public-profile/SEL5AK48mg4ISQP2": {
+      "count": 1,
+      "p50": 23.77,
+      "p95": 23.77,
+      "p99": 23.77,
+      "max": 23.77
+    },
+    "/api/public-profile/WXrvsbxrLRkvRUPh": {
+      "count": 1,
+      "p50": 10.37,
+      "p95": 10.37,
+      "p99": 10.37,
+      "max": 10.37
+    },
+    "/api/public-profile/4ldPL7zvv1AaOb4s": {
+      "count": 1,
+      "p50": 11.25,
+      "p95": 11.25,
+      "p99": 11.25,
+      "max": 11.25
+    },
+    "/api/public-profile/QtPqGQcfiKocjKjk": {
+      "count": 1,
+      "p50": 27.17,
+      "p95": 27.17,
+      "p99": 27.17,
+      "max": 27.17
+    },
+    "/api/public-profile/sVH3o50KMoWIatGp": {
+      "count": 1,
+      "p50": 24.49,
+      "p95": 24.49,
+      "p99": 24.49,
+      "max": 24.49
+    },
+    "/api/public-profile/eDNTfRUY9vA710lz": {
+      "count": 1,
+      "p50": 12.45,
+      "p95": 12.45,
+      "p99": 12.45,
+      "max": 12.45
+    },
+    "/api/public-profile/GE9ikJR752eiL6ZQ": {
+      "count": 1,
+      "p50": 12.76,
+      "p95": 12.76,
+      "p99": 12.76,
+      "max": 12.76
+    },
+    "/api/public-profile/a5JK_DpNMDdP9lJ6": {
+      "count": 1,
+      "p50": 20.36,
+      "p95": 20.36,
+      "p99": 20.36,
+      "max": 20.36
+    },
+    "/api/public-profile/4lM83cifiP8zJQKH": {
+      "count": 1,
+      "p50": 26.48,
+      "p95": 26.48,
+      "p99": 26.48,
+      "max": 26.48
+    },
+    "/api/public-profile/_5uHNntiBPpPdo2j": {
+      "count": 1,
+      "p50": 9.65,
+      "p95": 9.65,
+      "p99": 9.65,
+      "max": 9.65
+    },
+    "/api/public-profile/F2-pT8haHPcAHZrZ": {
+      "count": 1,
+      "p50": 15.35,
+      "p95": 15.35,
+      "p99": 15.35,
+      "max": 15.35
+    },
+    "/api/public-profile/r25WuVAGZZLBALpl": {
+      "count": 1,
+      "p50": 8.78,
+      "p95": 8.78,
+      "p99": 8.78,
+      "max": 8.78
+    },
+    "/api/public-profile/6VVBiY7XW9-xrGGY": {
+      "count": 1,
+      "p50": 10.29,
+      "p95": 10.29,
+      "p99": 10.29,
+      "max": 10.29
+    },
+    "/api/public-profile/DnM3GeGFi8y3noBP": {
+      "count": 1,
+      "p50": 14.86,
+      "p95": 14.86,
+      "p99": 14.86,
+      "max": 14.86
+    },
+    "/api/public-profile/fwU4wn1Z0ouBCyKT": {
+      "count": 1,
+      "p50": 16.88,
+      "p95": 16.88,
+      "p99": 16.88,
+      "max": 16.88
+    },
+    "/api/public-profile/8qWArSJ-U_ww4S7I": {
+      "count": 1,
+      "p50": 12.37,
+      "p95": 12.37,
+      "p99": 12.37,
+      "max": 12.37
+    },
+    "/api/public-profile/WuuUArFL-IMEC4Lb": {
+      "count": 1,
+      "p50": 12.19,
+      "p95": 12.19,
+      "p99": 12.19,
+      "max": 12.19
+    },
+    "/api/public-profile/AGzgEtphTa5k34Yr": {
+      "count": 1,
+      "p50": 10.13,
+      "p95": 10.13,
+      "p99": 10.13,
+      "max": 10.13
+    },
+    "/api/public-profile/iJTAP3cAdojMYc0D": {
+      "count": 1,
+      "p50": 11.39,
+      "p95": 11.39,
+      "p99": 11.39,
+      "max": 11.39
+    },
+    "/api/public-profile/8wdqajQ3aYCVxo4I": {
+      "count": 1,
+      "p50": 35.33,
+      "p95": 35.33,
+      "p99": 35.33,
+      "max": 35.33
+    },
+    "/api/public-profile/v5gnFvclmg3KhuvH": {
+      "count": 1,
+      "p50": 35.73,
+      "p95": 35.73,
+      "p99": 35.73,
+      "max": 35.73
+    },
+    "/api/public-profile/mlWnto9oOjPb4H7l": {
+      "count": 1,
+      "p50": 32.5,
+      "p95": 32.5,
+      "p99": 32.5,
+      "max": 32.5
+    },
+    "/api/public-profile/V30uORr8sP3guw9a": {
+      "count": 1,
+      "p50": 11.91,
+      "p95": 11.91,
+      "p99": 11.91,
+      "max": 11.91
+    },
+    "/api/public-profile/alrZ9Uj_QQeMxTod": {
+      "count": 1,
+      "p50": 32.75,
+      "p95": 32.75,
+      "p99": 32.75,
+      "max": 32.75
+    },
+    "/api/public-profile/0gsAlarqYnKGVclm": {
+      "count": 1,
+      "p50": 10.52,
+      "p95": 10.52,
+      "p99": 10.52,
+      "max": 10.52
+    },
+    "/api/public-profile/g3FkxBgNBzvuFhUf": {
+      "count": 1,
+      "p50": 10.92,
+      "p95": 10.92,
+      "p99": 10.92,
+      "max": 10.92
+    },
+    "/api/public-profile/b7Quz3MMPoNYSxwe": {
+      "count": 1,
+      "p50": 30.38,
+      "p95": 30.38,
+      "p99": 30.38,
+      "max": 30.38
+    },
+    "/api/public-profile/-fGUO2AmGDkUd_Id": {
+      "count": 1,
+      "p50": 31.47,
+      "p95": 31.47,
+      "p99": 31.47,
+      "max": 31.47
+    },
+    "/api/public-profile/JOETCAJzvXqyevQf": {
+      "count": 1,
+      "p50": 16.39,
+      "p95": 16.39,
+      "p99": 16.39,
+      "max": 16.39
+    },
+    "/api/public-profile/zKnKSQvOblaeN57f": {
+      "count": 1,
+      "p50": 23.76,
+      "p95": 23.76,
+      "p99": 23.76,
+      "max": 23.76
+    },
+    "/api/public-profile/9zMN0VH1cHh7JYeT": {
+      "count": 1,
+      "p50": 25.91,
+      "p95": 25.91,
+      "p99": 25.91,
+      "max": 25.91
+    },
+    "/api/public-profile/1ebB5bT_FD4uLMIG": {
+      "count": 1,
+      "p50": 12.34,
+      "p95": 12.34,
+      "p99": 12.34,
+      "max": 12.34
+    },
+    "/api/public-profile/RUa2RUG-GIrTmUEE": {
+      "count": 1,
+      "p50": 19.17,
+      "p95": 19.17,
+      "p99": 19.17,
+      "max": 19.17
+    },
+    "/api/public-profile/KY1LoBfMXO_wst6T": {
+      "count": 1,
+      "p50": 19.39,
+      "p95": 19.39,
+      "p99": 19.39,
+      "max": 19.39
+    },
+    "/api/public-profile/sH78E1drJE9JOSBf": {
+      "count": 1,
+      "p50": 12.11,
+      "p95": 12.11,
+      "p99": 12.11,
+      "max": 12.11
+    },
+    "/api/public-profile/f0QzRWadRbF9vGdo": {
+      "count": 1,
+      "p50": 17.71,
+      "p95": 17.71,
+      "p99": 17.71,
+      "max": 17.71
+    },
+    "/api/public-profile/2lGOlYZULout8i3y": {
+      "count": 1,
+      "p50": 18.42,
+      "p95": 18.42,
+      "p99": 18.42,
+      "max": 18.42
+    },
+    "/api/public-profile/a3gOoD_cFBjmGC8U": {
+      "count": 1,
+      "p50": 15.03,
+      "p95": 15.03,
+      "p99": 15.03,
+      "max": 15.03
+    },
+    "/api/public-profile/WOsZ_x7hCkjIwTW1": {
+      "count": 1,
+      "p50": 9.7,
+      "p95": 9.7,
+      "p99": 9.7,
+      "max": 9.7
+    },
+    "/api/public-profile/HfYgzJl6axP1fiCX": {
+      "count": 1,
+      "p50": 9.18,
+      "p95": 9.18,
+      "p99": 9.18,
+      "max": 9.18
+    },
+    "/api/public-profile/0cwBmewkcMGBAkTb": {
+      "count": 1,
+      "p50": 16.88,
+      "p95": 16.88,
+      "p99": 16.88,
+      "max": 16.88
+    },
+    "/api/public-profile/MI1C9rSXNILvCzIn": {
+      "count": 1,
+      "p50": 8.61,
+      "p95": 8.61,
+      "p99": 8.61,
+      "max": 8.61
+    },
+    "/api/public-profile/bK6rqqlWU7sCx08o": {
+      "count": 1,
+      "p50": 21.19,
+      "p95": 21.19,
+      "p99": 21.19,
+      "max": 21.19
+    },
+    "/api/public-profile/uYUOnzJ1H9ZchZUq": {
+      "count": 1,
+      "p50": 7.93,
+      "p95": 7.93,
+      "p99": 7.93,
+      "max": 7.93
+    },
+    "/api/public-profile/FzUnyJ8NDOUYsbrw": {
+      "count": 1,
+      "p50": 15.64,
+      "p95": 15.64,
+      "p99": 15.64,
+      "max": 15.64
+    },
+    "/api/public-profile/SYM-Yn0seSYqiUXg": {
+      "count": 1,
+      "p50": 22.85,
+      "p95": 22.85,
+      "p99": 22.85,
+      "max": 22.85
+    },
+    "/api/public-profile/LGp2bz_50AjdCmfM": {
+      "count": 1,
+      "p50": 16.94,
+      "p95": 16.94,
+      "p99": 16.94,
+      "max": 16.94
+    },
+    "/api/public-profile/psNyPvcccsW8CAZ-": {
+      "count": 1,
+      "p50": 14.45,
+      "p95": 14.45,
+      "p99": 14.45,
+      "max": 14.45
+    },
+    "/api/public-profile/CIe6SYs8fq1SExR2": {
+      "count": 1,
+      "p50": 8.88,
+      "p95": 8.88,
+      "p99": 8.88,
+      "max": 8.88
+    },
+    "/api/public-profile/j6-H44_dTplXn2LA": {
+      "count": 1,
+      "p50": 15.5,
+      "p95": 15.5,
+      "p99": 15.5,
+      "max": 15.5
+    },
+    "/api/public-profile/_b_Lf81VUyHJ3_-y": {
+      "count": 1,
+      "p50": 8.76,
+      "p95": 8.76,
+      "p99": 8.76,
+      "max": 8.76
+    },
+    "/api/public-profile/8zBsQsITpLqePEMK": {
+      "count": 1,
+      "p50": 20.92,
+      "p95": 20.92,
+      "p99": 20.92,
+      "max": 20.92
+    },
+    "/api/public-profile/8uNDmyy8ARKbg2Ug": {
+      "count": 1,
+      "p50": 22.11,
+      "p95": 22.11,
+      "p99": 22.11,
+      "max": 22.11
+    },
+    "/api/public-profile/8l2D5vLcD8XPLOG0": {
+      "count": 1,
+      "p50": 12.48,
+      "p95": 12.48,
+      "p99": 12.48,
+      "max": 12.48
+    },
+    "/api/public-profile/Bw-3lOIBV9X4NF8r": {
+      "count": 1,
+      "p50": 11.82,
+      "p95": 11.82,
+      "p99": 11.82,
+      "max": 11.82
+    },
+    "/api/public-profile/0z75nEaEGotXVbBn": {
+      "count": 1,
+      "p50": 19.93,
+      "p95": 19.93,
+      "p99": 19.93,
+      "max": 19.93
+    },
+    "/api/public-profile/AudR8Rf-gSgHzoUA": {
+      "count": 1,
+      "p50": 23.05,
+      "p95": 23.05,
+      "p99": 23.05,
+      "max": 23.05
+    },
+    "/api/public-profile/IXD91xg_2-gaJFzW": {
+      "count": 1,
+      "p50": 11.85,
+      "p95": 11.85,
+      "p99": 11.85,
+      "max": 11.85
+    },
+    "/api/public-profile/y4Wa43Fkypt_gru3": {
+      "count": 1,
+      "p50": 12.36,
+      "p95": 12.36,
+      "p99": 12.36,
+      "max": 12.36
+    },
+    "/api/public-profile/sQPia05XxSLRp2zg": {
+      "count": 1,
+      "p50": 12.3,
+      "p95": 12.3,
+      "p99": 12.3,
+      "max": 12.3
+    },
+    "/api/public-profile/V5wYxLw24gzUjqcm": {
+      "count": 1,
+      "p50": 12.49,
+      "p95": 12.49,
+      "p99": 12.49,
+      "max": 12.49
+    },
+    "/api/public-profile/RMwtconTnie9h9c7": {
+      "count": 1,
+      "p50": 10.8,
+      "p95": 10.8,
+      "p99": 10.8,
+      "max": 10.8
+    },
+    "/api/public-profile/2flmKnyYyD7gFsEr": {
+      "count": 1,
+      "p50": 9.77,
+      "p95": 9.77,
+      "p99": 9.77,
+      "max": 9.77
+    },
+    "/api/public-profile/d8L9Pfvd3ZxwdcKE": {
+      "count": 1,
+      "p50": 9.56,
+      "p95": 9.56,
+      "p99": 9.56,
+      "max": 9.56
+    },
+    "/api/public-profile/7BoA_P0faXbFnNyV": {
+      "count": 1,
+      "p50": 25.22,
+      "p95": 25.22,
+      "p99": 25.22,
+      "max": 25.22
+    },
+    "/api/public-profile/Kt4lCIfXqT7a-hWn": {
+      "count": 1,
+      "p50": 11.43,
+      "p95": 11.43,
+      "p99": 11.43,
+      "max": 11.43
+    },
+    "/api/public-profile/mD-n3vKaD3gevyvJ": {
+      "count": 1,
+      "p50": 8.87,
+      "p95": 8.87,
+      "p99": 8.87,
+      "max": 8.87
+    },
+    "/api/public-profile/DSuv5fid9EPE9KTV": {
+      "count": 1,
+      "p50": 9.21,
+      "p95": 9.21,
+      "p99": 9.21,
+      "max": 9.21
+    },
+    "/api/public-profile/s3ZQqYMcATKtixjA": {
+      "count": 1,
+      "p50": 29.91,
+      "p95": 29.91,
+      "p99": 29.91,
+      "max": 29.91
+    },
+    "/api/public-profile/MysqTUv7LXxcAwzL": {
+      "count": 1,
+      "p50": 13.61,
+      "p95": 13.61,
+      "p99": 13.61,
+      "max": 13.61
+    },
+    "/api/public-profile/LCer6U_65R6eKLt1": {
+      "count": 1,
+      "p50": 9.16,
+      "p95": 9.16,
+      "p99": 9.16,
+      "max": 9.16
+    },
+    "/api/public-profile/GeH1E-WFlp8FkUic": {
+      "count": 1,
+      "p50": 10.53,
+      "p95": 10.53,
+      "p99": 10.53,
+      "max": 10.53
+    },
+    "/api/public-profile/CxikDPZvQ-NBQGJh": {
+      "count": 1,
+      "p50": 16.05,
+      "p95": 16.05,
+      "p99": 16.05,
+      "max": 16.05
+    },
+    "/api/public-profile/Ex9NdrO-DQUOkOSH": {
+      "count": 1,
+      "p50": 32.12,
+      "p95": 32.12,
+      "p99": 32.12,
+      "max": 32.12
+    },
+    "/api/public-profile/rM3T4y8-6zmWf3L6": {
+      "count": 1,
+      "p50": 34.89,
+      "p95": 34.89,
+      "p99": 34.89,
+      "max": 34.89
+    },
+    "/api/public-profile/EDzrSY8tsUp_1n1f": {
+      "count": 1,
+      "p50": 14.85,
+      "p95": 14.85,
+      "p99": 14.85,
+      "max": 14.85
+    },
+    "/api/public-profile/ENzy4cOmmx5QWrhd": {
+      "count": 1,
+      "p50": 12.72,
+      "p95": 12.72,
+      "p99": 12.72,
+      "max": 12.72
+    },
+    "/api/public-profile/TlXkpYwAKR5NhQBn": {
+      "count": 1,
+      "p50": 7.62,
+      "p95": 7.62,
+      "p99": 7.62,
+      "max": 7.62
+    },
+    "/api/public-profile/WpHl0deZjQuzdyuh": {
+      "count": 1,
+      "p50": 7.99,
+      "p95": 7.99,
+      "p99": 7.99,
+      "max": 7.99
+    },
+    "/api/public-profile/zrpn99MlZT6DU4r2": {
+      "count": 1,
+      "p50": 12.52,
+      "p95": 12.52,
+      "p99": 12.52,
+      "max": 12.52
+    },
+    "/api/public-profile/8avlPK0LyJRe1k82": {
+      "count": 1,
+      "p50": 36.13,
+      "p95": 36.13,
+      "p99": 36.13,
+      "max": 36.13
+    },
+    "/api/public-profile/emFrgWyf853_48h1": {
+      "count": 1,
+      "p50": 35.28,
+      "p95": 35.28,
+      "p99": 35.28,
+      "max": 35.28
+    },
+    "/api/public-profile/8g6KvPDmWjLVJCjN": {
+      "count": 1,
+      "p50": 8.58,
+      "p95": 8.58,
+      "p99": 8.58,
+      "max": 8.58
+    },
+    "/api/public-profile/EioLkSZfzcbURZMk": {
+      "count": 1,
+      "p50": 8.56,
+      "p95": 8.56,
+      "p99": 8.56,
+      "max": 8.56
+    },
+    "/api/public-profile/3Lm8qTWxFm6Xwr-A": {
+      "count": 1,
+      "p50": 11.93,
+      "p95": 11.93,
+      "p99": 11.93,
+      "max": 11.93
+    },
+    "/api/public-profile/BJ6SmO648FImNVA1": {
+      "count": 1,
+      "p50": 34.81,
+      "p95": 34.81,
+      "p99": 34.81,
+      "max": 34.81
+    },
+    "/api/public-profile/g6Gi0IKQshiFvbwk": {
+      "count": 1,
+      "p50": 31.82,
+      "p95": 31.82,
+      "p99": 31.82,
+      "max": 31.82
+    },
+    "/api/public-profile/w0XETmPjvZfUXZ5P": {
+      "count": 1,
+      "p50": 27.51,
+      "p95": 27.51,
+      "p99": 27.51,
+      "max": 27.51
+    },
+    "/api/public-profile/a2Ez2mcHdPkFrFIG": {
+      "count": 1,
+      "p50": 9.76,
+      "p95": 9.76,
+      "p99": 9.76,
+      "max": 9.76
+    },
+    "/api/public-profile/3wJ8Oc3TcKkWJc5X": {
+      "count": 1,
+      "p50": 10.37,
+      "p95": 10.37,
+      "p99": 10.37,
+      "max": 10.37
+    },
+    "/api/public-profile/PodRHr1Lt01QHl_s": {
+      "count": 1,
+      "p50": 28.28,
+      "p95": 28.28,
+      "p99": 28.28,
+      "max": 28.28
+    },
+    "/api/public-profile/k6jLijjOxXIpGtgy": {
+      "count": 1,
+      "p50": 22.25,
+      "p95": 22.25,
+      "p99": 22.25,
+      "max": 22.25
+    },
+    "/api/public-profile/kGYqzUpO2axMNQkV": {
+      "count": 1,
+      "p50": 23.57,
+      "p95": 23.57,
+      "p99": 23.57,
+      "max": 23.57
+    },
+    "/api/public-profile/fs3diycZHJDMLA3I": {
+      "count": 1,
+      "p50": 17.01,
+      "p95": 17.01,
+      "p99": 17.01,
+      "max": 17.01
+    },
+    "/api/public-profile/mX91-6AuhDsroY8i": {
+      "count": 1,
+      "p50": 17.8,
+      "p95": 17.8,
+      "p99": 17.8,
+      "max": 17.8
+    },
+    "/api/public-profile/veFlkPe2R6zikHhu": {
+      "count": 1,
+      "p50": 19.31,
+      "p95": 19.31,
+      "p99": 19.31,
+      "max": 19.31
+    },
+    "/api/public-profile/vyOQUhJMxT3EVbYL": {
+      "count": 1,
+      "p50": 19.61,
+      "p95": 19.61,
+      "p99": 19.61,
+      "max": 19.61
+    },
+    "/api/public-profile/VIC-pS18Vb7ESVIH": {
+      "count": 1,
+      "p50": 14.81,
+      "p95": 14.81,
+      "p99": 14.81,
+      "max": 14.81
+    },
+    "/api/public-profile/DhDcLHEg5rzjPu91": {
+      "count": 1,
+      "p50": 13.82,
+      "p95": 13.82,
+      "p99": 13.82,
+      "max": 13.82
+    },
+    "/api/public-profile/_gaVGq6yyuQNFArr": {
+      "count": 1,
+      "p50": 13.22,
+      "p95": 13.22,
+      "p99": 13.22,
+      "max": 13.22
+    },
+    "/api/public-profile/4PteuRSClMUZCS2y": {
+      "count": 1,
+      "p50": 21.11,
+      "p95": 21.11,
+      "p99": 21.11,
+      "max": 21.11
+    },
+    "/api/public-profile/9Q62C-sYZqDFdgRl": {
+      "count": 1,
+      "p50": 13.5,
+      "p95": 13.5,
+      "p99": 13.5,
+      "max": 13.5
+    },
+    "/api/public-profile/xYWURfNrDQDwb7Wp": {
+      "count": 1,
+      "p50": 24.53,
+      "p95": 24.53,
+      "p99": 24.53,
+      "max": 24.53
+    },
+    "/api/public-profile/c4M12UtkOCtI0QZR": {
+      "count": 1,
+      "p50": 12.6,
+      "p95": 12.6,
+      "p99": 12.6,
+      "max": 12.6
+    },
+    "/api/public-profile/gXAsLOhBgavPJcLO": {
+      "count": 1,
+      "p50": 13.75,
+      "p95": 13.75,
+      "p99": 13.75,
+      "max": 13.75
+    },
+    "/api/public-profile/muX33f5VR2JEmGOR": {
+      "count": 1,
+      "p50": 14.1,
+      "p95": 14.1,
+      "p99": 14.1,
+      "max": 14.1
+    },
+    "/api/public-profile/f9slTUNQiW2d7NS1": {
+      "count": 1,
+      "p50": 14.76,
+      "p95": 14.76,
+      "p99": 14.76,
+      "max": 14.76
+    },
+    "/api/public-profile/djH1spONyqLbWOYS": {
+      "count": 1,
+      "p50": 9.57,
+      "p95": 9.57,
+      "p99": 9.57,
+      "max": 9.57
+    },
+    "/api/public-profile/xAm4cESUKO075G81": {
+      "count": 1,
+      "p50": 24.46,
+      "p95": 24.46,
+      "p99": 24.46,
+      "max": 24.46
+    },
+    "/api/public-profile/Y4eA4VjGe8IbLn6I": {
+      "count": 1,
+      "p50": 25.74,
+      "p95": 25.74,
+      "p99": 25.74,
+      "max": 25.74
+    },
+    "/api/public-profile/fYP5vNByhNeerB82": {
+      "count": 1,
+      "p50": 14.54,
+      "p95": 14.54,
+      "p99": 14.54,
+      "max": 14.54
+    },
+    "/api/public-profile/HQLC2fbk6A88hZbc": {
+      "count": 1,
+      "p50": 9.95,
+      "p95": 9.95,
+      "p99": 9.95,
+      "max": 9.95
+    },
+    "/api/public-profile/WciBO0z0E1NaxA1S": {
+      "count": 1,
+      "p50": 14.3,
+      "p95": 14.3,
+      "p99": 14.3,
+      "max": 14.3
+    },
+    "/api/public-profile/Ur5vp6mX2-3Ku-aX": {
+      "count": 1,
+      "p50": 10.34,
+      "p95": 10.34,
+      "p99": 10.34,
+      "max": 10.34
+    },
+    "/api/public-profile/mBHeQ3IlnCrIyQPr": {
+      "count": 1,
+      "p50": 23.67,
+      "p95": 23.67,
+      "p99": 23.67,
+      "max": 23.67
+    },
+    "/api/public-profile/SKeDoYOziUe85pjf": {
+      "count": 1,
+      "p50": 23.61,
+      "p95": 23.61,
+      "p99": 23.61,
+      "max": 23.61
+    },
+    "/api/public-profile/lfoNf1uLPcVccXCP": {
+      "count": 1,
+      "p50": 14.16,
+      "p95": 14.16,
+      "p99": 14.16,
+      "max": 14.16
+    },
+    "/api/public-profile/UVAG8TM6Ui1y5Oy6": {
+      "count": 1,
+      "p50": 25.05,
+      "p95": 25.05,
+      "p99": 25.05,
+      "max": 25.05
+    },
+    "/api/public-profile/zPS7owj5bp_lzTZa": {
+      "count": 1,
+      "p50": 14.52,
+      "p95": 14.52,
+      "p99": 14.52,
+      "max": 14.52
+    },
+    "/api/public-profile/E3AKpv5k8wwbvWEo": {
+      "count": 1,
+      "p50": 23.3,
+      "p95": 23.3,
+      "p99": 23.3,
+      "max": 23.3
+    },
+    "/api/public-profile/qkY8fTUx-_GR0VwA": {
+      "count": 1,
+      "p50": 11.77,
+      "p95": 11.77,
+      "p99": 11.77,
+      "max": 11.77
+    },
+    "/api/public-profile/qK8GrNRMrrEO2P-d": {
+      "count": 1,
+      "p50": 23.28,
+      "p95": 23.28,
+      "p99": 23.28,
+      "max": 23.28
+    },
+    "/api/public-profile/bqimppo5nnNn51CK": {
+      "count": 1,
+      "p50": 12.61,
+      "p95": 12.61,
+      "p99": 12.61,
+      "max": 12.61
+    },
+    "/api/public-profile/jiWvNOuLV22TPnGo": {
+      "count": 1,
+      "p50": 14.12,
+      "p95": 14.12,
+      "p99": 14.12,
+      "max": 14.12
+    },
+    "/api/public-profile/ivMzQvU8l4U_2FJR": {
+      "count": 1,
+      "p50": 20.44,
+      "p95": 20.44,
+      "p99": 20.44,
+      "max": 20.44
+    },
+    "/api/public-profile/DieVHCMsbLXsSXUm": {
+      "count": 1,
+      "p50": 12.79,
+      "p95": 12.79,
+      "p99": 12.79,
+      "max": 12.79
+    },
+    "/api/public-profile/n3aSylno3FKVsfaX": {
+      "count": 1,
+      "p50": 22.24,
+      "p95": 22.24,
+      "p99": 22.24,
+      "max": 22.24
+    },
+    "/api/public-profile/aSpqs_npLwOpAkcz": {
+      "count": 1,
+      "p50": 12.52,
+      "p95": 12.52,
+      "p99": 12.52,
+      "max": 12.52
+    },
+    "/api/public-profile/4aiecfK86Crcek1-": {
+      "count": 1,
+      "p50": 11.27,
+      "p95": 11.27,
+      "p99": 11.27,
+      "max": 11.27
+    },
+    "/api/public-profile/hAV2W_I_i431HWip": {
+      "count": 1,
+      "p50": 19.15,
+      "p95": 19.15,
+      "p99": 19.15,
+      "max": 19.15
+    },
+    "/api/public-profile/y4rAHop3htNoQmbv": {
+      "count": 1,
+      "p50": 9.94,
+      "p95": 9.94,
+      "p99": 9.94,
+      "max": 9.94
+    },
+    "/api/public-profile/2fo0t1idJG_ztgon": {
+      "count": 1,
+      "p50": 15.29,
+      "p95": 15.29,
+      "p99": 15.29,
+      "max": 15.29
+    },
+    "/api/public-profile/j5QrtrEUFwG053mX": {
+      "count": 1,
+      "p50": 9.99,
+      "p95": 9.99,
+      "p99": 9.99,
+      "max": 9.99
+    },
+    "/api/public-profile/7-0TuArHzB-OzdNU": {
+      "count": 1,
+      "p50": 15.71,
+      "p95": 15.71,
+      "p99": 15.71,
+      "max": 15.71
+    },
+    "/api/public-profile/GJGnNnttqZ-gjkCZ": {
+      "count": 1,
+      "p50": 22.63,
+      "p95": 22.63,
+      "p99": 22.63,
+      "max": 22.63
+    },
+    "/api/public-profile/Smxdo-bbB5RKjbYW": {
+      "count": 1,
+      "p50": 14.19,
+      "p95": 14.19,
+      "p99": 14.19,
+      "max": 14.19
+    },
+    "/api/public-profile/-Z2l08CN6IVESt6D": {
+      "count": 1,
+      "p50": 22.62,
+      "p95": 22.62,
+      "p99": 22.62,
+      "max": 22.62
+    },
+    "/api/public-profile/wQpGRoEYp2HFlYC1": {
+      "count": 1,
+      "p50": 9.81,
+      "p95": 9.81,
+      "p99": 9.81,
+      "max": 9.81
+    },
+    "/api/public-profile/M29PPF7VYHB6FU_U": {
+      "count": 1,
+      "p50": 18.56,
+      "p95": 18.56,
+      "p99": 18.56,
+      "max": 18.56
+    },
+    "/api/public-profile/m9xBk1zxJZsfAddr": {
+      "count": 1,
+      "p50": 10.88,
+      "p95": 10.88,
+      "p99": 10.88,
+      "max": 10.88
+    },
+    "/api/public-profile/lEVlvP_bN6P8jV-H": {
+      "count": 1,
+      "p50": 23.41,
+      "p95": 23.41,
+      "p99": 23.41,
+      "max": 23.41
+    },
+    "/api/public-profile/eRztEq6UKQqe55jE": {
+      "count": 1,
+      "p50": 15.19,
+      "p95": 15.19,
+      "p99": 15.19,
+      "max": 15.19
+    },
+    "/api/public-profile/-WhJRBuIB2AMMr9_": {
+      "count": 1,
+      "p50": 15.86,
+      "p95": 15.86,
+      "p99": 15.86,
+      "max": 15.86
+    },
+    "/api/public-profile/vgb0WQODzWkdAa6J": {
+      "count": 1,
+      "p50": 23.18,
+      "p95": 23.18,
+      "p99": 23.18,
+      "max": 23.18
+    },
+    "/api/public-profile/B4XwIyFVKl51Xj5F": {
+      "count": 1,
+      "p50": 24.5,
+      "p95": 24.5,
+      "p99": 24.5,
+      "max": 24.5
+    },
+    "/api/public-profile/deMnMupcn371UYPd": {
+      "count": 1,
+      "p50": 13.82,
+      "p95": 13.82,
+      "p99": 13.82,
+      "max": 13.82
+    },
+    "/api/public-profile/BiInueFKaOBgYPVu": {
+      "count": 1,
+      "p50": 21.39,
+      "p95": 21.39,
+      "p99": 21.39,
+      "max": 21.39
+    },
+    "/api/public-profile/veId3jERNbK9pFWA": {
+      "count": 1,
+      "p50": 14.95,
+      "p95": 14.95,
+      "p99": 14.95,
+      "max": 14.95
+    },
+    "/api/public-profile/magS-kWnMj4D7dki": {
+      "count": 1,
+      "p50": 15.95,
+      "p95": 15.95,
+      "p99": 15.95,
+      "max": 15.95
+    },
+    "/api/public-profile/IhLTj7A-clO4dm-H": {
+      "count": 1,
+      "p50": 15.29,
+      "p95": 15.29,
+      "p99": 15.29,
+      "max": 15.29
+    },
+    "/api/public-profile/VjEBkaWsD6RvxROd": {
+      "count": 1,
+      "p50": 24.91,
+      "p95": 24.91,
+      "p99": 24.91,
+      "max": 24.91
+    },
+    "/api/public-profile/3pn8s6D018-d9VhL": {
+      "count": 1,
+      "p50": 14.68,
+      "p95": 14.68,
+      "p99": 14.68,
+      "max": 14.68
+    },
+    "/api/public-profile/4iA2AnZdHZqw8ELd": {
+      "count": 1,
+      "p50": 14.87,
+      "p95": 14.87,
+      "p99": 14.87,
+      "max": 14.87
+    },
+    "/api/public-profile/-4EwOdVca1kLpkb-": {
+      "count": 1,
+      "p50": 14.32,
+      "p95": 14.32,
+      "p99": 14.32,
+      "max": 14.32
+    },
+    "/api/public-profile/OQz4PAGy9jMj3Ne-": {
+      "count": 1,
+      "p50": 21.41,
+      "p95": 21.41,
+      "p99": 21.41,
+      "max": 21.41
+    },
+    "/api/public-profile/z-ckXxckuokdd5mE": {
+      "count": 1,
+      "p50": 14.89,
+      "p95": 14.89,
+      "p99": 14.89,
+      "max": 14.89
+    },
+    "/api/public-profile/RmMCHLEyQSWLbq8w": {
+      "count": 1,
+      "p50": 22.72,
+      "p95": 22.72,
+      "p99": 22.72,
+      "max": 22.72
+    },
+    "/api/public-profile/uM2LAxByfcoyVfvZ": {
+      "count": 1,
+      "p50": 10.85,
+      "p95": 10.85,
+      "p99": 10.85,
+      "max": 10.85
+    },
+    "/api/public-profile/tZT6ATWroDziY9fA": {
+      "count": 1,
+      "p50": 12.75,
+      "p95": 12.75,
+      "p99": 12.75,
+      "max": 12.75
+    },
+    "/api/public-profile/O9cx4LqOpgVNtskt": {
+      "count": 1,
+      "p50": 12.26,
+      "p95": 12.26,
+      "p99": 12.26,
+      "max": 12.26
+    },
+    "/api/public-profile/2tUKmDwsKcrSRxJT": {
+      "count": 1,
+      "p50": 12.64,
+      "p95": 12.64,
+      "p99": 12.64,
+      "max": 12.64
+    },
+    "/api/public-profile/MoRKelbgq9GqvMSk": {
+      "count": 1,
+      "p50": 10.69,
+      "p95": 10.69,
+      "p99": 10.69,
+      "max": 10.69
+    },
+    "/api/public-profile/1hmHS1HmMiLW6tlc": {
+      "count": 1,
+      "p50": 11.64,
+      "p95": 11.64,
+      "p99": 11.64,
+      "max": 11.64
+    },
+    "/api/public-profile/GCJ2iBU9PeWvM36z": {
+      "count": 1,
+      "p50": 11.91,
+      "p95": 11.91,
+      "p99": 11.91,
+      "max": 11.91
+    },
+    "/api/public-profile/bwN_QUQrrAoxtM6P": {
+      "count": 1,
+      "p50": 11.66,
+      "p95": 11.66,
+      "p99": 11.66,
+      "max": 11.66
+    },
+    "/api/public-profile/hL3R5jreK6eRPbcK": {
+      "count": 1,
+      "p50": 23.95,
+      "p95": 23.95,
+      "p99": 23.95,
+      "max": 23.95
+    },
+    "/api/public-profile/fiGwBdcjfz6Q_WOV": {
+      "count": 1,
+      "p50": 23.73,
+      "p95": 23.73,
+      "p99": 23.73,
+      "max": 23.73
+    },
+    "/api/public-profile/HFGoqLmcr04NIa7_": {
+      "count": 1,
+      "p50": 12.54,
+      "p95": 12.54,
+      "p99": 12.54,
+      "max": 12.54
+    },
+    "/api/public-profile/4FfSvSj9FC4lYgnz": {
+      "count": 1,
+      "p50": 14.41,
+      "p95": 14.41,
+      "p99": 14.41,
+      "max": 14.41
+    },
+    "/api/public-profile/xNOlviKooXByZbZ0": {
+      "count": 1,
+      "p50": 23.47,
+      "p95": 23.47,
+      "p99": 23.47,
+      "max": 23.47
+    },
+    "/api/public-profile/nGCz3Vq6jr6fn8FC": {
+      "count": 1,
+      "p50": 11.67,
+      "p95": 11.67,
+      "p99": 11.67,
+      "max": 11.67
+    },
+    "/api/public-profile/PnbcHLLQu46jcXWX": {
+      "count": 1,
+      "p50": 11.15,
+      "p95": 11.15,
+      "p99": 11.15,
+      "max": 11.15
+    },
+    "/api/public-profile/LT_s2mCWYPiB__At": {
+      "count": 1,
+      "p50": 23.28,
+      "p95": 23.28,
+      "p99": 23.28,
+      "max": 23.28
+    },
+    "/api/public-profile/xu63bhfRiZDKwu8c": {
+      "count": 1,
+      "p50": 21.18,
+      "p95": 21.18,
+      "p99": 21.18,
+      "max": 21.18
+    },
+    "/api/public-profile/0a0R_l_x2t1AOWJS": {
+      "count": 1,
+      "p50": 12.76,
+      "p95": 12.76,
+      "p99": 12.76,
+      "max": 12.76
+    },
+    "/api/public-profile/Lp0hhVnooSjMnNRb": {
+      "count": 1,
+      "p50": 12.61,
+      "p95": 12.61,
+      "p99": 12.61,
+      "max": 12.61
+    },
+    "/api/public-profile/C6OwNuJt7YN7Vuz2": {
+      "count": 1,
+      "p50": 24.48,
+      "p95": 24.48,
+      "p99": 24.48,
+      "max": 24.48
+    },
+    "/api/public-profile/4IL_2-urS2NDHMh5": {
+      "count": 1,
+      "p50": 8.9,
+      "p95": 8.9,
+      "p99": 8.9,
+      "max": 8.9
+    },
+    "/api/public-profile/tU2DoYax4S-jJZUv": {
+      "count": 1,
+      "p50": 9.37,
+      "p95": 9.37,
+      "p99": 9.37,
+      "max": 9.37
+    },
+    "/api/public-profile/Lq70466XLPXi1f2O": {
+      "count": 1,
+      "p50": 21.99,
+      "p95": 21.99,
+      "p99": 21.99,
+      "max": 21.99
+    },
+    "/api/public-profile/_PRsNG7MU6JKJeoC": {
+      "count": 1,
+      "p50": 21.94,
+      "p95": 21.94,
+      "p99": 21.94,
+      "max": 21.94
+    },
+    "/api/public-profile/PtMCG0SZbu4b5V6l": {
+      "count": 1,
+      "p50": 9.64,
+      "p95": 9.64,
+      "p99": 9.64,
+      "max": 9.64
+    },
+    "/api/public-profile/zbioPIbgqoc1Ud_f": {
+      "count": 1,
+      "p50": 12.08,
+      "p95": 12.08,
+      "p99": 12.08,
+      "max": 12.08
+    },
+    "/api/public-profile/3oPSuYZLaCkBQlez": {
+      "count": 1,
+      "p50": 15.17,
+      "p95": 15.17,
+      "p99": 15.17,
+      "max": 15.17
+    },
+    "/api/public-profile/s4fkbeCoyplA-sT0": {
+      "count": 1,
+      "p50": 17.58,
+      "p95": 17.58,
+      "p99": 17.58,
+      "max": 17.58
+    },
+    "/api/public-profile/cUyW6bu79TsTDmMT": {
+      "count": 1,
+      "p50": 21.0,
+      "p95": 21.0,
+      "p99": 21.0,
+      "max": 21.0
+    },
+    "/api/public-profile/4ouMIKy1l68j9zSn": {
+      "count": 1,
+      "p50": 8.53,
+      "p95": 8.53,
+      "p99": 8.53,
+      "max": 8.53
+    },
+    "/api/public-profile/Ztw7QFSS1xzrQBYC": {
+      "count": 1,
+      "p50": 20.33,
+      "p95": 20.33,
+      "p99": 20.33,
+      "max": 20.33
+    },
+    "/api/public-profile/kiJSg3_PFMPD9EVJ": {
+      "count": 1,
+      "p50": 9.21,
+      "p95": 9.21,
+      "p99": 9.21,
+      "max": 9.21
+    },
+    "/api/public-profile/dncREfBYC2V9VfyN": {
+      "count": 1,
+      "p50": 18.11,
+      "p95": 18.11,
+      "p99": 18.11,
+      "max": 18.11
+    },
+    "/api/public-profile/HLhidghcNGGbJ0RO": {
+      "count": 1,
+      "p50": 17.07,
+      "p95": 17.07,
+      "p99": 17.07,
+      "max": 17.07
+    },
+    "/api/public-profile/dvOUPa4zwRrgZVks": {
+      "count": 1,
+      "p50": 17.62,
+      "p95": 17.62,
+      "p99": 17.62,
+      "max": 17.62
+    },
+    "/api/public-profile/NbomN536xWlFGyWr": {
+      "count": 1,
+      "p50": 20.46,
+      "p95": 20.46,
+      "p99": 20.46,
+      "max": 20.46
+    },
+    "/api/public-profile/DIo1sWXXvKK2rHKo": {
+      "count": 1,
+      "p50": 16.18,
+      "p95": 16.18,
+      "p99": 16.18,
+      "max": 16.18
+    },
+    "/api/public-profile/wCmBLYv1vGn-r8-h": {
+      "count": 1,
+      "p50": 15.94,
+      "p95": 15.94,
+      "p99": 15.94,
+      "max": 15.94
+    },
+    "/api/public-profile/PRpHE21FwCbJR2tM": {
+      "count": 1,
+      "p50": 11.09,
+      "p95": 11.09,
+      "p99": 11.09,
+      "max": 11.09
+    },
+    "/api/public-profile/kbaD9hlgbPcCljec": {
+      "count": 1,
+      "p50": 12.7,
+      "p95": 12.7,
+      "p99": 12.7,
+      "max": 12.7
+    },
+    "/api/public-profile/5uqXRlaunJGSOZG9": {
+      "count": 1,
+      "p50": 17.46,
+      "p95": 17.46,
+      "p99": 17.46,
+      "max": 17.46
+    },
+    "/api/public-profile/VkgEQThpT1owkv80": {
+      "count": 1,
+      "p50": 16.54,
+      "p95": 16.54,
+      "p99": 16.54,
+      "max": 16.54
+    },
+    "/api/public-profile/ahNc8ZnaLVk_IFcA": {
+      "count": 1,
+      "p50": 16.42,
+      "p95": 16.42,
+      "p99": 16.42,
+      "max": 16.42
+    },
+    "/api/public-profile/4T8WIePcxNatDvZZ": {
+      "count": 1,
+      "p50": 13.1,
+      "p95": 13.1,
+      "p99": 13.1,
+      "max": 13.1
+    },
+    "/api/public-profile/pOa64Y2rq0ns0HlD": {
+      "count": 1,
+      "p50": 16.05,
+      "p95": 16.05,
+      "p99": 16.05,
+      "max": 16.05
+    },
+    "/api/public-profile/m5cpsaf82yG47YQr": {
+      "count": 1,
+      "p50": 14.15,
+      "p95": 14.15,
+      "p99": 14.15,
+      "max": 14.15
+    },
+    "/api/public-profile/9ZXG0vDCSl7uobku": {
+      "count": 1,
+      "p50": 13.17,
+      "p95": 13.17,
+      "p99": 13.17,
+      "max": 13.17
+    },
+    "/api/public-profile/RnX7IAc-enUB3QkU": {
+      "count": 1,
+      "p50": 19.79,
+      "p95": 19.79,
+      "p99": 19.79,
+      "max": 19.79
+    },
+    "/api/public-profile/UHVTSm1IjD4ToYm3": {
+      "count": 1,
+      "p50": 14.74,
+      "p95": 14.74,
+      "p99": 14.74,
+      "max": 14.74
+    },
+    "/api/public-profile/nwi4abcdEOo4nieP": {
+      "count": 1,
+      "p50": 14.49,
+      "p95": 14.49,
+      "p99": 14.49,
+      "max": 14.49
+    },
+    "/api/public-profile/JYyoSSHRZlyNHwaI": {
+      "count": 1,
+      "p50": 17.52,
+      "p95": 17.52,
+      "p99": 17.52,
+      "max": 17.52
+    },
+    "/api/public-profile/7Omu4pu6J2TWOvP2": {
+      "count": 1,
+      "p50": 19.71,
+      "p95": 19.71,
+      "p99": 19.71,
+      "max": 19.71
+    },
+    "/api/public-profile/e-bMOSNhYcs9togb": {
+      "count": 1,
+      "p50": 18.42,
+      "p95": 18.42,
+      "p99": 18.42,
+      "max": 18.42
+    },
+    "/api/public-profile/np5P5rw_yqQJEqcl": {
+      "count": 1,
+      "p50": 15.43,
+      "p95": 15.43,
+      "p99": 15.43,
+      "max": 15.43
+    },
+    "/api/public-profile/Q2msd31UX9Wxmky2": {
+      "count": 1,
+      "p50": 14.82,
+      "p95": 14.82,
+      "p99": 14.82,
+      "max": 14.82
+    },
+    "/api/public-profile/tdF5LnPfh842w7St": {
+      "count": 1,
+      "p50": 15.0,
+      "p95": 15.0,
+      "p99": 15.0,
+      "max": 15.0
+    },
+    "/api/public-profile/KaYHehMQAgjAHN6o": {
+      "count": 1,
+      "p50": 16.89,
+      "p95": 16.89,
+      "p99": 16.89,
+      "max": 16.89
+    },
+    "/api/public-profile/4cPdy6dAM_sYQTmA": {
+      "count": 1,
+      "p50": 16.45,
+      "p95": 16.45,
+      "p99": 16.45,
+      "max": 16.45
+    },
+    "/api/public-profile/v-6UBEQf84IQpIKr": {
+      "count": 1,
+      "p50": 17.61,
+      "p95": 17.61,
+      "p99": 17.61,
+      "max": 17.61
+    },
+    "/api/public-profile/_lp1FfDmyF7o5I4k": {
+      "count": 1,
+      "p50": 18.74,
+      "p95": 18.74,
+      "p99": 18.74,
+      "max": 18.74
+    },
+    "/api/public-profile/6HpGizzbxFnOO1nA": {
+      "count": 1,
+      "p50": 13.9,
+      "p95": 13.9,
+      "p99": 13.9,
+      "max": 13.9
+    },
+    "/api/public-profile/I0UId7O7U9RHprKN": {
+      "count": 1,
+      "p50": 14.79,
+      "p95": 14.79,
+      "p99": 14.79,
+      "max": 14.79
+    },
+    "/api/public-profile/FcMb0kUl91yxGFuj": {
+      "count": 1,
+      "p50": 12.9,
+      "p95": 12.9,
+      "p99": 12.9,
+      "max": 12.9
+    },
+    "/api/public-profile/BpnIXXtoI2pjdUAB": {
+      "count": 1,
+      "p50": 17.18,
+      "p95": 17.18,
+      "p99": 17.18,
+      "max": 17.18
+    },
+    "/api/public-profile/ZYN7eA8rXAeR_XXO": {
+      "count": 1,
+      "p50": 19.28,
+      "p95": 19.28,
+      "p99": 19.28,
+      "max": 19.28
+    },
+    "/api/public-profile/oxlit4hAwATmDPMz": {
+      "count": 1,
+      "p50": 19.96,
+      "p95": 19.96,
+      "p99": 19.96,
+      "max": 19.96
+    },
+    "/api/public-profile/ZflyfAeVa82fMqMg": {
+      "count": 1,
+      "p50": 14.46,
+      "p95": 14.46,
+      "p99": 14.46,
+      "max": 14.46
+    },
+    "/api/public-profile/fOW3K_3yECGRWET-": {
+      "count": 1,
+      "p50": 16.24,
+      "p95": 16.24,
+      "p99": 16.24,
+      "max": 16.24
+    },
+    "/api/public-profile/-0V_SQuRY6S50Vvc": {
+      "count": 1,
+      "p50": 18.85,
+      "p95": 18.85,
+      "p99": 18.85,
+      "max": 18.85
+    },
+    "/api/public-profile/n_IHWuw-5um2xyjp": {
+      "count": 1,
+      "p50": 15.38,
+      "p95": 15.38,
+      "p99": 15.38,
+      "max": 15.38
+    },
+    "/api/public-profile/vAGiuvKaicgc9Gb6": {
+      "count": 1,
+      "p50": 20.4,
+      "p95": 20.4,
+      "p99": 20.4,
+      "max": 20.4
+    },
+    "/api/public-profile/p47X2-41IpSTrVNt": {
+      "count": 1,
+      "p50": 15.46,
+      "p95": 15.46,
+      "p99": 15.46,
+      "max": 15.46
+    },
+    "/api/public-profile/RYTCawTM764FBm76": {
+      "count": 1,
+      "p50": 13.41,
+      "p95": 13.41,
+      "p99": 13.41,
+      "max": 13.41
+    },
+    "/api/public-profile/OT7xXqrEE-x-7ahn": {
+      "count": 1,
+      "p50": 12.98,
+      "p95": 12.98,
+      "p99": 12.98,
+      "max": 12.98
+    },
+    "/api/public-profile/tVoiu_NCUvZTH7yb": {
+      "count": 1,
+      "p50": 16.03,
+      "p95": 16.03,
+      "p99": 16.03,
+      "max": 16.03
+    },
+    "/api/public-profile/QDAJByVes-E17CYg": {
+      "count": 1,
+      "p50": 11.29,
+      "p95": 11.29,
+      "p99": 11.29,
+      "max": 11.29
+    },
+    "/api/public-profile/4xNLbzizAUdyRHbD": {
+      "count": 1,
+      "p50": 20.5,
+      "p95": 20.5,
+      "p99": 20.5,
+      "max": 20.5
+    },
+    "/api/public-profile/Bn513DogCghUV4JK": {
+      "count": 1,
+      "p50": 16.41,
+      "p95": 16.41,
+      "p99": 16.41,
+      "max": 16.41
+    },
+    "/api/public-profile/Ke-gdcTvj6xi0t3h": {
+      "count": 1,
+      "p50": 22.52,
+      "p95": 22.52,
+      "p99": 22.52,
+      "max": 22.52
+    },
+    "/api/public-profile/gB5x3Fiz2N6AEl5j": {
+      "count": 1,
+      "p50": 12.4,
+      "p95": 12.4,
+      "p99": 12.4,
+      "max": 12.4
+    },
+    "/api/public-profile/DlgbS1JQqe_oCoc8": {
+      "count": 1,
+      "p50": 21.98,
+      "p95": 21.98,
+      "p99": 21.98,
+      "max": 21.98
+    },
+    "/api/public-profile/gMJqLSTZJMt3WCR-": {
+      "count": 1,
+      "p50": 22.16,
+      "p95": 22.16,
+      "p99": 22.16,
+      "max": 22.16
+    },
+    "/api/public-profile/Nht3F9-0DzLKs4nL": {
+      "count": 1,
+      "p50": 18.7,
+      "p95": 18.7,
+      "p99": 18.7,
+      "max": 18.7
+    },
+    "/api/public-profile/MOuirp-vgt69qWdS": {
+      "count": 1,
+      "p50": 15.66,
+      "p95": 15.66,
+      "p99": 15.66,
+      "max": 15.66
+    },
+    "/api/public-profile/NHGtmftSf4HKE83n": {
+      "count": 1,
+      "p50": 18.78,
+      "p95": 18.78,
+      "p99": 18.78,
+      "max": 18.78
+    },
+    "/api/public-profile/J_SMWv0FnTFR-p4G": {
+      "count": 1,
+      "p50": 14.82,
+      "p95": 14.82,
+      "p99": 14.82,
+      "max": 14.82
+    },
+    "/api/public-profile/gj_feLrYJ6QMasDy": {
+      "count": 1,
+      "p50": 24.92,
+      "p95": 24.92,
+      "p99": 24.92,
+      "max": 24.92
+    },
+    "/api/public-profile/tKRYrGyyv23RwvBg": {
+      "count": 1,
+      "p50": 17.44,
+      "p95": 17.44,
+      "p99": 17.44,
+      "max": 17.44
+    },
+    "/api/public-profile/vol7CuQHRhowgpON": {
+      "count": 1,
+      "p50": 16.29,
+      "p95": 16.29,
+      "p99": 16.29,
+      "max": 16.29
+    },
+    "/api/public-profile/OvF-RUQmKLa2g5Ts": {
+      "count": 1,
+      "p50": 16.69,
+      "p95": 16.69,
+      "p99": 16.69,
+      "max": 16.69
+    },
+    "/api/public-profile/e1MmZet8ttA1IyB9": {
+      "count": 1,
+      "p50": 14.78,
+      "p95": 14.78,
+      "p99": 14.78,
+      "max": 14.78
+    },
+    "/api/public-profile/NtKuAb0pkXjc68tU": {
+      "count": 1,
+      "p50": 14.46,
+      "p95": 14.46,
+      "p99": 14.46,
+      "max": 14.46
+    },
+    "/api/public-profile/B4OfvhP1e-ZVMi9C": {
+      "count": 1,
+      "p50": 15.23,
+      "p95": 15.23,
+      "p99": 15.23,
+      "max": 15.23
+    },
+    "/api/public-profile/6p3iqE4_qxlaFAst": {
+      "count": 1,
+      "p50": 10.16,
+      "p95": 10.16,
+      "p99": 10.16,
+      "max": 10.16
+    },
+    "/api/public-profile/SkOtfc9D6_rhQLGw": {
+      "count": 1,
+      "p50": 12.13,
+      "p95": 12.13,
+      "p99": 12.13,
+      "max": 12.13
+    },
+    "/api/public-profile/QBZsfPPyRsZf2NXX": {
+      "count": 1,
+      "p50": 16.11,
+      "p95": 16.11,
+      "p99": 16.11,
+      "max": 16.11
+    },
+    "/api/public-profile/Fe3RDVH12-ZfJRrx": {
+      "count": 1,
+      "p50": 11.92,
+      "p95": 11.92,
+      "p99": 11.92,
+      "max": 11.92
+    },
+    "/api/public-profile/TgBu_fjCDu3ukGVU": {
+      "count": 1,
+      "p50": 13.83,
+      "p95": 13.83,
+      "p99": 13.83,
+      "max": 13.83
+    },
+    "/api/public-profile/YSFjFmbGbtxic2xW": {
+      "count": 1,
+      "p50": 37.88,
+      "p95": 37.88,
+      "p99": 37.88,
+      "max": 37.88
+    },
+    "/api/public-profile/lbi6xmGy5HlDFOwo": {
+      "count": 1,
+      "p50": 11.7,
+      "p95": 11.7,
+      "p99": 11.7,
+      "max": 11.7
+    },
+    "/api/public-profile/oXwhG5wT9UfHRPKa": {
+      "count": 1,
+      "p50": 12.72,
+      "p95": 12.72,
+      "p99": 12.72,
+      "max": 12.72
+    },
+    "/api/public-profile/t8TIJxjuROuh9hxw": {
+      "count": 1,
+      "p50": 40.12,
+      "p95": 40.12,
+      "p99": 40.12,
+      "max": 40.12
+    },
+    "/api/public-profile/55zIRTICG_6MsCCC": {
+      "count": 1,
+      "p50": 37.8,
+      "p95": 37.8,
+      "p99": 37.8,
+      "max": 37.8
+    },
+    "/api/public-profile/NSVWcB8dDONWvfQm": {
+      "count": 1,
+      "p50": 11.71,
+      "p95": 11.71,
+      "p99": 11.71,
+      "max": 11.71
+    },
+    "/api/public-profile/9UAXPHUm5Dy26XMn": {
+      "count": 1,
+      "p50": 12.23,
+      "p95": 12.23,
+      "p99": 12.23,
+      "max": 12.23
+    },
+    "/api/public-profile/XB6aEgglkXXl81LG": {
+      "count": 1,
+      "p50": 37.44,
+      "p95": 37.44,
+      "p99": 37.44,
+      "max": 37.44
+    },
+    "/api/public-profile/ebiI1OlWpnDw95mc": {
+      "count": 1,
+      "p50": 12.81,
+      "p95": 12.81,
+      "p99": 12.81,
+      "max": 12.81
+    },
+    "/api/public-profile/wt7nEi4cda1V14T1": {
+      "count": 1,
+      "p50": 13.18,
+      "p95": 13.18,
+      "p99": 13.18,
+      "max": 13.18
+    },
+    "/api/public-profile/VgImc2po4aptYRNS": {
+      "count": 1,
+      "p50": 35.14,
+      "p95": 35.14,
+      "p99": 35.14,
+      "max": 35.14
+    },
+    "/api/public-profile/bZZG8wEBJ7yEDPBt": {
+      "count": 1,
+      "p50": 34.85,
+      "p95": 34.85,
+      "p99": 34.85,
+      "max": 34.85
+    },
+    "/api/public-profile/dFVNWUoP2P3GgExp": {
+      "count": 1,
+      "p50": 27.44,
+      "p95": 27.44,
+      "p99": 27.44,
+      "max": 27.44
+    },
+    "/api/public-profile/pdTTU4mWm0X-x1_e": {
+      "count": 1,
+      "p50": 26.75,
+      "p95": 26.75,
+      "p99": 26.75,
+      "max": 26.75
+    },
+    "/api/public-profile/4008TRFpNwsjxCC8": {
+      "count": 1,
+      "p50": 20.83,
+      "p95": 20.83,
+      "p99": 20.83,
+      "max": 20.83
+    },
+    "/api/public-profile/ZlkdswdwoJXZCxVR": {
+      "count": 1,
+      "p50": 21.14,
+      "p95": 21.14,
+      "p99": 21.14,
+      "max": 21.14
+    },
+    "/api/public-profile/_jlNQ03W_u973dfU": {
+      "count": 1,
+      "p50": 14.01,
+      "p95": 14.01,
+      "p99": 14.01,
+      "max": 14.01
+    },
+    "/api/public-profile/b4L6odBq-mYGNDVh": {
+      "count": 1,
+      "p50": 15.94,
+      "p95": 15.94,
+      "p99": 15.94,
+      "max": 15.94
+    },
+    "/api/public-profile/pgYGmabREWyDXP1Q": {
+      "count": 1,
+      "p50": 16.18,
+      "p95": 16.18,
+      "p99": 16.18,
+      "max": 16.18
+    },
+    "/api/public-profile/RRBvqHkL2uuXO8nt": {
+      "count": 1,
+      "p50": 15.51,
+      "p95": 15.51,
+      "p99": 15.51,
+      "max": 15.51
+    },
+    "/api/public-profile/SoQs9dTH3y2ut-_d": {
+      "count": 1,
+      "p50": 13.6,
+      "p95": 13.6,
+      "p99": 13.6,
+      "max": 13.6
+    },
+    "/api/public-profile/tnJaLHlNTU1PzeZb": {
+      "count": 1,
+      "p50": 15.21,
+      "p95": 15.21,
+      "p99": 15.21,
+      "max": 15.21
+    },
+    "/api/public-profile/MuTftWCoUKXECMsF": {
+      "count": 1,
+      "p50": 11.77,
+      "p95": 11.77,
+      "p99": 11.77,
+      "max": 11.77
+    },
+    "/api/public-profile/KE-VhJ2fOgyGF8j6": {
+      "count": 1,
+      "p50": 12.48,
+      "p95": 12.48,
+      "p99": 12.48,
+      "max": 12.48
+    },
+    "/api/public-profile/tt80814P9ITgs83G": {
+      "count": 1,
+      "p50": 31.5,
+      "p95": 31.5,
+      "p99": 31.5,
+      "max": 31.5
+    },
+    "/api/public-profile/I4yuNsvu1Be81oKh": {
+      "count": 1,
+      "p50": 31.23,
+      "p95": 31.23,
+      "p99": 31.23,
+      "max": 31.23
+    },
+    "/api/public-profile/P9o2otEbH90_uOQF": {
+      "count": 1,
+      "p50": 9.31,
+      "p95": 9.31,
+      "p99": 9.31,
+      "max": 9.31
+    },
+    "/api/public-profile/XQ6FiFGmfYmbFJpf": {
+      "count": 1,
+      "p50": 10.12,
+      "p95": 10.12,
+      "p99": 10.12,
+      "max": 10.12
+    },
+    "/api/public-profile/szVq1mLEkXZ3vNct": {
+      "count": 1,
+      "p50": 29.91,
+      "p95": 29.91,
+      "p99": 29.91,
+      "max": 29.91
+    },
+    "/api/public-profile/AHfW2t9BR3MYhzRV": {
+      "count": 1,
+      "p50": 31.33,
+      "p95": 31.33,
+      "p99": 31.33,
+      "max": 31.33
+    },
+    "/api/public-profile/DFAaOq2koQDBRtZK": {
+      "count": 1,
+      "p50": 19.5,
+      "p95": 19.5,
+      "p99": 19.5,
+      "max": 19.5
+    },
+    "/api/public-profile/2GlyTzn9eTDENxja": {
+      "count": 1,
+      "p50": 25.62,
+      "p95": 25.62,
+      "p99": 25.62,
+      "max": 25.62
+    },
+    "/api/public-profile/6vNSJ_SSbMnSEZa5": {
+      "count": 1,
+      "p50": 24.63,
+      "p95": 24.63,
+      "p99": 24.63,
+      "max": 24.63
+    },
+    "/api/public-profile/KOgzKE_kywEGtjXP": {
+      "count": 1,
+      "p50": 21.24,
+      "p95": 21.24,
+      "p99": 21.24,
+      "max": 21.24
+    },
+    "/api/public-profile/5kJLia9tr8dr_0Pa": {
+      "count": 1,
+      "p50": 10.38,
+      "p95": 10.38,
+      "p99": 10.38,
+      "max": 10.38
+    },
+    "/api/public-profile/gbaQPGha6PwLQ5bM": {
+      "count": 1,
+      "p50": 20.11,
+      "p95": 20.11,
+      "p99": 20.11,
+      "max": 20.11
+    },
+    "/api/public-profile/_DMR_72wLrg9lL63": {
+      "count": 1,
+      "p50": 11.73,
+      "p95": 11.73,
+      "p99": 11.73,
+      "max": 11.73
+    },
+    "/api/public-profile/uMLfgg3FocFVtqwO": {
+      "count": 1,
+      "p50": 20.73,
+      "p95": 20.73,
+      "p99": 20.73,
+      "max": 20.73
+    },
+    "/api/public-profile/0zXCkPscbS1-eKa0": {
+      "count": 1,
+      "p50": 9.8,
+      "p95": 9.8,
+      "p99": 9.8,
+      "max": 9.8
+    },
+    "/api/public-profile/Wn3YZP9rqnPEjW9d": {
+      "count": 1,
+      "p50": 9.65,
+      "p95": 9.65,
+      "p99": 9.65,
+      "max": 9.65
+    },
+    "/api/public-profile/HcvfK6H_pZmPRaej": {
+      "count": 1,
+      "p50": 21.56,
+      "p95": 21.56,
+      "p99": 21.56,
+      "max": 21.56
+    },
+    "/api/public-profile/WxUVqO-eeRo-5rsQ": {
+      "count": 1,
+      "p50": 23.1,
+      "p95": 23.1,
+      "p99": 23.1,
+      "max": 23.1
+    },
+    "/api/public-profile/ese9ClbzqYZC9_Iu": {
+      "count": 1,
+      "p50": 18.81,
+      "p95": 18.81,
+      "p99": 18.81,
+      "max": 18.81
+    },
+    "/api/public-profile/5IAy3mzJ4kWCIR3E": {
+      "count": 1,
+      "p50": 16.74,
+      "p95": 16.74,
+      "p99": 16.74,
+      "max": 16.74
+    },
+    "/api/public-profile/D8e8MZ-makkdEc8P": {
+      "count": 1,
+      "p50": 17.97,
+      "p95": 17.97,
+      "p99": 17.97,
+      "max": 17.97
+    },
+    "/api/public-profile/x2q1bz4RmXv7wBKR": {
+      "count": 1,
+      "p50": 21.05,
+      "p95": 21.05,
+      "p99": 21.05,
+      "max": 21.05
+    },
+    "/api/public-profile/zxLRiFLez_JVK4Ov": {
+      "count": 1,
+      "p50": 20.69,
+      "p95": 20.69,
+      "p99": 20.69,
+      "max": 20.69
+    },
+    "/api/public-profile/jUpSTubbBrKaZ_CI": {
+      "count": 1,
+      "p50": 12.6,
+      "p95": 12.6,
+      "p99": 12.6,
+      "max": 12.6
+    },
+    "/api/public-profile/TyGgI0jU2KmkrxS3": {
+      "count": 1,
+      "p50": 13.2,
+      "p95": 13.2,
+      "p99": 13.2,
+      "max": 13.2
+    },
+    "/api/public-profile/ioWnfUHBYyn9VY1k": {
+      "count": 1,
+      "p50": 18.62,
+      "p95": 18.62,
+      "p99": 18.62,
+      "max": 18.62
+    },
+    "/api/public-profile/W8ILqKs-2f4V0Pg8": {
+      "count": 1,
+      "p50": 19.54,
+      "p95": 19.54,
+      "p99": 19.54,
+      "max": 19.54
+    },
+    "/api/public-profile/_99Fd_upa2US-ftY": {
+      "count": 1,
+      "p50": 21.06,
+      "p95": 21.06,
+      "p99": 21.06,
+      "max": 21.06
+    },
+    "/api/public-profile/EewokP2QhZ-80biJ": {
+      "count": 1,
+      "p50": 11.5,
+      "p95": 11.5,
+      "p99": 11.5,
+      "max": 11.5
+    },
+    "/api/public-profile/iE7XKrOwaGwEHTJF": {
+      "count": 1,
+      "p50": 17.02,
+      "p95": 17.02,
+      "p99": 17.02,
+      "max": 17.02
+    },
+    "/api/public-profile/QoqEbkt62O2O4WMv": {
+      "count": 1,
+      "p50": 20.9,
+      "p95": 20.9,
+      "p99": 20.9,
+      "max": 20.9
+    },
+    "/api/public-profile/6t5zZe__nwoLipNz": {
+      "count": 1,
+      "p50": 18.84,
+      "p95": 18.84,
+      "p99": 18.84,
+      "max": 18.84
+    },
+    "/api/public-profile/_s0WDXyQNfJEbfey": {
+      "count": 1,
+      "p50": 20.34,
+      "p95": 20.34,
+      "p99": 20.34,
+      "max": 20.34
+    },
+    "/api/public-profile/Hi2R23OkfNEzzHOf": {
+      "count": 1,
+      "p50": 9.67,
+      "p95": 9.67,
+      "p99": 9.67,
+      "max": 9.67
+    },
+    "/api/public-profile/Sg6Zht5xeTFCQwC8": {
+      "count": 1,
+      "p50": 10.51,
+      "p95": 10.51,
+      "p99": 10.51,
+      "max": 10.51
+    },
+    "/api/public-profile/ULcCNWQ3rq0q7VfP": {
+      "count": 1,
+      "p50": 15.12,
+      "p95": 15.12,
+      "p99": 15.12,
+      "max": 15.12
+    },
+    "/api/public-profile/S69ROhwyy4CN5L0I": {
+      "count": 1,
+      "p50": 20.93,
+      "p95": 20.93,
+      "p99": 20.93,
+      "max": 20.93
+    },
+    "/api/public-profile/1jsjFTymUw_MgHzT": {
+      "count": 1,
+      "p50": 15.92,
+      "p95": 15.92,
+      "p99": 15.92,
+      "max": 15.92
+    },
+    "/api/public-profile/fJzYJBEv82M9ODAN": {
+      "count": 1,
+      "p50": 9.64,
+      "p95": 9.64,
+      "p99": 9.64,
+      "max": 9.64
+    },
+    "/api/public-profile/DAC5i1dj-SlTTpvV": {
+      "count": 1,
+      "p50": 20.69,
+      "p95": 20.69,
+      "p99": 20.69,
+      "max": 20.69
+    },
+    "/api/public-profile/9uUkDNvddhSrapFp": {
+      "count": 1,
+      "p50": 10.52,
+      "p95": 10.52,
+      "p99": 10.52,
+      "max": 10.52
+    },
+    "/api/public-profile/KflaZGihwRk-2qn8": {
+      "count": 1,
+      "p50": 20.96,
+      "p95": 20.96,
+      "p99": 20.96,
+      "max": 20.96
+    },
+    "/api/public-profile/HQXlJDm2genPvdjV": {
+      "count": 1,
+      "p50": 18.84,
+      "p95": 18.84,
+      "p99": 18.84,
+      "max": 18.84
+    },
+    "/api/public-profile/-O96gWJwNmCuszbE": {
+      "count": 1,
+      "p50": 21.15,
+      "p95": 21.15,
+      "p99": 21.15,
+      "max": 21.15
+    },
+    "/api/public-profile/lmnd4Q0AeOtidYUM": {
+      "count": 1,
+      "p50": 18.76,
+      "p95": 18.76,
+      "p99": 18.76,
+      "max": 18.76
+    },
+    "/api/public-profile/5shZarSNair0nqZ9": {
+      "count": 1,
+      "p50": 19.05,
+      "p95": 19.05,
+      "p99": 19.05,
+      "max": 19.05
+    },
+    "/api/public-profile/tTWgLmfSWa3-vFk_": {
+      "count": 1,
+      "p50": 10.71,
+      "p95": 10.71,
+      "p99": 10.71,
+      "max": 10.71
+    },
+    "/api/public-profile/roqbfuWSMdGQJ_-D": {
+      "count": 1,
+      "p50": 16.3,
+      "p95": 16.3,
+      "p99": 16.3,
+      "max": 16.3
+    },
+    "/api/public-profile/In_ZwKB01QBbpvQC": {
+      "count": 1,
+      "p50": 17.55,
+      "p95": 17.55,
+      "p99": 17.55,
+      "max": 17.55
+    },
+    "/api/public-profile/0d0-QLwtTGBb8rFL": {
+      "count": 1,
+      "p50": 12.26,
+      "p95": 12.26,
+      "p99": 12.26,
+      "max": 12.26
+    },
+    "/api/public-profile/l1J1yxAhJUzVgjyD": {
+      "count": 1,
+      "p50": 19.39,
+      "p95": 19.39,
+      "p99": 19.39,
+      "max": 19.39
+    },
+    "/api/public-profile/nA2D1buEeNPU-qUU": {
+      "count": 1,
+      "p50": 20.18,
+      "p95": 20.18,
+      "p99": 20.18,
+      "max": 20.18
+    },
+    "/api/public-profile/UgQT5RQeIFRW1nKZ": {
+      "count": 1,
+      "p50": 18.6,
+      "p95": 18.6,
+      "p99": 18.6,
+      "max": 18.6
+    },
+    "/api/public-profile/OMXxAeW3JM3vKter": {
+      "count": 1,
+      "p50": 11.8,
+      "p95": 11.8,
+      "p99": 11.8,
+      "max": 11.8
+    },
+    "/api/public-profile/o--48GH0QbjRblaK": {
+      "count": 1,
+      "p50": 19.33,
+      "p95": 19.33,
+      "p99": 19.33,
+      "max": 19.33
+    },
+    "/api/public-profile/aQBdinoykCiFRhdT": {
+      "count": 1,
+      "p50": 15.89,
+      "p95": 15.89,
+      "p99": 15.89,
+      "max": 15.89
+    },
+    "/api/public-profile/YSL75SRaQr6XwIqF": {
+      "count": 1,
+      "p50": 12.88,
+      "p95": 12.88,
+      "p99": 12.88,
+      "max": 12.88
+    },
+    "/api/public-profile/VPvg1GqAs3gsiHQW": {
+      "count": 1,
+      "p50": 15.23,
+      "p95": 15.23,
+      "p99": 15.23,
+      "max": 15.23
+    },
+    "/api/public-profile/Am595xNCuXG92jtu": {
+      "count": 1,
+      "p50": 11.94,
+      "p95": 11.94,
+      "p99": 11.94,
+      "max": 11.94
+    },
+    "/api/public-profile/pK1BTZ1KQROI_hFn": {
+      "count": 1,
+      "p50": 15.05,
+      "p95": 15.05,
+      "p99": 15.05,
+      "max": 15.05
+    },
+    "/api/public-profile/92ZucHCmUU9r5kZN": {
+      "count": 1,
+      "p50": 15.83,
+      "p95": 15.83,
+      "p99": 15.83,
+      "max": 15.83
+    },
+    "/api/public-profile/aSC6KSb9VWb_f1q6": {
+      "count": 1,
+      "p50": 14.24,
+      "p95": 14.24,
+      "p99": 14.24,
+      "max": 14.24
+    },
+    "/api/public-profile/xdF3ujQJDdxoR9Fz": {
+      "count": 1,
+      "p50": 18.83,
+      "p95": 18.83,
+      "p99": 18.83,
+      "max": 18.83
+    },
+    "/api/public-profile/qgUmoYkMenGGwWFX": {
+      "count": 1,
+      "p50": 20.35,
+      "p95": 20.35,
+      "p99": 20.35,
+      "max": 20.35
+    },
+    "/api/public-profile/O7s56gqV_uIpqe09": {
+      "count": 1,
+      "p50": 12.49,
+      "p95": 12.49,
+      "p99": 12.49,
+      "max": 12.49
+    },
+    "/api/public-profile/XkiMEzXHByXX0z9T": {
+      "count": 1,
+      "p50": 12.37,
+      "p95": 12.37,
+      "p99": 12.37,
+      "max": 12.37
+    },
+    "/api/public-profile/TrqXkveGIFoY5WX0": {
+      "count": 1,
+      "p50": 13.69,
+      "p95": 13.69,
+      "p99": 13.69,
+      "max": 13.69
+    },
+    "/api/public-profile/8hyus02yhwlpThU8": {
+      "count": 1,
+      "p50": 13.02,
+      "p95": 13.02,
+      "p99": 13.02,
+      "max": 13.02
+    },
+    "/api/public-profile/-I-yzm-ZgeS2MPVC": {
+      "count": 1,
+      "p50": 20.57,
+      "p95": 20.57,
+      "p99": 20.57,
+      "max": 20.57
+    },
+    "/api/public-profile/MDnCSiwfj1-zKvW4": {
+      "count": 1,
+      "p50": 11.04,
+      "p95": 11.04,
+      "p99": 11.04,
+      "max": 11.04
+    },
+    "/api/public-profile/gVh3sI7qj3DuvAHy": {
+      "count": 1,
+      "p50": 21.54,
+      "p95": 21.54,
+      "p99": 21.54,
+      "max": 21.54
+    },
+    "/api/public-profile/l4MY5wd1nSCQ5BW2": {
+      "count": 1,
+      "p50": 12.15,
+      "p95": 12.15,
+      "p99": 12.15,
+      "max": 12.15
+    },
+    "/api/public-profile/ilxOzsLAEsJZdR8B": {
+      "count": 1,
+      "p50": 15.04,
+      "p95": 15.04,
+      "p99": 15.04,
+      "max": 15.04
+    },
+    "/api/public-profile/7hxQ32y7VmnVQWps": {
+      "count": 1,
+      "p50": 15.95,
+      "p95": 15.95,
+      "p99": 15.95,
+      "max": 15.95
+    },
+    "/api/public-profile/pnFfaK7q90YwhOqH": {
+      "count": 1,
+      "p50": 19.2,
+      "p95": 19.2,
+      "p99": 19.2,
+      "max": 19.2
+    },
+    "/api/public-profile/eE2qx5hBP0o9Zn9D": {
+      "count": 1,
+      "p50": 18.27,
+      "p95": 18.27,
+      "p99": 18.27,
+      "max": 18.27
+    },
+    "/api/public-profile/UxBTvt8zYzFuXbAW": {
+      "count": 1,
+      "p50": 14.89,
+      "p95": 14.89,
+      "p99": 14.89,
+      "max": 14.89
+    },
+    "/api/public-profile/T6X7r0bxWAPZsujl": {
+      "count": 1,
+      "p50": 17.94,
+      "p95": 17.94,
+      "p99": 17.94,
+      "max": 17.94
+    },
+    "/api/public-profile/McG7jayR6nf-aZMW": {
+      "count": 1,
+      "p50": 16.28,
+      "p95": 16.28,
+      "p99": 16.28,
+      "max": 16.28
+    },
+    "/api/public-profile/F1hb2IHxrEYI2A1c": {
+      "count": 1,
+      "p50": 16.79,
+      "p95": 16.79,
+      "p99": 16.79,
+      "max": 16.79
+    },
+    "/api/public-profile/PkJjJS3oLaWdemli": {
+      "count": 1,
+      "p50": 16.03,
+      "p95": 16.03,
+      "p99": 16.03,
+      "max": 16.03
+    },
+    "/api/public-profile/WkZT7UnGEoGV6hsY": {
+      "count": 1,
+      "p50": 16.02,
+      "p95": 16.02,
+      "p99": 16.02,
+      "max": 16.02
+    },
+    "/api/public-profile/OPNqJBoNXIOyPryU": {
+      "count": 1,
+      "p50": 13.22,
+      "p95": 13.22,
+      "p99": 13.22,
+      "max": 13.22
+    },
+    "/api/public-profile/upNE-mg3tKrqcmqK": {
+      "count": 1,
+      "p50": 17.0,
+      "p95": 17.0,
+      "p99": 17.0,
+      "max": 17.0
+    },
+    "/api/public-profile/Y6Y2DWI-V826ql-T": {
+      "count": 1,
+      "p50": 15.13,
+      "p95": 15.13,
+      "p99": 15.13,
+      "max": 15.13
+    },
+    "/api/public-profile/GYrKzvzXtRxB0-d-": {
+      "count": 1,
+      "p50": 14.83,
+      "p95": 14.83,
+      "p99": 14.83,
+      "max": 14.83
+    },
+    "/api/public-profile/meWHKf5IrhgsGcUA": {
+      "count": 1,
+      "p50": 16.64,
+      "p95": 16.64,
+      "p99": 16.64,
+      "max": 16.64
+    },
+    "/api/public-profile/VwQbZMXkFNwj2Hqu": {
+      "count": 1,
+      "p50": 17.35,
+      "p95": 17.35,
+      "p99": 17.35,
+      "max": 17.35
+    },
+    "/api/public-profile/mML4kHzMPPhMUOgw": {
+      "count": 1,
+      "p50": 12.33,
+      "p95": 12.33,
+      "p99": 12.33,
+      "max": 12.33
+    },
+    "/api/public-profile/baxZafdqh3ULIMyf": {
+      "count": 1,
+      "p50": 15.48,
+      "p95": 15.48,
+      "p99": 15.48,
+      "max": 15.48
+    },
+    "/api/public-profile/6HBC03ah1thIW9Mi": {
+      "count": 1,
+      "p50": 15.04,
+      "p95": 15.04,
+      "p99": 15.04,
+      "max": 15.04
+    },
+    "/api/public-profile/41b37X3gFW_NFNpO": {
+      "count": 1,
+      "p50": 16.77,
+      "p95": 16.77,
+      "p99": 16.77,
+      "max": 16.77
+    },
+    "/api/public-profile/nJV2D7wLeV7Sdzx6": {
+      "count": 1,
+      "p50": 16.47,
+      "p95": 16.47,
+      "p99": 16.47,
+      "max": 16.47
+    },
+    "/api/public-profile/lV1mCfUvlTgZnX-_": {
+      "count": 1,
+      "p50": 16.58,
+      "p95": 16.58,
+      "p99": 16.58,
+      "max": 16.58
+    },
+    "/api/public-profile/RcQG3Zt0ajqcU98O": {
+      "count": 1,
+      "p50": 16.73,
+      "p95": 16.73,
+      "p99": 16.73,
+      "max": 16.73
+    },
+    "/api/public-profile/54vr1kPhENEDw6uh": {
+      "count": 1,
+      "p50": 16.43,
+      "p95": 16.43,
+      "p99": 16.43,
+      "max": 16.43
+    },
+    "/api/public-profile/pUNKlL1mAj7-Q4DL": {
+      "count": 1,
+      "p50": 13.52,
+      "p95": 13.52,
+      "p99": 13.52,
+      "max": 13.52
+    },
+    "/api/public-profile/_cmBAViA5ouOCRzy": {
+      "count": 1,
+      "p50": 16.44,
+      "p95": 16.44,
+      "p99": 16.44,
+      "max": 16.44
+    },
+    "/api/public-profile/KqMtgPatdnW9l_iX": {
+      "count": 1,
+      "p50": 15.96,
+      "p95": 15.96,
+      "p99": 15.96,
+      "max": 15.96
+    },
+    "/api/public-profile/wiwJqzzxd0NAIgZ3": {
+      "count": 1,
+      "p50": 16.66,
+      "p95": 16.66,
+      "p99": 16.66,
+      "max": 16.66
+    },
+    "/api/public-profile/yOAVKnfBqdrSh98s": {
+      "count": 1,
+      "p50": 14.76,
+      "p95": 14.76,
+      "p99": 14.76,
+      "max": 14.76
+    },
+    "/api/public-profile/hEZCkReHXwwxuD_N": {
+      "count": 1,
+      "p50": 19.51,
+      "p95": 19.51,
+      "p99": 19.51,
+      "max": 19.51
+    },
+    "/api/public-profile/Uf72wi3akKNkxkxB": {
+      "count": 1,
+      "p50": 15.77,
+      "p95": 15.77,
+      "p99": 15.77,
+      "max": 15.77
+    },
+    "/api/public-profile/Ublfq6Geyux8x5ng": {
+      "count": 1,
+      "p50": 15.35,
+      "p95": 15.35,
+      "p99": 15.35,
+      "max": 15.35
+    },
+    "/api/public-profile/FQxK8EwvZyiOPz0V": {
+      "count": 1,
+      "p50": 14.55,
+      "p95": 14.55,
+      "p99": 14.55,
+      "max": 14.55
+    },
+    "/api/public-profile/10OlYIWURDAyEOOf": {
+      "count": 1,
+      "p50": 14.14,
+      "p95": 14.14,
+      "p99": 14.14,
+      "max": 14.14
+    },
+    "/api/public-profile/A0MgmE6xrN7JMtmj": {
+      "count": 1,
+      "p50": 10.59,
+      "p95": 10.59,
+      "p99": 10.59,
+      "max": 10.59
+    },
+    "/api/public-profile/nQL3WEEFaaHHvDvT": {
+      "count": 1,
+      "p50": 10.86,
+      "p95": 10.86,
+      "p99": 10.86,
+      "max": 10.86
+    },
+    "/api/public-profile/uELIvx-OqpV901py": {
+      "count": 1,
+      "p50": 15.46,
+      "p95": 15.46,
+      "p99": 15.46,
+      "max": 15.46
+    },
+    "/api/public-profile/CZ4kqXWJKAjiWrJa": {
+      "count": 1,
+      "p50": 15.74,
+      "p95": 15.74,
+      "p99": 15.74,
+      "max": 15.74
+    },
+    "/api/public-profile/OuSi2u-SnryMfjn6": {
+      "count": 1,
+      "p50": 22.91,
+      "p95": 22.91,
+      "p99": 22.91,
+      "max": 22.91
+    },
+    "/api/public-profile/DKfb1gxAhnFEe0cv": {
+      "count": 1,
+      "p50": 15.24,
+      "p95": 15.24,
+      "p99": 15.24,
+      "max": 15.24
+    },
+    "/api/public-profile/fP0e68w1h8KkokjD": {
+      "count": 1,
+      "p50": 15.15,
+      "p95": 15.15,
+      "p99": 15.15,
+      "max": 15.15
+    },
+    "/api/public-profile/BgS1t_LUkMRqoy-X": {
+      "count": 1,
+      "p50": 26.51,
+      "p95": 26.51,
+      "p99": 26.51,
+      "max": 26.51
+    },
+    "/api/public-profile/uZDV1PxKUUcTMK3d": {
+      "count": 1,
+      "p50": 22.72,
+      "p95": 22.72,
+      "p99": 22.72,
+      "max": 22.72
+    },
+    "/api/public-profile/mqhPDaPqULjSonwA": {
+      "count": 1,
+      "p50": 26.08,
+      "p95": 26.08,
+      "p99": 26.08,
+      "max": 26.08
+    },
+    "/api/public-profile/9LSN_iBRpJaV3rfc": {
+      "count": 1,
+      "p50": 11.6,
+      "p95": 11.6,
+      "p99": 11.6,
+      "max": 11.6
+    },
+    "/api/public-profile/4e7386s4pv6eyB3m": {
+      "count": 1,
+      "p50": 13.21,
+      "p95": 13.21,
+      "p99": 13.21,
+      "max": 13.21
+    },
+    "/api/public-profile/jHi2fCfm_myZHE8O": {
+      "count": 1,
+      "p50": 20.65,
+      "p95": 20.65,
+      "p99": 20.65,
+      "max": 20.65
+    },
+    "/api/public-profile/_qvipqzblxO9Ww2P": {
+      "count": 1,
+      "p50": 11.22,
+      "p95": 11.22,
+      "p99": 11.22,
+      "max": 11.22
+    },
+    "/api/public-profile/5USW9P1gB9yR_DDq": {
+      "count": 1,
+      "p50": 21.82,
+      "p95": 21.82,
+      "p99": 21.82,
+      "max": 21.82
+    },
+    "/api/public-profile/HN3eeWpB2Y8dFa2i": {
+      "count": 1,
+      "p50": 20.17,
+      "p95": 20.17,
+      "p99": 20.17,
+      "max": 20.17
+    },
+    "/api/public-profile/8BGBh1Kd_XchR-8X": {
+      "count": 1,
+      "p50": 12.9,
+      "p95": 12.9,
+      "p99": 12.9,
+      "max": 12.9
+    },
+    "/api/public-profile/zTKv6i4y702mrUk2": {
+      "count": 1,
+      "p50": 20.74,
+      "p95": 20.74,
+      "p99": 20.74,
+      "max": 20.74
+    },
+    "/api/public-profile/MfB7RvNDVJc87rks": {
+      "count": 1,
+      "p50": 18.66,
+      "p95": 18.66,
+      "p99": 18.66,
+      "max": 18.66
+    },
+    "/api/public-profile/dbYXmr3O5fRehxzS": {
+      "count": 1,
+      "p50": 14.01,
+      "p95": 14.01,
+      "p99": 14.01,
+      "max": 14.01
+    },
+    "/api/public-profile/ndffAXXlEONriq0Q": {
+      "count": 1,
+      "p50": 19.83,
+      "p95": 19.83,
+      "p99": 19.83,
+      "max": 19.83
+    },
+    "/api/public-profile/AJf_hb9q2F8XTB4n": {
+      "count": 1,
+      "p50": 16.33,
+      "p95": 16.33,
+      "p99": 16.33,
+      "max": 16.33
+    },
+    "/api/public-profile/tzc4IrRb_oUSxbFx": {
+      "count": 1,
+      "p50": 15.5,
+      "p95": 15.5,
+      "p99": 15.5,
+      "max": 15.5
+    },
+    "/api/public-profile/Lv4o0KrEW43p3J3l": {
+      "count": 1,
+      "p50": 15.97,
+      "p95": 15.97,
+      "p99": 15.97,
+      "max": 15.97
+    },
+    "/api/public-profile/hFBP2oGrIB472sOS": {
+      "count": 1,
+      "p50": 11.36,
+      "p95": 11.36,
+      "p99": 11.36,
+      "max": 11.36
+    },
+    "/api/communities/majlis/leave": {
+      "count": 250,
+      "p50": 1.49,
+      "p95": 2.01,
+      "p99": 2.28,
+      "max": 3.39
+    },
+    "/api/communities/square/leave": {
+      "count": 250,
+      "p50": 1.52,
+      "p95": 1.87,
+      "p99": 2.29,
+      "max": 2.64
+    }
+  },
+  "failures": [],
+  "scope": "real HTTP accounts and native headless Uno client replicas; optional real Chromium purchase sample; TLS proxy headers simulated on loopback; no Flutter/WAN/physics/10k certification",
+  "generatorReplicaRpcMs": {
+    "count": 189323,
+    "p50": 0.96,
+    "p95": 13.95,
+    "p99": 27.89,
+    "max": 309.53
+  },
+  "generatorReplicaProcessingMs": {
+    "count": 189323,
+    "p50": 0.01,
+    "p95": 0.05,
+    "p99": 0.24,
+    "max": 33.23
+  },
+  "gatewayMetrics": [
+    "# TYPE samidev_connections gauge\nsamidev_connections 0\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 1001\n# TYPE samidev_messages_in counter\nsamidev_messages_in 23281\n# TYPE samidev_messages_out counter\nsamidev_messages_out 51365\n# TYPE samidev_moves counter\nsamidev_moves 20281\n# TYPE samidev_errors counter\nsamidev_errors 0\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 998\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 253.454\n# TYPE samidev_errors_by_code counter\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 6.116\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 3.173\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 5.420\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 3.132\n",
+    "# TYPE samidev_connections gauge\nsamidev_connections 0\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 1010\n# TYPE samidev_messages_in counter\nsamidev_messages_in 23463\n# TYPE samidev_messages_out counter\nsamidev_messages_out 51892\n# TYPE samidev_moves counter\nsamidev_moves 20437\n# TYPE samidev_errors counter\nsamidev_errors 0\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 1006\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 253.442\n# TYPE samidev_errors_by_code counter\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 4.942\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 3.142\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 5.042\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 2.655\n",
+    "# TYPE samidev_connections gauge\nsamidev_connections 0\n# TYPE samidev_connections_accepted counter\nsamidev_connections_accepted 999\n# TYPE samidev_messages_in counter\nsamidev_messages_in 23377\n# TYPE samidev_messages_out counter\nsamidev_messages_out 51507\n# TYPE samidev_moves counter\nsamidev_moves 20383\n# TYPE samidev_errors counter\nsamidev_errors 0\n# TYPE samidev_rate_limited counter\nsamidev_rate_limited 0\n# TYPE samidev_chat_messages counter\nsamidev_chat_messages 996\n# TYPE samidev_uptime_seconds gauge\nsamidev_uptime_seconds 253.453\n# TYPE samidev_errors_by_code counter\nsamidev_listener_reconnects 0\nsamidev_send_timeouts 0\nsamidev_stage_recent_p95_ms{stage=\"authenticate_message\"} 5.034\nsamidev_stage_recent_p95_ms{stage=\"commit_move\"} 3.339\nsamidev_stage_recent_p95_ms{stage=\"fanout_move\"} 5.955\nsamidev_stage_recent_p95_ms{stage=\"gamehost_move\"} 2.936\n"
+  ],
+  "browserSample": "passed",
+  "functionalPass": true,
+  "latencyPass": false,
+  "verdict": "NO_GO",
+  "productionCertified": false,
+  "remainingValidation": [
+    "full mixed-game physics journeys",
+    "real TLS/proxy/WAN deployment",
+    "long soak and reconnect storms",
+    "real Flutter devices",
+    "known replay/failover gaps in SYNC_CAPACITY_REVIEW_AR.md"
+  ],
+  "environment": {
+    "cpuQuotaCores": 4,
+    "memoryLimitGiB": 32,
+    "deployment": "shared local test machine, generator and services together"
+  }
+}

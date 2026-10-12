@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "requestedPlayers": 500,
+  "matchesPerRewardCycle": 5,
+  "extraCapMatch": true,
+  "game": "crazy8",
+  "gateways": 3,
+  "gamehosts": 3,
+  "seed": 20261012,
+  "seconds": 38.72,
+  "counts": {
+    "registered_logged_out_logged_in": 499
+  },
+  "purchaseVariants": [],
+  "rounds": [],
+  "latenciesMs": {
+    "/api/auth/register": {
+      "count": 500,
+      "p50": 289.8,
+      "p95": 467.94,
+      "p99": 601.24,
+      "max": 716.84
+    },
+    "/api/auth/logout": {
+      "count": 998,
+      "p50": 2.41,
+      "p95": 19.44,
+      "p99": 31.05,
+      "max": 54.29
+    },
+    "/api/me": {
+      "count": 998,
+      "p50": 1.51,
+      "p95": 15.94,
+      "p99": 31.71,
+      "max": 46.37
+    },
+    "/api/auth/login": {
+      "count": 998,
+      "p50": 269.17,
+      "p95": 440.26,
+      "p99": 549.23,
+      "max": 784.78
+    },
+    "/api/store": {
+      "count": 499,
+      "p50": 14.08,
+      "p95": 77.67,
+      "p99": 214.23,
+      "max": 327.52
+    },
+    "/api/communities/majlis/enter": {
+      "count": 250,
+      "p50": 8.93,
+      "p95": 47.82,
+      "p99": 79.3,
+      "max": 105.85
+    },
+    "/api/communities/square/enter": {
+      "count": 249,
+      "p50": 9.7,
+      "p95": 46.46,
+      "p99": 76.52,
+      "max": 113.85
+    }
+  },
+  "failures": [
+    {
+      "phase": "registration_login_logout",
+      "index": 430,
+      "error": "POST /api/auth/register: HTTP 503, code=AUTH_BUSY"
+    },
+    {
+      "phase": "registration_login_logout",
+      "error": "phase failed; see report.json"
+    }
+  ],
+  "scope": "real HTTP accounts and native headless Uno client replicas; optional real Chromium purchase sample; TLS proxy headers simulated on loopback; no Flutter/WAN/physics/10k certification",
+  "generatorReplicaRpcMs": {
+    "count": 0
+  },
+  "generatorReplicaProcessingMs": {
+    "count": 0
+  },
+  "gatewayMetrics": [],
+  "browserSample": "not-run",
+  "functionalPass": false,
+  "latencyPass": false,
+  "verdict": "NO_GO",
+  "productionCertified": false,
+  "remainingValidation": [
+    "full mixed-game physics journeys",
+    "real TLS/proxy/WAN deployment",
+    "long soak and reconnect storms",
+    "real Flutter devices",
+    "known replay/failover gaps in SYNC_CAPACITY_REVIEW_AR.md"
+  ],
+  "environment": {
+    "cpuQuotaCores": 4,
+    "memoryLimitGiB": 32,
+    "deployment": "shared local test machine, generator and services together"
+  }
+}
