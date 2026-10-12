@@ -339,6 +339,20 @@ class SamiDevRealtime:
         for uid in sorted({str(v) for v in account_ids.values() if v}):
             try:
                 result = await self.platform.award_daily_match_coins(uid, rid)
+                if not result.get('duplicate'):
+                    notice = {'type': 'match_reward', 'roomId': rid,
+                              'id': f"{result['day']}:{rid}:{uid}",
+                              'amount': result.get('amount', 0),
+                              'rewardedMatches': result.get('rewardedMatchesToday', 0),
+                              'remainingMatches': result.get('remainingMatches', 0)}
+                    delivery = {'roomId': rid, 'payloadBySeat': {
+                        str(seat): notice for seat, account in account_ids.items() if str(account) == uid
+                    }}
+                    await self.deliver_local(delivery)
+                    if getattr(self.store, 'distributed', False):
+                        for node in await self.store.room_nodes(rid):
+                            if node != NODE_ID:
+                                await self.store.publish_node(node, delivery)
                 if result.get("awarded"):
                     print(f"[SamiDev Store] daily match reward uid={uid} room={rid} +{result.get('amount')} coins")
             except PlatformError as exc:

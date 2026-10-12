@@ -7,7 +7,7 @@
   <meta name="samidev-release" content="V30">
   <title>SamiDev V25 — الكيرم وكرة الطاولة</title>
   <link rel="stylesheet" href="/profile-details.css?v=eca05057b0914d22">
-  <link rel="stylesheet" href="/platform/platform.css?v=cd56801e6592bc80">
+  <link rel="stylesheet" href="/platform/platform.css?v=2ce37f89b17dddad">
 </head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
@@ -149,18 +149,13 @@
 
       <section id="page-store" class="page store-page">
         <div class="page-head store-page-head">
-          <div><span class="eyebrow">متجر SamiDev</span><h2>تصاميمك ومكافآتك</h2><p>اختر تصميم الكيرم الذي يعجبك. اختيارك محفوظ لحسابك ويظهر في مبارياتك القادمة.</p></div>
+          <div><span class="eyebrow">متجر SamiDev</span><h2>متجر التصاميم</h2><p>تصاميم للألعاب وشارات لملفك. اختر ما يناسبك واحتفظ به في مقتنياتك.</p></div>
           <button id="store-refresh" class="ghost" type="button">تحديث</button>
         </div>
         <div class="store-dashboard">
           <article class="store-wallet-card panel">
             <div class="store-wallet-main"><span class="coin-mark" aria-hidden="true">C</span><div><small>رصيد الكوينز</small><strong id="store-balance">0</strong><span>Coin</span></div></div>
             <div class="store-wallet-security"><span class="store-lock-mark" aria-hidden="true"></span><div><strong>محفظتك محفوظة</strong><small>رصيدك واختياراتك معك عند تسجيل الدخول من أي جهاز.</small></div></div>
-          </article>
-          <article class="daily-reward-card panel">
-            <div class="daily-reward-head"><div><small>مكافأة اللعب اليومية</small><h3><span id="store-reward-coins">50</span> كوينز لكل مباراة</h3></div><strong id="store-reward-progress">0/5</strong></div>
-            <div id="store-reward-steps" class="reward-steps" aria-label="تقدم مكافآت المباريات اليومية"></div>
-            <p id="store-reward-note">أول خمس مباريات مكتملة يوميًا تحصل على المكافأة.</p>
           </article>
           <section class="store-catalog-panel panel">
             <div class="store-section-head"><div><small>المتجر والمقتنيات</small><h3>العناصر والتصاميم</h3></div><span id="store-owned-count" class="count-pill">0 مملوك</span></div>
@@ -172,6 +167,7 @@
               <button type="button" class="store-category-btn" data-category="other">ألعاب أخرى</button>
             </div>
             <div id="store-catalog" class="store-catalog"><div class="empty small">جارٍ تحميل التصاميم...</div></div>
+            <nav id="store-pagination" class="store-pagination" aria-label="صفحات المتجر"></nav>
           </section>
           <aside class="store-ledger-panel panel">
             <div class="store-section-head"><div><small>السجل</small><h3>آخر الحركات</h3></div></div>
@@ -303,11 +299,11 @@
     </main>
 
     <nav class="bottom-nav">
-      <button class="bottom-btn active" data-page="lobby">⌂<small>المساحات</small></button>
-      <button class="bottom-btn" data-page="friends">♟<small>الأصدقاء</small></button>
-      <button class="bottom-btn" data-page="store">¤<small>المتجر</small></button>
-      <button class="bottom-btn" data-page="profile">◎<small>الملف</small></button>
-      <button id="admin-bottom" class="bottom-btn hidden" data-page="admin">⚙<small>الإدارة</small></button>
+      <button class="bottom-btn active" data-page="lobby"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/></svg><small>المساحات</small></button>
+      <button class="bottom-btn" data-page="friends"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/></svg><small>الأصدقاء</small></button>
+      <button class="bottom-btn" data-page="store"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 9 2-6h12l2 6M4 9v12h16V9M3 9h18M9 21v-7h6v7"/><path d="M4 9c0 4 4 4 4 0 0 4 4 4 4 0 0 4 4 4 4 0 0 4 4 4 4 0"/></svg><small>المتجر</small></button>
+      <button class="bottom-btn" data-page="profile"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><small>الملف</small></button>
+      <button id="admin-bottom" class="bottom-btn hidden" data-page="admin"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></svg><small>الإدارة</small></button>
     </nav>
   </div>
 
@@ -387,6 +383,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=9c0dece53f812f41"></script><script src="/profile-details.js?v=79d84630b04f6d90"></script><script src="/platform/platform.js?v=6d21ebd6b881618f"></script>
+  <script src="/samidev-games.js?v=9c0dece53f812f41"></script><script src="/profile-details.js?v=79d84630b04f6d90"></script><script src="/platform/platform.js?v=9409edb59939d831"></script>
 </body>
 </html>

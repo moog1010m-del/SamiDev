@@ -221,6 +221,7 @@
     $('#community-profile-edit').onclick=()=>{navigate('profile');requestAnimationFrame(openProfileEditor);};
     $('#refresh-communities').onclick=()=>loadCommunities(true);
     $('#refresh-rooms').onclick=()=>loadCommunityState(true);
+    $('#mobile-menu').onclick=()=>navigate('lobby');
     $('#leave-community').onclick=leaveCommunity;
     const exitCommunity=$('#exit-community');if(exitCommunity)exitCommunity.onclick=leaveCommunity;
     $('#community-profile-close').onclick=closeCommunityProfile;
@@ -295,22 +296,17 @@
     bar.querySelectorAll('.store-category-btn').forEach(btn=>{
       btn.addEventListener('click',()=>{
         bar.querySelectorAll('.store-category-btn').forEach(b=>b.classList.toggle('active',b===btn));
-        state.storeCategory=btn.dataset.category||'all';
+        state.storeCategory=btn.dataset.category||'all';state.storePage=0;
         renderStore();
       });
     });
   }
   function renderStore(){
     wireStoreCategoryButtons();
-    const data=state.store||{}, reward=data.dailyReward||{}, catalog=Array.isArray(data.catalog)?data.catalog:[], inventory=Array.isArray(data.inventory)?data.inventory:[], ledger=Array.isArray(data.ledger)?data.ledger:[];
+    const data=state.store||{}, catalog=Array.isArray(data.catalog)?data.catalog:[], inventory=Array.isArray(data.inventory)?data.inventory:[], ledger=Array.isArray(data.ledger)?data.ledger:[];
     const userStars=Number(data.starsCount??state.user?.starsCount??5);
     const selectedCat=state.storeCategory||'all';
     const balance=$('#store-balance');if(balance)balance.textContent=formatProfileStat(data.coins);
-    const rewardCoins=$('#store-reward-coins');if(rewardCoins)rewardCoins.textContent=formatProfileStat(reward.coinsPerMatch||50);
-    const max=Math.max(1,Number(reward.maxMatches)||5),done=Math.max(0,Math.min(max,Number(reward.rewardedMatches)||0));
-    const progress=$('#store-reward-progress');if(progress)progress.textContent=`${done}/${max}`;
-    const note=$('#store-reward-note');if(note)note.textContent=done>=max?`اكتملت مكافآت اليوم: ${formatProfileStat(reward.maxCoins||0)} كوينز.`:`متبقي ${Math.max(0,max-done)} مباراة مكافأة اليوم.`;
-    const steps=$('#store-reward-steps');if(steps){steps.replaceChildren();for(let i=0;i<max;i++){const step=document.createElement('span');step.className='reward-step'+(i<done?' done':'');step.setAttribute('aria-label',i<done?`المباراة ${i+1} تمت مكافأتها`:`المباراة ${i+1} لم تكتمل بعد`);const n=document.createElement('b');n.textContent=String(i+1);const c=document.createElement('small');c.textContent=`+${formatProfileStat(reward.coinsPerMatch||50)}`;step.append(n,c);steps.append(step);}}
     const owned=$('#store-owned-count');if(owned)owned.textContent=`${inventory.length} مملوك`;
 
     const filteredCatalog=catalog.filter(item=>{
@@ -322,14 +318,25 @@
       return true;
     });
 
-    const box=$('#store-catalog');if(box){box.replaceChildren();if(!filteredCatalog.length){box.append(emptyBlock('لا توجد عناصر متاحة في هذا القسم حاليًا.'));}else for(const item of filteredCatalog){
+    const pageCount=Math.max(1,Math.ceil(filteredCatalog.length/12));
+    state.storePage=Math.max(0,Math.min(pageCount-1,Number(state.storePage)||0));
+    const visibleCatalog=filteredCatalog.slice(state.storePage*12,(state.storePage+1)*12);
+    const pager=$('#store-pagination');if(pager){pager.replaceChildren();pager.hidden=pageCount<=1;if(pageCount>1){
+      for(const [label,delta] of [['السابق',-1],['التالي',1]]){
+        const button=document.createElement('button');button.type='button';button.textContent=label;
+        button.disabled=state.storePage+delta<0||state.storePage+delta>=pageCount;
+        button.onclick=()=>{state.storePage+=delta;renderStore();$('#store-catalog').scrollIntoView({block:'start',behavior:'smooth'});};pager.append(button);
+        if(delta===-1){const status=document.createElement('span');status.setAttribute('aria-live','polite');status.textContent=`${state.storePage+1} / ${pageCount}`;pager.append(status);}
+      }
+    }}
+    const box=$('#store-catalog');if(box){box.replaceChildren();if(!filteredCatalog.length){box.append(emptyBlock('لا توجد عناصر متاحة في هذا القسم حاليًا.'));}else for(const item of visibleCatalog){
       const isStar=item.slot==='profile_stars'||item.id==='profile_star';
       const isBadge=item.slot==='name_badge';
       const active=isBadge?(data.equipped?.name_badge||'badge_palm_swords')===item.id:(data.equipped?.[item.slot]===item.id);
       const card=document.createElement('article');card.className='store-item-card'+(active?' is-equipped':'');
       if(item.asset){const visual=document.createElement('img');visual.className='store-item-visual';visual.alt=String(item.name||'تصميم');visual.loading='lazy';visual.src=String(item.asset);card.append(visual);}
       const copy=document.createElement('div');copy.className='store-item-copy';
-      const title=document.createElement('strong');title.textContent=String(item.name||item.id||'عنصر');
+      const title=document.createElement('strong');title.textContent=String(item.name||item.id||'عنصر');title.title=title.textContent;
       const desc=document.createElement('small');desc.textContent=String(item.description||'');
       const badge=document.createElement('span');badge.className='store-item-badge';
       if(isStar){
@@ -357,7 +364,7 @@
           action.textContent='مكتمل (5 نجوم)';action.disabled=true;
         }else{
           action.className='ghost compact store-item-btn-buy';
-          action.textContent=`شراء نجمة (${formatProfileStat(item.price||50)} كوينز)`;
+          action.textContent=`شراء · ${formatProfileStat(item.price||50)}`;
           action.onclick=()=>buyStoreItem(item.id,action);
         }
       }else if(item.owned||item.availableToAll||item.default){
@@ -367,7 +374,7 @@
         if(!active)action.onclick=()=>equipStoreItem(item.id,action);
       }else{
         action.className='ghost compact store-item-btn-buy';
-        action.textContent=`شراء (${formatProfileStat(item.price)} كوينز)`;
+        action.textContent=`شراء · ${formatProfileStat(item.price)}`;
         action.onclick=()=>buyStoreItem(item.id,action);
       }
       card.append(action);box.append(card);
@@ -419,10 +426,18 @@
     }
     catch(err){button.disabled=false;toast(err.message||'تعذر تجهيز العنصر',true);}
   }
+  function syncBottomNavigation(){
+    const nav=$('.bottom-nav');if(nav)nav.hidden=!!state.activeCommunity;
+    const back=$('#mobile-menu');if(back){
+      back.setAttribute('aria-label',state.activeCommunity?'العودة للروم':'المساحات');
+      back.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(state.activeCommunity?'<path d="m9 5 7 7-7 7"/>':'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/>')+'</svg>';
+    }
+  }
   function navigate(page){
     if(!page)return;
     if(page!=='profile')closeProfileEditor();
     state.page=page;
+    syncBottomNavigation();
     document.body.classList.toggle('community-mode',page==='lobby'&&!!state.activeCommunity);
     $$('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${page}`));
     $$('.nav-btn,.bottom-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
@@ -474,7 +489,7 @@
   async function enterCommunity(id,{syncUrl=true}={}){
     try{
       await api(`/api/communities/${encodeURIComponent(id)}/enter`,{method:'POST',body:'{}'});
-      const found=state.communities.find(c=>c.id===id)||{id};state.activeCommunity=found;
+      const found=state.communities.find(c=>c.id===id)||{id};state.activeCommunity=found;syncBottomNavigation();
       $('#community-home').classList.add('hidden');$('#community-room').classList.remove('hidden');document.body.classList.add('community-mode');
       if(syncUrl)syncCommunityLocation(id);else{try{sessionStorage.setItem('samidev_return_community',id);}catch(_){}}
       await loadCommunityState();
@@ -487,7 +502,7 @@
       try{await api(`/api/communities/${encodeURIComponent(cid)}/leave`,{method:'POST',body:'{}'});}
       catch(err){if(err?.status===401)return showAuth();toast(err?.message||'تعذر تسجيل الخروج من الروم، تم إرجاعك للمساحات',true);}
     }
-    state.activeCommunity=null;state.rooms=[];state.communityMembers=[];state.communityMessages=[];
+    state.activeCommunity=null;state.rooms=[];state.communityMembers=[];state.communityMessages=[];syncBottomNavigation();
     $('#community-room').classList.add('hidden');$('#community-home').classList.remove('hidden');document.body.classList.remove('community-mode');
     syncCommunityLocation('');loadCommunities();
   }

@@ -196,6 +196,9 @@
         state.chatHistory = Array.isArray(msg.messages) ? msg.messages.slice(-30) : [];
         emit('chat_history', {messages: state.chatHistory});
         break;
+      case 'match_reward':
+        emit('match_reward', msg);
+        break;
       case 'chat_message':
         state.chatHistory.push(msg);
         if (state.chatHistory.length > 30) state.chatHistory.splice(0, state.chatHistory.length - 30);
