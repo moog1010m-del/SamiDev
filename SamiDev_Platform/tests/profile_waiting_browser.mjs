@@ -43,7 +43,7 @@ try{
   }
   seed(accounts[0].id);
   const page=await contexts[0].newPage();page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(base+'/platform/');await page.waitForFunction(()=>window.SamiDevMobilePlatform);
+  await page.goto(base+'/platform/');await page.waitForFunction(()=>window.SamiDevMobilePlatform);await page.locator('#app').waitFor({state:'visible'});
   await page.evaluate(()=>window.SamiDevMobilePlatform.navigate('profile'));
   const own=page.locator('#own-profile-details');await own.locator('.sd-rank-row').first().waitFor();
   assert.equal(await own.locator('.sd-rank-row').count(),4);
@@ -65,7 +65,7 @@ try{
   checks.push('own profile: real inventory preview/browse/filter/detail, four games, rank progress, compact/full and responsive widths');
 
   const visitor=await contexts[1].newPage();visitor.on('pageerror',e=>errors.push(e.message));
-  await visitor.goto(base+'/platform/');await visitor.waitForFunction(()=>window.SamiDevMobilePlatform);
+  await visitor.goto(base+'/platform/');await visitor.waitForFunction(()=>window.SamiDevMobilePlatform);await visitor.locator('#app').waitFor({state:'visible'});
   await visitor.evaluate(id=>window.SamiDevMobilePlatform.openProfile(id),accounts[0].id);
   await visitor.locator('#community-profile-full').click();
   const publicCard=visitor.locator('#sd-public-extra');await publicCard.locator('.sd-owned-card').first().waitFor();

@@ -10,7 +10,7 @@ class ProfileDetails extends StatefulWidget {
 class _ProfileDetailsState extends State<ProfileDetails> {
   bool expanded = false, full = false;
   String filter = 'all';
-  static const names = {'pool':'البلياردو','carrom':'الكيرم','tablesoccer':'كرة الطاولة','crazy8':'كريزي 8'};
+  static const names = {'pool':'البلياردو','carrom':'الكيرم','tablesoccer':'كرة الطاولة','crazy8':'أونو'};
   static const marks = {'pool':'pool','carrom':'carrom','tablesoccer':'football','crazy8':'cards'};
   int number(dynamic value) => (value is num ? value.toInt() : int.tryParse('$value') ?? 0).clamp(0, 1 << 40).toInt();
   String? asset(dynamic value) {

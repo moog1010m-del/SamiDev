@@ -55,7 +55,7 @@
       const text = document.createElement('span');
       text.className = 'sd-chat-text';
       text.textContent = String(msg.text || '');
-      body.append(name, document.createTextNode(': '), text);
+      body.append(name,text);
       row.appendChild(body);
 
       const openSenderProfile = (e) => {
@@ -343,13 +343,13 @@
       <div id="sd-chat-backdrop" aria-hidden="true"></div>
       <div id="sd-chat-shell">
         <div id="sd-chat-header">
-          <span id="sd-chat-title">شات المباراة</span>
+          <span id="sd-chat-title">محادثة المباراة</span>
           <button id="sd-chat-close" type="button" aria-label="إغلاق الشات">×</button>
         </div>
         <div id="sd-chat-messages" aria-live="polite"></div>
         <div id="sd-chat-error" role="status"></div>
         <form id="sd-chat-form" autocomplete="off">
-          <button id="sd-chat-send" type="submit" aria-label="إرسال">➤</button>
+          <button id="sd-chat-send" type="submit" aria-label="إرسال"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-7 18-4-7-7-4 18-7Z"/><path d="m10 14 11-11"/></svg></button>
           <input id="sd-chat-input" type="text" inputmode="text" enterkeyhint="send" maxlength="160" placeholder="اكتب رسالة…" autocomplete="off" autocapitalize="sentences" spellcheck="true">
         </form>
       </div>`;
@@ -358,7 +358,7 @@
     launcher = document.createElement('button');
     launcher.id = 'sd-chat-launcher';
     launcher.type = 'button';
-    launcher.setAttribute('aria-label', 'فتح شات المباراة');
+    launcher.setAttribute('aria-label', 'فتح محادثة المباراة');
     launcher.innerHTML = `<span aria-hidden="true">💬</span><span id="sd-chat-unread" hidden></span>`;
     document.body.appendChild(launcher);
 

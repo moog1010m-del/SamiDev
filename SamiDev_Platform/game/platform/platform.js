@@ -203,7 +203,7 @@
     $$('.crazy8-setting').forEach(x=>x.classList.toggle('hidden',!cards));
     $$('.board-players-setting').forEach(x=>x.classList.toggle('hidden',cards||pool));
     $('#create-game-description').textContent=pool?'بلياردو 8 كرات، تصويب وقوة ودوران.':cards?'طابق اللون أو الرقم وتخلّص من أوراقك أولًا.':soccer?'فريقان، تسديدات وتمريرات وأهداف.':'الكيرم الكلاسيكي وأنماط النقاط.';
-    $('#create-go').textContent=pool?'إنشاء مباراة بلياردو':cards?'إنشاء مباراة كريزي 8':soccer?'إنشاء مباراة كرة الطاولة':'إنشاء مباراة الكيرم';
+    $('#create-go').textContent=pool?'إنشاء مباراة بلياردو':cards?'إنشاء مباراة أونو':soccer?'إنشاء مباراة كرة الطاولة':'إنشاء مباراة الكيرم';
   }
   function openCreateGame(gameId=state.settings.gameId){
     if(!state.activeCommunity)return toast('اختر مساحة أولًا',true);
@@ -631,7 +631,7 @@
     const rows=(user.gameStatistics||[]).filter(s=>Number(s.played)>0).sort((a,b)=>Number(b.wins)-Number(a.wins));
     const best=rows[0];root.hidden=!best;if(!best)return;
     const mark={pool:'pool',carrom:'carrom',tablesoccer:'football',crazy8:'cards'}[best.gameId];
-    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'كريزي 8'};
+    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'أونو'};
     const img=document.createElement('img');img.src='/room-sprites/'+mark+'.png';img.alt='';
     const info=document.createElement('div'),name=document.createElement('strong'),rank=document.createElement('small');
     name.textContent=names[best.gameId]||'اللعبة';rank.textContent=`${best.rankName} · المستوى ${formatProfileStat(best.level)}`;

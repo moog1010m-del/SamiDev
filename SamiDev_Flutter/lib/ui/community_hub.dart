@@ -22,7 +22,7 @@ class CommunityHubState extends State<CommunityHub> {
   bool busy=false,sending=false,navigating=false;
   String? error;
   int tab=0,generation=0;
-  static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'كريزي 8','tablesoccer':'كرة الطاولة'};
+  static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'أونو','tablesoccer':'كرة الطاولة'};
   List<Map<String,dynamic>> rows(dynamic data)=>(data as List? ?? []).whereType<Map>().map((e)=>Map<String,dynamic>.from(e)).toList();
   Future<Map<String,dynamic>> request(String path,{String method='GET',Map<String,dynamic>? body}) async {
     final r=await widget.api.request(method,path,body:body==null?null:utf8.encode(jsonEncode(body)));

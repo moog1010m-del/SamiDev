@@ -73,6 +73,7 @@
   }
 
   function makeTextCanvas(text, opts={}) {
+    if(isCrazy8 && typeof text==='string'){const you=/^You \((.*)\)$/.exec(text);if(you)text='أنت · '+you[1];}
     const size = Math.max(1, Number(opts.size) || 50);
     const fontName = (opts.font || 'Arial').replace(/^~/,'');
     const c = document.createElement('canvas');
@@ -961,6 +962,9 @@
           state.network.snapshotBusy=false;
           try{ await logic.resume?.(true); }catch(_){}
           try{ synchronizeClientView(logic); }catch(_){}
+          if(isCrazy8 && state.unoWaitingNeedsLayout && logic.started){
+            state.surface.initialized=false;resize();state.unoWaitingNeedsLayout=false;
+          }
           if(isPool && !state.network.spectator) logic.sendReady?.();
           if(msg.gameOver && logic.gameOver) state.network.finished=true;
           state.frameRequested=true;
@@ -1086,7 +1090,7 @@
         }
         console.warn('img failed',path);resolve();
       };
-      const source=(window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path);
+      const source=(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
       const refreshedAsset = ['images/table-background.webp','images/ui/ui.webp','images/imported/themes/th_basic_background.webp'].includes(path);
       img.src=refreshedAsset && !source.startsWith('data:') ? source+(source.includes('?')?'&':'?')+'v=36' : source;
     }))]);
@@ -1126,7 +1130,7 @@
     try {
       const qs=new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
       const online=qs.get('online')==='1';
-      if(isCrazy8 && !online) throw new Error('كريزي 8 متاحة عبر غرف المنصة. ارجع للقائمة وأنشئ غرفة أونلاين.');
+      if(isCrazy8 && !online) throw new Error('أونو متاحة عبر غرف المنصة. ارجع للقائمة وأنشئ غرفة أونلاين.');
       let startData=null;
       let settings;
       let localSeat=0;
@@ -1188,6 +1192,7 @@
       if(waitingScene && JSON.stringify(waitingScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
       const seats=waitingScene?waitingScene.seats:logic.initialize(nativeSettings,localSeat);
       state.network.waiting=false;
+      if(isCrazy8 && waitingScene)state.unoWaitingNeedsLayout=true;
       if(!waitingScene)installLocalHost(logic, online);
       logic._initialSync=true;
       try { if(!isPool) for(let seat=0;seat<seats;seat++) logic.enter?.(seat); } catch(e){console.warn('enter',e);}

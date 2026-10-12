@@ -4,7 +4,7 @@
   const number = v => Math.max(0, Math.floor(Number(v) || 0));
   const count = v => number(v).toLocaleString('ar-SA');
   const asset = v => /^\/(?:images|games|platform\/assets|room-sprites)\/[A-Za-z0-9_./-]+$/.test(String(v)) && !String(v).includes('..') ? String(v) : '';
-  const games = [['pool','البلياردو','pool'],['carrom','الكيرم','carrom'],['tablesoccer','كرة الطاولة','football'],['crazy8','كريزي 8','cards']];
+  const games = [['pool','البلياردو','pool'],['carrom','الكيرم','carrom'],['tablesoccer','كرة الطاولة','football'],['crazy8','أونو','cards']];
 
   function render(root, user, {own = false} = {}) {
     if (!root) return;

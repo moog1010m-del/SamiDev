@@ -4,7 +4,7 @@
     pool:{id:'pool',name:'البلياردو',title:'SamiDev Pool',entry:'/games/pool/index.html',root:'/games/pool/'},
     carrom: {id:'carrom', name:'الكيرم', title:'SamiDev Carrom', entry:'/index.html', root:'/'},
     tablesoccer: {id:'tablesoccer', name:'كرة الطاولة', title:'SamiDev Table Soccer', entry:'/games/tablesoccer/index.html', root:'/games/tablesoccer/'},
-    crazy8: {id:'crazy8', name:'كريزي 8', title:'SamiDev Crazy 8', entry:'/games/crazy8/index.html', root:'/games/crazy8/'}
+    crazy8: {id:'crazy8', name:'أونو', title:'SamiDev Uno', entry:'/games/crazy8/index.html', root:'/games/crazy8/'}
   };
   const current = () => Object.values(games).find(g => g.id!=='carrom' && location.pathname.startsWith(g.root)) || games.carrom;
   const get = id => games[id] || games.carrom;
@@ -18,7 +18,7 @@
   const cardSpecial = ['أساسية','كل الأوراق الخاصة','درع','كشف الأوراق','الأحمر','الأزرق'];
   const label = value => {
     if(value?.gameId==='pool')return 'البلياردو · 8 كرات · لاعب ضد لاعب';
-    if (value?.gameId==='crazy8') return `كريزي 8 · ${cardSeats[Number(value.seats)??2]||cardSeats[2]} · ${cardSpecial[Number(value.special)||0]}`;
+    if (value?.gameId==='crazy8') return `أونو · ${cardSeats[Number(value.seats)??2]||cardSeats[2]} · ${cardSpecial[Number(value.special)||0]}`;
     if (value?.gameId==='tablesoccer') return `كرة الطاولة · ${Number(value.live)===1?'متزامن':'تناوب'} · ${[2,3,5][Number(value.goalsToWin)||0]} أهداف`;
     return `الكيرم · ${['Classic','Pool','Freestyle 120','Freestyle 160','Freestyle 210'][Number(value?.gamemode)||0]}`;
   };
