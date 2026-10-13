@@ -15,7 +15,7 @@
       "main": "games/crazy8/main.js"
     },
     "pool": {
-      "sha256": "7c37c462ce6d27e2928d502bf61eaf0de98595057aa8fe79a289c5e3f245b077",
+      "sha256": "aa1aae06de0c68f9e962c96321bc183709e8b5807e777f0e66165e2f1f18b36b",
       "main": "games/pool/main.js"
     }
   }

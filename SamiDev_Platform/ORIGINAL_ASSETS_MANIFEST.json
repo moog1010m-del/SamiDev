@@ -5,7 +5,8 @@
     "crazy8",
     "tablesoccer",
     "shared game and profile icons",
-    "Pool table changed; original pool balls retained"
+    "Pool table changed; original pool balls retained",
+    "Free and Scratch Pyramid original ball textures; existing other pool modes retained"
   ],
   "generatedImageSources": 8,
   "newVisualFiles": 94,
@@ -2142,6 +2143,11 @@
       "duration": 0.45,
       "previousPath": "game/sounds/woosh2.m4a",
       "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/games/pool/images/ui/pyramid-ui.webp",
+      "source": "Original generated white numbered and yellow unnumbered sphere textures; design/original-assets/pyramid-ball-textures.png; packed over existing native UI atlas without replacing other UI pixels",
+      "sha256": "396d789683e624e8688cb04829d43e9609640268fc1cdb7d3f3ec679ca4ed96e"
     }
   ],
   "audioSource": "V37: 105 effects from 15 CC0 Freesound recordings; existing music and four vocal reactions retained",

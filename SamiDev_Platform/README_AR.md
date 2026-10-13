@@ -121,3 +121,5 @@ python tools/update_game_integrity.py
 ```
 
 game/samidev-integrity.json يثبت بصمة كل حزمة. ملفات attestation.json الجديدة جرد SHA-256 غير موقّع باسم SamiDev، وليست توقيعات ناشر خارجي.
+
+الهرم الحر وسكراتش واختيار كرة الضرب: [PYRAMID_MODES_AR.md](PYRAMID_MODES_AR.md).

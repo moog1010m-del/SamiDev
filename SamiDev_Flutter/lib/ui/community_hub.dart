@@ -198,8 +198,8 @@ class _CreateMatchSheetState extends State<CreateMatchSheet> {
         ],
         select('live','نوع المباراة',game=='tablesoccer'?['تناوب الأدوار','متزامن']:['تناوب الأدوار','مباشر'],initial:game=='tablesoccer'?'0':'1'),
       ]else...[
-        select('gameType','نوع البلياردو',['إيت بول · لاعبان','إيت بول · فريقان بالتناوب','إيت بول · فريقان','ناين بول · لاعبان','ناين بول · فريقان بالتناوب','ناين بول · فريقان','ثلاثي · ٣ لاعبين','قيم بول · أول من يسجل ٨ كرات']),
-        const Padding(padding:EdgeInsets.all(14),child:Text('قيم بول: أي ٨ كرات، والسوداء عادية. البيضاء لا تُحسب.')),
+        select('gameType','نوع البلياردو',['إيت بول · لاعبان','إيت بول · فريقان بالتناوب','إيت بول · فريقان','ناين بول · لاعبان','ناين بول · فريقان بالتناوب','ناين بول · فريقان','ثلاثي · ٣ لاعبين','قيم بول · أول من يسجل ٨ كرات','الهرم الحر · أي كرة للضرب','هرم سكراتش · تسجيل كرة الضرب']),
+        Padding(padding:const EdgeInsets.all(14),child:Text(['8','9'].contains(values['gameType'])?'الهرم: أي كرة للضرب، وتغيير واحد قبل الضربة. سكراتش يحتسب كرة الضرب بعد ملامسة كرة أخرى.':'قيم بول: أي ٨ كرات، والسوداء عادية. البيضاء لا تُحسب.')),
       ],
     ])),const SizedBox(height:12),
     FilledButton(onPressed:()=>Navigator.pop(context,{'game':game,'live':game=='tablesoccer'?'0':'1','players':'0','seats':'0','special':'0','gamemode':'0','break':'0','goalsToWin':'1','passes':'0',...values}),child:const Padding(padding:EdgeInsets.all(12),child:Text('إنشاء المباراة'))),

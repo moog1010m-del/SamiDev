@@ -20,7 +20,7 @@ async def main():
         base=f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
         for index,client in enumerate(clients):
             async with client.post(base+'/api/auth/register',json={'username':f'pool_modes_{index}','password':'Test-password-123'}) as response:assert response.status==200
-        for mode,capacity in enumerate([2,4,4,2,4,4,3,2]):
+        for mode,capacity in enumerate([2,4,4,2,4,4,3,2,2,2]):
             current=[await client.ws_connect(base+'/ws') for client in clients[:capacity]];sockets.extend(current)
             await current[0].send_json({'type':'create_room','settings':{'gameId':'pool','gameType':mode}})
             created=await receive(current[0],'created');assert created['type']=='created',created
@@ -40,7 +40,7 @@ async def main():
                 move=await receive(socket,'move');assert move['type']=='move',move
                 assert move['reveal']['pool']['freePool']==(mode==7),move
             for socket in current:await socket.close()
-        print('PASS eight pool modes: authenticated create/join/start/physics/fanout and capacities 2/3/4')
+        print('PASS ten pool modes: authenticated create/join/start/physics/fanout and capacities 2/3/4')
     finally:
         for socket in sockets:await socket.close()
         if runner:await runner.cleanup()

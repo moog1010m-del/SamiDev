@@ -1,7 +1,7 @@
 'use strict';
 const finite=Number.isFinite;
 function balls(g){return [g.table.cueBall,...g.table.balls].map(b=>[b.rank||0,Math.round(b.position[0]*100)/100,Math.round(b.position[1]*100)/100,b.isPocketed()?1:0]);}
-function poolView(g){return {balls:balls(g),turn:[...g.turn],sequence:[...g._sequence],freePool:!!g.freePool,freePoolScores:(g.freePoolScores||[]).slice(),solids:g.solids,ballInHand:g.ballInHand,breaking:g.isBreaking(),gameOver:g.gameOver,finishOrder:g.finishOrder,reason:g.getGameOverReason(),awaitingReady:!!g.awaitingReady,turnSeconds:Math.round(g.turnDuration/1000),pockets:g.table.pockets.map(p=>[...p.position])};}
+function poolView(g){return {balls:balls(g),turn:[...g.turn],sequence:[...g._sequence],pyramid:g.pyramid?JSON.parse(JSON.stringify(g.pyramid)):null,freePool:!!g.freePool,freePoolScores:(g.freePoolScores||[]).slice(),solids:g.solids,ballInHand:g.ballInHand,breaking:g.isBreaking(),gameOver:g.gameOver,finishOrder:g.finishOrder,reason:g.getGameOverReason(),awaitingReady:!!g.awaitingReady,turnSeconds:Math.round(g.turnDuration/1000),pockets:g.table.pockets.map(p=>[...p.position])};}
 function validatePoolMove(g,seat,m){
   if(!Number.isInteger(seat)||seat<0||seat>=g.seats||g.gameOver||g.isResigned(seat))return false;
   const keys=Object.keys(m),only=(...names)=>keys.every(k=>names.includes(k));
@@ -9,6 +9,7 @@ function validatePoolMove(g,seat,m){
   if(m.a===0)return only('a')&&g.canResign(seat);
   if(m.a===8)return only('a','al')&&typeof m.al==='boolean';
   if(!g.isTurn(seat))return false;
+  if(m.a===9)return only('a','rank')&&g.canSelectPyramidCue?.(seat,m.rank);
   if(m.a===3)return only('a','an')&&finite(m.an)&&Math.abs(m.an)<=Math.PI*2;
   if(m.a===4)return only('a','st')&&finite(m.st)&&m.st>=0&&m.st<=1;
   if(m.a===1)return only('a','st','an','sp')&&finite(m.st)&&m.st>=.01&&m.st<=1&&finite(m.an)&&Math.abs(m.an)<=Math.PI*2&&Array.isArray(m.sp)&&m.sp.length===2&&m.sp.every(x=>finite(x)&&Math.abs(x)<=1)&&Math.hypot(...m.sp)<=1.001&&g.canShoot(seat);
