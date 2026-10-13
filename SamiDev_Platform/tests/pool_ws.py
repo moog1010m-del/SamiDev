@@ -43,9 +43,10 @@ async def main():
   await move(0,{'__ready':1});shot=await move(0,{'a':1,'st':.8,'an':-1.5707963267948966,'sp':[0,0]})
   assert shot[0]['reveal']['soundEvents'][0]['kind']=='cue'
   assert shot[0]['reveal']['soundEvents']==shot[1]['reveal']['soundEvents']
-  assert shot[0]['reveal']['frames'] and shot[0]['reveal']['pool']['turn']==[1]
+  assert 'frames' not in shot[0]['reveal'] and shot[0]['reveal']['pool']['turn']==[1]
+  assert shot[0]['reveal']['rid']==0 and shot[0]['reveal']['data'], 'native authoritative world reveal required'
   results.append('Catalog, assets, authenticated invitation, two-player match and actual server break')
-  await peers[0].send_json({'type':'move','packet':{'i':'wrong-turn','n':sequence[0],'m':{'a':1,'st':.8,'an':0,'sp':[0,0]}}});assert (await receive(peers[0],'move'))['type']=='error'
+  await peers[0].send_json({'type':'move','packet':{'i':'wrong-turn','n':sequence[0],'m':{'a':1,'st':.8,'an':0,'sp':[0,0]}}});rejected=await receive(peers[0],'move');assert rejected['type']=='error' and rejected['reason']=='NOT_YOUR_TURN',rejected
   await peers[0].send_json({'type':'move','packet':{'__info':{'a':-1,'idx':1,'logic':{'winner':0}}}});assert (await receive(peers[0],'move'))['type']=='error'
   await peers[1].send_json({'type':'chat_send','text':'مرحبا من البلياردو <script>'})
   for w in peers:assert (await receive(w,'chat_message'))['text']=='مرحبا من البلياردو <script>'

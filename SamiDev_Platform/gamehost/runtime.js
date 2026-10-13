@@ -263,7 +263,11 @@ class GameRuntimeFactory {
   beginMatch(room) {
     if (!room.waitingForClients) return;
     room.waitingForClients = false;
-    for (const [id, item] of [...room.timers]) this._scheduleAlarm(room, item.remaining, id);
+    for (const [id, item] of [...room.timers]) {
+      this._scheduleAlarm(room, item.remaining, id);
+      const resumed=room.timers.get(id);
+      resumed.duration=item.duration;resumed.startedAt=resumed.expiresAt-item.duration;
+    }
   }
 
   _pruneStaleAlarms(room) {
@@ -352,6 +356,7 @@ class GameRuntimeFactory {
       startedAt: Date.now(),
       expiresAt: Date.now() + delay,
     });
+    if(room.waitingForClients){clearTimeout(handle);room.timers.get(alarmId).remaining=delay;}
     this._record(room, 'alarm_set', { ms: delay, id: alarmId });
   }
 
@@ -399,6 +404,10 @@ class GameRuntimeFactory {
       lastAlert: null,
     };
     room.hostApi = this._makeRoomHostApi(room);
+    return this._initializeRoomLogic(room);
+  }
+
+  _initializeRoomLogic(room) {
     this._activate(room);
     room.logic = new this.GameLogicCtor();
     const g = room.logic;
@@ -431,10 +440,10 @@ class GameRuntimeFactory {
       this._record(room, 'turn_expire_auto_move', { seat, sequence: Number(g._sequence?.[seat] || 0) });
       g.autoMoves([{ seat, data: { m: 3 } }]);
     };
-    const nativeSettings = structuredClone(settings);
+    const nativeSettings = structuredClone(room.settings);
     delete nativeSettings.gameId;
     const seats = g.initialize(nativeSettings, undefined);
-    if (seats !== capacity) throw new Error(`GameLogic seat mismatch: ${seats} != ${capacity}`);
+    if (seats !== room.capacity) throw new Error(`GameLogic seat mismatch: ${seats} != ${room.capacity}`);
     for (let s = 0; s < seats; s++) g.enter(s);
     if (g.server !== true || g.localSeat !== undefined) throw new Error('GameLogic did not enter authoritative server mode');
     this._record(room, 'room_initialized', { seats, server: g.server });
@@ -463,13 +472,27 @@ class GameRuntimeFactory {
     const preMovePoolReason = this.gameId === 'pool'
       ? poolMoveRejectionReason(room.logic, seat, packet) : undefined;
     if (this.gameId === 'pool') {room.logic.poolFrames=[];room.logic.poolSounds=[];}
+    const poolCheckpoint=this.gameId==='pool'&&packet.m?.a===1?this.describeRoom(room,true).snapshot:null;
+    if(this.gameId==='pool'&&packet.m?.a===1&&!poolCheckpoint){
+      return {accepted:false,revealBySeat:{},rejectionReason:'CHECKPOINT_UNAVAILABLE'};
+    }
     this._beginEffects(room, 'move', { seat });
     let accepted;
     try {
       accepted = room.logic.move(seat, packet) === true;
-      if (accepted && this.gameId === "pool") room.logic.revealData(room.logic.createSeatList(), {pool:poolView(room.logic),frames:room.logic.poolFrames,soundEvents:room.logic.poolSounds});
+      if (accepted && this.gameId === "pool") room.logic.revealData(room.logic.createSeatList(), {pool:poolView(room.logic),...(room.logic.poolFrames.length?{frames:room.logic.poolFrames}:{}),soundEvents:room.logic.poolSounds});
     } catch (e) {
       this._endEffects(room);
+      if(poolCheckpoint){
+        // Rebuild the native runtime, not only serialized coordinates: currentShot,
+        // contact caches, collision masks and sinking state are not all serialized.
+        this.destroyRoom(room);
+        room.destroyed=false;
+        room.lastGameOver=null;room.lastAlert=null;
+        this._initializeRoomLogic(room);
+        this.deserialize(room,poolCheckpoint);
+        room.logic.stopBodies();
+      }
       throw e;
     }
     const effects = this._endEffects(room);
@@ -479,7 +502,25 @@ class GameRuntimeFactory {
 
   deserialize(room, snapshot) {
     this._activate(room);
-    return room.logic.deserialize(structuredClone(snapshot), undefined);
+    const result=room.logic.deserialize(structuredClone(snapshot), undefined);
+    this._pruneStaleAlarms(room);
+    // The SDK restores alarm identifiers/state, but the platform owns its scheduler.
+    // Recreate that scheduler on both host recovery and transactional rollback.
+    if(snapshot.p===1&&room.logic._pendingAlarm){
+      const meta=snapshot._samidev_alarm;
+      const absolute=meta&&meta.id===snapshot.a&&Number.isFinite(meta.expiresAt)&&Number.isFinite(meta.duration);
+      const remaining=absolute?(meta.paused?meta.remaining:Math.max(0,meta.expiresAt-Date.now())):snapshot.x;
+      const duration=absolute?meta.duration:snapshot.z;
+      if(Number.isFinite(remaining)&&remaining>=0){
+        this._scheduleAlarm(room,remaining,snapshot.a);
+        const alarm=room.timers.get(snapshot.a);
+        if(alarm&&Number.isFinite(duration)&&duration>=0){
+          if(absolute&&!meta.paused)alarm.expiresAt=meta.expiresAt;
+          alarm.duration=duration;alarm.startedAt=alarm.expiresAt-duration;
+        }
+      }
+    }
+    return result;
   }
 
   _snapshotSafe(room) {
@@ -541,6 +582,8 @@ class GameRuntimeFactory {
         if (alarm) {
           snapshot.x = alarm[0];
           snapshot.z = alarm[1];
+          const timer=room.timers.get(snapshot.a);
+          if(timer)snapshot._samidev_alarm={id:snapshot.a,expiresAt:timer.expiresAt,duration:timer.duration,paused:!!room.waitingForClients,remaining:alarm[0]};
         }
       }
       if (this.gameId === "pool") snapshot.pool=poolView(g);

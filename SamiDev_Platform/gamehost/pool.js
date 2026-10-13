@@ -52,13 +52,15 @@ function poolMoveRejectionReason(g,seat,packet){
     if(g.table.balls.some(b=>!b.isPocketed()&&Math.hypot(x-b.position[0],y-b.position[1])<41))return 'CUE_BALL_OVERLAPS_BALL';
     if(g.table.pockets.some(p=>Math.hypot(x-p.position[0],y-p.position[1])<55))return 'CUE_BALL_OVERLAPS_POCKET';
   }
-  return 'INVALID_MOVE_PAYLOAD';
+  return validatePoolMove(g,seat,m)?'VALID':'INVALID_MOVE_PAYLOAD';
 }
 function installPoolServer(g){
   // Use the supplied rules/physics implementation, without its browser scene.
   const rules=Object.getPrototypeOf(Object.getPrototypeOf(g));
   g.shoot=function(...args){return rules.shoot.apply(this,args);};
   g.poolFrames=[];g.poolSounds=[];
+  const recordFrames=process.env.SAMIDEV_POOL_DIAGNOSTIC_FRAMES==='1';
+  g.poolMaxSteps=9000;
   let recording=false,step=0,events=[],lastContact=new Map();
   const emit=(kind,strength)=>{if(recording&&events.length<120)events.push({t:step,kind,strength:Math.min(1,Math.max(.05,strength))});};
   g.world.on('beginContact',e=>{
@@ -74,15 +76,19 @@ function installPoolServer(g){
   });
   g.worldAnimationMove=function(move){const ok=this._move(move.seat,{...move.data,__psValidationMove:true});if(ok)this.lastState=this.noAnimations;return ok;};
   g.executeAnimation=function(){
-    this.poolFrames=[balls(this)];let steps=0;
+    this.poolFrames=recordFrames?[balls(this)]:[];let steps=0;
     step=0;events=[];lastContact.clear();recording=true;
     emit('cue',Math.hypot(...this.table.cueBall.velocity)/2500);
     const live=[this.table.cueBall,...this.table.balls],pocketed=new Set(live.filter(b=>b.isPocketed()));
     this.world.resetAnimationTime();this.world.resetBodiesTimes();this.world.resetAnimationStepsCount();
-    do{this.onBeforeStep.emit();this.world.step(this.getFixedTimeStep());this.onAfterStep.emit();steps++;step=steps;for(const b of live)if(b.isPocketed()&&!pocketed.has(b)){pocketed.add(b);emit('pocket',.65);}if(steps%5===0)this.poolFrames.push(balls(this));}while(!this.isAnimationFinished()&&steps<9000);
+    do{this.onBeforeStep.emit();this.world.step(this.getFixedTimeStep());this.onAfterStep.emit();steps++;step=steps;for(const b of live)if(b.isPocketed()&&!pocketed.has(b)){pocketed.add(b);emit('pocket',.65);}if(recordFrames&&steps%5===0)this.poolFrames.push(balls(this));}while(!this.isAnimationFinished()&&steps<this.poolMaxSteps);
+    if(!this.isAnimationFinished()){
+      recording=false;
+      throw Object.assign(new Error('Pool physics did not settle; shot rolled back'),{code:'PHYSICS_DID_NOT_SETTLE',statusCode:503});
+    }
     recording=false;this.poolSounds=events.map(e=>({...e,t:e.t/Math.max(1,steps)}));
     this.onPreAnimationFinished.emit();this.shotCompleted();this.onAnimationFinished.emit();
-    this.poolFrames.push(balls(this));
+    if(recordFrames)this.poolFrames.push(balls(this));
     if(this.poolFrames.length>240){const frames=this.poolFrames;this.poolFrames=Array.from({length:240},(_,i)=>frames[Math.round(i*(frames.length-1)/239)]);}
     this.world.resetAnimationStepsCount();
   };

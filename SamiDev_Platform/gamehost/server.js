@@ -27,7 +27,7 @@ const factories = new Map(Object.entries(gameDirs).map(([id, dir]) => [id, new G
 const gameHashes = Object.fromEntries([...factories].map(([id,f]) => [id,f.sha256]));
 const rooms = new Map();
 const sseClients = new Set();
-const metrics = { requests: 0, moves: 0, accepted: 0, rejected: 0, roomsCreated: 0, events: 0, errors: 0 };
+const metrics = { requests: 0, moves: 0, accepted: 0, rejected: 0, roomsCreated: 0, events: 0, errors: 0, poolRollbacks: 0 };
 const eventLoopDelay = monitorEventLoopDelay({resolution:20});
 eventLoopDelay.enable();
 const moveDurations = [];
@@ -268,6 +268,7 @@ async function handler(req, res) {
       let revealBySeat = {};
       let rejectionReason;
       let error = false;
+      let errorCode;
       const moveStart = performance.now();
       try {
         room.opDepth++;
@@ -278,6 +279,8 @@ async function handler(req, res) {
         rejectionReason = result.rejectionReason;
       } catch (e) {
         error = true;
+        errorCode=e.code==='PHYSICS_DID_NOT_SETTLE'?e.code:'GAMELOGIC_EXCEPTION';
+        if(room.gameId==='pool'&&packet.m?.a===1)metrics.poolRollbacks++;
         console.error('[SamiDev GameHost] GAMELOGIC_EXCEPTION', roomId, String(e.stack || e));
       } finally {
         room.opDepth--;
@@ -287,13 +290,14 @@ async function handler(req, res) {
       room.lastUsed = Date.now();
       const desc = room.factory.describeRoom(room, true);
       if (accepted) metrics.accepted++; else metrics.rejected++;
-      return json(res, 200, {
+      return json(res, errorCode==='PHYSICS_DID_NOT_SETTLE'?503:200, {
         ok: !error,
         accepted,
-        code: error ? 'GAMELOGIC_EXCEPTION' : (accepted ? 'ACCEPTED' : 'REJECTED_BY_GAMELOGIC'),
+        code: error ? errorCode : (accepted ? 'ACCEPTED' : 'REJECTED_BY_GAMELOGIC'),
         rejectionReason: !accepted && !error && room.gameId === 'pool' ? (rejectionReason || 'UNKNOWN') : undefined,
         rejectionContext: !accepted && !error && room.gameId === 'pool' ? {turn: Array.isArray(room.logic.turn) ? [...room.logic.turn] : [], ballInHand: room.logic.ballInHand, gameOver: !!room.logic.gameOver, moveAction: packet?.m?.a ?? null, packetSequence: Number.isSafeInteger(packet?.n) ? packet.n : null, expectedSequence: beforeSeq} : undefined,
         error: error ? 'GameLogic execution failed' : null,
+        message: errorCode==='PHYSICS_DID_NOT_SETTLE'?'تعذر إكمال حساب الضربة بأمان. تمت استعادة الطاولة؛ حاول مجددًا.':undefined,
         roomId: room.roomId,
         authorityEpoch: room.authorityEpoch,
         authorityRevision: room.authorityRevision,

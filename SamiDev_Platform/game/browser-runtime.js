@@ -345,8 +345,8 @@
     sendMove:(move)=>{
       if(state.network.waiting)return false;
       if(isPool && state.network.online && move?.__info!==undefined){
-        // Native animation reports are presentation-only. Never send client results.
-        setTimeout(()=>waitUntilWorldSettles(state.gameLogic,20000).then(()=>window.SamiDevNetwork?.requestResync?.()),100);
+        // The native rid=0 reveal already carries the server-computed final world.
+        // Keep client world reports presentation-only; reconcile only on actual drift.
         return true;
       }
       return state.network.online?window.SamiDevNetwork?.sendMove?.(move):ackLocalMove(move);
@@ -1101,7 +1101,7 @@
       if(logic._awaitingResync && !state.network.snapshotBusy) net.requestResync();
     });
     net.on('error', msg=>{
-      if (['MOVE_REJECTED','STALE_MOVE_SEQUENCE','FUTURE_MOVE_SEQUENCE'].includes(msg?.code)) net.requestResync();
+      if (['MOVE_REJECTED','STALE_MOVE_SEQUENCE','FUTURE_MOVE_SEQUENCE','PHYSICS_DID_NOT_SETTLE'].includes(msg?.code)) net.requestResync();
     });
   }
 
@@ -1247,6 +1247,14 @@
       window.SamiDevCardAudio?.setSyncing(true);
       if(isPool) logic.isMusicMuted=()=>true; // No ambient music recording exists in the supplied bundle.
       if(isPool && online && !logic.__samidevPoolReadyGuard){
+        const nativeLocalMove=logic.localMove.bind(logic);
+        logic.localMove=(...args)=>{
+          const transport=window.SamiDevNetwork?.state;
+          // Never consume a local sequence for an unsendable command, or queue input
+          // against coordinates that an authoritative checkpoint is replacing.
+          if(state.network.waiting||state.network.snapshotBusy||!transport?.connected||transport.ws?.readyState!==1||transport.resyncInFlight)return false;
+          return nativeLocalMove(...args);
+        };
         const nativeSendReady=logic.sendReady.bind(logic);
         logic.sendReady=()=>state.network.snapshotBusy ? false : nativeSendReady();
         logic.__samidevPoolReadyGuard=true;

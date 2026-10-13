@@ -126,3 +126,5 @@ game/samidev-integrity.json يثبت بصمة كل حزمة. ملفات attestat
 قسم الألعاب في Flutter وجسر البحث السريع : [QUICK_PLAY_AR.md](QUICK_PLAY_AR.md).
 
 تقييم التقارير والتراجع عن الهرم: [PYRAMID_ROLLBACK_REVIEW_AR.md](PYRAMID_ROLLBACK_REVIEW_AR.md).
+
+عقد محرك البلياردو وإصلاح الربط ودليل الأداء: [POOL_ENGINE_INTEGRATION_AR.md](POOL_ENGINE_INTEGRATION_AR.md).

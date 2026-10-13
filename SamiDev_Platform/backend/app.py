@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 import os
+import re
 import secrets
 import signal
 import time
@@ -496,14 +497,23 @@ class SamiDevRealtime:
         self.metrics.messages_out += 1
 
     async def error(self, c: Conn, code: str, message: str, **extra: Any) -> None:
-        self.record_problem(c, code)
+        self.record_problem(c, code, **extra)
         await self.send(c, {"type": "error", "code": code, "message": message, **extra})
 
-    def record_problem(self, c: Conn, code: str) -> None:
+    def record_problem(self, c: Conn, code: str, **diagnostics: Any) -> None:
         self.metrics.errors += 1
         self.metrics.errors_by_code[code] = self.metrics.errors_by_code.get(code, 0) + 1
-        print(json.dumps({'event':'ws_error','node':NODE_ID,'roomId':c.room_id,
-            'connectionId':c.conn_id,'seat':c.seat,'code':code,'time':int(time.time()*1000)}, separators=(',', ':')))
+        event = {'event':'ws_error','node':NODE_ID,'roomId':c.room_id,
+            'connectionId':c.conn_id,'seat':c.seat,'code':code,'time':int(time.time()*1000)}
+        # Bounded diagnosis only; never log packets, auth tokens or user content.
+        for key in ('expectedSequence', 'packetSequence', 'moveAction'):
+            value = diagnostics.get(key)
+            if type(value) is int and 0 <= value <= 2**53-1:
+                event[key] = value
+        reason = diagnostics.get('reason')
+        if isinstance(reason, str) and re.fullmatch(r'[A-Z_]{1,80}', reason):
+            event['reason'] = reason
+        print(json.dumps(event, separators=(',', ':')))
 
     def observe(self, stage: str, began: float) -> None:
         self.metrics.latencies.setdefault(stage, deque(maxlen=512)).append((time.monotonic()-began)*1000)
@@ -958,14 +968,17 @@ class SamiDevRealtime:
                 expected = seq[c.seat] if c.seat < len(seq) else None
                 actual = packet.get("n")
                 if isinstance(expected, int) and isinstance(actual, int) and actual != expected:
-                    self.record_problem(c, 'DESYNC')
+                    self.record_problem(c, 'DESYNC', expectedSequence=expected, packetSequence=actual)
                     await self.send(c, {
                         "type": "desync", "seat": c.seat, "expected": expected,
                         "actual": actual, "moveCount": (await self.store.get_room_state(c.room_id))["moveCount"],
                         "source": "GameLogic",
                     })
                 else:
-                    await self.error(c, "MOVE_REJECTED", "GameLogic رفض الحركة", turn=authority.get("turn") or [])
+                    context = authority.get("rejectionContext") or {}
+                    await self.error(c, "MOVE_REJECTED", "GameLogic رفض الحركة", turn=authority.get("turn") or [],
+                        reason=authority.get("rejectionReason") or "RULES_ENGINE_REJECTED",
+                        expectedSequence=expected, packetSequence=actual, moveAction=context.get("moveAction"))
                 return
 
             self.observe('gamehost_move', host_began)

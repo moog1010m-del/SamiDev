@@ -3,7 +3,7 @@
   "algorithm": "sha256",
   "signed": false,
   "files": {
-    "browser-runtime.js": "d25558194fcc1b65cb3cbac2bbb4f8756f175bf3130f55c579600392b052eeaf",
+    "browser-runtime.js": "d36b669964f62d5db81ac7ea0a5314a21313e49d33ce78c97c82a9e8860455ff",
     "carrom-themes.js": "8743ebd5c5f0665940fb7aade2755acbc218bf61cd18e743d3a3eacd3420eb0d",
     "chat-polish.css": "6af1264c6fc76c7a638fba1991a85f5138c3fbae517e75111e75854b7f88ff1f",
     "chat-ui.js": "cf27123f0f5b6fc3b0d60b548a7a5f4ece40401a1dec66e39318d5386e58336c",
@@ -261,7 +261,7 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "62d806504ddc652eaf3d5c54629294e135801344f1b03bd9ea6ddaf38790f931",
     "platform/assets/stickers/samidev-stickers.png": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085",
-    "platform/build.json": "c71eb68da0cbc43b4727999160e75a6bf2b2211764ef6be890c0b805030950da",
+    "platform/build.json": "96d7413feba71ef5749a8637e8d09738156c3a01451324ba9aff25796340f3df",
     "platform/index.html": "c43542a317067b6ad49e566f29b02745fb57f5ce055328840a34e387ee212a56",
     "platform/platform.css": "b7b2f6000bb30283d7267535e7f9e4bc4526507d2e3e00b4551b823db91c7ca0",
     "platform/platform.js": "1c24e77084a6751c37f7701cfc619dd7ab0691a074461ffe9c2c41a8b09444d4",

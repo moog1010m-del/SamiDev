@@ -1,4 +1,5 @@
 'use strict';
+process.env.SAMIDEV_POOL_DIAGNOSTIC_FRAMES='1';
 const assert=require('node:assert/strict'),path=require('node:path');
 const {GameRuntimeFactory}=require('../gamehost/runtime');
 const f=new GameRuntimeFactory(path.join(__dirname,'../game/games/pool'),{gameId:'pool',expectedSha256:require('../game/samidev-integrity.json').games.pool.sha256});
