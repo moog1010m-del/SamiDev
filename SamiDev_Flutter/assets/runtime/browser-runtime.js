@@ -1172,8 +1172,7 @@
       };
       const poolMode=Number(window.SamiDevNetwork?.state?.settings?.gameType??runtimeQuery.get('gameType'));
       const pyramidAtlas=isPool&&[8,9].includes(poolMode)&&path==='images/ui/ui.webp';
-      const pyramidTable=isPool&&[8,9].includes(poolMode)&&['images/imported/themes/th_basic_table.webp','images/themes/pool-emerald.webp','images/themes/pool-midnight.webp'].includes(norm(path).replace(/^\//,''));
-      const source=pyramidTable?'/games/pool/images/imported/themes/samidev-pyramid-table.webp':pyramidAtlas?'/games/pool/images/ui/pyramid-ui.webp':(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
+      const source=pyramidAtlas?'/games/pool/images/ui/pyramid-ui.webp':(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
       const refreshedAsset = ['images/table-background.webp','images/ui/ui.webp','images/imported/themes/th_basic_background.webp'].includes(path);
       img.src=refreshedAsset && !source.startsWith('data:') ? source+(source.includes('?')?'&':'?')+'v=36' : source;
     }))]);

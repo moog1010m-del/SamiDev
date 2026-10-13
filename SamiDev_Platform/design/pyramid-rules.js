@@ -28,27 +28,6 @@ globalThis.SamiDevPyramidRules = Object.freeze({
     logic.onSynchronize?.emit?.();
     return true;
   },
-  applyGeometry(logic) {
-    if (!logic.pyramid || logic._pyramidJaws) return;
-    // 68 mm reference balls: 4.5 mm corner / 16 mm middle mouth clearance.
-    const diameter=logic.table.cueBall.radius*2;
-    const corner=(Math.hypot(40,40)-(diameter+diameter*4.5/68))/2;
-    const middle=(88-(diameter+diameter*16/68))/2;
-    const jaws=[];
-    for (const [x,y] of [[76,116],[116,76],[758,116],[718,76],[76,1400],[116,1440],[758,1400],[718,1440]])jaws.push({x,y,radius:corner});
-    for (const [x,y] of [[76,714],[76,802],[758,714],[758,802]])jaws.push({x,y,radius:middle});
-    const Rail=logic.table.rails[0].constructor;
-    for (let index=0;index<jaws.length;index++) {
-      const {x,y,radius}=jaws[index],path=[];
-      for (let i=0;i<24;i++) {const angle=Math.PI+i*Math.PI*2/24;path.push([radius+Math.cos(angle)*radius,Math.sin(angle)*radius]);}
-      const rail=new Rail(path,-1000-index);
-      rail.position[0]=x-radius;rail.position[1]=y;
-      logic.table.constructor.adjustPathBodyPos(rail);
-      for (const shape of rail.shapes) shape.collisionGroup |= 16; // aiming rays see the tighter jaws too
-      logic.addBody(rail,false,false);logic.table.rails.push(rail);
-    }
-    logic._pyramidJaws=jaws;
-  },
   restore(logic,body) {
     body.sinking=undefined;body.setCollidingWithBallsAndRails(true);
     body.velocity[0]=body.velocity[1]=0;body.angularVelocity=0;body.setZeroForce();

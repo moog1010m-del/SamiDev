@@ -9,7 +9,7 @@ function arrange(g,offset=0){g.ballInHand=0;for(let i=0;i<15;i++){const b=g.tabl
 for(const mode of [8,9]){
  const r=create(mode),g=r.logic;
  try{
-  check(g.pyramid.mode===mode&&g.table.rails.length===18,'isolated Pyramid geometry');
+  check(g.pyramid.mode===mode&&g.table.rails.length===6,'Pyramid uses standard pool geometry');
   const before=g.table.balls.map(b=>Array.from(b.position)),cue=Array.from(g.table.cueBall.position);
   check(!move(r,1,{a:9,rank:1}).accepted,'opponent cannot choose cue');
   for(const rank of [-1,0,16,1.5])check(!move(r,0,{a:9,rank}).accepted,'invalid cue choice rejected');
@@ -55,5 +55,5 @@ for(const mode of [8,9]){
  }finally{f.destroyRoom(r);}
 }
 const p=create(7),py=create(8);
-try{const a=arrange(p.logic,10),b=arrange(py.logic,10);move(p,0,{a:1,st:.2,an:-Math.PI*.75,sp:[0,0]});move(py,0,{a:1,st:.2,an:-Math.PI*.75,sp:[0,0]});check(a.isPocketed()&&!b.isPocketed(),'Pyramid mouth rejects imprecise shot accepted by normal pool');check(p.logic.table.rails.length===6,'normal geometry unchanged');}finally{f.destroyRoom(p);f.destroyRoom(py);}
-console.log(JSON.stringify({ok:true,checks,realPhysics:true,selectionQuota:true,scratchContactAndWins:true,tightMouths:true}));
+try{const a=arrange(p.logic,10),b=arrange(py.logic,10);move(p,0,{a:1,st:.2,an:-Math.PI*.75,sp:[0,0]});move(py,0,{a:1,st:.2,an:-Math.PI*.75,sp:[0,0]});check(a.isPocketed()&&b.isPocketed(),'Pyramid and normal pool accept the same pocket shot');check(p.logic.table.rails.length===6,'normal geometry unchanged');}finally{f.destroyRoom(p);f.destroyRoom(py);}
+console.log(JSON.stringify({ok:true,checks,realPhysics:true,selectionQuota:true,scratchContactAndWins:true,standardGeometry:true}));
