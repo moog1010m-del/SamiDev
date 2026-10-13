@@ -2148,6 +2148,11 @@
       "path": "game/games/pool/images/ui/pyramid-ui.webp",
       "source": "Original generated white numbered and yellow unnumbered sphere textures; design/original-assets/pyramid-ball-textures.png; packed over existing native UI atlas without replacing other UI pixels",
       "sha256": "396d789683e624e8688cb04829d43e9609640268fc1cdb7d3f3ec679ca4ed96e"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/samidev-pyramid-table.webp",
+      "source": "Original generated Pyramid table quarter; design/original-assets/pyramid-table-quarter.png; resized to native 433x773 mirrored quadrant; Free and Scratch modes only",
+      "sha256": "dce719b555c461d6825e9407cccdc5b3d2849a96822fe10e8333e043685f1514"
     }
   ],
   "audioSource": "V37: 105 effects from 15 CC0 Freesound recordings; existing music and four vocal reactions retained",

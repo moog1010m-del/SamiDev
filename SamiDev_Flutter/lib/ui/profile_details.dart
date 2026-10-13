@@ -12,7 +12,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   bool expanded = false, full = false;
   String filter = 'all';
   static const names = {'pool':'البلياردو','carrom':'الكيرم','tablesoccer':'كرة الطاولة','crazy8':'أونو'};
-  static const marks = {'pool':'pool','carrom':'carrom','tablesoccer':'football','crazy8':'cards'};
   int number(dynamic value) => (value is num ? value.toInt() : int.tryParse('$value') ?? 0).clamp(0, 1 << 40).toInt();
   String? asset(dynamic value) {
     final path = '$value';
@@ -64,7 +63,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       if (full) Text('يُحتسب التقدم من نتائج المباريات المسجلة لكل لعبة. نجوم الرتب مستقلة عن زينة النجوم المشتراة.${number(widget.user['legacyWins']) > 0 ? ' يوجد ${number(widget.user['legacyWins'])} فوز سابق دون تفاصيل حسب اللعبة.' : ''}', style: TextStyle(fontSize: 11, color: colors.onSurfaceVariant)),
     ]));
   }
-  Widget rankRow(String id, String name, Map stat, ColorScheme colors) {
+  Widget rankRow(String id, String name, Map stat, ColorScheme colors) => GameRankCard(id:id,name:name,stat:stat,full:full);
+}
+
+/// The same server-recorded rank presentation in profile and game discovery.
+class GameRankCard extends StatelessWidget {
+  const GameRankCard({super.key,required this.id,required this.name,required this.stat,this.full=false});
+  final String id,name;
+  final Map stat;
+  final bool full;
+  static const marks={'pool':'pool','carrom':'carrom','tablesoccer':'football','crazy8':'cards'};
+  int number(dynamic value)=>(value is num?value.toInt():int.tryParse('$value')??0).clamp(0,1<<40).toInt();
+  @override Widget build(BuildContext context){
+    final colors=Theme.of(context).colorScheme;
     final level = number(stat['level']).clamp(1, 100);
     final progress = ((stat['progress'] as num?)?.toDouble() ?? 0).clamp(0.0, 1.0).toDouble();
     return Card(margin: const EdgeInsets.only(bottom: 10), child: Padding(padding: const EdgeInsets.all(12), child: Row(children: [

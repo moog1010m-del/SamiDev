@@ -20,6 +20,7 @@ from gamehost_client import GameHostClient, GameHostError
 from social_platform import PlatformService, PlatformHttp, PlatformError
 from games import GAMES, game_id
 from game_views import client_state
+from quick_play import QuickPlay
 
 ROOT = Path(__file__).resolve().parent.parent
 GAME_ROOT = ROOT / "game"
@@ -119,6 +120,7 @@ class SamiDevRealtime:
         else:
             self.platform = PlatformService(getattr(self.store, "r", None))
         self.platform_http = PlatformHttp(self.platform, self.store, trust_proxy=TRUST_PROXY, trust_forwarded_https=TRUST_FORWARDED_HTTPS)
+        self.quick_play = QuickPlay(self.store)
         self.gamehost = GameHostClient()
         self.metrics = Metrics()
         self.connections: dict[str, Conn] = {}
@@ -699,6 +701,25 @@ class SamiDevRealtime:
 
     async def handle(self, c: Conn, msg: dict[str, Any]) -> None:
         kind = msg.get("type")
+        if kind == "quick_play":
+            if c.room_id is not None:
+                raise StoreError("ALREADY_IN_ROOM", "الاتصال موجود بالفعل في غرفة")
+            await self.enforce_action_rate(c, "create", CREATE_RATE_PER_MINUTE)
+            if set(msg) - {"type", "preset", "name"}:
+                raise StoreError("INVALID_QUICK_FIELDS", "إعدادات البحث غير صالحة")
+            try:
+                data, created = await self.quick_play.match(str(msg.get("preset") or ""),
+                    self.effective_name(c, msg), NODE_ID, c.conn_id, c.account_id, c.community_id)
+            except TimeoutError:
+                raise StoreError("MATCHMAKING_BUSY", "تأخر البحث، حاول مجددًا")
+            self.attach(c, data)
+            await self.send(c, {"type": "created" if created else "joined", **self.public_join_data(data), "quickPlay": True})
+            await self.send_chat_history(c)
+            await self.fanout(c.room_id, await self.room_state_event(c.room_id))
+            if data["started"]:
+                await self.maybe_send_start_to_all(c.room_id)
+            return
+
         if kind == "create_room":
             if c.room_id is not None:
                 raise StoreError("ALREADY_IN_ROOM", "الاتصال موجود بالفعل في غرفة")

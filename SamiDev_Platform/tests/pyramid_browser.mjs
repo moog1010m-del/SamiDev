@@ -15,10 +15,13 @@ try{
  }
  const [host,peer]=pages;
  for(const mode of [8,9]){
-  await host.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType='+mode);await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
-  const room=await host.evaluate(()=>SamiDevNetwork.state.roomId);await peer.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+room);
+  await host.goto(base+'/games/pool/index.html?online=1&action=quick&preset='+({8:'pool-pyramid',9:'pool-scratch'}[mode])+'&community=square&gameType='+mode);await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+  const room=await host.evaluate(()=>SamiDevNetwork.state.roomId);await peer.goto(base+'/games/pool/index.html?online=1&action=quick&preset='+({8:'pool-pyramid',9:'pool-scratch'}[mode])+'&community=square&gameType='+mode);
   for(const page of pages)await page.waitForFunction(()=>SamiDevNetwork.state.begun&&window.__gameLogic?.pyramid&&window.__gameLogic.canShoot(0),{},{timeout:30000});
   for(const page of pages){assert.equal(await page.evaluate(()=>window.__gameLogic.pyramid.mode),mode);assert((await page.evaluate(()=>window.__samidevGameState.images.get('images/ui/ui.webp').src)).includes('pyramid-ui.webp'));}
+  assert.equal(await peer.evaluate(()=>SamiDevNetwork.state.roomId),room,'quick play must reuse the waiting room');
+  for(const page of pages)assert((await page.evaluate(()=>window.__samidevGameState.images.get('images/imported/themes/th_basic_table.webp').src)).includes('samidev-pyramid-table.webp'));
+  assert.equal(await host.locator('.pyr-pocket-jaw').count(),0,'no floating pocket knobs');
   await host.locator('.pyr-select-ball[data-rank="1"]').waitFor({state:'visible'});
   assert.equal(await peer.locator('.pyr-select-ball:not([hidden])').count(),0,'opponent has no cue-choice controls');
   assert.equal(await host.locator('.pyr-select-ball:not([hidden])').count(),15);

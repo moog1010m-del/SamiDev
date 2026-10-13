@@ -23,8 +23,8 @@
     "images/table-background.webp": "0c17334a75f736ac058435329fc7dc184a9abb55150b729ac631cb939b4a445a",
     "imported/251fo5zi7i1n7.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "imported/qy2n1p7p2zl22.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "index.html": "7f7a09015488575c1969c6b20258badf1202de67c2f02194a3e97758be722fdf",
-    "main.js": "9211d150c3160e51180d078ffcc22ff1aa14453a9aa88b4491df4f706d590b6c",
+    "index.html": "54fa34d4d7d3a39914ab4945157894c48ebffb4a10de11ff4c5bf67ff97c020d",
+    "main.js": "0286e37092df64924d988e1c0e4f3fbe9a4d934defca66457730ebf55195ce59",
     "scene-avatars/lobby_avatar_empty_seat.png": "3406723db5ef73e89909a4c0a27f8c21a46b508519da18c7bfa8e6fca786e642",
     "scene-avatars/lobby_avatar_join.png": "33fa90f2724597d34178357754f71cd74cc26b814e436ccb16dfbca4ac4e59c0",
     "scene-avatars/player_indicator.atlas": "35952b6a72f4dc127a787bea86b1884908320f980a975bd1f41d084c19434de7",
@@ -63,6 +63,6 @@
     "sounds/card-shuffle.m4a": "03d89b4ab946704c3821a01363df3405568bbb4795a3590124c26349b0da436c",
     "sounds/card-special.m4a": "ab1f6582dfb626854ac8ec5b3e8ba85ed66f0dfa9ea9e55e321c8e36adac5f18",
     "sounds/card-warning.m4a": "c83181afe8e06336b68e53cda0067039c8e99ba594aaab70914bd568cc4ed3d2",
-    "uno-table.css": "76b4c911801a2d3f7a19b136986a12d756a00bea41e575ba097fd3b24ef9456a"
+    "uno-table.css": "9beb7074fb9a330f93d0897dad6347924d306754a365972d2cd6a77866f4c560"
   }
 }

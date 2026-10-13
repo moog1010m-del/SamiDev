@@ -173,11 +173,13 @@ class ChatComposer extends StatelessWidget {
 }
 
 class CreateMatchSheet extends StatefulWidget {
-  const CreateMatchSheet({super.key});
+  const CreateMatchSheet({super.key,this.initialGame='pool'});
+  final String initialGame;
   @override State<CreateMatchSheet> createState()=>_CreateMatchSheetState();
 }
 class _CreateMatchSheetState extends State<CreateMatchSheet> {
-  String game='pool';final values=<String,String>{};
+  late String game;final values=<String,String>{};
+  @override void initState(){super.initState();game=CommunityHubState.games.containsKey(widget.initialGame)?widget.initialGame:'pool';}
   Widget select(String key,String label,List<String> labels,{String initial='0'})=>Padding(padding:const EdgeInsets.only(bottom:12),child:DropdownButtonFormField<String>(initialValue:values[key]??initial,decoration:InputDecoration(labelText:label,border:const OutlineInputBorder()),items:List.generate(labels.length,(i)=>DropdownMenuItem(value:'$i',child:Text(labels[i]))),onChanged:(v){if(v!=null)setState(()=>values[key]=v);}));
   @override Widget build(BuildContext context)=>Padding(padding:EdgeInsets.fromLTRB(20,20,20,20+MediaQuery.viewInsetsOf(context).bottom),child:SingleChildScrollView(child:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.stretch,children:[
     const Text('إنشاء مباراة',style:TextStyle(fontSize:22,fontWeight:FontWeight.w700)),const SizedBox(height:20),

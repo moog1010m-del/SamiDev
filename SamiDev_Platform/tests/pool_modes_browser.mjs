@@ -25,6 +25,7 @@ try{
   const current=pages.slice(0,capacity);
   for(const page of current)await page.waitForFunction(()=>window.SamiDevNetwork.state.begun&&window.__gameLogic.started&&!window.__samidevGameState.network.snapshotBusy,{},{timeout:30000});
   for(const page of current)assert.equal(await page.evaluate(()=>window.__gameLogic.seats),capacity);
+  for(const page of current)assert(!(await page.evaluate(()=>window.__samidevGameState.images.get('images/imported/themes/th_basic_table.webp').src)).includes('samidev-pyramid-table'),'other pool tables retain their artwork');
   if(mode===7)for(const page of current)assert(await page.evaluate(()=>window.__gameLogic.freePool));
   const seat=await host.evaluate(()=>window.__gameLogic.turn[0]);await current[seat].waitForFunction(()=>window.__gameLogic.canShoot(window.__gameLogic.localSeat),{},{timeout:15000});
   const observer=current[(seat+1)%capacity];await observer.evaluate(()=>{

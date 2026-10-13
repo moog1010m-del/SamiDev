@@ -368,7 +368,10 @@
       progress?.(`الغرفة ${r.roomId} — متصل ${connected}/${r.capacity}. انتظار بقية اللاعبين...`);
     });
 
-    if (action === 'create') {
+    if (action === 'quick') {
+      send({type:'quick_play',preset:q.get('preset') || '',name});
+      progress?.('البحث عن لاعب بنفس قواعد المباراة…');
+    } else if (action === 'create') {
       send({type: 'create_room', name, settings});
       progress?.('إنشاء غرفة SamiDev...');
     } else if (action === 'invite') {

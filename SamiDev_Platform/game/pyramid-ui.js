@@ -2,7 +2,7 @@
   'use strict';
   if (window.SamiDevGames?.current().id !== 'pool') return;
   const style=document.createElement('style');
-  style.textContent=`#sd-pyramid-ui{position:fixed;inset:0;z-index:24;pointer-events:none}#sd-pyramid-ui[hidden]{display:none}.pyr-select-ball{position:absolute;border:2px dotted #fff;border-radius:50%;background:transparent;padding:0;pointer-events:auto;touch-action:manipulation;box-shadow:0 0 3px #0008;cursor:pointer}.pyr-select-ball[hidden]{display:none}.pyr-pocket-jaw{position:absolute;border-radius:50%;background:radial-gradient(circle at 40% 35%,#b7a16e,#846d42 80%);box-shadow:inset 0 0 1px #493921;pointer-events:none}.pyr-choice-status{position:absolute;transform:translate(-50%,-100%);max-width:80vw;white-space:nowrap;border-radius:999px;background:#122b31eb;color:#fff;padding:6px 10px;font:11px/1.5 Arial;text-align:center}`;
+  style.textContent=`#sd-pyramid-ui{position:fixed;inset:0;z-index:24;pointer-events:none}#sd-pyramid-ui[hidden]{display:none}.pyr-select-ball{position:absolute;border:2px dotted #fff;border-radius:50%;background:transparent;padding:0;pointer-events:auto;touch-action:manipulation;box-shadow:0 0 3px #0008;cursor:pointer}.pyr-select-ball[hidden]{display:none}.pyr-choice-status{position:absolute;transform:translate(-50%,-100%);max-width:80vw;white-space:nowrap;border-radius:999px;background:#122b31eb;color:#fff;padding:6px 10px;font:11px/1.5 Arial;text-align:center}`;
   document.head.append(style);
   const root=document.createElement('div');root.id='sd-pyramid-ui';root.hidden=true;
   const caption=document.createElement('div');caption.className='pyr-choice-status';root.append(caption);
@@ -15,7 +15,6 @@
       }
     });return button;
   });
-  const jaws=Array.from({length:12},()=>{const dot=document.createElement('div');dot.className='pyr-pocket-jaw';root.append(dot);return dot;});
   document.body.append(root);
   const place=(node,x,y,diameter)=>{
     const transform=`translate(${(x-diameter/2).toFixed(2)}px,${(y-diameter/2).toFixed(2)}px)`;
@@ -34,9 +33,6 @@
       const ball=g.table.balls[index],button=buttons[index],rank=index+1;
       const hidden=!available||!g.canSelectPyramidCue(g.localSeat,rank);if(button.hidden!==hidden)button.hidden=hidden;
       if(!button.hidden){const [x,y]=screen(ball.position);place(button,x,y,Math.max(16,ball.radius*2*view.scaleX*sx+6));const id=g.pyramid.ids[rank],label=id===0?'اختيار الكرة الصفراء للضرب':'اختيار كرة '+id+' للضرب';if(button.getAttribute('aria-label')!==label)button.setAttribute('aria-label',label);}
-    }
-    for(let index=0;index<jaws.length;index++){
-      const jaw=g._pyramidJaws[index],[x,y]=screen([jaw.x,jaw.y]);place(jaws[index],x,y,jaw.radius*2*view.scaleX*sx);
     }
     caption.hidden=!g.isTurn(g.localSeat)||g.preshooting||g.animator.isAnimatingWorld();
     if(!caption.hidden){const [x,y]=screen([417,-55]);const left=x+'px',top=y+'px';if(caption.style.left!==left)caption.style.left=left;if(caption.style.top!==top)caption.style.top=top;const text=available?'النقاط البيضاء: اختر كرة الضرب مرة واحدة':'تم اختيار كرة الضرب — صوّب الآن';if(caption.textContent!==text)caption.textContent=text;}
