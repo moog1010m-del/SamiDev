@@ -13,7 +13,7 @@ def game_id(settings: Any) -> str:
 
 
 def game_capacity(settings: dict[str, Any]) -> int:
-    if game_id(settings) == "pool": return (2,4,4,2,4,4,3,2,2,2)[settings.get("gameType",0)]
+    if game_id(settings) == "pool": return (2,4,4,2,4,4,3,2)[settings.get("gameType",0)]
     if game_id(settings) == "crazy8":
         return (2, 3, 4, 6, 4)[settings["seats"]]
     return 2 if settings["players"] == 0 else 4

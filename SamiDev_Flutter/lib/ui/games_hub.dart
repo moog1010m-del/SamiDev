@@ -14,12 +14,10 @@ class GameCardData {
   final List<QuickMode> modes;
 }
 const supportedGames=<GameCardData>[
-  GameCardData('pool','البلياردو','pool',Color(0xff156a5b),'من إيت بول إلى الهرم الحر',[
+  GameCardData('pool','البلياردو','pool',Color(0xff156a5b),'أنماط متعددة وطاولة واحدة',[
     QuickMode('pool-eight','إيت بول','لاعبان · قواعد إيت بول',{'gameType':'0'}),
     QuickMode('pool-nine','ناين بول','لاعبان · كرات بالترتيب',{'gameType':'3'}),
     QuickMode('pool-free','قيم بول','لاعبان · أول من يسجل ٨ كرات',{'gameType':'7'}),
-    QuickMode('pool-pyramid','الهرم الحر','لاعبان · أي كرة للضرب · ٨ كرات للفوز',{'gameType':'8'}),
-    QuickMode('pool-scratch','هرم سكراتش','لاعبان · تسجيل كرة الضرب بعد الملامسة',{'gameType':'9'}),
     QuickMode('pool-teams','إيت بول · فريقان','٤ لاعبين · بالتناوب',{'gameType':'1'}),
     QuickMode('pool-three','الثلاثي','٣ لاعبين · لكل لاعب مجموعته',{'gameType':'6'}),
   ]),

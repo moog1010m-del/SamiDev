@@ -14,7 +14,7 @@ try{
  }
  const host=pages[0];await host.goto(base+'/platform/');await host.locator('.community-card[data-community="majlis"]').click();
  await host.locator('#quick-create-pool').click();await host.locator('#create-pool-mode').waitFor({state:'visible'});
- assert.equal(await host.locator('#create-pool-mode option').count(),10);await host.locator('#create-pool-mode').selectOption('7');
+ assert.equal(await host.locator('#create-pool-mode option').count(),8);await host.locator('#create-pool-mode').selectOption('7');
  await host.screenshot({path:out+'/pool-modes-picker.png'});await host.locator('#create-go').click();
  await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
  for(const mode of [7,6]){
@@ -41,5 +41,5 @@ try{
   await host.screenshot({path:out+`/pool-mode-${mode}-mobile.png`});
   for(const page of current)await page.evaluate(()=>window.SamiDevNetwork.leaveRoom({closeSocket:true}));
  }
- assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,checks:['all ten choices visible','Game Pool created from UI','authoritative mode reaches both clients','three-player pool renders','remote shot animation','scores and turn agree'],artifacts:out}));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,checks:['all eight choices visible','Game Pool created from UI','authoritative mode reaches both clients','three-player pool renders','remote shot animation','scores and turn agree'],artifacts:out}));
 }finally{await browser.close();}

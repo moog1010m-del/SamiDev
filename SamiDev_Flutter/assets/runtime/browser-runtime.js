@@ -273,17 +273,9 @@
   function translate(args) {
     if (!Array.isArray(args)) args=[args];
     const key=String(args[0] ?? '');
-    if(isPool && (state.gameLogic?.pyramid || [8,9].includes(Number(window.SamiDevNetwork?.state?.settings?.gameType??runtimeQuery.get('gameType'))))){
-      const hints={tut_ball:'اختر كرة الضرب من الدوائر البيضاء',tut_finger:'حرّك العصا لتحديد اتجاه الضربة',tut_arrow:'اسحب شريط القوة للتسديد',_scene_avatars_your_turn:'دورك'};
-      if(hints[key])return hints[key];
-    }
     if(isPool && key==='sl_free_pool_turn'){
       const seat=Number(args[1]),name=seat===state.gameLogic?.localSeat?'دورك':state.network.roster.find(player=>player.seat===seat)?.name||`اللاعب ${seat+1}`;
       return `${name} · قيم بول · ${args[2]}/${args[3]}`;
-    }
-    if(isPool && key==='sl_pyramid_turn'){
-      const seat=Number(args[1]),name=seat===state.gameLogic?.localSeat?'دورك':state.network.roster.find(player=>player.seat===seat)?.name||`اللاعب ${seat+1}`;
-      return `${name} · ${Number(args[3])===9?'هرم سكراتش':'الهرم الحر'} · ${args[2]}/8`;
     }
     let s=state.dict[key] ?? key.replace(/^_/, '').replaceAll('_',' ');
     args.slice(1).forEach((v,i)=>{
@@ -1170,9 +1162,7 @@
         }
         console.warn('img failed',path);resolve();
       };
-      const poolMode=Number(window.SamiDevNetwork?.state?.settings?.gameType??runtimeQuery.get('gameType'));
-      const pyramidAtlas=isPool&&[8,9].includes(poolMode)&&path==='images/ui/ui.webp';
-      const source=pyramidAtlas?'/games/pool/images/ui/pyramid-ui.webp':(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
+      const source=(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
       const refreshedAsset = ['images/table-background.webp','images/ui/ui.webp','images/imported/themes/th_basic_background.webp'].includes(path);
       img.src=refreshedAsset && !source.startsWith('data:') ? source+(source.includes('?')?'&':'?')+'v=36' : source;
     }))]);

@@ -258,6 +258,8 @@ class SamiDevRealtime:
 
     async def _ensure_authority(self, rid: str, renew: bool = False) -> dict[str, Any]:
         start = await self.store.get_start(rid, 0)
+        if start["settings"].get("gameId") == "pool" and start["settings"].get("gameType") in (8, 9):
+            raise StoreError("RETIRED_POOL_MODE", "هذه مباراة هرم من نسخة سابقة؛ تم إيقاف هذا النوع")
         lease = await self.store.get_authority(rid)
         preferred = self.gamehost.shard_for(rid)
         if lease is None:

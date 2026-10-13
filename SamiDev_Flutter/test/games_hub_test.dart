@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:samidev/ui/games_hub.dart';
 
 void main(){
-  testWidgets('mobile discovery launches existing quick room bridge with exact Pyramid rules',(tester)async{
+  testWidgets('mobile discovery launches existing quick room bridge with exact Game Pool rules',(tester)async{
     tester.view.physicalSize=const Size(390,844);tester.view.devicePixelRatio=1;
     addTearDown(tester.view.resetPhysicalSize);addTearDown(tester.view.resetDevicePixelRatio);
     const visualOut=String.fromEnvironment('SAMIDEV_VISUAL_OUTPUT');
@@ -35,10 +35,10 @@ void main(){
     expect(find.text('بوكر'),findsNothing);expect(find.text('Ranked'),findsNothing);
     await tester.tap(find.text('البلياردو'));await tester.pumpAndSettle();
     expect(find.text('اللعب السريع'),findsOneWidget);expect(find.text('23 فوز'),findsOneWidget);await capture('pool-matching');
-    final row=find.ancestor(of:find.text('الهرم الحر'),matching:find.byType(Row)).first;
+    final row=find.ancestor(of:find.text('قيم بول'),matching:find.byType(Row)).first;
     final join=find.descendant(of:row,matching:find.text('انضم'));
     await tester.ensureVisible(join);await tester.pumpAndSettle();await tester.tap(join);await tester.pumpAndSettle();
-    expect(game,'pool');expect(query?['action'],'quick');expect(query?['preset'],'pool-pyramid');expect(query?['gameType'],'8');expect(query?['community'],'square');
+    expect(game,'pool');expect(query?['action'],'quick');expect(query?['preset'],'pool-free');expect(query?['gameType'],'7');expect(query?['community'],'square');
     expect(tester.takeException(),isNull);expect(key.currentState!.back(),isTrue);await tester.pumpAndSettle();expect(find.text('الكل'),findsOneWidget);
   });
 }

@@ -9,8 +9,6 @@ PRESETS = {
     'pool-eight': {'gameId': 'pool', 'gameType': 0},
     'pool-nine': {'gameId': 'pool', 'gameType': 3},
     'pool-free': {'gameId': 'pool', 'gameType': 7},
-    'pool-pyramid': {'gameId': 'pool', 'gameType': 8},
-    'pool-scratch': {'gameId': 'pool', 'gameType': 9},
     'pool-teams': {'gameId': 'pool', 'gameType': 1},
     'pool-three': {'gameId': 'pool', 'gameType': 6},
     'carrom-classic': {'gameId': 'carrom', 'players': 0, 'gamemode': 0, 'live': 1},

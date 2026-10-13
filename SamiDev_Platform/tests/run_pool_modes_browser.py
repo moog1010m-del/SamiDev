@@ -12,5 +12,5 @@ async def main(script):
     finally:await cluster.close()
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
-    parser.add_argument('--script',choices=['pool_modes_browser.mjs','pyramid_browser.mjs'],default='pool_modes_browser.mjs')
+    parser.add_argument('--script',choices=['pool_modes_browser.mjs'],default='pool_modes_browser.mjs')
     asyncio.run(main(parser.parse_args().script))
