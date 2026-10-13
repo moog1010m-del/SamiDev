@@ -59,7 +59,9 @@ def sanitize_settings(raw: Any) -> dict[str, Any]:
     if selected not in GAMES:
         raise StoreError("UNKNOWN_GAME", "اللعبة غير مدعومة")
     if selected == "pool":
-        return {"gameId":"pool", "gameType":0, "players":0, "live":1, "break":clamp_int(raw.get("break"),0,1,0), "trickShots":0}
+        mode = clamp_int(raw.get("gameType"), 0, 8, 0)
+        if mode == 8: mode = 0
+        return {"gameId":"pool", "gameType":mode, "players":(0,1,2,0,1,2,3,0)[mode], "live":1, "break":clamp_int(raw.get("break"),0,1,0), "trickShots":0}
     if selected == "crazy8":
         return {"gameId": selected, "seats": clamp_int(raw.get("seats"), 0, 4, 2),
                 "live": clamp_int(raw.get("live"), 0, 1, 1),

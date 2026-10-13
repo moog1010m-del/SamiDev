@@ -3,6 +3,7 @@
   const currentGame=window.SamiDevGames.current();
   const soccer=currentGame.id==='tablesoccer';
   const cards=currentGame.id==='crazy8';
+  const pool=currentGame.id==='pool';
 
   const qs = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
   const running = qs.get('play') === '1' || qs.get('online') === '1';
@@ -125,6 +126,11 @@
         </div>
       </div>`;
     document.body.appendChild(wrap);
+    if(pool){
+      wrap.querySelector('input[name="break"][value="2"]')?.closest('label')?.remove();
+      wrap.querySelector('input[name="gamemode"]').closest('.section').outerHTML=`<div class="section"><span class="label">نوع البلياردو</span><div class="choices">${window.SamiDevGames.poolModes.map((label,i)=>choice('gameType',i,label,i===0)).join('')}</div></div>`;
+      for(const name of ['players','live'])wrap.querySelector(`input[name="${name}"]`)?.closest('.section')?.classList.add('hidden');
+    }
     if(cards){
       wrap.querySelector('[data-tab="local"]').classList.add('hidden');
       wrap.querySelector('input[name="players"]').closest('.section').outerHTML=`<div class="section"><span class="label">عدد اللاعبين</span><div class="choices">${window.SamiDevGames.cardSeats.map((label,i)=>choice('seats',i,label,i===2)).join('')}</div></div><div class="section"><span class="label">الأوراق الخاصة</span><div class="choices">${window.SamiDevGames.cardSpecial.map((label,i)=>choice('special',i,label,i===0)).join('')}</div></div>`;
@@ -145,7 +151,7 @@
     }));
 
     const val=n=>wrap.querySelector(`input[name="${n}"]:checked`).value;
-    const gameParams=()=>cards?{game:currentGame.id,seats:val('seats'),special:val('special'),live:val('live')}:({game:currentGame.id,...(soccer?{goalsToWin:val('goalsToWin'),passes:val('passes')} : {}),players:val('players'),gamemode:val('gamemode'),live:val('live'),break:val('break')});
+    const gameParams=()=>pool?{game:currentGame.id,gameType:val('gameType'),break:val('break'),live:'1'}:cards?{game:currentGame.id,seats:val('seats'),special:val('special'),live:val('live')}:({game:currentGame.id,...(soccer?{goalsToWin:val('goalsToWin'),passes:val('passes')} : {}),players:val('players'),gamemode:val('gamemode'),live:val('live'),break:val('break')});
     const go=params=>{
       const p=new URLSearchParams(params);
       location.search=p.toString();

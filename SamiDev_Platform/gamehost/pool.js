@@ -1,7 +1,7 @@
 'use strict';
 const finite=Number.isFinite;
 function balls(g){return [g.table.cueBall,...g.table.balls].map(b=>[b.rank||0,Math.round(b.position[0]*100)/100,Math.round(b.position[1]*100)/100,b.isPocketed()?1:0]);}
-function poolView(g){return {balls:balls(g),turn:[...g.turn],sequence:[...g._sequence],solids:g.solids,ballInHand:g.ballInHand,breaking:g.isBreaking(),gameOver:g.gameOver,finishOrder:g.finishOrder,reason:g.getGameOverReason(),awaitingReady:!!g.awaitingReady,turnSeconds:Math.round(g.turnDuration/1000),pockets:g.table.pockets.map(p=>[...p.position])};}
+function poolView(g){return {balls:balls(g),turn:[...g.turn],sequence:[...g._sequence],freePool:!!g.freePool,freePoolScores:(g.freePoolScores||[]).slice(),solids:g.solids,ballInHand:g.ballInHand,breaking:g.isBreaking(),gameOver:g.gameOver,finishOrder:g.finishOrder,reason:g.getGameOverReason(),awaitingReady:!!g.awaitingReady,turnSeconds:Math.round(g.turnDuration/1000),pockets:g.table.pockets.map(p=>[...p.position])};}
 function validatePoolMove(g,seat,m){
   if(!Number.isInteger(seat)||seat<0||seat>=g.seats||g.gameOver||g.isResigned(seat))return false;
   const keys=Object.keys(m),only=(...names)=>keys.every(k=>names.includes(k));

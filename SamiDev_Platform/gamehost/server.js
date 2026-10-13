@@ -143,7 +143,7 @@ function ensureRoom(body) {
   if (!room) {
     const settings = body.settings;
     const capacity = Number(body.capacity);
-    const capacities = gameId === 'crazy8' ? [2, 3, 4, 6] : [2, 4];
+    const capacities = gameId === 'crazy8' ? [2, 3, 4, 6] : gameId === 'pool' ? [2, 3, 4] : [2, 4];
     if (!settings || typeof settings !== 'object' || !capacities.includes(capacity)) {
       throw Object.assign(new Error('settings/capacity required'), { statusCode: 400 });
     }

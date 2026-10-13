@@ -6,6 +6,8 @@
 
 تقييم الباك إند والأمان والتخزين والتعافي وخطة الإنتاج: [BACKEND_ASSESSMENT_AR.md](BACKEND_ASSESSMENT_AR.md).
 
+أنواع البلياردو وقواعد قيم بول والاختبارات: [POOL_MODES_AR.md](POOL_MODES_AR.md).
+
 > أحدث تحديث: تحسينات أداء الهاتف واللمس وتكبير اللاعبين في الألعاب الثلاث في [MOBILE_FIX_AR.md](MOBILE_FIX_AR.md). تحديث الرسومات في [CARROM_FOOTBALL_REFRESH_AR.md](CARROM_FOOTBALL_REFRESH_AR.md)، وسجل المصادر في [ORIGINAL_ASSETS_AR.md](ORIGINAL_ASSETS_AR.md). تفاصيل ربط كريزي 8 في [CRAZY8_INTEGRATION_AR.md](CRAZY8_INTEGRATION_AR.md).
 
 > تحديث تصميم الكيرم والمتجر: راجع [CARROM_CLASSIC_STORE_AR.md](CARROM_CLASSIC_STORE_AR.md). الكلاسيك هو الافتراضي، والقطو قابل للتفعيل من المتجر.

@@ -197,7 +197,10 @@ class _CreateMatchSheetState extends State<CreateMatchSheet> {
           select('passes','التمرير',['بدون حد','3 تمريرات','6 تمريرات']),
         ],
         select('live','نوع المباراة',game=='tablesoccer'?['تناوب الأدوار','متزامن']:['تناوب الأدوار','مباشر'],initial:game=='tablesoccer'?'0':'1'),
-      ]else const Padding(padding:EdgeInsets.all(14),child:Text('8 كرات · لاعبان · مباشر')),
+      ]else...[
+        select('gameType','نوع البلياردو',['إيت بول · لاعبان','إيت بول · فريقان بالتناوب','إيت بول · فريقان','ناين بول · لاعبان','ناين بول · فريقان بالتناوب','ناين بول · فريقان','ثلاثي · ٣ لاعبين','قيم بول · أول من يسجل ٨ كرات']),
+        const Padding(padding:EdgeInsets.all(14),child:Text('قيم بول: أي ٨ كرات، والسوداء عادية. البيضاء لا تُحسب.')),
+      ],
     ])),const SizedBox(height:12),
     FilledButton(onPressed:()=>Navigator.pop(context,{'game':game,'live':game=='tablesoccer'?'0':'1','players':'0','seats':'0','special':'0','gamemode':'0','break':'0','goalsToWin':'1','passes':'0',...values}),child:const Padding(padding:EdgeInsets.all(12),child:Text('إنشاء المباراة'))),
   ])));

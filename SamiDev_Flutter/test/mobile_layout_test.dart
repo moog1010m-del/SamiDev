@@ -23,9 +23,13 @@ void main(){
   });
   testWidgets('create sheet offers only supported games and real card settings',(tester)async{
     await tester.pumpWidget(const MaterialApp(home:Scaffold(body:CreateMatchSheet())));
-    expect(find.text('8 كرات · لاعبان · مباشر'),findsOneWidget);
+    expect(find.text('نوع البلياردو'),findsOneWidget);
+    await tester.tap(find.byType(DropdownButtonFormField<String>).at(1));await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('قيم بول · أول من يسجل ٨ كرات').last);
+    await tester.tap(find.text('قيم بول · أول من يسجل ٨ كرات').last);await tester.pumpAndSettle();
+    expect(find.text('قيم بول · أول من يسجل ٨ كرات'),findsOneWidget);
     await tester.tap(find.byType(DropdownButtonFormField<String>).first);await tester.pumpAndSettle();
-    await tester.tap(find.text('كريزي 8').last);await tester.pumpAndSettle();
+    await tester.tap(find.text('أونو').last);await tester.pumpAndSettle();
     expect(find.text('البطاقات'),findsOneWidget);expect(find.text('اللاعبون'),findsOneWidget);
     expect(find.text('غولف'),findsNothing);expect(find.text('إنشاء المباراة'),findsOneWidget);
   });

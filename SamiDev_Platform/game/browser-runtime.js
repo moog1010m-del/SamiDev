@@ -273,6 +273,10 @@
   function translate(args) {
     if (!Array.isArray(args)) args=[args];
     const key=String(args[0] ?? '');
+    if(isPool && key==='sl_free_pool_turn'){
+      const seat=Number(args[1]),name=seat===state.gameLogic?.localSeat?'دورك':state.network.roster.find(player=>player.seat===seat)?.name||`اللاعب ${seat+1}`;
+      return `${name} · قيم بول · ${args[2]}/${args[3]}`;
+    }
     let s=state.dict[key] ?? key.replace(/^_/, '').replaceAll('_',' ');
     args.slice(1).forEach((v,i)=>{
       if(isCrazy8 && (i===0 || key==='game_over_team'&&i===1) && /^(move_|game_over|player_won|turn$|players_hand$)/.test(key) && Number.isInteger(v)){
