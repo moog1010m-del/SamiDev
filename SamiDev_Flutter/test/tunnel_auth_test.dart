@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -27,6 +28,7 @@ void main(){
     final manifest={'engines':hashes,'files':{'platform/index.html':{'size':web.length,'sha256':sha256.convert(web).toString()}}};
     final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode(manifest)),'assets/runtime/platform/index.html':web}));
     final backend=await HttpServer.bind(InternetAddress.loopbackIPv4,0);var secure=false;
+    var delayMe=false;final oldMeArrived=Completer<void>(),releaseOldMe=Completer<void>();
     backend.listen((request)async{
       await request.drain<void>();request.response.headers.contentType=ContentType.json;
       if(request.uri.path=='/api/games'){
@@ -35,6 +37,7 @@ void main(){
         request.response.cookies.add(Cookie('samidev_session','T'*43)..httpOnly=true..secure=secure);
         request.response.write('{"ok":true,"user":{"id":"test-user"}}');
       }else{
+        if(delayMe&&request.uri.path=='/api/me'){oldMeArrived.complete();await releaseOldMe.future;request.response.statusCode=401;}
         expect(request.headers.value('Cookie'),'samidev_session=${'T'*43}');
         request.response.write('{"ok":true}');
       }
@@ -58,6 +61,13 @@ void main(){
       final accepted=await post('/api/auth/login');expect(accepted.statusCode,200);expect(accepted.cookies,isEmpty);
       final body=await accepted.transform(utf8.decoder).join();expect(body, isNot(contains('T'*43)));expect(body,isNot(contains('password-not-for-output')));
       expect(api.signedIn,isTrue);expect(vault.data.values.single,'T'*43);expect((await api.request('GET','/api/me')).status,200);
+      // A delayed old document must not expire a newly established native session.
+      final events=<Map<String,dynamic>>[];final sub=runtime.events.stream.listen(events.add);
+      delayMe=true;final oldRequest=await client.getUrl(runtime.origin.replace(path:'/api/me'));oldRequest.cookies.add(cookie);
+      final oldResponse=oldRequest.close();await oldMeArrived.future;
+      await api.request('POST','/api/auth/login',body:utf8.encode('{}'));
+      releaseOldMe.complete();final response=await oldResponse;expect(response.statusCode,401);await response.drain<void>();
+      expect(api.signedIn,isTrue);expect(events.where((e)=>e['type']=='auth_expired'),isEmpty);await sub.cancel();
     }finally{client.close(force:true);await runtime.close();await backend.close(force:true);}
   });
 }

@@ -82,7 +82,7 @@ class GameRuntime {
         request.response.statusCode=reply.status;
         request.response.headers.set('Content-Type',reply.type);
         request.response.add(reply.bytes);
-        if(path=='/api/auth/logout'&&reply.status==200 || reply.status==401){
+        if((path=='/api/auth/logout'&&reply.status==200 || reply.status==401)&&!api.signedIn){
           await _disconnect(4003);_emit({'type':'auth_expired'});
         }
         return;
