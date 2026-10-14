@@ -7,6 +7,7 @@ const fs = require('fs');
 const {monitorEventLoopDelay, performance} = require('perf_hooks');
 const { URL } = require('url');
 const { GameRuntimeFactory } = require('./runtime');
+const { MatchRecorder } = require('./match-recorder');
 
 const PORT = Number(process.env.SAMIDEV_GAMEHOST_PORT || 8091);
 const PRODUCTION = process.env.SAMIDEV_PRODUCTION === '1' || process.env.NODE_ENV === 'production';
@@ -26,6 +27,7 @@ const ROOM_RE = /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/;
 const factories = new Map(Object.entries(gameDirs).map(([id, dir]) => [id, new GameRuntimeFactory(dir, {gameId:id, expectedSha256: (id === 'carrom' && process.env.SAMIDEV_MAINJS_SHA256) || integrity.games[id].sha256})]));
 const gameHashes = Object.fromEntries([...factories].map(([id,f]) => [id,f.sha256]));
 const rooms = new Map();
+const recorder = new MatchRecorder(process.env.SAMIDEV_POOL_RECORD_DIR);
 const sseClients = new Set();
 const metrics = { requests: 0, moves: 0, accepted: 0, rejected: 0, roomsCreated: 0, events: 0, errors: 0, poolRollbacks: 0 };
 const eventLoopDelay = monitorEventLoopDelay({resolution:20});
@@ -68,6 +70,7 @@ function emitEvent(event) {
 }
 
 function emitRoomEvent(room, event) {
+  recorder.event(room, event);
   room.authorityRevision = Number(room.authorityRevision || 0) + 1;
   emitEvent({
     ...event,
@@ -135,6 +138,7 @@ function ensureRoom(body) {
     throw Object.assign(new Error('stale authority epoch'), { statusCode: 409, code: 'STALE_AUTHORITY' });
   }
   if (room && requestedEpoch > room.authorityEpoch) {
+    recorder.finish(roomId,'authority_replaced',false);
     room.factory.destroyRoom(room);
     rooms.delete(roomId);
     room = null;
@@ -167,7 +171,11 @@ function ensureRoom(body) {
   } else {
     applyConnectionEpochs(room, body.connectionEpochs);
   }
-  if (['crazy8','pool'].includes(gameId) && body.begun === true) factory.beginMatch(room);
+  if (['crazy8','pool'].includes(gameId) && body.begun === true) {
+    const waiting=room.waitingForClients;
+    factory.beginMatch(room);
+    if(waiting)recorder.begin(room);
+  }
   room.lastUsed = Date.now();
   return room;
 }
@@ -200,6 +208,11 @@ async function handler(req, res) {
       req.on('close', () => sseClients.delete(res));
       return;
     }
+    if (req.method === 'GET' && u.pathname.startsWith('/v1/recording/')) {
+      const id=u.pathname.slice('/v1/recording/'.length),download=await recorder.download(id);
+      res.writeHead(200,{'Content-Type':'application/x-ndjson','Content-Length':download.bytes,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});
+      const stream=fs.createReadStream(download.file);stream.on('error',()=>res.destroy());stream.pipe(res);return;
+    }
     if (req.method === 'GET' && u.pathname.startsWith('/v1/room/')) {
       const authorityOnly = u.pathname.endsWith('/authority');
       const roomId = normalizeRoomId(decodeURIComponent(u.pathname.slice('/v1/room/'.length).replace(/\/authority$/, '')));
@@ -216,6 +229,7 @@ async function handler(req, res) {
     if (req.method === 'DELETE' && u.pathname.startsWith('/v1/room/')) {
       const roomId = normalizeRoomId(decodeURIComponent(u.pathname.slice('/v1/room/'.length)));
       const room = rooms.get(roomId);
+      recorder.finish(roomId,'room_removed',false);
       if (room) room.factory.destroyRoom(room);
       rooms.delete(roomId);
       return json(res, 200, { ok: true });
@@ -223,6 +237,18 @@ async function handler(req, res) {
     if (req.method !== 'POST') return json(res, 404, { ok: false, code: 'NOT_FOUND' });
 
     const body = await readBody(req);
+    if (['/v1/recording/start','/v1/recording/stop','/v1/recording/status'].includes(u.pathname)) {
+      const roomId=normalizeRoomId(body.roomId);
+      if(u.pathname.endsWith('/stop'))return json(res,200,{ok:true,...await recorder.stop(roomId,rooms.get(roomId))});
+      if(u.pathname.endsWith('/status')){
+        const record=recorder.byRoom.get(roomId);
+        if(!record)return json(res,404,{ok:false,code:'RECORDING_NOT_FOUND'});
+        return json(res,200,{ok:true,...recorder.status(record)});
+      }
+      const room=rooms.get(roomId);
+      if(!room)return json(res,404,{ok:false,code:'ROOM_NOT_LOADED'});
+      return json(res,200,{ok:true,...recorder.start(room)});
+    }
     if (u.pathname === '/v1/room/init') {
       const room = ensureRoom(body);
       return json(res, 200, { ok: true, ...roomSummary(room, true) });
@@ -289,6 +315,7 @@ async function handler(req, res) {
       }
       room.lastUsed = Date.now();
       const desc = room.factory.describeRoom(room, true);
+      recorder.command(room,seat,packet,desc,{accepted,code:errorCode||rejectionReason,processingMs:performance.now()-moveStart,started:moveStart});
       if (accepted) metrics.accepted++; else metrics.rejected++;
       return json(res, errorCode==='PHYSICS_DID_NOT_SETTLE'?503:200, {
         ok: !error,
@@ -329,6 +356,7 @@ const sweep = setInterval(() => {
   const cutoff = Date.now() - ROOM_IDLE_MS;
   for (const [id, room] of rooms) {
     if ((room.lastUsed || 0) < cutoff) {
+      recorder.finish(id,'room_expired',false);
       room.factory.destroyRoom(room);
       rooms.delete(id);
     }
@@ -343,13 +371,15 @@ const streamHeartbeat = setInterval(() => {
 }, 10000);
 streamHeartbeat.unref();
 
-function shutdown() {
+async function shutdown() {
+  setTimeout(() => process.exit(1), 3000).unref();
   clearInterval(sweep);
   clearInterval(streamHeartbeat);
   for (const res of sseClients) res.end();
   for (const room of rooms.values()) room.factory.destroyRoom(room);
+  const pending=[...recorder.byRoom.values()].map(r=>recorder.finish(r.roomId,'host_shutdown',false)?.finished).filter(Boolean);
+  await Promise.all(pending);
   server.close(() => process.exit(0));
-  setTimeout(() => process.exit(1), 3000).unref();
 }
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);

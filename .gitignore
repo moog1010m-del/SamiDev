@@ -66,3 +66,5 @@ Thumbs.db
 !.env.example
 *.log
 *.tmp
+.samidev-recordings/
+SamiDev_Platform/recordings/

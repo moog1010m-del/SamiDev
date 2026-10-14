@@ -8,6 +8,9 @@ x-gamehost: &gamehost
     SAMIDEV_GAME_DIR: /app/game
     SAMIDEV_GAMEHOST_ROOM_IDLE_MS: "21600000"
     SAMIDEV_GAMEHOST_SERVICE_KEY: ${SAMIDEV_GAMEHOST_SERVICE_KEY:?SAMIDEV_GAMEHOST_SERVICE_KEY is required}
+    SAMIDEV_POOL_RECORD_DIR: ${SAMIDEV_POOL_RECORD_DIR:-}
+  volumes:
+    - samidev_pool_recordings:/app/recordings
   healthcheck:
     test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8091/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
     interval: 3s
@@ -178,3 +181,4 @@ services:
 volumes:
   samidev_postgres:
   samidev_redis:
+  samidev_pool_recordings:

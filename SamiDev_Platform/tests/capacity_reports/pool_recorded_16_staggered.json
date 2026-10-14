@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "requestedPlayers": 16,
+  "simultaneousConnections": 16,
+  "matches": 8,
+  "maxActiveMatches": 8,
+  "gateways": 3,
+  "hosts": 3,
+  "seconds": 20.631,
+  "counts": {
+    "registeredLoggedOutLoggedIn": 16,
+    "receivedBytes": 345149,
+    "matchedAlarms": 8,
+    "matchedCommands": 40,
+    "completedMatches": 8
+  },
+  "recordedEngineSha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+  "currentEngineSha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+  "sourceEndedNormally": true,
+  "sourceRejectedEvents": 0,
+  "spreadSeconds": 5.0,
+  "moveFanoutMs": {
+    "count": 40,
+    "p50": 27.599,
+    "p95": 138.179,
+    "p99": 161.161,
+    "max": 161.161
+  },
+  "schedulingLatenessMs": {
+    "count": 48,
+    "p50": 0.956,
+    "p95": 3.335,
+    "p99": 34.108,
+    "max": 34.108
+  },
+  "latenciesMs": {
+    "/api/auth/register": {
+      "count": 16,
+      "p50": 737.221,
+      "p95": 1298.737,
+      "p99": 1298.737,
+      "max": 1298.737
+    },
+    "/api/auth/logout": {
+      "count": 16,
+      "p50": 5.709,
+      "p95": 24.056,
+      "p99": 24.056,
+      "max": 24.056
+    },
+    "/api/auth/login": {
+      "count": 16,
+      "p50": 461.226,
+      "p95": 855.522,
+      "p99": 855.522,
+      "max": 855.522
+    },
+    "moveFanout": {
+      "count": 40,
+      "p50": 27.599,
+      "p95": 138.179,
+      "p99": 161.161,
+      "max": 161.161
+    },
+    "/api/store": {
+      "count": 16,
+      "p50": 8.262,
+      "p95": 24.248,
+      "p99": 24.248,
+      "max": 24.248
+    }
+  },
+  "thresholds": {
+    "moveP95Ms": 250,
+    "latenessP95Ms": 1000
+  },
+  "functionalPass": true,
+  "latencyPass": true,
+  "verdict": "PASS_RECORDED_SCENARIO",
+  "failures": [],
+  "pairs": [
+    {
+      "pair": 0,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.966
+    },
+    {
+      "pair": 1,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.937
+    },
+    {
+      "pair": 2,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.935
+    },
+    {
+      "pair": 3,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.897
+    },
+    {
+      "pair": 4,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.906
+    },
+    {
+      "pair": 5,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.998
+    },
+    {
+      "pair": 6,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.962
+    },
+    {
+      "pair": 7,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 10.9
+    }
+  ],
+  "hostMetrics": [
+    {
+      "ok": true,
+      "requests": 23,
+      "moves": 5,
+      "accepted": 5,
+      "rejected": 0,
+      "roomsCreated": 1,
+      "events": 1,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 1,
+      "memory": {
+        "rss": 84914176,
+        "heapTotal": 36749312,
+        "heapUsed": 32951728,
+        "external": 2414240,
+        "arrayBuffers": 143995
+      },
+      "eventLoopDelayMs": {
+        "mean": 20.94712594582882,
+        "p95": 23.527423,
+        "max": 125.894655
+      },
+      "recentMoveMs": {
+        "count": 5,
+        "p50": 2.2230970000018715,
+        "p95": 109.66548500000135,
+        "max": 109.66548500000135
+      }
+    },
+    {
+      "ok": true,
+      "requests": 54,
+      "moves": 15,
+      "accepted": 15,
+      "rejected": 0,
+      "roomsCreated": 3,
+      "events": 3,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 3,
+      "memory": {
+        "rss": 88424448,
+        "heapTotal": 37797888,
+        "heapUsed": 34123344,
+        "external": 2414240,
+        "arrayBuffers": 143995
+      },
+      "eventLoopDelayMs": {
+        "mean": 20.983136308681672,
+        "p95": 23.773183,
+        "max": 107.216895
+      },
+      "recentMoveMs": {
+        "count": 15,
+        "p50": 1.2404439999991155,
+        "p95": 89.55655899999874,
+        "max": 89.55655899999874
+      }
+    },
+    {
+      "ok": true,
+      "requests": 70,
+      "moves": 20,
+      "accepted": 20,
+      "rejected": 0,
+      "roomsCreated": 4,
+      "events": 4,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 4,
+      "memory": {
+        "rss": 86421504,
+        "heapTotal": 39108608,
+        "heapUsed": 33948360,
+        "external": 2479776,
+        "arrayBuffers": 209403
+      },
+      "eventLoopDelayMs": {
+        "mean": 21.342286855885586,
+        "p95": 23.691263,
+        "max": 140.115967
+      },
+      "recentMoveMs": {
+        "count": 20,
+        "p50": 2.2648259999987204,
+        "p95": 133.61640400000033,
+        "max": 133.61640400000033
+      }
+    }
+  ],
+  "fixtureLogs": "/tmp/samidev-realtime-9zeehqtg",
+  "productionCertified": false,
+  "scope": "authenticated local accounts and replay of accepted pool inputs; native physics/results and both client responses compared; starting board installed only by private fixture; closed-loop timing with lateness reported; no browser/Flutter/WAN/transport disconnect recreation",
+  "evidenceNote": "Local demo capture: two real shots and native Ready alarm, followed by resignation. This is not the user match or production certification."
+}

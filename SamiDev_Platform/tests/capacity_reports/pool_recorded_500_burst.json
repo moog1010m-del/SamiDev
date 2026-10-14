@@ -1,0 +1,2659 @@
+{
+  "version": 1,
+  "requestedPlayers": 500,
+  "simultaneousConnections": 500,
+  "matches": 250,
+  "maxActiveMatches": 250,
+  "gateways": 3,
+  "hosts": 3,
+  "seconds": 106.506,
+  "counts": {
+    "registeredLoggedOutLoggedIn": 500,
+    "authBusyRetries": 20,
+    "receivedBytes": 8785638,
+    "matchedAlarms": 250,
+    "matchedCommands": 874,
+    "completedMatches": 146
+  },
+  "recordedEngineSha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+  "currentEngineSha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+  "sourceEndedNormally": true,
+  "sourceRejectedEvents": 0,
+  "spreadSeconds": 0,
+  "moveFanoutMs": {
+    "count": 874,
+    "p50": 1712.469,
+    "p95": 5546.487,
+    "p99": 6836.464,
+    "max": 7352.062
+  },
+  "schedulingLatenessMs": {
+    "count": 1220,
+    "p50": 483.142,
+    "p95": 11682.362,
+    "p99": 13265.743,
+    "max": 15867.851
+  },
+  "latenciesMs": {
+    "/api/auth/register": {
+      "count": 511,
+      "p50": 656.951,
+      "p95": 1148.412,
+      "p99": 1424.211,
+      "max": 1994.19
+    },
+    "/api/auth/logout": {
+      "count": 500,
+      "p50": 6.804,
+      "p95": 38.695,
+      "p99": 116.079,
+      "max": 201.859
+    },
+    "/api/auth/login": {
+      "count": 509,
+      "p50": 606.848,
+      "p95": 1104.398,
+      "p99": 1410.143,
+      "max": 2630.726
+    },
+    "moveFanout": {
+      "count": 874,
+      "p50": 1712.469,
+      "p95": 5546.487,
+      "p99": 6836.464,
+      "max": 7352.062
+    },
+    "/api/store": {
+      "count": 292,
+      "p50": 117.0,
+      "p95": 993.612,
+      "p99": 1305.76,
+      "max": 1486.599
+    }
+  },
+  "thresholds": {
+    "moveP95Ms": 250,
+    "latenessP95Ms": 1000
+  },
+  "functionalPass": false,
+  "latencyPass": false,
+  "verdict": "NO_GO",
+  "failures": [
+    {
+      "pair": 161,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 173,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 158,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 236,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 245,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 155,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 83,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 242,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 235,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 151,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 91,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 139,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 190,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 19,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 166,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 97,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 241,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 217,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 59,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 13,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 220,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 163,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 77,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 184,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 100,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 117,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 199,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 64,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 62,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 187,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 210,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 159,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 23,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 88,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 44,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 101,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 172,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 2,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 148,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 145,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 38,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 179,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 103,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 49,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 223,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 202,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 232,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 61,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 29,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 127,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 124,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 226,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 25,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 7,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 28,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 121,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 79,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 211,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 22,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 178,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 85,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 205,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 52,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 175,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 130,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 68,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 209,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 118,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 218,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 115,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 164,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 224,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 233,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 112,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 134,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 248,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 185,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 188,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 212,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 181,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 73,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 200,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 89,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 167,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 142,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 26,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 86,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 230,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 106,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 203,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 32,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 50,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 215,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 238,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 157,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 125,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 92,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 47,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 122,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 5,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 41,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 75,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 219,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 113,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    }
+  ],
+  "pairs": [
+    {
+      "pair": 0,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.776
+    },
+    {
+      "pair": 1,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.66
+    },
+    {
+      "pair": 2,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 3,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.948
+    },
+    {
+      "pair": 4,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.774
+    },
+    {
+      "pair": 5,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 6,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.508
+    },
+    {
+      "pair": 7,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 8,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 16.202
+    },
+    {
+      "pair": 9,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.541
+    },
+    {
+      "pair": 10,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.463
+    },
+    {
+      "pair": 11,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 20.695
+    },
+    {
+      "pair": 12,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.793
+    },
+    {
+      "pair": 13,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 14,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 12.021
+    },
+    {
+      "pair": 15,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.64
+    },
+    {
+      "pair": 16,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.297
+    },
+    {
+      "pair": 17,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 16.13
+    },
+    {
+      "pair": 18,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.685
+    },
+    {
+      "pair": 19,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 20,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.798
+    },
+    {
+      "pair": 21,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.79
+    },
+    {
+      "pair": 22,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 23,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 24,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.491
+    },
+    {
+      "pair": 25,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 26,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 27,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.73
+    },
+    {
+      "pair": 28,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 29,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 30,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.346
+    },
+    {
+      "pair": 31,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 21.735
+    },
+    {
+      "pair": 32,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 33,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.614
+    },
+    {
+      "pair": 34,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.668
+    },
+    {
+      "pair": 35,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 21.624
+    },
+    {
+      "pair": 36,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.851
+    },
+    {
+      "pair": 37,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.482
+    },
+    {
+      "pair": 38,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 39,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.407
+    },
+    {
+      "pair": 40,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.298
+    },
+    {
+      "pair": 41,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 42,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.71
+    },
+    {
+      "pair": 43,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.374
+    },
+    {
+      "pair": 44,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 45,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.565
+    },
+    {
+      "pair": 46,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.634
+    },
+    {
+      "pair": 47,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 48,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.148
+    },
+    {
+      "pair": 49,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 50,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 51,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.644
+    },
+    {
+      "pair": 52,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 53,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.282
+    },
+    {
+      "pair": 54,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.095
+    },
+    {
+      "pair": 55,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.088
+    },
+    {
+      "pair": 56,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 19.589
+    },
+    {
+      "pair": 57,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.226
+    },
+    {
+      "pair": 58,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.554
+    },
+    {
+      "pair": 59,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 60,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.495
+    },
+    {
+      "pair": 61,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 62,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 63,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.617
+    },
+    {
+      "pair": 64,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 65,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.892
+    },
+    {
+      "pair": 66,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.807
+    },
+    {
+      "pair": 67,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.385
+    },
+    {
+      "pair": 68,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 69,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.636
+    },
+    {
+      "pair": 70,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.412
+    },
+    {
+      "pair": 71,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 16.299
+    },
+    {
+      "pair": 72,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.128
+    },
+    {
+      "pair": 73,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 74,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.224
+    },
+    {
+      "pair": 75,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 76,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.762
+    },
+    {
+      "pair": 77,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 78,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.257
+    },
+    {
+      "pair": 79,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 80,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 15.477
+    },
+    {
+      "pair": 81,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.251
+    },
+    {
+      "pair": 82,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.591
+    },
+    {
+      "pair": 83,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 84,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.938
+    },
+    {
+      "pair": 85,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 86,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 87,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.664
+    },
+    {
+      "pair": 88,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 89,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 90,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.445
+    },
+    {
+      "pair": 91,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 92,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 93,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.661
+    },
+    {
+      "pair": 94,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.628
+    },
+    {
+      "pair": 95,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.026
+    },
+    {
+      "pair": 96,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.201
+    },
+    {
+      "pair": 97,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 98,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.016
+    },
+    {
+      "pair": 99,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.592
+    },
+    {
+      "pair": 100,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 101,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 102,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.511
+    },
+    {
+      "pair": 103,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 104,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.264
+    },
+    {
+      "pair": 105,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.504
+    },
+    {
+      "pair": 106,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 107,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.867
+    },
+    {
+      "pair": 108,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.276
+    },
+    {
+      "pair": 109,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.448
+    },
+    {
+      "pair": 110,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.995
+    },
+    {
+      "pair": 111,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.132
+    },
+    {
+      "pair": 112,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 113,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 114,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.084
+    },
+    {
+      "pair": 115,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 116,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.046
+    },
+    {
+      "pair": 117,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 118,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 119,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.489
+    },
+    {
+      "pair": 120,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.476
+    },
+    {
+      "pair": 121,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 122,
+      "ok": false,
+      "error": "final restored state differs",
+      "commands": 5,
+      "alarms": 1
+    },
+    {
+      "pair": 123,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.372
+    },
+    {
+      "pair": 124,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 125,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 126,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.894
+    },
+    {
+      "pair": 127,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 128,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.866
+    },
+    {
+      "pair": 129,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.658
+    },
+    {
+      "pair": 130,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 131,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.041
+    },
+    {
+      "pair": 132,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.834
+    },
+    {
+      "pair": 133,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.311
+    },
+    {
+      "pair": 134,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 135,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.65
+    },
+    {
+      "pair": 136,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.332
+    },
+    {
+      "pair": 137,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.651
+    },
+    {
+      "pair": 138,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.291
+    },
+    {
+      "pair": 139,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 140,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 21.856
+    },
+    {
+      "pair": 141,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.614
+    },
+    {
+      "pair": 142,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 143,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.772
+    },
+    {
+      "pair": 144,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.607
+    },
+    {
+      "pair": 145,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 146,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.595
+    },
+    {
+      "pair": 147,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.145
+    },
+    {
+      "pair": 148,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 149,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.149
+    },
+    {
+      "pair": 150,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.132
+    },
+    {
+      "pair": 151,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 152,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 21.457
+    },
+    {
+      "pair": 153,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.936
+    },
+    {
+      "pair": 154,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.596
+    },
+    {
+      "pair": 155,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 156,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.05
+    },
+    {
+      "pair": 157,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 158,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 159,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 160,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.633
+    },
+    {
+      "pair": 161,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 162,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.234
+    },
+    {
+      "pair": 163,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 164,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 165,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.552
+    },
+    {
+      "pair": 166,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 167,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 168,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.962
+    },
+    {
+      "pair": 169,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.573
+    },
+    {
+      "pair": 170,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.408
+    },
+    {
+      "pair": 171,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.664
+    },
+    {
+      "pair": 172,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 173,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 174,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.728
+    },
+    {
+      "pair": 175,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 176,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.839
+    },
+    {
+      "pair": 177,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.636
+    },
+    {
+      "pair": 178,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 179,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 180,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.998
+    },
+    {
+      "pair": 181,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 182,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.999
+    },
+    {
+      "pair": 183,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.751
+    },
+    {
+      "pair": 184,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 185,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 186,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.542
+    },
+    {
+      "pair": 187,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 188,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 189,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.975
+    },
+    {
+      "pair": 190,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 191,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.779
+    },
+    {
+      "pair": 192,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.267
+    },
+    {
+      "pair": 193,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.206
+    },
+    {
+      "pair": 194,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 22.415
+    },
+    {
+      "pair": 195,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.582
+    },
+    {
+      "pair": 196,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.523
+    },
+    {
+      "pair": 197,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.428
+    },
+    {
+      "pair": 198,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.13
+    },
+    {
+      "pair": 199,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 200,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 201,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.824
+    },
+    {
+      "pair": 202,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 203,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 204,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.501
+    },
+    {
+      "pair": 205,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 206,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.241
+    },
+    {
+      "pair": 207,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.549
+    },
+    {
+      "pair": 208,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.617
+    },
+    {
+      "pair": 209,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 210,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 211,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 212,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 213,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.004
+    },
+    {
+      "pair": 214,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.91
+    },
+    {
+      "pair": 215,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 216,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.024
+    },
+    {
+      "pair": 217,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 218,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 219,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 220,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 221,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.847
+    },
+    {
+      "pair": 222,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.554
+    },
+    {
+      "pair": 223,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 224,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 225,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.196
+    },
+    {
+      "pair": 226,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 227,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.779
+    },
+    {
+      "pair": 228,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.186
+    },
+    {
+      "pair": 229,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 25.628
+    },
+    {
+      "pair": 230,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 3,
+      "alarms": 1
+    },
+    {
+      "pair": 231,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.502
+    },
+    {
+      "pair": 232,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 233,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 234,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.111
+    },
+    {
+      "pair": 235,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 236,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 237,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.582
+    },
+    {
+      "pair": 238,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 1,
+      "alarms": 1
+    },
+    {
+      "pair": 239,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.35
+    },
+    {
+      "pair": 240,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.244
+    },
+    {
+      "pair": 241,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 242,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 4,
+      "alarms": 1
+    },
+    {
+      "pair": 243,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.33
+    },
+    {
+      "pair": 244,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 27.143
+    },
+    {
+      "pair": 245,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 0,
+      "alarms": 1
+    },
+    {
+      "pair": 246,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 26.518
+    },
+    {
+      "pair": 247,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 23.577
+    },
+    {
+      "pair": 248,
+      "ok": false,
+      "error": "protocol GAMEHOST_OFFLINE",
+      "commands": 2,
+      "alarms": 1
+    },
+    {
+      "pair": 249,
+      "ok": true,
+      "commands": 5,
+      "alarms": 1,
+      "seconds": 24.588
+    }
+  ],
+  "hostMetrics": [
+    {
+      "ok": true,
+      "requests": 1136,
+      "moves": 331,
+      "accepted": 331,
+      "rejected": 0,
+      "roomsCreated": 82,
+      "events": 84,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 82,
+      "memory": {
+        "rss": 193814528,
+        "heapTotal": 134266880,
+        "heapUsed": 80262592,
+        "external": 2685839,
+        "arrayBuffers": 415594
+      },
+      "eventLoopDelayMs": {
+        "mean": 29.219028221970554,
+        "p95": 43.941887,
+        "max": 3074.424831
+      },
+      "recentMoveMs": {
+        "count": 331,
+        "p50": 0.831873999995878,
+        "p95": 165.41597600000387,
+        "max": 1037.3390990000044
+      }
+    },
+    {
+      "ok": true,
+      "requests": 1221,
+      "moves": 332,
+      "accepted": 332,
+      "rejected": 0,
+      "roomsCreated": 94,
+      "events": 105,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 94,
+      "memory": {
+        "rss": 181579776,
+        "heapTotal": 86294528,
+        "heapUsed": 64979960,
+        "external": 2547225,
+        "arrayBuffers": 275574
+      },
+      "eventLoopDelayMs": {
+        "mean": 29.85534585982117,
+        "p95": 44.269567,
+        "max": 4857.004031
+      },
+      "recentMoveMs": {
+        "count": 332,
+        "p50": 1.143314000000828,
+        "p95": 190.3060059999989,
+        "max": 1370.5254669999995
+      }
+    },
+    {
+      "ok": true,
+      "requests": 1048,
+      "moves": 307,
+      "accepted": 307,
+      "rejected": 0,
+      "roomsCreated": 74,
+      "events": 75,
+      "errors": 0,
+      "poolRollbacks": 0,
+      "rooms": 74,
+      "memory": {
+        "rss": 180006912,
+        "heapTotal": 130596864,
+        "heapUsed": 71790224,
+        "external": 2612701,
+        "arrayBuffers": 342456
+      },
+      "eventLoopDelayMs": {
+        "mean": 28.339949734357848,
+        "p95": 43.286527,
+        "max": 2428.502015
+      },
+      "recentMoveMs": {
+        "count": 307,
+        "p50": 0.8380299999989802,
+        "p95": 189.02558800000406,
+        "max": 735.4438990000053
+      }
+    }
+  ],
+  "fixtureLogs": "/tmp/samidev-realtime-x3bn4x34",
+  "productionCertified": false,
+  "scope": "authenticated local accounts and replay of accepted pool inputs; native physics/results and both client responses compared; starting board installed only by private fixture; closed-loop timing with lateness reported; no browser/Flutter/WAN/transport disconnect recreation",
+  "evidenceNote": "Local demo capture: two real shots and native Ready alarm, followed by resignation. This is not the user match or production certification."
+}

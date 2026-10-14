@@ -6,6 +6,7 @@ COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 COPY --chown=samidev:samidev backend /app/backend
 COPY --chown=samidev:samidev game /app/game
+COPY --chown=samidev:samidev tools/pool_match_record.py /app/tools/pool_match_record.py
 USER samidev
 WORKDIR /app/backend
 CMD ["python", "app.py"]

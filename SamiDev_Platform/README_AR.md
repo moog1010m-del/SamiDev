@@ -2,6 +2,8 @@
 
 اختبار رحلة ٥٠٠ لاعب من التسجيل إلى المكافآت والشراء: [PLAYER_JOURNEY_TEST_AR.md](PLAYER_JOURNEY_TEST_AR.md).
 
+تسجيل مباراة بلياردو حقيقية وإعادتها على ٥٠٠ حساب مع مقارنة النتائج وقياس التأخير: [POOL_MATCH_RECORD_REPLAY_AR.md](POOL_MATCH_RECORD_REPLAY_AR.md).
+
 تحسين حركة وسجل أونو وترتيب الكيرم على الهاتف: [UNO_CARROM_POLISH_AR.md](UNO_CARROM_POLISH_AR.md).
 
 تقييم الباك إند والأمان والتخزين والتعافي وخطة الإنتاج: [BACKEND_ASSESSMENT_AR.md](BACKEND_ASSESSMENT_AR.md).
