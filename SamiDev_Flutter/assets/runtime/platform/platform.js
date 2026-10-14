@@ -93,7 +93,7 @@
     renderAvatar('#profile-editor-avatar-image','#profile-editor-avatar-fallback',name,user.avatarData);
     renderAvatar('#lobby-avatar-image','#lobby-avatar-fallback',name,user.avatarData);
     renderAvatar('#community-user-avatar-image','#community-user-avatar-fallback',name,user.avatarData);
-    document.querySelectorAll('.lobby-profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
+    document.querySelectorAll('.lobby-profile .lobby-profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
     const communityUserName=$('#community-user-name');if(communityUserName)communityUserName.textContent=name;
     const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent='@'+String(user.username||'player');
     const lobbyName=$('#lobby-profile-name');if(lobbyName)lobbyName.textContent=name;
@@ -124,7 +124,7 @@
     const id=state.user?.id;if(!id)return;const request=++ownProfileRequest;
     try{const data=await api('/api/public-profile/'+encodeURIComponent(id));
       if(request!==ownProfileRequest||state.user?.id!==id)return;
-      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins,starsCount:data.user.starsCount,nameBadgeAsset:data.user.nameBadgeAsset,nameBadgeName:data.user.nameBadgeName});
+      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins,profileBanner:data.user.profileBanner,chatBubble:data.user.chatBubble,nameBadge:data.user.nameBadge,starsCount:data.user.starsCount,nameBadgeAsset:data.user.nameBadgeAsset,nameBadgeName:data.user.nameBadgeName});
       setUser(state.user);
     }catch(_){const node=$('#own-profile-details');if(node&&!node.children.length)node.textContent='تعذر تحميل المقتنيات والإحصاءات. افتح الملف مجددًا للمحاولة.';}
   }
@@ -315,8 +315,8 @@
     });
   }
   function cosmeticProductArt(item,className=''){
-    if(item.slot==='chat_bubble')return `<div class="store-chat-preview ${escapeHtml(className)}" data-chat-cosmetic="${escapeHtml(item.id)}"><strong>مرحبًا، جاهز للمباراة؟</strong><small>سامي · الآن</small></div>`;
-    if(item.slot==='profile_banner'&&!item.asset)return '<div class="store-item-visual lobby-profile-cover"></div>';
+    if(item.slot==='chat_bubble')return `<div class="store-chat-sample ${escapeHtml(className)}"><div class="store-chat-preview-meta"><strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong><small>الآن</small></div><div class="store-chat-preview" data-chat-cosmetic="${escapeHtml(item.id)}"><span>مرحبًا</span></div></div>`;
+    if(item.slot==='profile_banner'&&!item.asset)return '<img class="store-item-visual store-banner-art" src="/platform/assets/profile/identity/samidev-night-cover.png" alt="الغلاف الافتراضي">';
     return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
   }
   function applyCosmeticPreviews(root){root.querySelectorAll('[data-chat-cosmetic]').forEach(el=>window.SamiDevCosmetics?.bubble(el,el.dataset.chatCosmetic));}
@@ -394,7 +394,7 @@
     const owned=isStar?stars>=5:(item.owned||item.availableToAll||item.default);
     const active=!isStar&&state.store?.equipped?.[item.slot]===item.id;
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
-    modal.innerHTML=`<section class="store-product-sheet" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
+    modal.innerHTML=`<section class="store-product-sheet${item.slot==='chat_bubble'?' has-chat-preview':''}" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
       <header><span>رصيدك <b>${formatProfileStat(coins)}</b> <span class="coin-mark small">C</span></span><button type="button" data-product-close aria-label="إغلاق">×</button></header>
       <div class="store-product-art">${cosmeticProductArt(item)}</div>
       ${preview?`<div class="store-name-preview">${preview}<strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong></div>`:''}
@@ -431,11 +431,11 @@
       button.disabled=true;
       const result=await api('/api/store/equip',{method:'POST',body:JSON.stringify({itemId})});
       if(state.store){state.store.equipped=result.equipped;renderStore();}
+      ++ownProfileRequest;
       if(state.user&&result.equipped?.name_badge){
         state.user.nameBadge=result.equipped.name_badge;
         const bItem=(state.store?.catalog||[]).find(x=>x.id===result.equipped.name_badge);
         if(bItem){state.user.nameBadgeAsset=bItem.asset;state.user.nameBadgeName=bItem.name;}
-        setUser(state.user);
       }
       if(state.user){state.user.profileBanner=result.equipped?.profile_banner||'';state.user.chatBubble=result.equipped?.chat_bubble||'';setUser(state.user);}
       toast('تم تفعيل العنصر بنجاح');
@@ -599,9 +599,9 @@
     for(const [index,m] of state.communityMessages.entries()){
       if(update.reuse(String(m.id||JSON.stringify([m.userId,m.createdAt,index])),[m,state.user?.id]))continue;
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
-      const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
+      const content=document.createElement('div');content.className='community-chat-content';const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);article.append(bubble);update.add(article);
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
     }update.finish();
     if(wasNearBottom||!box.dataset.loaded){box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
   }

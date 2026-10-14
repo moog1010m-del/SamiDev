@@ -1,21 +1,45 @@
-/* Only allowlisted, locally bundled artwork is supplied by cosmetic-ui.js. */
-.sd-custom-cover{background-image:var(--sd-profile-cover)!important;background-size:cover!important;background-position:center!important}
-.sd-custom-cover::after,.sd-custom-cover>.profile-cover-emblem,.sd-custom-cover>.lobby-profile-cover-mark,.sd-custom-cover>.sdpp-cover-mark{display:none!important}
-.sd-decorated-message{box-sizing:border-box!important;border:solid transparent!important;border-width:28px 34px 24px!important;border-radius:0!important;border-image-source:var(--sd-bubble-frame)!important;border-image-slice:55 85 50 85!important;border-image-repeat:stretch!important;padding:6px 8px!important;background:#12242d!important;background-clip:padding-box!important;min-width:170px;max-width:100%;color:#edf3f5!important;box-shadow:none!important;overflow-wrap:anywhere}
-.sd-decorated-message p,.sd-decorated-message .sd-chat-text{color:#edf3f5!important}.sd-decorated-message strong,.sd-decorated-message .sd-chat-name{color:#f0d5a0!important}.sd-decorated-message time{color:#adbac8!important}
-.store-chat-preview{width:min(330px,100%);margin:12px auto;direction:rtl;text-align:right;font:14px/1.7 system-ui}.store-chat-preview small{font-size:10px;color:#adbac8;display:block}
-.store-item-card .store-chat-preview{min-width:0;width:100%;font-size:12px;margin:0;height:164px;display:flex;flex-direction:column;justify-content:center}.store-item-card .store-chat-preview small{font-size:9px}
-.store-item-card .store-banner-art{height:164px;width:100%;object-fit:cover;border-radius:12px;padding:0}
-html[data-theme="light"] .sd-decorated-message{background-color:#12242d!important}
-@media(max-width:600px){.store-item-card .store-chat-preview.sd-decorated-message{height:132px;border-width:24px 22px 20px!important;padding:4px!important;font-size:11px}.store-item-card .store-banner-art{height:132px}}
-/* Keep chat previews wide, with the same proportions as an actual message. */
-.store-item-card .store-chat-preview{height:90px;margin:37px 0;flex-shrink:0}
-.store-chat-preview:not(.sd-decorated-message){border:1px solid #78939a;border-radius:14px;padding:14px;background:var(--panel,#152832);color:var(--text,#edf3f5)}
-@media(max-width:600px){.store-item-card .store-chat-preview{height:90px;margin:21px 0}}
+/* Allowlisted, bundled cosmetics. Selection wins over the default identity art. */
+.sd-profile-cover{background-image:var(--sd-profile-cover)!important;background-size:cover!important;background-position:center!important}
+.sd-profile-cover::before,.sd-profile-cover::after,.sd-profile-cover>.profile-cover-emblem,.sd-profile-cover>.profile-cover-glow,.sd-profile-cover>.lobby-profile-cover-mark,.sd-profile-cover>.lobby-profile-cover-glow,.sd-profile-cover>.sdpp-cover-mark{display:none!important}
 
-#community-chat-messages .sd-decorated-message .community-chat-meta strong,#sd-chat-messages .sd-decorated-message .sd-chat-name{color:#f0d5a0!important}
-#community-chat-messages .sd-decorated-message .community-chat-meta time{color:#adbac8!important}
-/* Long decorated messages must reserve the avatar's full width. */
-.community-chat-message>.community-chat-avatar{flex:0 0 34px}
-.community-chat-message>.sd-decorated-message{max-width:calc(100% - 42px)!important;min-width:min(170px,calc(100% - 42px))!important}
-#sd-chat-messages .sd-chat-message>.sd-decorated-message{max-width:calc(100% - 39px)!important;min-width:min(170px,calc(100% - 39px))!important}
+/* The frame decorates text only; sender metadata and avatars stay outside it. */
+.sd-decorated-message{box-sizing:border-box!important;border:solid transparent!important;border-width:16px 20px 14px!important;border-radius:0!important;border-image-source:var(--sd-bubble-frame)!important;border-image-slice:55 85 50 85!important;border-image-repeat:stretch!important;padding:6px 10px!important;background:#12242d!important;background-clip:padding-box!important;width:fit-content;min-width:0;max-width:100%;color:#edf3f5!important;box-shadow:none!important;overflow-wrap:anywhere;line-height:1.65}
+.sd-decorated-message p,.sd-decorated-message .sd-chat-text,.sd-decorated-message span{color:#edf3f5!important}
+html[data-theme="light"] .sd-decorated-message{background-color:#12242d!important}
+
+#community-chat-messages>.community-chat-message{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;width:fit-content;max-width:100%;flex-shrink:0}
+#community-chat-messages>.community-chat-message>.community-chat-avatar{grid-column:1;grid-row:1;align-self:start;width:34px;height:34px;min-width:34px;max-width:34px;min-height:34px;max-height:34px;aspect-ratio:1;flex:none;box-sizing:border-box}
+#community-chat-messages>.community-chat-message>.community-chat-content{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;max-width:100%}
+#community-chat-messages>.community-chat-message.me{grid-template-columns:minmax(0,1fr) 34px}
+#community-chat-messages>.community-chat-message.me>.community-chat-avatar{grid-column:2}
+#community-chat-messages>.community-chat-message.me>.community-chat-content{grid-column:1;align-items:flex-end}
+#community-chat-messages .community-chat-avatar img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1}
+#community-chat-messages .community-chat-meta{direction:rtl;display:flex;align-items:baseline;gap:8px;margin:0;max-width:100%;line-height:1.5}
+#community-chat-messages .community-chat-meta strong{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text,#e7edef)}
+#community-chat-messages .community-chat-meta time{font-size:10px;white-space:nowrap;flex:none;color:var(--muted,#92a8b0)}
+#community-chat-messages .community-chat-bubble{font-size:14px;max-width:100%}
+#community-chat-messages .community-chat-bubble p{font-size:14px;margin:0;line-height:1.7}
+
+#sd-chat-messages .sd-chat-message{display:grid!important;grid-template-columns:30px minmax(0,1fr);gap:9px!important;align-items:start!important;width:fit-content;max-width:100%}
+#sd-chat-messages .sd-chat-avatar{grid-column:1;grid-row:1;width:30px!important;height:30px!important;min-width:30px;max-width:30px;min-height:30px;max-height:30px;aspect-ratio:1;box-sizing:border-box;align-self:start;flex:none!important}
+#sd-chat-messages .sd-chat-avatar img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1}
+#sd-chat-messages .sd-chat-content{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;max-width:100%}
+#sd-chat-messages .sd-chat-message.me{grid-template-columns:minmax(0,1fr) 30px}
+#sd-chat-messages .sd-chat-message.me>.sd-chat-avatar{grid-column:2}
+#sd-chat-messages .sd-chat-message.me>.sd-chat-content{grid-column:1;align-items:flex-end}
+#sd-chat-messages .sd-chat-meta{direction:rtl;display:flex;align-items:baseline;gap:8px;max-width:100%;line-height:1.5}
+#sd-chat-messages .sd-chat-meta .sd-chat-name{font-size:12px!important;color:#c9b88f!important;margin:0}
+#sd-chat-messages .sd-chat-meta time{font-size:10px;white-space:nowrap;color:#92a8b0}
+#sd-chat-messages .sd-chat-message-body{max-width:100%;font-size:14px}
+
+/* Product previews use the same frame and text padding as real messages. */
+.store-chat-sample{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%;height:164px;padding:10px!important;box-sizing:border-box;filter:none!important}
+.store-chat-preview-meta{display:flex;align-items:baseline;gap:8px;direction:rtl;color:var(--muted,#97acb5);font:11px/1.5 system-ui}
+.store-chat-preview-meta strong{font-weight:600;color:var(--text,#e7edef)}
+.store-chat-preview-meta small{font-size:10px}
+.store-chat-preview{width:100%;max-width:280px;direction:rtl;text-align:right;font:14px/1.65 system-ui}
+.store-chat-preview:not(.sd-decorated-message){border:1px solid var(--line,#78939a);border-radius:14px;padding:10px 14px;background:var(--panel,#152832);color:var(--text,#edf3f5)}
+.store-item-card .store-chat-preview{font-size:12px}
+.store-item-card .store-banner-art{height:164px;width:100%;object-fit:cover;border-radius:12px;padding:0}
+.store-product-sheet.has-chat-preview .store-product-art{height:180px;padding:12px}
+@media(max-width:600px){.store-chat-sample{height:132px;padding:4px!important}.store-item-card .store-chat-preview{font-size:12px}.store-item-card .store-banner-art{height:132px}.store-product-sheet.has-chat-preview .store-product-art{height:150px;padding:8px}}

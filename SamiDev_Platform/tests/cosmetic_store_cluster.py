@@ -32,7 +32,7 @@ async def main():
     entry=await receive(ws,{'chat_message'});assert entry['chatBubble']=='chat_turquoise',entry
    await peers[1].send_json({'type':'chat_history'});history=await receive(peers[1],{'chat_history'});assert history['messages'][-1]['chatBubble']=='chat_turquoise'
    for ws in peers:await ws.close()
-   env=dict(os.environ,SAMIDEV_TEST_BASE_URL=base,SAMIDEV_COSMETIC_COOKIE=h['Cookie'].split('=',1)[1])
+   env=dict(os.environ,SAMIDEV_TEST_BASE_URL=base,SAMIDEV_COSMETIC_COOKIE=h['Cookie'].split('=',1)[1],SAMIDEV_COSMETIC_OTHER_COOKIE=cookies[1]['Cookie'].split('=',1)[1])
    process=await asyncio.create_subprocess_exec('node',str(ROOT/'cosmetic_store_browser.mjs'),env=env);assert await process.wait()==0
   print('POSTGRES_REDIS_TWO_GATEWAY_COSMETICS_PASS')
  finally:await cluster.close()

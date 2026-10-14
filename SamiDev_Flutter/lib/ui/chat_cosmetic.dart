@@ -23,18 +23,42 @@ class ChatCosmetic extends StatelessWidget {
         child: child,
       );
     }
-    return Container(
-      constraints: const BoxConstraints(minWidth: 170, minHeight: 80),
-      padding: const EdgeInsets.fromLTRB(34, 28, 34, 24),
-      decoration: BoxDecoration(
-        color: const Color(0xff12242d),
-        image: DecorationImage(
-          image: AssetImage('assets/runtime/platform/assets/cosmetics/$id.webp'),
-          centerSlice: Rect.fromLTRB(85, 55, size.width - 85, size.height - 50),
-          fit: BoxFit.fill,
-        ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 42),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 14),
+            child: ColoredBox(
+              color: const Color(0xff12242d),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                child: DefaultTextStyle.merge(
+                  style: const TextStyle(color: Color(0xffedf3f5)),
+                  child: child,
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Image.asset(
+                'assets/runtime/platform/assets/cosmetics/$id.webp',
+                centerSlice: Rect.fromLTRB(
+                  85,
+                  55,
+                  size.width - 85,
+                  size.height - 50,
+                ),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+        ],
       ),
-      child: DefaultTextStyle.merge(style: const TextStyle(color: Color(0xffedf3f5)), child: child),
     );
   }
 }

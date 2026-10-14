@@ -52,6 +52,8 @@
       const av = avatarFor(player);
       row.appendChild(av);
 
+      const content=document.createElement('div');content.className='sd-chat-content';
+      const meta=document.createElement('div');meta.className='sd-chat-meta';
       const body = document.createElement('div');
       body.className = 'sd-chat-message-body';
       const name = document.createElement('span');
@@ -60,9 +62,12 @@
       const text = document.createElement('span');
       text.className = 'sd-chat-text';
       text.textContent = String(msg.text || '');
-      body.append(name,text);
+      const time=document.createElement('time');
+      const stamp=Number(msg.ts??msg.createdAt);
+      if(Number.isFinite(stamp)&&stamp>0){time.dateTime=new Date(stamp).toISOString();time.textContent=new Date(stamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});}
+      meta.append(name,time);body.append(text);
       window.SamiDevCosmetics?.bubble(body,msg.chatBubble);
-      row.appendChild(body);
+      content.append(meta,body);row.appendChild(content);
 
       const openSenderProfile = (e) => {
         e.preventDefault();
