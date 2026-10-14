@@ -29,6 +29,9 @@ for(const [rank,prior] of [[8,0],[8,7],[15,7],[1,7]]){
   const result=f.processMove(r,0,structuredClone(packet));check(result.accepted,'legal object-ball shot');
   check(target.isPocketed(),'physics sinks target');check(g.freePoolScores[0]===prior+1,'one numbered ball counts once');
   check(g.gameOver===(prior===7),'only eighth point wins');
+  const extra=result.revealBySeat['0'].data[String(g.noAnimations)].e;
+  check(JSON.stringify(extra.freePoolScores)===JSON.stringify(g.freePoolScores),'native reveal carries server scores');
+  check(JSON.stringify(extra.freePoolPocketed)===JSON.stringify([...g.freePoolPocketed].sort((a,b)=>a-b)),'native reveal carries credited ranks');
   if(prior===7)check(g.finishOrder[0][0]===0,'shooter wins regardless of ball group or black');
   else check(g.freePoolScores[1]===0,'opponent score unaffected');
   const scores=JSON.stringify(g.freePoolScores);check(!f.processMove(r,0,packet).accepted,'replayed shot rejected');check(JSON.stringify(g.freePoolScores)===scores,'replay never duplicates score');

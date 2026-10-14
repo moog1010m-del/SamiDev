@@ -920,8 +920,9 @@ class SamiDevRealtime:
             if not authority.get("server"):
                 raise StoreError("AUTHORITY_FAILED", "تعذر تشغيل GameLogic في وضع السيرفر")
             begun = await self.store.runtime_ready(c.room_id, c.seat, c.conn_id, c.connection_epoch)
-            if game_id((await self.store.get_room_state(c.room_id))["settings"]) == "crazy8":
-                # Do not spend a player's turn while browsers are loading assets.
+            if game_id((await self.store.get_room_state(c.room_id))["settings"]) in {"crazy8", "pool"}:
+                # Both engines freeze their alarms while clients load. Resume the
+                # authority after committing readiness, before announcing begin.
                 state = await self.store.get_room_state(c.room_id)
                 if state.get("begun"):
                     authority = await self._ensure_authority(c.room_id)

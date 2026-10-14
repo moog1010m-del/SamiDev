@@ -36,6 +36,8 @@ async def main():
    start=await receive(w,'start');assert len(start['snapshot']['pool']['balls'])==16
   for w in peers:await w.send_json({'type':'runtime_ready'})
   for w in peers:assert (await receive(w,'begin_match'))['type']=='begin_match'
+  started_state=await app.SERVICE.gamehost.state(rid)
+  assert started_state['snapshot']['_samidev_alarm']['paused'] is False, 'begin_match must unfreeze pool authority timers'
   sequence=[0,0]
   async def move(seat,m):
    await peers[seat].send_json({'type':'move','packet':{'i':f'p-{seat}-{sequence[seat]}','n':sequence[seat],'m':m}})

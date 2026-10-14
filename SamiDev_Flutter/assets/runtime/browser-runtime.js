@@ -1101,7 +1101,9 @@
       if(logic._awaitingResync && !state.network.snapshotBusy) net.requestResync();
     });
     net.on('error', msg=>{
-      if (['MOVE_REJECTED','STALE_MOVE_SEQUENCE','FUTURE_MOVE_SEQUENCE','PHYSICS_DID_NOT_SETTLE'].includes(msg?.code)) net.requestResync();
+      // A rolled-back host exception has also invalidated the optimistic local
+      // move. Recover now, rather than waiting for the missing-ack heartbeat.
+      if (['MOVE_REJECTED','STALE_MOVE_SEQUENCE','FUTURE_MOVE_SEQUENCE','PHYSICS_DID_NOT_SETTLE','GAMELOGIC_EXCEPTION'].includes(msg?.code)) net.requestResync();
     });
   }
 

@@ -3,7 +3,7 @@
   "engines": {
     "carrom": "25a933fb14fe7db07dc04ef5bb14ee36630a9e46905c3a79e240195908d8a3a0",
     "crazy8": "0286e37092df64924d988e1c0e4f3fbe9a4d934defca66457730ebf55195ce59",
-    "pool": "7c37c462ce6d27e2928d502bf61eaf0de98595057aa8fe79a289c5e3f245b077",
+    "pool": "b86fb993ac9f7f1aeabad0637200a3a814c4a3690439461625b0f1d1b68400fd",
     "tablesoccer": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085"
   },
   "files": {
@@ -13,11 +13,11 @@
     },
     "attestation.json": {
       "size": 36133,
-      "sha256": "75c884f03599c4c37af010833047e39909d0da293df062e098acb7657201a726"
+      "sha256": "80fba55bfdd59b6881dffa2f64f14a796d015f5da66622959f914bcc832b336c"
     },
     "browser-runtime.js": {
-      "size": 74743,
-      "sha256": "d36b669964f62d5db81ac7ea0a5314a21313e49d33ce78c97c82a9e8860455ff"
+      "size": 74924,
+      "sha256": "f8772e14d455a171f23460197ebb8b6129195d5ef2cd5b66e715d1c3083d6ffe"
     },
     "carrom-themes.js": {
       "size": 1695,
@@ -97,7 +97,7 @@
     },
     "games/crazy8/attestation.json": {
       "size": 6484,
-      "sha256": "61a8054670061fe62934c527e8f81adc45f63db1c004164d69b22980142d913a"
+      "sha256": "50c06f2ac1bcaaef8d7489709a0d4648cf49cba17f6224470fd4a624b6a1689f"
     },
     "games/crazy8/dictionary.json": {
       "size": 28417,
@@ -133,7 +133,7 @@
     },
     "games/crazy8/index.html": {
       "size": 7503,
-      "sha256": "bb704690f9c7338ad96aa52093b29f2cd787c5c750b41a32315476d776de6c6f"
+      "sha256": "f739ab75d5f2af49c7002742bca6ea5df053c5b0431f2934d4033bb90fe17ed7"
     },
     "games/crazy8/main.js": {
       "size": 783040,
@@ -301,7 +301,7 @@
     },
     "games/pool/attestation.json": {
       "size": 18360,
-      "sha256": "b5a5ec64faccf015506524fc659f4b60e611c0251510bde517ac48bd57c1b872"
+      "sha256": "123b7238e39e32982717158413517fe724d853b572102c1b42f222937c259ef7"
     },
     "games/pool/images/imported/themes/th_basic_background.webp": {
       "size": 290,
@@ -785,11 +785,11 @@
     },
     "games/pool/index.html": {
       "size": 6887,
-      "sha256": "47c6e80640aa890009a1d7178ff57fc2f6e993fd3e41c0a477f922bc36ce3527"
+      "sha256": "e59dddbe3e885091d595307043a9b39490e39d9c8ac0fb78cc45f1c55a72c8a8"
     },
     "games/pool/main.js": {
-      "size": 988121,
-      "sha256": "7c37c462ce6d27e2928d502bf61eaf0de98595057aa8fe79a289c5e3f245b077"
+      "size": 988847,
+      "sha256": "b86fb993ac9f7f1aeabad0637200a3a814c4a3690439461625b0f1d1b68400fd"
     },
     "games/pool/scene-avatars/lobby_avatar_empty_seat.png": {
       "size": 12860,
@@ -1013,7 +1013,7 @@
     },
     "games/tablesoccer/attestation.json": {
       "size": 8030,
-      "sha256": "35881137f24f93bed5713a6527eeb2d3e146ce7b9742748db8834661907cab39"
+      "sha256": "24f4394140628ea20928d779f79c3024abd51fe3f5005e0bf78999805346d0d7"
     },
     "games/tablesoccer/dictionary.json": {
       "size": 82289,
@@ -1113,7 +1113,7 @@
     },
     "games/tablesoccer/index.html": {
       "size": 7715,
-      "sha256": "ee34a951a5be21a106700d1158886310cda8eafb2336b69afb2c781d63fb617d"
+      "sha256": "da0ac7213ee530c7bba40fe9f79576b4a99ae2edb7179d5310afb0a8356e6f3f"
     },
     "games/tablesoccer/main.js": {
       "size": 967301,
@@ -1420,8 +1420,8 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "index.html": {
-      "size": 7565,
-      "sha256": "d7b24f3aa5248a8d59c7376cddaa9f9f0eb29205d07ca3a9d437ca9e0e0e784a"
+      "size": 7552,
+      "sha256": "178da2b06bab1d57bbdc3f9b839e5bcfd00add4c60bda75be6eab2242e4e5918"
     },
     "inventory-ui.css": {
       "size": 2950,
@@ -2325,7 +2325,7 @@
     },
     "platform/build.json": {
       "size": 2423,
-      "sha256": "96d7413feba71ef5749a8637e8d09738156c3a01451324ba9aff25796340f3df"
+      "sha256": "c37abe12d597e4ad63d46101536cb80b74f456abb34034789e4fae26326abc49"
     },
     "platform/index.html": {
       "size": 36703,
@@ -2405,7 +2405,7 @@
     },
     "samidev-integrity.json": {
       "size": 640,
-      "sha256": "b717c92d5f767f90f470d2e0fea53254e47a431aeec30c00050fa61459982e36"
+      "sha256": "52bb00dc314cf64efa4ed37f81a069ea2c8f35ccadaabd1fdef189c46c160c7b"
     },
     "samidev-network.js": {
       "size": 20829,

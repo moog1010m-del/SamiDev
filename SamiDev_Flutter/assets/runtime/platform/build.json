@@ -1,6 +1,6 @@
 {
   "release": "V37",
-  "buildId": "samidev-v37-376aed8534c45757",
+  "buildId": "samidev-v37-227ec64e3d0e33c3",
   "games": [
     "carrom",
     "tablesoccer",
@@ -17,8 +17,8 @@
     "samidev-games.js": "30f9761386dd7be736ad3c854a0f1cafc55290ba40515d2590a02d4f3450edc8",
     "profile-details.css": "266b5c252cb0d40ed3861c994208065bf02369dd64260f51448e22a0e99ad618",
     "profile-details.js": "c039faea20b85f32a6c52c1a585fa80e0768f7a2437fa8eac587c5ebea2deddc",
-    "index.html": "d7b24f3aa5248a8d59c7376cddaa9f9f0eb29205d07ca3a9d437ca9e0e0e784a",
-    "browser-runtime.js": "d36b669964f62d5db81ac7ea0a5314a21313e49d33ce78c97c82a9e8860455ff",
+    "index.html": "178da2b06bab1d57bbdc3f9b839e5bcfd00add4c60bda75be6eab2242e4e5918",
+    "browser-runtime.js": "f8772e14d455a171f23460197ebb8b6129195d5ef2cd5b66e715d1c3083d6ffe",
     "match-reward-ui.js": "fff9a0efd8b9d88a5aed0d6ed37d478673ee8a902d23d857741e217f7bc53758",
     "chat-ui.js": "cf27123f0f5b6fc3b0d60b548a7a5f4ece40401a1dec66e39318d5386e58336c",
     "chat-polish.css": "6af1264c6fc76c7a638fba1991a85f5138c3fbae517e75111e75854b7f88ff1f",
@@ -29,8 +29,8 @@
     "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
     "game-touch.css": "3b46fb9faf96cbfde8954ad1304a294bf5299a4883ddaaef93ccab4151778079",
     "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
-    "games/tablesoccer/index.html": "ee34a951a5be21a106700d1158886310cda8eafb2336b69afb2c781d63fb617d",
-    "games/crazy8/index.html": "bb704690f9c7338ad96aa52093b29f2cd787c5c750b41a32315476d776de6c6f",
-    "games/pool/index.html": "47c6e80640aa890009a1d7178ff57fc2f6e993fd3e41c0a477f922bc36ce3527"
+    "games/tablesoccer/index.html": "da0ac7213ee530c7bba40fe9f79576b4a99ae2edb7179d5310afb0a8356e6f3f",
+    "games/crazy8/index.html": "f739ab75d5f2af49c7002742bca6ea5df053c5b0431f2934d4033bb90fe17ed7",
+    "games/pool/index.html": "e59dddbe3e885091d595307043a9b39490e39d9c8ac0fb78cc45f1c55a72c8a8"
   }
 }

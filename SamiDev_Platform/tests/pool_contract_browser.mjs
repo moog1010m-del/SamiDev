@@ -11,6 +11,7 @@ try{
  }
  for(const mode of [0,7]){
   let reconnectResyncs=0;
+  const driftRecoveries=[];
   const [a,b]=pages;
   await a.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType='+mode);
   await a.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});const rid=await a.evaluate(()=>SamiDevNetwork.state.roomId);
@@ -26,14 +27,23 @@ try{
     assert(await pages[turn].evaluate(shot=>{const g=window.__gameLogic,before=[...g._sequence];SamiDevNetwork.state.connected=false;const blocked=!g.localMove(shot);SamiDevNetwork.state.connected=true;return blocked&&JSON.stringify(before)===JSON.stringify(g._sequence);},shot),'disconnected transport blocks local mutation');
     assert(await pages[turn].evaluate(shot=>{const g=window.__gameLogic,before=[...g._sequence];window.__samidevGameState.network.snapshotBusy=true;const blocked=!g.localMove(shot);window.__samidevGameState.network.snapshotBusy=false;return blocked&&JSON.stringify(before)===JSON.stringify(g._sequence);},shot),'checkpoint blocks local mutation');
    }
+   let driftCounter;
+   if(mode===7&&(i===2||i===4)){
+    driftCounter=await b.evaluate(field=>{const g=window.__gameLogic;if(field==='scores')g.freePoolScores[0]++;else {const rank=g.table.balls.find(x=>!g.freePoolPocketed.includes(x.rank)).rank;g.freePoolPocketed.push(rank);}return window.contractResyncs;},i===2?'scores':'creditedRanks');
+   }
    assert(await pages[turn].evaluate(shot=>window.__gameLogic.localMove(shot),shot));
    if(i===3)await b.evaluate(()=>SamiDevNetwork.requestResync());
 
    for(const page of pages)await page.waitForFunction(before=>window.__gameLogic.noAnimations>before&&!window.__gameLogic.animator.isAnimatingWorld()&&!window.__gameLogic.preshooting&&!window.__samidevGameState.network.snapshotBusy,before,{timeout:30000});
+   if(driftCounter!==undefined){
+    await b.waitForFunction(before=>window.contractResyncs>before,driftCounter,{timeout:15000});
+    await b.waitForFunction(()=>!SamiDevNetwork.state.resyncInFlight&&!window.__samidevGameState.network.snapshotBusy&&!window.__gameLogic._awaitingResync&&!window.__gameLogic.paused,{},{timeout:30000});
+    driftRecoveries.push(i===2?'scores':'creditedRanks');
+   }
    // Allow native reveal/ready queues to finish; both clients must agree without a checkpoint per shot.
    await a.waitForFunction(()=>window.__gameLogic._localMoves.length===0,{},{timeout:15000});
    await b.waitForFunction(()=>window.__gameLogic._localMoves.length===0,{},{timeout:15000});
-   const state=await Promise.all(pages.map(p=>p.evaluate(()=>{const g=window.__gameLogic;return {turn:[...g.turn],sequence:[...g._sequence],positions:g.getPositionsToValidate(),random:[...g.random.state],noAnimations:g.noAnimations,lastValidAnim:g.lastValidAnim,gameOver:g.gameOver};})));
+   const state=await Promise.all(pages.map(p=>p.evaluate(()=>{const g=window.__gameLogic;return {turn:[...g.turn],sequence:[...g._sequence],positions:g.getPositionsToValidate(),random:[...g.random.state],noAnimations:g.noAnimations,lastValidAnim:g.lastValidAnim,gameOver:g.gameOver,ballInHand:g.ballInHand,scores:[...g.freePoolScores],creditedRanks:[...g.freePoolPocketed].sort((a,b)=>a-b)};})));
    assert.deepEqual(state[0],state[1],`replica mismatch mode=${mode} shot=${i}`);
    if(i===5&&!state[0].gameOver){
     reconnectResyncs+=await b.evaluate(()=>window.contractResyncs);
@@ -46,8 +56,8 @@ try{
   }
   const resyncs=await Promise.all(pages.map(p=>p.evaluate(()=>window.contractResyncs)));
   resyncs[1]+=reconnectResyncs;
-  assert(resyncs.reduce((a,b)=>a+b,0)<=5,'no forced full snapshot per shot');
-  results.push({mode,resyncs});
+  assert(resyncs.reduce((a,b)=>a+b,0)<=(mode===7?7:5),'no forced full snapshot per shot');
+  results.push({mode,resyncs,driftRecoveries});
   for(const page of pages)await page.evaluate(()=>SamiDevNetwork.leaveRoom({closeSocket:true}));
  }
  assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,results}));

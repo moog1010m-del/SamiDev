@@ -1,5 +1,19 @@
 /* Shared original Game Pool rules, embedded in the client and authoritative engine. */
 globalThis.SamiDevFreePoolRules = Object.freeze({
+  validationInfo(logic) {
+    return {
+      freePoolScores: logic.freePoolScores.slice(),
+      // Credited ranks are a set. Collision callback order is not part of the rules.
+      freePoolPocketed: logic.freePoolPocketed.slice().sort((a, b) => a - b),
+    };
+  },
+  validateInfo(authority, local) {
+    return ['freePoolScores', 'freePoolPocketed'].every(key => {
+      const a = authority?.[key], b = local?.[key];
+      return Array.isArray(a) && Array.isArray(b) && a.length === b.length &&
+        a.every((value, i) => Number.isInteger(value) && value === b[i]);
+    });
+  },
   finishShot(logic, outcome) {
     const seat = logic.turn[0];
     let added = 0;
