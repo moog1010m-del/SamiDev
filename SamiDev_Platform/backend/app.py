@@ -18,7 +18,7 @@ from aiohttp import WSMsgType, web
 
 from store import MemoryStore, RedisStore, StoreError, sanitize_settings
 from gamehost_client import GameHostClient, GameHostError
-from social_platform import PlatformService, PlatformHttp, PlatformError
+from social_platform import PlatformService, PlatformHttp, PlatformError, cosmetic_id
 from games import GAMES, game_id
 from game_views import client_state
 from quick_play import QuickPlay
@@ -881,7 +881,9 @@ class SamiDevRealtime:
                 self.metrics.rate_limited += 1
                 raise StoreError("CHAT_RATE_LIMIT", "أرسلت رسائل كثيرة بسرعة؛ حاول بعد قليل")
             text = self.sanitize_chat_text(msg.get("text"))
-            entry = await self.store.append_chat(c.room_id, c.seat, c.conn_id, c.connection_epoch, text)
+            user = await self.platform.get_user(c.account_id) if c.account_id else None
+            bubble = cosmetic_id((user or {}).get("chatBubble"), "chat_bubble")
+            entry = await self.store.append_chat(c.room_id, c.seat, c.conn_id, c.connection_epoch, text, chat_bubble=bubble)
             self.metrics.chat_messages += 1
             await self.fanout(c.room_id, {"type": "chat_message", **entry})
             return

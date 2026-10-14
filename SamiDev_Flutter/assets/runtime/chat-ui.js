@@ -61,6 +61,7 @@
       text.className = 'sd-chat-text';
       text.textContent = String(msg.text || '');
       body.append(name,text);
+      window.SamiDevCosmetics?.bubble(body,msg.chatBubble);
       row.appendChild(body);
 
       const openSenderProfile = (e) => {

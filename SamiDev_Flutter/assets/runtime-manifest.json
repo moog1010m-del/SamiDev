@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36133,
-      "sha256": "e48152bb8867ec96bdf990aa5a2329a9e74244afad8a195174feb4fb5c78b16b"
+      "sha256": "93d1a6d30d4f4f812ea75cdb12354e450f0276d7ffa5dfe1f63fa1ca9b32a7fc"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -28,8 +28,16 @@
       "sha256": "b896168b59ec99f672f9c4e804480c9a78e6f4ab1388e23e38bd7b4d20744939"
     },
     "chat-ui.js": {
-      "size": 19920,
-      "sha256": "1a7c3369ba52c56fba1b7f53168b7143666283d824ac6df44dd320b4143357cb"
+      "size": 19980,
+      "sha256": "2713f901dbe7bb906781edc038573cbf561df182fc46d9fc29b0bbef6a0afccd"
+    },
+    "cosmetic-ui.css": {
+      "size": 2966,
+      "sha256": "0b2df58b934d7fa32de998eca8a24f9d79f6dfef682e5777c994cfb21954a0ef"
+    },
+    "cosmetic-ui.js": {
+      "size": 835,
+      "sha256": "daabe289485f09b6f451e480e1bc4f0020eb6f758b78bde159caaf456cafe8b4"
     },
     "crazy8-audio.js": {
       "size": 3985,
@@ -97,7 +105,7 @@
     },
     "games/crazy8/attestation.json": {
       "size": 6484,
-      "sha256": "0f3a388d4728f657359303c549ba131eeb1f1e1b08747fe855b937b676d20832"
+      "sha256": "410cab1854e4242273216f895ec87278328fc1dc260a6be2d283d0543cc3fc2a"
     },
     "games/crazy8/dictionary.json": {
       "size": 28417,
@@ -132,8 +140,8 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "games/crazy8/index.html": {
-      "size": 7617,
-      "sha256": "e62ee1a59a73766df43e6e13cfdb92798f900aa558a73d80f9a92eecbf01dd41"
+      "size": 7760,
+      "sha256": "89d61b43962888e279eb1678a31d504fbb14bf2a8543a19878b54bacf4287580"
     },
     "games/crazy8/main.js": {
       "size": 783040,
@@ -301,7 +309,7 @@
     },
     "games/pool/attestation.json": {
       "size": 18360,
-      "sha256": "e30b6fd297e1cd09e28ff8361f612e029cc43be5c5ba03207c33a0394bda3f89"
+      "sha256": "5e06c2b0e4348a0f18cec3233ef93dc17538b24adf6e1e8af30509d9b2f2a893"
     },
     "games/pool/images/imported/themes/th_basic_background.webp": {
       "size": 290,
@@ -784,8 +792,8 @@
       "sha256": "1c3efbf483d7973fbe3dee71ad0051df3bc8d23333e7e211a62c60edbe0d0eb2"
     },
     "games/pool/index.html": {
-      "size": 7001,
-      "sha256": "f88ef52507c0e52939e7d3ae667e59ee0e9138f5b55d5a453e54de7ad461e2a7"
+      "size": 7144,
+      "sha256": "be306acde2cf7098355ebb94bbce543dcedda48a110085d1c102d2a1ba9be866"
     },
     "games/pool/main.js": {
       "size": 991187,
@@ -1013,7 +1021,7 @@
     },
     "games/tablesoccer/attestation.json": {
       "size": 8030,
-      "sha256": "fd27fd9fe501949200e239d9385256f0a24e7267038c661cd9841287c8188b9b"
+      "sha256": "e342c5ba36e50876010921fcf8ff396a89d94f5251f4a9c44b55591d81ecd2a1"
     },
     "games/tablesoccer/dictionary.json": {
       "size": 82289,
@@ -1112,8 +1120,8 @@
       "sha256": "5c3c2543293f9dcc881a47de08b1178164096bab564acab990c330c9335822d9"
     },
     "games/tablesoccer/index.html": {
-      "size": 7829,
-      "sha256": "fe4497a0fcaebd80135db697f0a6cfc431a1411fb590ac236574a4c2ad0643b8"
+      "size": 7972,
+      "sha256": "13ea4a3e19560edb4353ca4bc1a3ea437650c689f48864f4b04fbfc8ef8d6acc"
     },
     "games/tablesoccer/main.js": {
       "size": 967301,
@@ -1428,16 +1436,16 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "index.html": {
-      "size": 7647,
-      "sha256": "9b56a126478eaaa696ebb03501512f4537d947b9cdc14de4140d861f4ae62a9c"
+      "size": 7790,
+      "sha256": "4cc7808f8df837d5ac266a22a9897e97cdd4edde4061b741c043430767281d17"
     },
     "inventory-ui.css": {
       "size": 3954,
       "sha256": "3fd364b75c609c2765dacb711369e868a222c519dc0f5dc28f09216193adb653"
     },
     "inventory-ui.js": {
-      "size": 6284,
-      "sha256": "0569931b82c96c6a9b84e4c24f20381ee6a082f47fe45020c4ab12a36971cc90"
+      "size": 6638,
+      "sha256": "773429c7d8cae8e5940f012d0bb0dbc4f29790a9653c0dcde79a89ba09084b33"
     },
     "launcher.js": {
       "size": 11753,
@@ -1450,6 +1458,42 @@
     "match-reward-ui.js": {
       "size": 2851,
       "sha256": "fff9a0efd8b9d88a5aed0d6ed37d478673ee8a902d23d857741e217f7bc53758"
+    },
+    "platform/assets/cosmetics/badge_ember.webp": {
+      "size": 183518,
+      "sha256": "773306f7e942a7bb891626fb3d726be076a893fe36a07248969700ed75bcbce2"
+    },
+    "platform/assets/cosmetics/badge_moonstone.webp": {
+      "size": 164746,
+      "sha256": "51d751b0677b53476cd68fb0321c37a7999bce44f33f065e0465305534a36f5b"
+    },
+    "platform/assets/cosmetics/badge_shard.webp": {
+      "size": 188228,
+      "sha256": "c2e41ffef48092fa24a0cd5b49712aefbe66a95a5660c1dccf4d91c14d98186d"
+    },
+    "platform/assets/cosmetics/banner_canyon.webp": {
+      "size": 131280,
+      "sha256": "20be061a261b3b014b1597030d447190d95d0670387744ba9d637b118275ef79"
+    },
+    "platform/assets/cosmetics/banner_dunes.webp": {
+      "size": 134772,
+      "sha256": "6189218a00110dd9ed3ec46f5392f3491cb909cd5f2ccac8f7b8add9b6faeed5"
+    },
+    "platform/assets/cosmetics/banner_garden.webp": {
+      "size": 156304,
+      "sha256": "e5e8caca1adde5df148aa4701237816e632af431f6ad912338600b45e442a88e"
+    },
+    "platform/assets/cosmetics/chat_ember.webp": {
+      "size": 83082,
+      "sha256": "66c2213895eb873fbea875a895666f1d2a0ea872e11b8b171017ea6097934ebe"
+    },
+    "platform/assets/cosmetics/chat_mist.webp": {
+      "size": 78414,
+      "sha256": "b4cc59924e62ea1265800af198d59dad5fe9a13e621141ec42cf89b5178d8af1"
+    },
+    "platform/assets/cosmetics/chat_turquoise.webp": {
+      "size": 82464,
+      "sha256": "98dfd5d885d484cd5640c44f8fd4d3ce807e5976d5057564073ca36b4fc3f6ec"
     },
     "platform/assets/profile/calendar.svg": {
       "size": 993,
@@ -2332,20 +2376,20 @@
       "sha256": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085"
     },
     "platform/build.json": {
-      "size": 2423,
-      "sha256": "e9a651213bbb9e8381beb7900aa115e5faec939e756e6b5f405f3824f46dbcd5"
+      "size": 2604,
+      "sha256": "105e753f0deea4c55fcccd22c72c4d0748eba03cb138dc19485a5b9f38288daf"
     },
     "platform/index.html": {
-      "size": 36703,
-      "sha256": "385f3fc65c0e67f3c4ce96d1c2e3ec3f2701be2604c52719ec3fa1031222a5af"
+      "size": 37037,
+      "sha256": "720f4896a0466aff9b135e976e420fcb9ae90e598b3ab1cfa62e28ad68c26cee"
     },
     "platform/platform.css": {
       "size": 101181,
       "sha256": "3dd4ecc86be1557d555a54b89562ad4f5e4ea421c314269754efd6acfd244dc9"
     },
     "platform/platform.js": {
-      "size": 68514,
-      "sha256": "810a9335547a1a19d4d93a83003c50e2fcaf8dc19acb3b39ac182afcc71947b8"
+      "size": 69795,
+      "sha256": "6de461a82730a4fe997b3a9181864ae2278f6c73d7d613f50afe6bae90fa18f6"
     },
     "platform/profile-identity.css": {
       "size": 10976,
@@ -2364,8 +2408,8 @@
       "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
     },
     "player-profile-ui.js": {
-      "size": 33670,
-      "sha256": "88bfe9f41daad10a01fba723629b03c18c837be18af8854ff31266b166245581"
+      "size": 33760,
+      "sha256": "5ec91871c7a6a43a41dd6401e262434fe601b7167740b9b00c7c54984f8098e2"
     },
     "profile-details.css": {
       "size": 5610,

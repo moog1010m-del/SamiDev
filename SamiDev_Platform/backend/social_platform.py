@@ -103,6 +103,35 @@ def normalize_community_id(value: Any) -> str:
     return cid
 
 
+# Original static SamiDev collection. Keep old ownership usable without selling retired art.
+for _id, _item in STORE_CATALOG.items():
+    if str(_item.get("asset", "")).startswith("/platform/assets/stickers/samidev-stickers.png#"):
+        _item["retired"] = True
+STORE_CATALOG["badge_palm_swords"].update(name="نخلة المجلس", description="شارتك الافتراضية بهوية SamiDev.", asset="/platform/assets/profile/raster/palm-swords.webp", retired=False)
+for _id, _name, _description, _slot, _category, _price in [
+    ("badge_shard", "شظية البرق", "بريق فيروزي وحضور حاد بجانب اسمك.", "name_badge", "profile", 150),
+    ("badge_ember", "جمرة", "شعلة مرجانية بتصميم منحوت.", "name_badge", "profile", 150),
+    ("badge_moonstone", "حجر الليل", "هلال بلوري يضيء اسمك بهدوء.", "name_badge", "profile", 200),
+    ("banner_dunes", "أفق الزمرد", "غلاف ثابت بكثبان زمردية وشمس ذهبية.", "profile_banner", "banners", 250),
+    ("banner_garden", "حديقة الليل", "غلاف ثابت بحديقة ليلية وأغصان فضية.", "profile_banner", "banners", 250),
+    ("banner_canyon", "وادي الجمر", "غلاف ثابت بدرجات العنبر والنحاس.", "profile_banner", "banners", 250),
+    ("chat_turquoise", "حديث الفيروز", "إطار ذهبي وفيروزي لرسائلك في الروم والمباراة.", "chat_bubble", "chat", 200),
+    ("chat_mist", "همس الليل", "إطار فضي بلمسات بلورية بنفسجية لرسائلك.", "chat_bubble", "chat", 200),
+    ("chat_ember", "دفء الجمر", "إطار نحاسي ولمسات مرجانية لرسائلك.", "chat_bubble", "chat", 200),
+]:
+    STORE_CATALOG[_id] = dict(name=_name, description=_description, slot=_slot, category=_category,
+        gameId="", asset=f"/platform/assets/cosmetics/{_id}.webp", price=_price, availableToAll=False, default=False)
+for _id, _slot, _category, _name in [("chat_default", "chat_bubble", "chat", "الشات البسيط"), ("banner_default", "profile_banner", "banners", "الغلاف الافتراضي")]:
+    STORE_CATALOG[_id] = dict(name=_name, description="العودة إلى التصميم الافتراضي.", slot=_slot, category=_category, gameId="", asset="", price=0, availableToAll=True, default=True)
+
+STORE_DEFAULT_EQUIPPED.update(chat_bubble="chat_default", profile_banner="banner_default")
+
+def cosmetic_id(value: Any, slot: str) -> str:
+    item_id = str(value or "")
+    item = STORE_CATALOG.get(item_id)
+    return item_id if item and item.get("slot") == slot else ""
+
+
 class PlatformError(Exception):
     def __init__(self, code: str, message: str, status: int = 400):
         super().__init__(message)
@@ -232,6 +261,8 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     badge_item = STORE_CATALOG.get(badge)
     out["nameBadgeAsset"] = badge_item.get("asset", "/platform/assets/profile/raster/palm-swords.webp") if badge_item else "/platform/assets/profile/raster/palm-swords.webp"
     out["nameBadgeName"] = badge_item.get("name", "سيفين ونخلة") if badge_item else "سيفين ونخلة"
+    out["profileBanner"] = cosmetic_id(raw.get("profileBanner"), "profile_banner")
+    out["chatBubble"] = cosmetic_id(raw.get("chatBubble"), "chat_bubble")
     if include_avatar:
         out["avatarData"] = str(raw.get("avatarData") or "")
     if relation is not None:
@@ -453,6 +484,7 @@ class PlatformService:
             "id": secrets.token_urlsafe(8), "communityId": cid, "userId": uid,
             "displayName": sanitize_plain_text(user.get("displayName") or user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
             "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
+            "chatBubble": cosmetic_id(user.get("chatBubble"), "chat_bubble"),
         }
         if self.r is not None:
             key = self.k_community_chat(cid)
@@ -715,6 +747,8 @@ class PlatformService:
         equipped = effective_store_equipment(equipped, inventory)
         catalog = []
         for item_id, item in STORE_CATALOG.items():
+            if item.get("retired") and item_id not in inventory:
+                continue
             slot = str(item.get("slot") or "")
             if slot == "profile_stars":
                 catalog.append({
@@ -751,6 +785,8 @@ class PlatformService:
         item = STORE_CATALOG.get(item_id)
         if not item:
             raise PlatformError("STORE_ITEM_NOT_FOUND", "العنصر غير موجود في المتجر", 404)
+        if item.get("retired"):
+            raise PlatformError("STORE_ITEM_RETIRED", "هذا العنصر لم يعد معروضًا للبيع", 400)
         user = await self.get_user(uid)
         if not user:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
@@ -850,8 +886,9 @@ class PlatformService:
                 raise PlatformError("STORE_ITEM_NOT_OWNED", "هذا العنصر غير مملوك", 403)
             p = self.r.pipeline(transaction=True)
             p.hset(self.k_equipped(uid), slot, item_id)
-            if slot == "name_badge":
-                p.hset(self.k_user(uid), "nameBadge", item_id)
+            field = {"name_badge": "nameBadge", "profile_banner": "profileBanner", "chat_bubble": "chatBubble"}.get(slot)
+            if field:
+                p.hset(self.k_user(uid), field, item_id)
             await p.execute()
             return {str(k): str(v) for k, v in (await self.r.hgetall(self.k_equipped(uid))).items()}
         async with self.lock:
@@ -859,8 +896,9 @@ class PlatformService:
                 raise PlatformError("STORE_ITEM_NOT_OWNED", "هذا العنصر غير مملوك", 403)
             equipped = self.mem_equipped.setdefault(uid, {})
             equipped[slot] = item_id
-            if slot == "name_badge":
-                user["nameBadge"] = item_id
+            field = {"name_badge": "nameBadge", "profile_banner": "profileBanner", "chat_bubble": "chatBubble"}.get(slot)
+            if field:
+                user[field] = item_id
             return dict(equipped)
 
     @staticmethod

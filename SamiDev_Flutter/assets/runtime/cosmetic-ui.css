@@ -1,0 +1,21 @@
+/* Only allowlisted, locally bundled artwork is supplied by cosmetic-ui.js. */
+.sd-custom-cover{background-image:var(--sd-profile-cover)!important;background-size:cover!important;background-position:center!important}
+.sd-custom-cover::after,.sd-custom-cover>.profile-cover-emblem,.sd-custom-cover>.lobby-profile-cover-mark,.sd-custom-cover>.sdpp-cover-mark{display:none!important}
+.sd-decorated-message{box-sizing:border-box!important;border:solid transparent!important;border-width:28px 34px 24px!important;border-radius:0!important;border-image-source:var(--sd-bubble-frame)!important;border-image-slice:55 85 50 85!important;border-image-repeat:stretch!important;padding:6px 8px!important;background:#12242d!important;background-clip:padding-box!important;min-width:170px;max-width:100%;color:#edf3f5!important;box-shadow:none!important;overflow-wrap:anywhere}
+.sd-decorated-message p,.sd-decorated-message .sd-chat-text{color:#edf3f5!important}.sd-decorated-message strong,.sd-decorated-message .sd-chat-name{color:#f0d5a0!important}.sd-decorated-message time{color:#adbac8!important}
+.store-chat-preview{width:min(330px,100%);margin:12px auto;direction:rtl;text-align:right;font:14px/1.7 system-ui}.store-chat-preview small{font-size:10px;color:#adbac8;display:block}
+.store-item-card .store-chat-preview{min-width:0;width:100%;font-size:12px;margin:0;height:164px;display:flex;flex-direction:column;justify-content:center}.store-item-card .store-chat-preview small{font-size:9px}
+.store-item-card .store-banner-art{height:164px;width:100%;object-fit:cover;border-radius:12px;padding:0}
+html[data-theme="light"] .sd-decorated-message{background-color:#12242d!important}
+@media(max-width:600px){.store-item-card .store-chat-preview.sd-decorated-message{height:132px;border-width:24px 22px 20px!important;padding:4px!important;font-size:11px}.store-item-card .store-banner-art{height:132px}}
+/* Keep chat previews wide, with the same proportions as an actual message. */
+.store-item-card .store-chat-preview{height:90px;margin:37px 0;flex-shrink:0}
+.store-chat-preview:not(.sd-decorated-message){border:1px solid #78939a;border-radius:14px;padding:14px;background:var(--panel,#152832);color:var(--text,#edf3f5)}
+@media(max-width:600px){.store-item-card .store-chat-preview{height:90px;margin:21px 0}}
+
+#community-chat-messages .sd-decorated-message .community-chat-meta strong,#sd-chat-messages .sd-decorated-message .sd-chat-name{color:#f0d5a0!important}
+#community-chat-messages .sd-decorated-message .community-chat-meta time{color:#adbac8!important}
+/* Long decorated messages must reserve the avatar's full width. */
+.community-chat-message>.community-chat-avatar{flex:0 0 34px}
+.community-chat-message>.sd-decorated-message{max-width:calc(100% - 42px)!important;min-width:min(170px,calc(100% - 42px))!important}
+#sd-chat-messages .sd-chat-message>.sd-decorated-message{max-width:calc(100% - 39px)!important;min-width:min(170px,calc(100% - 39px))!important}

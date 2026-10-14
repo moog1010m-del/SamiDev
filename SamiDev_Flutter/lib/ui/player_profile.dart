@@ -105,7 +105,9 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
         if(loading)const Padding(padding:EdgeInsets.all(32),child:CircularProgressIndicator()),
         if(u!=null)...[
           ClipRRect(borderRadius:BorderRadius.circular(16),child:Image.asset(
-            'assets/runtime/platform/assets/profile/identity/samidev-night-cover.png',
+            {'banner_dunes','banner_garden','banner_canyon'}.contains(u['profileBanner'])
+              ? 'assets/runtime/platform/assets/cosmetics/${u['profileBanner']}.webp'
+              : 'assets/runtime/platform/assets/profile/identity/samidev-night-cover.png',
             width:double.infinity,height:145,fit:BoxFit.cover)),
           Transform.translate(offset:const Offset(0,-52),child:PlayerAvatar(api:widget.api,user:u,radius:58,framed:true)),
           Transform.translate(offset:const Offset(0,-32),child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[

@@ -93,6 +93,7 @@
     renderAvatar('#profile-editor-avatar-image','#profile-editor-avatar-fallback',name,user.avatarData);
     renderAvatar('#lobby-avatar-image','#lobby-avatar-fallback',name,user.avatarData);
     renderAvatar('#community-user-avatar-image','#community-user-avatar-fallback',name,user.avatarData);
+    document.querySelectorAll('.lobby-profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
     const communityUserName=$('#community-user-name');if(communityUserName)communityUserName.textContent=name;
     const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent='@'+String(user.username||'player');
     const lobbyName=$('#lobby-profile-name');if(lobbyName)lobbyName.textContent=name;
@@ -313,6 +314,12 @@
       });
     });
   }
+  function cosmeticProductArt(item,className=''){
+    if(item.slot==='chat_bubble')return `<div class="store-chat-preview ${escapeHtml(className)}" data-chat-cosmetic="${escapeHtml(item.id)}"><strong>مرحبًا، جاهز للمباراة؟</strong><small>سامي · الآن</small></div>`;
+    if(item.slot==='profile_banner'&&!item.asset)return '<div class="store-item-visual lobby-profile-cover"></div>';
+    return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
+  }
+  function applyCosmeticPreviews(root){root.querySelectorAll('[data-chat-cosmetic]').forEach(el=>window.SamiDevCosmetics?.bubble(el,el.dataset.chatCosmetic));}
   function renderStore(){
     wireStoreCategoryButtons();
     const data=state.store||{}, catalog=Array.isArray(data.catalog)?data.catalog:[], inventory=Array.isArray(data.inventory)?data.inventory:[], ledger=Array.isArray(data.ledger)?data.ledger:[];
@@ -325,9 +332,10 @@
     const filteredCatalog=catalog.filter(item=>{
       if(selectedCat==='all')return true;
       if(selectedCat==='profile')return item.category==='profile';
+      if(selectedCat==='chat'||selectedCat==='banners')return item.category===selectedCat;
       if(selectedCat==='pool')return item.category==='pool';
       if(selectedCat==='carrom')return item.category==='carrom';
-      if(selectedCat==='other')return !['profile','pool','carrom'].includes(item.category);
+      if(selectedCat==='other')return !['profile','chat','banners','pool','carrom'].includes(item.category);
       return true;
     });
 
@@ -349,7 +357,8 @@
       const owned=item.owned||item.availableToAll||item.default;
       const card=document.createElement('article');card.className='store-item-card'+(active?' is-equipped':'');card.dataset.itemId=item.id;
       card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`معاينة ${item.name}`);
-      card.innerHTML=window.SamiDevStickerArt.markup(item.asset,'store-item-visual',item.name)+`<div class="store-item-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.description||'')}</small><div class="store-product-footer"><span class="store-item-price">${item.price?formatProfileStat(item.price)+' <span class="coin-mark small">C</span>':'مجاني'}</span><span class="store-item-badge">${active?'مفعّل':owned?'مملوك':'معاينة'}</span></div></div>`;
+      card.innerHTML=cosmeticProductArt(item,'store-item-visual')+`<div class="store-item-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.description||'')}</small><div class="store-product-footer"><span class="store-item-price">${item.price?formatProfileStat(item.price)+' <span class="coin-mark small">C</span>':'مجاني'}</span><span class="store-item-badge">${active?'مفعّل':owned?'مملوك':'معاينة'}</span></div></div>`;
+      applyCosmeticPreviews(card);
       card.onclick=()=>openStoreProduct(item.id,card);
       card.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openStoreProduct(item.id,card);}};
       box.append(card);
@@ -387,7 +396,7 @@
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
     modal.innerHTML=`<section class="store-product-sheet" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
       <header><span>رصيدك <b>${formatProfileStat(coins)}</b> <span class="coin-mark small">C</span></span><button type="button" data-product-close aria-label="إغلاق">×</button></header>
-      <div class="store-product-art">${window.SamiDevStickerArt.markup(item.asset,'',item.name)}</div>
+      <div class="store-product-art">${cosmeticProductArt(item)}</div>
       ${preview?`<div class="store-name-preview">${preview}<strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong></div>`:''}
       <h3 id="store-product-title">${escapeHtml(item.name)}</h3><p class="store-product-description">${escapeHtml(item.description||'')}</p>
       ${isStar?`<small class="store-star-count">تملك ${stars} من 5 نجوم. ${stars<5?'هذه العملية تضيف نجمة واحدة.':''}</small>`:''}
@@ -395,6 +404,7 @@
       ${confirming?`<div class="store-purchase-confirm"><h4>تأكيد الشراء</h4><p>شراء ${escapeHtml(item.name)} مقابل <b>${formatProfileStat(price)} كوينز</b>؟</p><small>رصيدك بعد الشراء: ${formatProfileStat(coins-price)} كوينز</small><div><button type="button" class="ghost" data-product-back>رجوع</button><button type="button" class="primary" data-product-confirm>تأكيد الشراء</button></div></div>`:
       `<footer><strong>${price?formatProfileStat(price)+' كوينز':'مجاني'}</strong><button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'تفعيل الملصق أو التصميم':'شراء'}</button></footer>`}
     </section>`;
+    applyCosmeticPreviews(modal);
     $('[data-product-close]',modal).onclick=closeStoreProduct;
     $('[data-product-back]',modal)?.addEventListener('click',()=>renderStoreProduct(false));
     $('[data-product-confirm]',modal)?.addEventListener('click',()=>buyStoreItem(item.id));
@@ -427,6 +437,7 @@
         if(bItem){state.user.nameBadgeAsset=bItem.asset;state.user.nameBadgeName=bItem.name;}
         setUser(state.user);
       }
+      if(state.user){state.user.profileBanner=result.equipped?.profile_banner||'';state.user.chatBubble=result.equipped?.chat_bubble||'';setUser(state.user);}
       toast('تم تفعيل العنصر بنجاح');
     }
     catch(err){button.disabled=false;toast(err.message||'تعذر تجهيز العنصر',true);}
@@ -590,7 +601,7 @@
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);article.append(bubble);update.add(article);
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);article.append(bubble);update.add(article);
     }update.finish();
     if(wasNearBottom||!box.dataset.loaded){box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
   }
@@ -609,7 +620,7 @@
   }
   function renderCommunityPublicProfile(user){
     const keepFull=$('#community-profile-modal').classList.contains('sd-profile-expanded');
-    activePublicProfile=user;
+    activePublicProfile=user;window.SamiDevCosmetics?.cover($('#community-profile-modal .profile-cover'),user.profileBanner);
     const name=user.displayName||user.username||'Player';
     $('#community-profile-name').textContent=name;
     const badgeAsset=user.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';

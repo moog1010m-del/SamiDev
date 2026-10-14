@@ -168,6 +168,7 @@
     card.querySelector('[data-action="full"]')?.addEventListener('click',()=>setProfileFull(true));
     card.querySelector('[data-action="collection"]')?.addEventListener("click",()=>{setProfileFull(true);card.querySelector(".sd-collection-section")?.scrollIntoView({block:"nearest"});});
     setProfileFull(profileFull);
+    window.SamiDevCosmetics?.cover(card.querySelector('.sdpp-cover'),user.profileBanner);
     window.SamiDevProfileDetails?.render(card.querySelector('[data-profile-details]'),user,{own:user.relation==='self'});
     card.querySelector('[data-action="friend"]')?.addEventListener('click',()=>friendAction());
     card.querySelector('[data-action="reputation"]')?.addEventListener('click',()=>reputationAction());

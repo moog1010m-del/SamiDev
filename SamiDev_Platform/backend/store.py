@@ -434,13 +434,13 @@ class MemoryStore:
             room.expires_at = time.monotonic() + ROOM_TTL_SECONDS
             return entry
 
-    async def append_chat(self, room_id: str, seat: int, conn_id: str, connection_epoch: int, text: str) -> dict[str, Any]:
+    async def append_chat(self, room_id: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "") -> dict[str, Any]:
         async with self.lock:
             room = self.rooms.get(room_id)
             player = room.players.get(seat) if room else None
             if not player or not player.connected or player.conn_id != conn_id or player.connection_epoch != connection_epoch:
                 raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
-            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms()}
+            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble}
             room.chat.append(message)
             if len(room.chat) > CHAT_HISTORY_MAX:
                 room.chat = room.chat[-CHAT_HISTORY_MAX:]
@@ -1058,8 +1058,8 @@ class RedisStore:
         await self._touch(rid)
         return {"seat": seat, "packet": packet, "moveIndex": code}
 
-    async def append_chat(self, rid: str, seat: int, conn_id: str, connection_epoch: int, text: str) -> dict[str, Any]:
-        message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms()}
+    async def append_chat(self, rid: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "") -> dict[str, Any]:
+        message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble}
         script = """
         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end

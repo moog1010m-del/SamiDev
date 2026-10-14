@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'chat_cosmetic.dart';
 import '../runtime/api.dart';
 import 'player_profile.dart';
 import 'sticker_art.dart';
@@ -122,7 +123,7 @@ class CommunityHubState extends State<CommunityHub> {
       Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(mainAxisSize:MainAxisSize.min,children:[
         Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:8),
         if(date!=null)Text(TimeOfDay.fromDateTime(date).format(context),style:TextStyle(fontSize:10,color:Theme.of(context).colorScheme.onSurfaceVariant)),
-      ]),const SizedBox(height:5),Container(padding:const EdgeInsets.symmetric(horizontal:16,vertical:11),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainerHighest,borderRadius:BorderRadius.circular(18)),
+      ]),const SizedBox(height:5),ChatCosmetic(id:message['chatBubble']?.toString()??'',
         child:Text(message['text']?.toString()??'',textDirection:TextDirection.rtl,style:const TextStyle(fontSize:15,height:1.4))),])),
     ])));
   }
