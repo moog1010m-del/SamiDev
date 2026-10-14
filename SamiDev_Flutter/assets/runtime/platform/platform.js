@@ -546,11 +546,19 @@
   function profileSprite(className){const span=document.createElement('span');span.className=`profile-sprite ${className}`;span.setAttribute('aria-hidden','true');return span;}
   function communityStarsMarkup(){return Array.from({length:5},()=>'<span class="profile-sprite profile-sprite-star community-member-star" aria-hidden="true"></span>').join('');}
   function emptyBlock(text){const el=document.createElement('div');el.className='empty small';el.textContent=text;return el;}
+  // Keep unchanged DOM nodes mounted: image requests and scroll position stay stable.
+  const stableLists=new WeakMap();
+  function stableList(box){const previous=stableLists.get(box)||new Map(),next=new Map(),nodes=[];return {
+    reuse(key,value){const signature=JSON.stringify(value),old=previous.get(key);if(old?.signature===signature){next.set(key,old);nodes.push(old.node);return true;}this.key=key;this.signature=signature;return false;},
+    add(node){next.set(this.key,{signature:this.signature,node});nodes.push(node);},
+    finish(){const keep=new Set(nodes);for(const child of [...box.children])if(!keep.has(child))child.remove();nodes.forEach((node,i)=>{if(box.children[i]!==node)box.insertBefore(node,box.children[i]||null);});stableLists.set(box,next);}
+  };}
   function renderCommunityMembers(){
     const box=$('#community-members');if(!box)return;
-    const members=visibleCommunityMembers();box.replaceChildren();
-    if(!members.length){box.append(emptyBlock('لا يوجد أعضاء آخرون متصلون الآن.'));return;}
+    const members=visibleCommunityMembers(),update=stableList(box);
+    if(!members.length){if(!update.reuse('empty',null))update.add(emptyBlock('لا يوجد أعضاء آخرون متصلون الآن.'));update.finish();return;}
     for(const u of members){
+      if(update.reuse(String(u.id),[u.id,u.displayName,u.username,u.nameBadgeAsset,u.nameBadgeName,u.starsCount,u.wins,u.reputation]))continue;
       const name=String(u.displayName||u.username||'Player');
       const row=document.createElement('div');row.className='community-member';row.dataset.publicProfile=String(u.id||'');row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label',`فتح ملف ${name}`);
       row.append(avatarNode(u,'community-member-avatar'));
@@ -570,19 +578,20 @@
       }
       const meta=document.createElement('div');meta.className='community-member-meta';
       for(const text of [`@${String(u.username||'player')}`,`فوز ${formatProfileStat(u.wins)}`,`سمعة ${formatProfileStat(u.reputation)}`]){const span=document.createElement('span');span.textContent=text;meta.append(span);}
-      copy.append(title,stars,meta);const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);box.append(row);
-    }
+      copy.append(title,stars,meta);const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);update.add(row);
+    }update.finish();
   }
   function chatTime(ts){const d=new Date(Number(ts)||Date.now());return d.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});}
   function renderCommunityMessages(){
-    const box=$('#community-chat-messages');if(!box)return;const wasNearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;box.replaceChildren();
-    if(!state.communityMessages.length){box.append(emptyBlock('ابدأ أول محادثة هنا.'));return;}
-    for(const m of state.communityMessages){
+    const box=$('#community-chat-messages');if(!box)return;const wasNearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70,update=stableList(box);
+    if(!state.communityMessages.length){if(!update.reuse('empty',null))update.add(emptyBlock('ابدأ أول محادثة هنا.'));update.finish();return;}
+    for(const [index,m] of state.communityMessages.entries()){
+      if(update.reuse(String(m.id||JSON.stringify([m.userId,m.createdAt,index])),[m,state.user?.id]))continue;
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);article.append(bubble);box.append(article);
-    }
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(meta,text);article.append(bubble);update.add(article);
+    }update.finish();
     if(wasNearBottom||!box.dataset.loaded){box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
   }
   function closeCommunityProfile(){
@@ -694,8 +703,9 @@
   }
   function renderRooms(){
     const rooms=state.rooms;
-    const box=$('#rooms'); if(!rooms.length){box.innerHTML='<div class="empty">لا توجد مباريات في هذه المساحة بعد. أنشئ أول مباراة.</div>';return;}
-    box.innerHTML=rooms.map(r=>{
+    const box=$('#rooms');const signature=JSON.stringify([state.activeCommunity?.id,rooms]);if(box.dataset.renderSignature===signature)return;box.dataset.renderSignature=signature;const update=stableList(box);if(!rooms.length){if(!update.reuse('empty',null))update.add(emptyBlock('لا توجد مباريات في هذه المساحة بعد. أنشئ أول مباراة.'));update.finish();return;}
+    rooms.forEach(r=>{
+      if(update.reuse(String(r.roomId),r))return;
       const open=!r.started&&Number(r.occupied)<Number(r.capacity);
       const watching=!!r.begun&&!r.finished;
       const preparing=!!r.started&&!r.begun;
@@ -710,7 +720,7 @@
         : watching
           ? `<button class="secondary watch-room" data-room="${rid}">مشاهدة</button>`
           : '<button class="secondary room-waiting" disabled>تجهيز</button>';
-      return `<article class="room-card community-room-card">
+      const template=document.createElement('template');template.innerHTML=`<article class="room-card community-room-card">
         <div class="room-mobile-top"><div class="room-code">${rid}</div>${st}</div>
         <div class="room-game-identity">
           <span class="room-game-mark"><img src="/room-sprites/${({pool:"pool",carrom:"carrom",crazy8:"cards",tablesoccer:"football"})[stg.gameId]||"carrom"}.png?v=36" alt="${modeName}" width="58" height="58"></span>
@@ -721,8 +731,8 @@
         <div class="room-mobile-meta room-meta"><div><b>${roomKind(r)}</b><small>النوع</small></div><div><b>${r.occupied}/${r.capacity}</b><small>اللاعبون</small></div><div><b>${modeName}</b><small>النمط</small></div></div>
         <div class="room-mobile-host room-host">المنشئ: ${host}</div>
         ${action}
-      </article>`;
-    }).join('');
+      </article>`;update.add(template.content.firstElementChild);
+    });update.finish();
     wireAvatarImages(box);
     $$('.join-room',box).forEach(b=>b.onclick=()=>joinRoom(b.dataset.room));
     $$('.watch-room',box).forEach(b=>b.onclick=()=>watchRoom(b.dataset.room));

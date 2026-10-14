@@ -7,6 +7,7 @@
   let unread = 0;
   const seen = new Set();
   const messages = [];
+  let renderedRows=new Map();
 
   const net = () => window.SamiDevNetwork;
   const platform = () => window.SamiDevPlatform;
@@ -39,11 +40,15 @@
   function render() {
     if (!list) return;
     const recent = messages.slice(-30);
-    list.replaceChildren();
-    for (const msg of recent) {
+    const nearBottom=list.scrollHeight-list.scrollTop-list.clientHeight<70,nextRows=new Map(),nodes=[];
+    for (const [index,msg] of recent.entries()) {
+      const player = playerForSeat(msg.seat);
+      const key=String(msg.id||JSON.stringify([msg.seat,msg.text,index]));
+      const signature=JSON.stringify([msg,player?.accountId,player?.name,net()?.state?.seat]);
+      const cached=renderedRows.get(key);
+      if(cached?.signature===signature){nextRows.set(key,cached);nodes.push(cached.row);continue;}
       const row = document.createElement('div');
       row.className = 'sd-chat-message' + (msg.seat != null && net()?.state?.seat != null && Number(net()?.state?.seat)>=0 && Number(msg.seat) === Number(net()?.state?.seat) ? ' me' : '');
-      const player = playerForSeat(msg.seat);
       const av = avatarFor(player);
       row.appendChild(av);
 
@@ -77,9 +82,12 @@
       name.title = `الملف الشخصي: ${player?.name || ''}`;
       name.addEventListener('click', openSenderProfile);
 
-      list.appendChild(row);
+      nextRows.set(key,{signature,row});nodes.push(row);
     }
-    list.scrollTop = list.scrollHeight;
+    const keep=new Set(nodes);for(const child of [...list.children])if(!keep.has(child))child.remove();
+    nodes.forEach((row,i)=>{if(list.children[i]!==row)list.insertBefore(row,list.children[i]||null);});
+    renderedRows=nextRows;
+    if(nearBottom)list.scrollTop = list.scrollHeight;
   }
 
   function updateUnread() {
