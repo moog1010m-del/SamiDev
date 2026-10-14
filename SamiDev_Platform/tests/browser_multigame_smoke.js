@@ -18,6 +18,7 @@ const storage={getItem:()=>null,setItem:noop,removeItem:noop};
 const doc={getElementById:id=>id==='game'?canvas:id==='status'?status:null,createElement:elem,body:elem('body'),head:elem('head'),addEventListener:noop,querySelector:()=>null,querySelectorAll:()=>[],documentElement:elem('html'),fonts:{ready:Promise.resolve()}};
 function imageSize(file){
  const b=fs.readFileSync(file);
+ if(file.endsWith('.svg')){const tag=b.toString('utf8').match(/<svg\b[^>]*>/)?.[0]||'';const width=Number(tag.match(/\bwidth="([0-9.]+)"/)?.[1]),height=Number(tag.match(/\bheight="([0-9.]+)"/)?.[1]);if(width>0&&height>0)return [width,height];}
  if(b.subarray(1,4).toString()==='PNG')return [b.readUInt32BE(16),b.readUInt32BE(20)];
  if(b.toString('ascii',0,4)==='RIFF'&&b.toString('ascii',8,12)==='WEBP'){
   for(let offset=12;offset+8<b.length;){const type=b.toString('ascii',offset,offset+4),size=b.readUInt32LE(offset+4),data=offset+8;

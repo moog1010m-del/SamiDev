@@ -31,3 +31,9 @@
 #sd-chat-messages .sd-chat-message.me{align-self:flex-end!important;flex-direction:row-reverse!important;margin-left:auto!important;margin-right:0!important}
 #sd-chat-messages .sd-chat-message-body,#sd-chat-messages .sd-chat-message.me .sd-chat-message-body{direction:rtl;background:#23343e;border-color:#36505c;border-radius:12px}
 #sd-chat-messages .sd-chat-message.me .sd-chat-name{color:#e2c887!important}
+
+#sd-chat-messages{overscroll-behavior:contain;min-height:0!important;overflow-y:auto!important}
+#sd-chat-messages .sd-chat-message{flex-shrink:0}
+#sd-chat-header,#sd-chat-form{flex-shrink:0}
+.sd-chat-message-body{box-shadow:0 3px 12px #00000012}
+@media(min-width:821px) and (hover:hover) and (pointer:fine){#sd-chat-shell{display:flex!important;flex-direction:column;flex:1;min-height:0;height:100%}}

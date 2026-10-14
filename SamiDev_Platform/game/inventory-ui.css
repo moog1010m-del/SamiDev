@@ -2,3 +2,14 @@
 
 .sd-inventory-trigger[hidden]{display:none}
 html[data-theme="light"] .sd-inventory-panel{background:#fafafa;color:#17222d}html[data-theme="light"] .sd-inventory-card{background:#edf1f4;color:#17222d}
+
+/* Collection controls and quiet product presentation. */
+.sd-inventory-trigger{width:48px;height:48px;min-height:48px;padding:11px;border-radius:15px;background:#142b32;color:#e2bf79;border-color:#4f656b}
+.sd-menu-item .ico svg{width:24px;height:24px;display:block}
+.sd-inventory-card{background:#13242c;border-color:#2c424c;border-radius:20px}
+.sd-inventory-card img{height:170px;padding:24px;box-sizing:border-box;background:transparent}
+.sd-inventory-card.is-equipped{border-color:#bba16b;box-shadow:inset 0 0 0 1px #bba16b24}
+.sd-inventory-card h3{font:650 16px/1.5 system-ui}.sd-inventory-card p{font:13px/1.7 system-ui;color:#9eb2bc}
+.sd-inventory-card div{padding:16px;gap:10px}.sd-inventory-note{line-height:1.8}.sd-inventory-card button:disabled{cursor:default}
+@media(max-width:540px){.sd-inventory-card img{height:135px;padding:16px}.sd-inventory-card div{padding:12px}.sd-inventory-trigger{padding:11px}}
+html[data-theme="light"] .sd-inventory-card{background:#f1f6f5;border-color:#d3dfdd}

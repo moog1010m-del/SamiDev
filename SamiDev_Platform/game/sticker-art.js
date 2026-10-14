@@ -5,6 +5,7 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function cell(value){if(value==='/platform/assets/profile/identity/profile-atlas.png#star')return 9;const match=String(value||'').match(/^\/platform\/assets\/stickers\/samidev-stickers\.png#cell-([0-8])$/);return match?Number(match[1]):null;}
   function markup(value,className='',label=''){
+    value=String(value||'').replace('/images/cues/classic-preview.webp','/images/cues/classic.webp').replace('/images/cues/moon-preview.webp','/images/cues/moon.webp');
     const index=cell(value);
     if(index!==null){
       const col=index===9?0:index%3,row=index===9?0:Math.floor(index/3),id='sd-sticker-clip-'+(++clipId);

@@ -27,3 +27,12 @@ html[data-theme="light"] .store-product-sheet{background:#f9fbfa;color:#243734;b
  .store-wallet-card{min-height:48px;flex-direction:row;align-items:center;padding:10px 12px}.store-wallet-main>div{display:flex;align-items:center;gap:10px}.store-wallet-main>div>span{display:none}.store-wallet-main>.coin-mark{width:28px;height:28px;font-size:14px}.store-wallet-main strong{font-size:22px;letter-spacing:0}
  .store-section-head>div>small{display:none}.store-section-head h3{font-size:15px}.store-item-copy{min-height:94px}.store-item-visual{height:112px}
 }
+
+/* Let the artwork breathe without boxed image backdrops. */
+.store-item-card{border-radius:20px;padding:18px 14px;background:var(--panel);transition:border-color .15s,transform .15s}
+.store-item-card:hover{border-color:#6d9896;transform:translateY(-2px)}
+.store-item-visual{height:164px;padding:18px;box-sizing:border-box;filter:drop-shadow(0 8px 9px #0002)}
+.store-item-copy small{color:var(--muted);font-size:12px}.store-product-footer{border-top:1px solid var(--line);padding-top:12px}
+.store-product-art{background:transparent;height:220px}.store-product-sheet{border-radius:24px}
+@media(max-width:600px){.store-item-card{padding:12px 9px;border-radius:16px}.store-item-visual{height:132px;padding:12px}.store-item-copy strong{font-size:14px}.store-product-art{height:175px}}
+@media(prefers-reduced-motion:reduce){.store-item-card{transition:none}.store-item-card:hover{transform:none}}

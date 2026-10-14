@@ -1155,6 +1155,15 @@
             texture=atlas;state.carromBoardArtwork='samidev-walnut';
           }catch(error){if(runtimeDebug)console.warn('[SamiDev] wood artwork fallback',error);}
         }
+        if(isPool && path==='images/ui/ui.webp'){
+          try{
+            const icons=await Promise.all(['aim-path-off','aim-path-on'].map(name=>new Promise((accept,reject)=>{const icon=new Image();icon.onload=()=>accept(icon);icon.onerror=reject;icon.src='/images/controls/'+name+'.svg';})));
+            const atlas=document.createElement('canvas');atlas.width=img.width;atlas.height=img.height;
+            const context=atlas.getContext('2d');context.drawImage(img,0,0);
+            [[1244,219],[1237,291]].forEach(([x,y],i)=>{context.clearRect(x,y,64,64);context.drawImage(icons[i],x,y,64,64);});
+            texture=atlas;
+          }catch(error){if(runtimeDebug)console.warn('[SamiDev] aim icon fallback',error);}
+        }
         state.images.set(norm(path),texture);resolve();
       };
       img.onerror=()=>{

@@ -52,6 +52,7 @@ flutter:
     - assets/runtime/games/tablesoccer/scene-ui/ShopWidget/
     - assets/runtime/games/tablesoccer/sounds/
     - assets/runtime/images/
+    - assets/runtime/images/controls/
     - assets/runtime/images/cues/
     - assets/runtime/images/themes/
     - assets/runtime/imported/

@@ -251,7 +251,7 @@
       <div class="sd-menu-backdrop"></div>
       <button id="sd-room-menu-button" type="button" aria-label="قائمة المباراة">⋯</button><button id="sd-room-back-button" type="button" aria-label="العودة إلى المساحة">›</button>
       <div id="sd-room-menu" aria-hidden="true">
-        <button class="sd-menu-item" id="sd-items" type="button"><span class="ico">▧</span><span>مقتنياتي</span></button>
+        <button class="sd-menu-item" id="sd-items" type="button"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9M8 5.3l8 4.5"/></svg></span><span>مقتنياتي</span></button>
         <button class="sd-menu-item" id="sd-info" type="button"><span class="ico">ⓘ</span><span>معلومات المباراة</span></button>
         <button class="sd-menu-item" id="sd-invite" type="button"><span class="ico">✉️</span><span>دعوة صديق</span></button>
         <button class="sd-menu-item" id="sd-sound" type="button"><span class="ico" id="sd-sound-icon">🔊</span><span id="sd-sound-label">كتم الصوت</span></button>
