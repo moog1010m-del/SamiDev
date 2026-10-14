@@ -3,20 +3,20 @@
   "algorithm": "sha256",
   "games": {
     "carrom": {
-      "sha256": "25a933fb14fe7db07dc04ef5bb14ee36630a9e46905c3a79e240195908d8a3a0",
+      "sha256": "aed1604cc5a3573340520533605186e62d20132764b197c52ae68008d7345c10",
       "main": "main.js"
+    },
+    "crazy8": {
+      "sha256": "9211d150c3160e51180d078ffcc22ff1aa14453a9aa88b4491df4f706d590b6c",
+      "main": "games/crazy8/main.js"
+    },
+    "pool": {
+      "sha256": "06a46ea6d9d13547761d0dbef65b7291f19e60f8f2ee72cb9e2e502d241fae20",
+      "main": "games/pool/main.js"
     },
     "tablesoccer": {
       "sha256": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085",
       "main": "games/tablesoccer/main.js"
-    },
-    "crazy8": {
-      "sha256": "0286e37092df64924d988e1c0e4f3fbe9a4d934defca66457730ebf55195ce59",
-      "main": "games/crazy8/main.js"
-    },
-    "pool": {
-      "sha256": "b86fb993ac9f7f1aeabad0637200a3a814c4a3690439461625b0f1d1b68400fd",
-      "main": "games/pool/main.js"
     }
   }
 }
