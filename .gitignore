@@ -68,3 +68,7 @@ Thumbs.db
 *.tmp
 .samidev-recordings/
 SamiDev_Platform/recordings/
+# Secrets & Firebase credentials
+*firebase-admin*.json
+*google-services*.json
+secrets/
