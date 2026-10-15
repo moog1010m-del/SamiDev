@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import re
 import secrets
 import time
@@ -11,6 +12,7 @@ from games import GAMES, game_id, game_capacity
 
 ROOM_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 ROOM_TTL_SECONDS = 6 * 60 * 60
+ROOM_WAIT_SECONDS = max(1, min(3600, int(os.getenv("SAMIDEV_ROOM_WAIT_SECONDS", "300"))))
 TOKEN_TTL_SECONDS = ROOM_TTL_SECONDS
 INVITE_TOKEN_RE = re.compile(r"^[A-Za-z0-9_-]{20,64}$")
 MAX_HISTORY = 1200
@@ -18,6 +20,18 @@ CHAT_HISTORY_MAX = 30
 CHAT_MAX_CHARS = 160
 ROOM_RE = re.compile(r"^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$")
 TOKEN_RE = re.compile(r"^[A-Za-z0-9_-]{20,64}$")
+
+
+WAITING_LUA = """
+local function waiting_expired(key)
+  if redis.call('HGET', key, 'waitingExpired') == '1' then return true end
+  local deadline = tonumber(redis.call('HGET', key, 'waitingExpiresAt') or '0')
+  if deadline <= 0 then return false end
+  if redis.call('HGET', key, 'started') == '1' or redis.call('HGET', key, 'begun') == '1' then return false end
+  local t = redis.call('TIME')
+  return tonumber(t[1])*1000 + math.floor(tonumber(t[2])/1000) >= deadline
+end
+"""
 
 
 def normalize_room_id(v: Any) -> str:
@@ -134,6 +148,10 @@ class MemRoom:
     capacity: int
     community_id: str = "majlis"
     created_at: int = field(default_factory=now_ms)
+    waiting_expires_at: int = 0
+    waiting_expired: bool = False
+    closed_reason: str = ""
+    owner_seat: int = 0
     players: dict[int, MemPlayer] = field(default_factory=dict)
     started: bool = False
     begun: bool = False
@@ -154,6 +172,7 @@ class MemRoom:
     expires_at: float = field(default_factory=lambda: time.monotonic() + ROOM_TTL_SECONDS)
 
     def __post_init__(self) -> None:
+        if not self.waiting_expires_at: self.waiting_expires_at=self.created_at+ROOM_WAIT_SECONDS*1000
         self.sequence = [0] * self.capacity
 
 
@@ -187,10 +206,16 @@ class MemoryStore:
             roster.append(item)
         return roster
 
+    def _waiting_expired(self, room: MemRoom) -> bool:
+        return room.waiting_expired or (not room.started and not room.begun and now_ms() >= room.waiting_expires_at)
+
     def _room_payload(self, room: MemRoom) -> dict[str, Any]:
         return {
             "roomId": room.room_id,
             "createdAt": room.created_at,
+            "waitingExpiresAt": room.waiting_expires_at,
+            "waitingExpired": self._waiting_expired(room),
+            "ownerSeat": room.owner_seat,
             "communityId": room.community_id,
             "capacity": room.capacity,
             "settings": room.settings,
@@ -227,6 +252,8 @@ class MemoryStore:
             room = self.rooms.get(room_id)
             if not room:
                 raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+            if self._waiting_expired(room):
+                raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
             player: MemPlayer | None = None
             if token and token in self.tokens:
                 mapped_room, seat = self.tokens[token]
@@ -276,14 +303,14 @@ class MemoryStore:
             rooms = sorted(self.rooms.values(), key=lambda r: r.created_at, reverse=True)[:limit]
             out: list[dict[str, Any]] = []
             for room in rooms:
-                if room.finished:
+                if room.finished or self._waiting_expired(room):
                     continue
                 roster = self._roster(room, include_account_ids=False)
                 occupied = sum(1 for p in room.players.values())
                 out.append({
                     "roomId": room.room_id, "communityId": room.community_id, "capacity": room.capacity, "occupied": occupied,
                     "settings": dict(room.settings), "started": bool(room.started), "begun": bool(room.begun),
-                    "createdAt": room.created_at, "hostName": roster[0]["name"] if roster else None,
+                    "createdAt": room.created_at, "hostName": roster[room.owner_seat]["name"] if roster and room.owner_seat<len(roster) else None,
                     "roster": roster,
                 })
             return out
@@ -294,6 +321,8 @@ class MemoryStore:
             room = self.rooms.get(room_id)
             if not room:
                 raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+            if self._waiting_expired(room):
+                raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
             player = room.players.get(int(seat))
             if not player or not player.connected or player.conn_id != conn_id or int(player.connection_epoch) != int(connection_epoch):
                 raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
@@ -317,6 +346,7 @@ class MemoryStore:
             if not room:
                 self.invites.pop(invite_token, None)
                 raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+            if self._waiting_expired(room): raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
             if account_id and any(p.account_id == account_id for p in room.players.values()):
                 raise StoreError("ACCOUNT_ALREADY_SEATED", "الحساب موجود في الغرفة؛ استخدم رمز إعادة الاتصال")
             if room.started:
@@ -350,6 +380,7 @@ class MemoryStore:
         room = self.rooms.get(room_id)
         if not room:
             raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+        if self._waiting_expired(room): raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if not room.started:
             raise StoreError("MATCH_NOT_STARTED", "المباراة لم تبدأ")
         return {
@@ -500,6 +531,8 @@ class MemoryStore:
             room = self.rooms.get(room_id)
             if not room:
                 raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+            if self._waiting_expired(room):
+                raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
             if room.authority_shard is None:
                 room.authority_shard = preferred_shard
                 room.authority_epoch = 1
@@ -550,18 +583,20 @@ class MemoryStore:
             self.rate_windows[key] = (count, expires)
             return count <= limit
 
-    async def leave_room(self, room_id: str, seat: int, conn_id: str, connection_epoch: int) -> dict[str, Any]:
+    async def leave_room(self, room_id: str, seat: int, conn_id: str, connection_epoch: int, *, before_begin_only: bool = False) -> dict[str, Any]:
         async with self.lock:
             room = self.rooms.get(room_id)
             p = room.players.get(seat) if room else None
             if not p or not p.connected or p.conn_id != conn_id or p.connection_epoch != connection_epoch:
                 raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
+            if before_begin_only and room.begun: return {'roomDeleted':False,'seatFreed':False}
             # Explicit exit invalidates reconnect ownership. Before the authoritative
             # match begins, also free the seat so a replacement player may join.
             self.tokens.pop(p.token, None)
             if not room.begun:
                 room.players.pop(seat, None)
                 room.started = False
+                if seat == room.owner_seat and room.players: room.owner_seat = min(room.players)
                 room.sequence[seat] = 0
                 if not room.players:
                     self.rooms.pop(room_id, None)
@@ -598,6 +633,8 @@ class MemoryStore:
             room = self.rooms.get(room_id)
             if not room:
                 raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
+            if self._waiting_expired(room):
+                raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
             if room.finished:
                 raise StoreError("MATCH_FINISHED", "المباراة انتهت")
             if not room.started:
@@ -618,6 +655,43 @@ class MemoryStore:
         nodes = {p.node_id for p in room.players.values() if p.connected}
         nodes.update(room.spectator_nodes.values())
         return nodes
+
+    async def manage_waiting_table(self, rid, seat, conn_id, epoch, action, target_seat=-1):
+        if action not in {'close','kick'}: raise StoreError('BAD_TABLE_ACTION','إجراء غير مدعوم')
+        async with self.lock:
+            room = self.rooms.get(rid)
+            player = room.players.get(seat) if room else None
+            if not player or player.conn_id!=conn_id or player.connection_epoch!=epoch or not player.connected:
+                raise StoreError('STALE_CONNECTION','الاتصال غير صالح')
+            if room.begun or room.finished or self._waiting_expired(room):
+                raise StoreError('TABLE_MANAGEMENT_CLOSED','إدارة الطاولة متاحة قبل اللعب فقط')
+            if room.owner_seat!=seat: raise StoreError('TABLE_OWNER_REQUIRED','هذه العملية لمنشئ الطاولة فقط')
+            if action=='close':
+                room.waiting_expired=True;room.finished=True;room.closed_reason='TABLE_CLOSED'
+                return {'roomId':rid,'createdAt':room.created_at,'reason':'TABLE_CLOSED'}
+            if target_seat==seat: raise StoreError('CANNOT_KICK_OWNER','لا يمكن إخراج منشئ الطاولة')
+            target=room.players.pop(target_seat,None)
+            if not target:raise StoreError('NOT_IN_ROOM','المقعد فارغ')
+            self.tokens.pop(target.token,None)
+            room.started=False;room.sequence[target_seat]=0
+            return {'roomId':rid,'createdAt':room.created_at,'reason':'TABLE_KICKED',
+                'targetConnId':target.conn_id,'targetNodeId':target.node_id}
+
+    async def waiting_closures(self, room_ids) -> list[dict[str, Any]]:
+        async with self.lock:
+            return [{"roomId":rid,"createdAt":self.rooms[rid].created_at,"reason":self.rooms[rid].closed_reason or "ROOM_WAIT_EXPIRED"} for rid in room_ids
+                if rid in self.rooms and self._waiting_expired(self.rooms[rid])]
+
+    async def expire_waiting_rooms(self, limit: int = 200) -> list[dict[str, Any]]:
+        out = []
+        async with self.lock:
+            for room in self.rooms.values():
+                if not room.waiting_expired and self._waiting_expired(room):
+                    room.waiting_expired = True
+                    room.finished = True
+                    out.append({"roomId": room.room_id, "createdAt": room.created_at})
+                    if len(out) >= limit: break
+        return out
 
     async def sweep(self) -> None:
         async with self.lock:
@@ -666,6 +740,7 @@ class RedisStore:
     def kcommit_order(self, rid: str) -> str: return f"{self.prefix}:room:{rid}:commit-order"
     def node_channel(self, node_id: str) -> str: return f"{self.prefix}:node:{node_id}"
     def krate(self, key: str) -> str: return f"{self.prefix}:rate:{key}"
+    def kwaiting(self) -> str: return f"{self.prefix}:rooms:waiting"
     def kroom_index(self) -> str: return f"{self.prefix}:rooms:index"
 
     async def ping(self) -> bool:
@@ -692,7 +767,11 @@ class RedisStore:
             script = """
             if redis.call('EXISTS', KEYS[1]) == 1 then return 0 end
             redis.call('DEL', KEYS[2], KEYS[3], KEYS[5], KEYS[6], KEYS[7], KEYS[8], KEYS[9], KEYS[10], KEYS[11])
-            redis.call('HSET', KEYS[1], 'capacity', ARGV[1], 'settings', ARGV[2], 'communityId', ARGV[8], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1', 'authorityShard', '', 'authorityEpoch', '0', 'authorityRevision', '-1', 'profileResultClaimed', '0', 'finished', '0', 'createdAt', ARGV[3])
+            local t = redis.call('TIME')
+            local clock = tonumber(t[1])*1000 + math.floor(tonumber(t[2])/1000)
+            local deadline = clock + tonumber(ARGV[9])
+            redis.call('ZADD', KEYS[12], deadline, ARGV[10])
+            redis.call('HSET', KEYS[1], 'waitingExpiresAt', string.format('%.0f',deadline), 'waitingExpired', '0', 'ownerSeat', '0', 'capacity', ARGV[1], 'settings', ARGV[2], 'communityId', ARGV[8], 'started', '0', 'begun', '0', 'moveCount', '0', 'snapshotMoveCount', '-1', 'snapshotRevision', '-1', 'authorityShard', '', 'authorityEpoch', '0', 'authorityRevision', '-1', 'profileResultClaimed', '0', 'finished', '0', 'createdAt', string.format('%.0f',clock))
             redis.call('HSET', KEYS[2], '0', ARGV[4])
             for i=0,tonumber(ARGV[1])-1 do redis.call('HSET', KEYS[3], tostring(i), '0') end
             redis.call('SET', KEYS[4], ARGV[5], 'EX', ARGV[6])
@@ -700,7 +779,7 @@ class RedisStore:
             redis.call('EXPIRE', KEYS[1], ARGV[6]); redis.call('EXPIRE', KEYS[2], ARGV[6]); redis.call('EXPIRE', KEYS[3], ARGV[6]); redis.call('EXPIRE', KEYS[5], ARGV[6])
             return 1
             """
-            ok = await self.r.eval(script, 11, self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.ktoken(token), self.knodes(rid), self.khistory(rid), self.kready(rid), self.kchat(rid), self.kspectators(rid), self.kcommits(rid), self.kcommit_order(rid), str(capacity), json.dumps(settings, separators=(",", ":")), str(now_ms()), json.dumps(player, separators=(",", ":")), f"{rid}:0", str(TOKEN_TTL_SECONDS), node_id, str(community_id or "majlis")[:32])
+            ok = await self.r.eval(script, 12, self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.ktoken(token), self.knodes(rid), self.khistory(rid), self.kready(rid), self.kchat(rid), self.kspectators(rid), self.kcommits(rid), self.kcommit_order(rid), self.kwaiting(), str(capacity), json.dumps(settings, separators=(",", ":")), str(now_ms()), json.dumps(player, separators=(",", ":")), f"{rid}:0", str(TOKEN_TTL_SECONDS), node_id, str(community_id or "majlis")[:32], str(ROOM_WAIT_SECONDS * 1000), rid)
             if int(ok) == 1:
                 self.last_touch.pop(rid, None)
                 await self.r.zadd(self.kroom_index(), {rid: now_ms()})
@@ -720,7 +799,8 @@ class RedisStore:
                 mrid, sseat = mapped.rsplit(":", 1)
                 if mrid == rid:
                     seat = int(sseat)
-                    script = """
+                    script = WAITING_LUA + """
+                    if waiting_expired(KEYS[4]) then return {-18, '', '', 0} end
                     local raw = redis.call('HGET', KEYS[1], ARGV[1])
                     if not raw then return {0, '', '', 0} end
                     local p = cjson.decode(raw)
@@ -744,9 +824,10 @@ class RedisStore:
                     return {1, oldNode, oldConn, epoch}
                     """
                     ret = await self.r.eval(
-                        script, 3, self.kplayers(rid), self.knodes(rid), self.kready(rid),
+                        script, 4, self.kplayers(rid), self.knodes(rid), self.kready(rid), self.kroom(rid),
                         str(seat), sanitize_name(name), node_id, conn_id, str(account_id or ""), token,
                     )
+                    if int(ret[0]) == -18: raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
                     if int(ret[0]) == -16:
                         raise StoreError("RECONNECT_ACCOUNT_MISMATCH", "رمز إعادة الاتصال لا يخص هذا الحساب")
                     if int(ret[0]) == 1:
@@ -762,8 +843,9 @@ class RedisStore:
         token = new_token()
         capacity = int(await self.r.hget(self.kroom(rid), "capacity") or 0)
         player_tpl = {"token": token, "name": sanitize_name(name), "seat": -1, "nodeId": node_id, "connId": conn_id, "accountId": account_id, "connected": True, "ready": False, "disconnectedAt": None, "connectionEpoch": 1}
-        script = """
+        script = WAITING_LUA + """
         if redis.call('EXISTS', KEYS[1]) == 0 then return {-10} end
+        if waiting_expired(KEYS[1]) then return {-18} end
         local p = cjson.decode(ARGV[1])
         if p['accountId'] ~= nil and p['accountId'] ~= cjson.null and p['accountId'] ~= '' then
           for _,raw in ipairs(redis.call('HVALS', KEYS[2])) do
@@ -792,6 +874,7 @@ class RedisStore:
         """
         ret = await self.r.eval(script, 4, self.kroom(rid), self.kplayers(rid), self.ktoken(token), self.knodes(rid), json.dumps(player_tpl, separators=(",", ":")), rid, str(TOKEN_TTL_SECONDS), node_id)
         code = int(ret[0])
+        if code == -18: raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if code == -10: raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         if code == -11: raise StoreError("MATCH_STARTED", "المباراة بدأت بالفعل")
         if code == -12: raise StoreError("ROOM_FULL", "الغرفة ممتلئة")
@@ -812,7 +895,10 @@ class RedisStore:
         for rid in rids:
             p.hgetall(self.kroom(rid))
             p.hgetall(self.kplayers(rid))
+        p.time()
         raw = await p.execute()
+        clock = raw.pop()
+        clock_ms = clock[0]*1000+clock[1]//1000
         out: list[dict[str, Any]] = []
         stale: list[str] = []
         for i, rid in enumerate(rids):
@@ -821,7 +907,8 @@ class RedisStore:
             if not room:
                 stale.append(rid)
                 continue
-            if room.get("finished") == "1":
+            deadline = int(room.get("waitingExpiresAt") or 0)
+            if room.get("finished") == "1" or (not room.get("started") == "1" and deadline > 0 and clock_ms >= deadline):
                 stale.append(rid)
                 continue
             try:
@@ -846,7 +933,7 @@ class RedisStore:
                 "roomId": rid, "communityId": str(room.get("communityId") or "majlis"), "capacity": capacity, "occupied": len(players), "settings": settings,
                 "started": room.get("started") == "1", "begun": room.get("begun") == "1",
                 "createdAt": int(room.get("createdAt") or 0),
-                "hostName": roster[0]["name"] if roster else None, "roster": roster,
+                "ownerSeat":int(room.get("ownerSeat") or 0), "hostName": roster[int(room.get("ownerSeat") or 0)]["name"] if roster and int(room.get("ownerSeat") or 0)<len(roster) else None, "roster": roster,
             })
             if len(out) >= limit:
                 break
@@ -858,7 +945,8 @@ class RedisStore:
         rid = normalize_room_id(rid)
         ttl = max(30, int(ttl_seconds))
         token = new_invite_token()
-        script = """
+        script = WAITING_LUA + """
+        if waiting_expired(KEYS[1]) then return -18 end
         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
         local p = cjson.decode(raw)
@@ -870,6 +958,7 @@ class RedisStore:
         return 1
         """
         code = int(await self.r.eval(script, 3, self.kroom(rid), self.kplayers(rid), self.kinvite(token), str(seat), conn_id, str(connection_epoch), rid, str(ttl)))
+        if code == -18: raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if code == -10: raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         if code == -12: raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
         if code in (-13, -14): raise StoreError("MATCH_STARTED", "لا يمكن إنشاء دعوة بعد اكتمال المباراة")
@@ -885,8 +974,9 @@ class RedisStore:
         rid = normalize_room_id(rid)
         player_token = new_token()
         player_tpl = {"token": player_token, "name": sanitize_name(name), "seat": -1, "nodeId": node_id, "connId": conn_id, "accountId": account_id, "connected": True, "ready": False, "disconnectedAt": None, "connectionEpoch": 1}
-        script = """
+        script = WAITING_LUA + """
         if redis.call('GET', KEYS[1]) ~= ARGV[1] then return {-15} end
+        if waiting_expired(KEYS[2]) then return {-18} end
         if redis.call('EXISTS', KEYS[2]) == 0 then return {-10} end
         local p = cjson.decode(ARGV[2])
         if p['accountId'] ~= nil and p['accountId'] ~= cjson.null and p['accountId'] ~= '' then
@@ -917,6 +1007,7 @@ class RedisStore:
         """
         ret = await self.r.eval(script, 6, invite_key, self.kroom(rid), self.kplayers(rid), self.kseq(rid), self.ktoken(player_token), self.knodes(rid), rid, json.dumps(player_tpl, separators=(",", ":")), str(TOKEN_TTL_SECONDS), node_id)
         code = int(ret[0])
+        if code == -18: raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if code == -15: raise StoreError("INVITE_INVALID", "الدعوة غير صالحة أو تم استخدامها")
         if code == -10: raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         if code == -11: raise StoreError("MATCH_STARTED", "المباراة بدأت بالفعل")
@@ -928,12 +1019,13 @@ class RedisStore:
         return data
 
     async def get_room_state(self, rid: str) -> dict[str, Any]:
-        fields = ('capacity','settings','createdAt','communityId','started','begun','finished','moveCount')
+        fields = ('capacity','settings','createdAt','communityId','started','begun','finished','moveCount','waitingExpiresAt','waitingExpired','ownerSeat')
         pipe = self.r.pipeline(transaction=False)
         pipe.hmget(self.kroom(rid), *fields)
         pipe.hgetall(self.kplayers(rid))
         pipe.hgetall(self.kseq(rid))
-        values, raw_players, seq_raw = await pipe.execute()
+        pipe.time()
+        values, raw_players, seq_raw, clock = await pipe.execute()
         meta = dict(zip(fields, values))
         if not meta['capacity']:
             raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
@@ -949,7 +1041,11 @@ class RedisStore:
                 "connected": bool(p and p.get("connected")),
                 "ready": bool(p and p.get("ready")),
             })
+        expired = meta.get("waitingExpired") == "1" or (meta.get("started") != "1" and meta.get("begun") != "1" and int(meta.get("waitingExpiresAt") or 0) > 0 and clock[0]*1000+clock[1]//1000 >= int(meta["waitingExpiresAt"]))
         return {
+            "waitingExpiresAt": int(meta.get("waitingExpiresAt") or 0),
+            "waitingExpired": expired,
+            "ownerSeat": int(meta.get("ownerSeat") or 0),
             "roomId": rid,
             "createdAt": int(meta.get("createdAt") or 0),
             "communityId": str(meta.get("communityId") or "majlis"),
@@ -965,6 +1061,7 @@ class RedisStore:
 
     async def get_start(self, rid: str, seat: int) -> dict[str, Any]:
         state = await self.get_room_state(rid)
+        if state.get("waitingExpired"): raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if not state["started"]:
             raise StoreError("MATCH_NOT_STARTED", "المباراة لم تبدأ")
         meta = await self.r.hmget(self.kroom(rid), "snapshot", "snapshotMoveCount", "moveCount")
@@ -993,7 +1090,8 @@ class RedisStore:
         return out
 
     async def runtime_ready(self, rid: str, seat: int, conn_id: str, connection_epoch: int) -> bool:
-        script = """
+        script = WAITING_LUA + """
+        if waiting_expired(KEYS[1]) then return -18 end
         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
         local p = cjson.decode(raw)
@@ -1007,6 +1105,7 @@ class RedisStore:
         return 0
         """
         ret = int(await self.r.eval(script, 3, self.kroom(rid), self.kplayers(rid), self.kready(rid), str(seat), conn_id, str(connection_epoch)))
+        if ret == -18: raise StoreError("ROOM_WAIT_EXPIRED", "انتهت مهلة انتظار اللاعبين")
         if ret == -12:
             raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
         if ret < 0:
@@ -1199,7 +1298,7 @@ class RedisStore:
         n = int(await self.r.eval(script, 1, self.krate(key), str(window_seconds)))
         return n <= limit
 
-    async def leave_room(self, rid: str, seat: int, conn_id: str, connection_epoch: int) -> dict[str, Any]:
+    async def leave_room(self, rid: str, seat: int, conn_id: str, connection_epoch: int, *, before_begin_only: bool = False) -> dict[str, Any]:
         raw = await self.r.hget(self.kplayers(rid), str(seat))
         current = json.loads(raw) if raw else None
         if not current:
@@ -1211,6 +1310,7 @@ class RedisStore:
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return {-11,0,0} end
         local p = cjson.decode(raw)
         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return {-12,0,0} end
+        if ARGV[6]=='1' and redis.call('HGET',KEYS[1],'begun')=='1' then return {1,0,0} end
         redis.call('DEL', KEYS[5])
         redis.call('SREM', KEYS[3], ARGV[1])
         local begun = redis.call('HGET', KEYS[1], 'begun') == '1'
@@ -1218,8 +1318,15 @@ class RedisStore:
           redis.call('HDEL', KEYS[2], ARGV[1])
           redis.call('HSET', KEYS[4], ARGV[1], '0')
           redis.call('HSET', KEYS[1], 'started', '0')
+          if tonumber(redis.call('HGET',KEYS[1],'ownerSeat') or '0')==tonumber(ARGV[1]) then
+            local nextOwner=100
+            for _,seat in ipairs(redis.call('HKEYS',KEYS[2])) do nextOwner=math.min(nextOwner,tonumber(seat)) end
+            redis.call('HSET',KEYS[1],'ownerSeat',tostring(nextOwner))
+          end
+          redis.call('ZADD', KEYS[9], tonumber(redis.call('HGET', KEYS[1], 'waitingExpiresAt') or '0'), ARGV[5])
           local count = redis.call('HLEN', KEYS[2])
           if count == 0 then
+            redis.call('ZREM', KEYS[9], ARGV[5])
             redis.call('DEL', KEYS[1], KEYS[2], KEYS[3], KEYS[4], KEYS[6], KEYS[7], KEYS[8])
             return {1,1,1}
           end
@@ -1230,9 +1337,9 @@ class RedisStore:
         return {1,0,0}
         """
         ret = await self.r.eval(
-            script, 8, self.kroom(rid), self.kplayers(rid), self.kready(rid), self.kseq(rid),
-            token_key, self.khistory(rid), self.knodes(rid), self.kchat(rid),
-            str(seat), conn_id, str(connection_epoch), str(now_ms()),
+            script, 9, self.kroom(rid), self.kplayers(rid), self.kready(rid), self.kseq(rid),
+            token_key, self.khistory(rid), self.knodes(rid), self.kchat(rid), self.kwaiting(),
+            str(seat), conn_id, str(connection_epoch), str(now_ms()), rid, "1" if before_begin_only else "0",
         )
         code = int(ret[0])
         if code == -12:
@@ -1302,6 +1409,77 @@ class RedisStore:
                         continue
         finally:
             await pubsub.aclose()
+
+    async def manage_waiting_table(self, rid, seat, conn_id, epoch, action, target_seat=-1):
+        if action not in {'close','kick'}: raise StoreError('BAD_TABLE_ACTION','إجراء غير مدعوم')
+        script = WAITING_LUA + """
+        if redis.call('EXISTS',KEYS[1])==0 then return {-10} end
+        local raw=redis.call('HGET',KEYS[2],ARGV[1]); if not raw then return {-11} end
+        local p=cjson.decode(raw)
+        if p['connId']~=ARGV[2] or tonumber(p['connectionEpoch'])~=tonumber(ARGV[3]) or p['connected']~=true then return {-11} end
+        if redis.call('HGET',KEYS[1],'begun')=='1' or redis.call('HGET',KEYS[1],'finished')=='1' or waiting_expired(KEYS[1]) then return {-12} end
+        if tonumber(redis.call('HGET',KEYS[1],'ownerSeat') or '0')~=tonumber(ARGV[1]) then return {-13} end
+        local created=redis.call('HGET',KEYS[1],'createdAt')
+        if ARGV[4]=='close' then
+          redis.call('HSET',KEYS[1],'waitingExpired','1','finished','1','closedReason','TABLE_CLOSED')
+          redis.call('ZREM',KEYS[5],ARGV[6]);redis.call('ZREM',KEYS[6],ARGV[6])
+          return {1,created,'',''}
+        end
+        if ARGV[5]==ARGV[1] then return {-14} end
+        local target=redis.call('HGET',KEYS[2],ARGV[5]);if not target then return {-15} end
+        target=cjson.decode(target)
+        redis.call('DEL',ARGV[7]..':token:'..target['token'])
+        redis.call('HDEL',KEYS[2],ARGV[5]);redis.call('SREM',KEYS[3],ARGV[5]);redis.call('HSET',KEYS[4],ARGV[5],'0')
+        redis.call('HSET',KEYS[1],'started','0')
+        redis.call('ZADD',KEYS[5],tonumber(redis.call('HGET',KEYS[1],'waitingExpiresAt') or '0'),ARGV[6])
+        return {1,created,target['connId'] or '',target['nodeId'] or ''}
+        """
+        ret=await self.r.eval(script,6,self.kroom(rid),self.kplayers(rid),self.kready(rid),self.kseq(rid),self.kwaiting(),self.kroom_index(),
+            str(seat),conn_id,str(epoch),action,str(target_seat),rid,self.prefix)
+        code=int(ret[0])
+        errors={-10:('ROOM_NOT_FOUND','الطاولة غير موجودة'),-11:('STALE_CONNECTION','الاتصال غير صالح'),
+            -12:('TABLE_MANAGEMENT_CLOSED','إدارة الطاولة متاحة قبل اللعب فقط'),-13:('TABLE_OWNER_REQUIRED','هذه العملية لمنشئ الطاولة فقط'),
+            -14:('CANNOT_KICK_OWNER','لا يمكن إخراج منشئ الطاولة'),-15:('NOT_IN_ROOM','المقعد فارغ')}
+        if code<0:raise StoreError(*errors[code])
+        return {'roomId':rid,'createdAt':int(ret[1]),'reason':'TABLE_CLOSED' if action=='close' else 'TABLE_KICKED',
+            'targetConnId':str(ret[2]),'targetNodeId':str(ret[3])}
+
+    async def waiting_closures(self, room_ids) -> list[dict[str, Any]]:
+        out = []
+        ids = list(room_ids)
+        for offset in range(0,len(ids),256):
+            batch = ids[offset:offset+256]
+            pipe = self.r.pipeline(transaction=False)
+            for rid in batch:
+                pipe.hmget(self.kroom(rid),'createdAt','waitingExpiresAt','waitingExpired','started','begun','closedReason')
+            pipe.time()
+            rows = await pipe.execute()
+            clock = rows.pop(); current = clock[0]*1000+clock[1]//1000
+            for rid, row in zip(batch,rows):
+                created,deadline,expired,started,begun,reason = row
+                if created and (expired == '1' or (started != '1' and begun != '1' and int(deadline or 0)>0 and current>=int(deadline))):
+                    out.append({"roomId":rid,"createdAt":int(created),"reason":reason or "ROOM_WAIT_EXPIRED"})
+        return out
+
+    async def expire_waiting_rooms(self, limit: int = 200) -> list[dict[str, Any]]:
+        script = WAITING_LUA + """
+        local t = redis.call('TIME')
+        local clock = tonumber(t[1])*1000+math.floor(tonumber(t[2])/1000)
+        local ids = redis.call('ZRANGEBYSCORE', KEYS[1], '-inf', clock, 'LIMIT', 0, tonumber(ARGV[2]))
+        local out = {}
+        for _,rid in ipairs(ids) do
+          local key = ARGV[1] .. ':room:' .. rid
+          if waiting_expired(key) and redis.call('HGET',key,'waitingExpired') ~= '1' then
+            redis.call('HSET',key,'waitingExpired','1','finished','1')
+            redis.call('ZREM',KEYS[2],rid)
+            table.insert(out,cjson.encode({roomId=rid,createdAt=tonumber(redis.call('HGET',key,'createdAt') or '0')}))
+          end
+          redis.call('ZREM',KEYS[1],rid)
+        end
+        return out
+        """
+        rows = await self.r.eval(script, 2, self.kwaiting(), self.kroom_index(), self.prefix, str(max(1,min(1000,limit))))
+        return [json.loads(row) for row in rows]
 
     async def sweep(self) -> None:
         return

@@ -120,6 +120,7 @@
         state.capacity = msg.capacity;
         state.settings = msg.settings;
         state.roster = msg.roster || [];
+        state.ownerSeat=msg.ownerSeat??state.ownerSeat??0;state.waitingExpiresAt=msg.waitingExpiresAt??state.waitingExpiresAt;
         state.started = !!msg.started;
         state.begun = !!msg.begun;
         updateUrlCredentials();
@@ -135,6 +136,7 @@
         state.capacity = msg.capacity;
         state.settings = msg.settings;
         state.roster = msg.roster || [];
+        state.ownerSeat=msg.ownerSeat??state.ownerSeat??0;state.waitingExpiresAt=msg.waitingExpiresAt??state.waitingExpiresAt;
         state.started = true;
         state.begun = true;
         updateUrlCredentials();
@@ -230,6 +232,9 @@
         state.startData = null;
         try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
         emit('left_room', msg);
+        if(['ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(msg.reason)&&!document.documentElement.hasAttribute('data-sd-native')){
+          const cid=state.communityId||'majlis';location.assign('/platform/?community='+encodeURIComponent(cid)+'&notice='+encodeURIComponent(msg.reason));
+        }
         break;
       case 'error':
         emit('error', msg);

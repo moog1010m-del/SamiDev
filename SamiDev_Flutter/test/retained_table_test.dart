@@ -16,6 +16,7 @@ void main(){
     expect(table.apply({...room('room_state',[me]),'roomId':'UNRELATED'}),isEmpty);
     expect(table.roster.length,2);expect(table.communityId,'majlis');expect(table.gameId,'pool');
     table.apply(room('room_state',[me]));expect(table.apply(room('room_state',[me,other])).length,1);
+    table.apply({'type':'room_state','roomId':'ABCDEF','ownerSeat':1});expect(table.ownerSeat,1);
     table.apply({'type':'begin_match','roomId':'ABCDEF'});expect(table.begun,isTrue);
     table.clear();expect(table.roomId,isEmpty);expect(table.roster,isEmpty);expect(table.begun,isFalse);
   });

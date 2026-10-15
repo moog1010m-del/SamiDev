@@ -32,7 +32,7 @@ class RuntimePolicy {
     const id = r'[A-Za-z0-9_-]{1,64}';
     return switch (method) {
       'GET' => RegExp('^/api/(avatar|public-profile|communities)/$id\$').hasMatch(path),
-      'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat)|users/$id/(reputation|report)|admin/users/$id/(ban|role))\$').hasMatch(path),
+      'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat|moderation)|users/$id/(reputation|report)|admin/users/$id/(ban|role))\$').hasMatch(path),
       'DELETE' => RegExp('^/api/friends/$id\$').hasMatch(path),
       _ => false,
     };

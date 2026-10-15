@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from firebase_identity import FirebaseIdentity, FirebaseFailure
+from community_rules import CommunityRules
 
 import asyncio
 import base64
@@ -289,6 +290,7 @@ class PlatformService:
 
     def __init__(self, redis_client: Any | None = None):
         self.firebase = FirebaseIdentity()
+        self.community_rules = CommunityRules(self)
         self.mem_firebase = {}
         self.r = redis_client
         self.lock = asyncio.Lock()
@@ -390,6 +392,7 @@ class PlatformService:
 
     async def touch_community(self, uid: str, community_id: str) -> str:
         cid = normalize_community_id(community_id)
+        await self.community_rules.access(uid,cid)
         await self.touch_presence(uid)
         if self.r is not None:
             active_key = self.k_active_community(uid)
@@ -480,6 +483,7 @@ class PlatformService:
 
     async def append_community_chat(self, uid: str, community_id: str, text: Any) -> dict[str, Any]:
         cid = normalize_community_id(community_id)
+        await self.community_rules.access(uid,cid,chat=True)
         clean = sanitize_community_chat_text(text)
         user = await self.get_user(uid)
         if not user:
@@ -1463,7 +1467,7 @@ class PlatformHttp:
 
     async def _admin(self, request: web.Request) -> dict[str, Any]:
         user = await self._user(request)
-        if str(user.get("role") or "user") not in {"admin", "moderator"}:
+        if str(user.get("role") or "user") != "admin":
             raise PlatformError("ADMIN_REQUIRED", "لا تملك صلاحية الإدارة", 403)
         return user
 
@@ -1636,6 +1640,7 @@ class PlatformHttp:
         rooms = [r for r in await self.room_store.list_public_rooms(200) if str(r.get("communityId") or "majlis") == cid]
         return web.json_response({
             "ok": True, "community": dict(COMMUNITIES[cid]),
+            "capabilities": {"canModerate":self.platform.community_rules.can_moderate(user,cid),"canAssignModerators":user.get("role")=="admin"},
             "members": await self.platform.community_members(cid),
             "messages": await self.platform.community_chat_history(cid),
             "rooms": rooms, "ts": now_ms(),
@@ -1646,6 +1651,16 @@ class PlatformHttp:
         cid = normalize_community_id(request.match_info.get("community_id"))
         await self.platform.touch_community(str(user["id"]), cid)
         return web.json_response({"ok": True, "communityId": cid})
+
+    async def community_moderate(self, request: web.Request) -> web.Response:
+        actor = await self._user(request)
+        cid = normalize_community_id(request.match_info.get("community_id"))
+        if not await self.platform.allow_rate(f"community-moderate:{actor['id']}",30,60):
+            raise PlatformError("RATE_LIMIT","محاولات كثيرة؛ حاول لاحقًا",429)
+        body = await self._body(request)
+        result = await self.platform.community_rules.moderate(str(actor['id']),cid,
+            str(body.get('targetUserId') or ''),str(body.get('action') or ''),body.get('duration',600))
+        return web.json_response({'ok':True,**result})
 
     async def community_leave(self, request: web.Request) -> web.Response:
         user = await self._user(request)
@@ -1673,6 +1688,7 @@ class PlatformHttp:
         user = await self._user(request)
         body = await self._body(request)
         community_id = body.get("communityId")
+        await self.platform.community_rules.access(str(user["id"]),str(community_id or "majlis"))
         if not await self.platform.allow_rate(f"game-ticket:{user['id']}", 30, 60):
             raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
         value = await self.platform.issue_game_ticket(user, str(community_id) if community_id else None, session_token=request.cookies.get(SESSION_COOKIE))

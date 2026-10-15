@@ -28,7 +28,7 @@ class CommunityHubState extends State<CommunityHub> {
   List<Map<String,dynamic>> rows(dynamic data)=>(data as List? ?? []).whereType<Map>().map((e)=>Map<String,dynamic>.from(e)).toList();
   Future<Map<String,dynamic>> request(String path,{String method='GET',Map<String,dynamic>? body}) async {
     final r=await widget.api.request(method,path,body:body==null?null:utf8.encode(jsonEncode(body)));
-    final data=r.json;if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
+    final data=r.json;if(r.status==403&&{'COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(data['error'])){final denied=path.split('/').length>3?path.split('/')[3]:null;WidgetsBinding.instance.addPostFrameCallback((_){if(mounted&&community?['id']==denied)unawaited(back());});}if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
   }
   @override void initState(){super.initState();final cid=widget.initialCommunity;if({'majlis','square','diwan','elite'}.contains(cid))community={'id':cid};WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});restart();}
   @override void didUpdateWidget(covariant CommunityHub old){super.didUpdateWidget(old);if(old.active!=widget.active)restart();}

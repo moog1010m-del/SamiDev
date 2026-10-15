@@ -14,12 +14,14 @@
       .sd-waiting-player{box-sizing:border-box;display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:8px;min-width:0;max-width:min(44vw,240px);padding:6px 10px;border:1px solid #b9a16c88;border-radius:15px;background:#081b23e8;box-shadow:0 4px 18px #0005;color:inherit;font:600 13px system-ui;cursor:pointer;text-align:right}
       .sd-waiting-player img{width:40px;height:40px;object-fit:cover;border-radius:50%}.sd-waiting-identity{min-width:0;display:grid;gap:3px}.sd-waiting-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;unicode-bidi:plaintext}.sd-waiting-status{font-size:10px;color:#aacabe;font-weight:400}.sd-waiting-player[data-connected="false"]{opacity:.7}
       .sd-waiting-bottom{display:grid;justify-items:center;gap:8px}.sd-waiting-label{margin:0;padding:8px 16px;border:1px solid #c4a56b44;border-radius:10px;background:#071820ed;color:#e5d7b5;max-width:100%;font-size:12px;text-align:center;line-height:1.5}.sd-waiting-label.error{color:#ffb4b4}
+      .sd-table-action{padding:8px 14px;border:1px solid #b9a16c88;border-radius:10px;background:#081b23e8;color:#edf5ee;font:600 12px system-ui;cursor:pointer}
       @media(max-height:450px) and (orientation:landscape){#sd-waiting{padding:52px 12px 8px;grid-template-columns:125px minmax(0,1fr) 125px;grid-template-rows:1fr}.sd-waiting-player{max-width:125px;grid-template-columns:30px minmax(0,1fr);padding:4px;gap:4px}.sd-waiting-player img{width:30px;height:30px}.sd-waiting-top{align-content:center}.sd-waiting-bottom{align-content:center}.sd-waiting-label{font-size:10px}}
     `;document.head.appendChild(style);
     root=el('section','');root.id='sd-waiting';root.dataset.game=game;root.setAttribute('aria-label','مشهد اللعبة بانتظار اللاعبين');
     opponents=el('div','sd-waiting-top');const stage=el('div','sd-waiting-stage');loading=el('p','sd-waiting-loading','جارٍ تحميل مشهد اللعبة…');stage.append(loading);
     const bottom=el('div','sd-waiting-bottom');own=el('div','sd-waiting-own');label=el('p','sd-waiting-label','بانتظار انضمام الخصم…');label.setAttribute('role','status');
-    bottom.append(own,label);root.append(opponents,stage,bottom);document.body.appendChild(root);
+    const controls=el('div','sd-waiting-top');controls.id='sd-table-controls';
+    bottom.append(own,label,controls);root.append(opponents,stage,bottom);document.body.appendChild(root);
   }
   function playerNode(player){
     const button=el('button','sd-waiting-player');button.type='button';button.dataset.seat=String(player.seat);button.dataset.connected=String(player.connected!==false);
@@ -34,6 +36,17 @@
     const roster=(message?.roster||state.roster||[]).filter(p=>p&&p.name);
     opponents.replaceChildren(...roster.filter(p=>p.seat!==state.seat).map(playerNode));own.replaceChildren(...roster.filter(p=>p.seat===state.seat).map(playerNode));
     label.textContent=message?.started?'جارٍ تجهيز المباراة…':'بانتظار انضمام الخصم…';
+    const controls=document.getElementById('sd-table-controls');controls.replaceChildren();
+    if(!window.SamiDevMobile?.postMessage&&!state.begun&&state.ownerSeat===state.seat){
+      const send=(action,targetSeat)=>{if(!window.SamiDevNetwork.send({type:'manage_table',action,targetSeat:targetSeat??-1}))window.SamiDevWaitingRoom.fail('انقطع الاتصال؛ أعد المحاولة بعد عودته');};
+      const close=el('button','sd-table-action','إغلاق الطاولة');close.type='button';
+      close.onclick=()=>{if(confirm('إغلاق الطاولة وإعادة اللاعبين إلى المساحة؟'))send('close');};controls.append(close);
+      for(const player of roster.filter(p=>p.seat!==state.seat)){
+        const kick=el('button','sd-table-action','إخراج '+player.name);kick.type='button';
+        kick.onclick=()=>{if(confirm('إخراج '+player.name+' قبل بدء اللعب؟'))send('kick',player.seat);};controls.append(kick);
+      }
+    }
+
   }
   window.SamiDevWaitingRoom={show,sceneReady(){show();root.classList.add('scene-ready');root.dataset.renderer='native';},progress(text){show();if(label)label.textContent=text;},fail(text){show();label.textContent=text;label.classList.add('error');},ready(){complete=true;themeObserver?.disconnect();root?.remove();document.body.classList.remove('sd-waiting');}};
   window.SamiDevNetwork.on('assignment',update);window.SamiDevNetwork.on('room_state',update);

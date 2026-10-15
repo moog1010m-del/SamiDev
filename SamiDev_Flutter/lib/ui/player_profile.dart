@@ -44,20 +44,21 @@ class PlayerAvatar extends StatelessWidget {
   }
 }
 
-Future<void> showPlayerProfile(BuildContext context,{required PlatformApi api,required String id,required VoidCallback onUnauthorized,String roomId=''}) async {
+Future<void> showPlayerProfile(BuildContext context,{required PlatformApi api,required String id,required VoidCallback onUnauthorized,String roomId='',String communityId=''}) async {
   if(!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
   await showModalBottomSheet<void>(context:context,isScrollControlled:true,useSafeArea:true,showDragHandle:true,
-    constraints:const BoxConstraints(maxWidth:460),builder:(_)=>PlayerProfileSheet(api:api,id:id,roomId:roomId,onUnauthorized:onUnauthorized));
+    constraints:const BoxConstraints(maxWidth:460),builder:(_)=>PlayerProfileSheet(api:api,id:id,roomId:roomId,communityId:communityId,onUnauthorized:onUnauthorized));
 }
 class PlayerProfileSheet extends StatefulWidget {
-  const PlayerProfileSheet({super.key,required this.api,required this.id,required this.onUnauthorized,this.roomId=''});
+  const PlayerProfileSheet({super.key,required this.api,required this.id,required this.onUnauthorized,this.roomId='',this.communityId=''});
   final PlatformApi api;
-  final String id,roomId;
+  final String id,roomId,communityId;
   final VoidCallback onUnauthorized;
   @override State<PlayerProfileSheet> createState()=>_PlayerProfileSheetState();
 }
 class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
   Map<String,dynamic>? user;
+  bool canModerate=false,canAssignModerators=false;
   String? error;
   bool loading=true,busy=false,reporting=false,full=false;
   final report=TextEditingController();
@@ -68,13 +69,33 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
     if(response.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');
     return data;
   }
-  @override void initState(){super.initState();unawaited(load());}
+  @override void initState(){super.initState();unawaited(load());if(widget.communityId.isNotEmpty)unawaited(loadModeration());}
   @override void dispose(){report.dispose();super.dispose();}
   Future<void> load() async {
     setState((){loading=true;error=null;});
     try{final data=await request('/api/public-profile/${widget.id}');if(mounted)setState(()=>user=Map<String,dynamic>.from(data['user']));}
     catch(e){if(mounted)setState(()=>error=e is StateError?e.message.toString():'تعذر تحميل بطاقة اللاعب. حاول مجددًا.');}
     finally{if(mounted)setState(()=>loading=false);}
+  }
+  Future<void> loadModeration() async {
+    try{
+      final result=await request('/api/communities/${widget.communityId}');
+      final capabilities=result['capabilities'] as Map? ?? {};
+      if(mounted)setState((){canModerate=capabilities['canModerate']==true;canAssignModerators=capabilities['canAssignModerators']==true;});
+    }catch(_){ }
+  }
+  Future<void> moderate(String operation,String title) async {
+    if(busy)return;
+    final confirmed=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(
+      title:Text(title),content:Text('تنفيذ الإجراء على هذا الحساب في المساحة الحالية؟'),actions:[
+        TextButton(onPressed:()=>Navigator.pop(context,false),child:const Text('إلغاء')),
+        FilledButton(onPressed:()=>Navigator.pop(context,true),child:const Text('تأكيد'))]));
+    if(confirmed!=true||!mounted)return;
+    setState((){busy=true;error=null;});
+    try{await request('/api/communities/${widget.communityId}/moderation',body:{'targetUserId':widget.id,'action':operation});
+      if(mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('تم تنفيذ الإجراء في هذه المساحة')));
+    }catch(e){if(mounted)setState(()=>error=e is StateError?e.message.toString():'تعذر تنفيذ الإجراء');}
+    finally{if(mounted)setState(()=>busy=false);}
   }
   Future<void> action(String kind) async {
     if(busy||user==null)return;setState((){busy=true;error=null;});
@@ -126,6 +147,12 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
             OutlinedButton.icon(onPressed:busy||remaining<=0||u['reputationGrantedToday']==true?null:()=>action('reputation'),icon:const ProfileDecoration('reputation-flame',size:19),label:Text(u['reputationGrantedToday']==true?'مُنحت اليوم':'منح سمعة ($remaining/5)')),
             TextButton.icon(onPressed:busy?null:()=>setState(()=>reporting=!reporting),icon:const Icon(Icons.flag_outlined,size:19),label:const Text('إبلاغ')),
           ]),
+          if(canModerate&&u['isSelf']!=true)PopupMenuButton<String>(
+            enabled:!busy,tooltip:'إدارة العضو في المساحة',
+            onSelected:(value){const names={'kick':'إخراج لمدة دقيقة','mute':'كتم ١٠ دقائق','unmute':'إلغاء الكتم','ban':'حظر من المساحة','unban':'فك حظر المساحة','grant_moderator':'تعيين مشرف للمساحة','revoke_moderator':'سحب إشراف المساحة'};unawaited(moderate(value,names[value]!));},
+            itemBuilder:(_)=>[const PopupMenuItem(value:'kick',child:Text('إخراج لمدة دقيقة')),const PopupMenuItem(value:'mute',child:Text('كتم ١٠ دقائق')),const PopupMenuItem(value:'unmute',child:Text('إلغاء الكتم')),const PopupMenuItem(value:'ban',child:Text('حظر من المساحة')),const PopupMenuItem(value:'unban',child:Text('فك حظر المساحة')),
+              if(canAssignModerators)...[const PopupMenuItem(value:'grant_moderator',child:Text('تعيين مشرف للمساحة')),const PopupMenuItem(value:'revoke_moderator',child:Text('سحب إشراف المساحة'))]],
+            child:const Padding(padding:EdgeInsets.all(12),child:Text('إدارة العضو في المساحة'))),
           if(reporting)...[TextField(controller:report,maxLength:500,maxLines:3,decoration:const InputDecoration(labelText:'وصف المشكلة',border:OutlineInputBorder())),FilledButton(onPressed:busy?null:()=>action('report'),child:const Text('إرسال للإدارة'))],
           if(busy)const Padding(padding:EdgeInsets.all(12),child:LinearProgressIndicator()),
           const SizedBox(height:12),

@@ -56,12 +56,12 @@ class QuickPlay:
                     room = await self.store.get_room_state(rid)
                     roster = room.get('roster') or []
                     if (room.get('settings') == settings and not room.get('started')
-                            and not room.get('finished') and any(p.get('connected') for p in roster)):
+                            and not room.get('finished') and not room.get('waitingExpired') and any(p.get('connected') for p in roster)):
                         if any(p.get('accountId') == account_id for p in roster):
                             raise StoreError('ACCOUNT_ALREADY_SEATED', 'لديك مباراة انتظار؛ عد إليها أو غادرها أولًا')
                         data = await self.store.join_room(rid, name, None, node_id, conn_id, account_id)
                 except StoreError as error:
-                    if error.code not in {'ROOM_NOT_FOUND', 'ROOM_FULL', 'MATCH_STARTED'}:
+                    if error.code not in {'ROOM_NOT_FOUND', 'ROOM_FULL', 'MATCH_STARTED', 'ROOM_WAIT_EXPIRED'}:
                         raise
             created = data is None
             if created:

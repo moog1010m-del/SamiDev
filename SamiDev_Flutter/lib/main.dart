@@ -158,6 +158,16 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     ));
     return c;
   }
+  Future<void> manageTable(String operation,int? target) async {
+    if(gameController==null||table.begun||table.ownerSeat!=table.seat)return;
+    final accepted=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(
+      title:Text(operation=='close'?'إغلاق الطاولة؟':'إخراج اللاعب قبل بدء اللعب؟'),actions:[
+        TextButton(onPressed:()=>Navigator.pop(context,false),child:const Text('إلغاء')),
+        FilledButton(onPressed:()=>Navigator.pop(context,true),child:const Text('تأكيد'))]));
+    if(accepted!=true||!mounted||gameController==null)return;
+    final packet={'type':'manage_table','action':operation,'targetSeat':target??-1};
+    try{final sent=await gameController!.runJavaScriptReturningResult('window.SamiDevNetwork?.send(${jsonEncode(packet)})??false');if(sent==false||sent=='false')notify('انقطع الاتصال؛ أعد المحاولة بعد عودته');}catch(_){if(mounted)notify('تعذر إرسال الإجراء؛ حاول مجددًا');}
+  }
   void parkGame(){
     if(!mounted||gameController==null)return;
     chatFocus.unfocus();
@@ -201,6 +211,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       case 'chat_history':if(gameController!=null){setState((){messages.clear();messages.addAll((event['messages'] as List? ?? []).whereType<Map>().map((x)=>Map<String,dynamic>.from(x)).take(80));});scrollChat();}
       case 'chat_message':if(gameController!=null){setState((){messages.add(event);if(messages.length>80)messages.removeAt(0);});scrollChat();}
       case 'invite_created':final token=event['inviteToken'];if(token is String&&RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token)){unawaited(copyText(runtime!.api.policy.backend.replace(path:'/platform/',queryParameters:{'invite':token}).toString()));}
+      case 'left_room':if({'ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(event['reason'])){unawaited(discardGame());notify(event['message']?.toString()??'أُغلقت الطاولة');}
       case 'error':notify(event['message']?.toString()??'تعذر تنفيذ العملية');
       case 'auth_expired':final hadSession=authenticated||gameController!=null;unawaited(discardGame());setState((){authenticated=false;gamesProfile=null;webPage=null;selectedTab=0;});unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.setNativeActive(true);'));if(hadSession){notify('انتهت الجلسة، سجّل الدخول مجددًا');}
     }
@@ -252,7 +263,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   void openProfile(String id){
     if(_profileOpen||runtime==null||!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
     _profileOpen=true;
-    unawaited(showPlayerProfile(context,api:runtime!.api,id:id,roomId:room,onUnauthorized:()=>onEvent({'type':'auth_expired'}))
+    unawaited(showPlayerProfile(context,api:runtime!.api,id:id,roomId:room,communityId:inGame?runtime!.community:(hubKey.currentState?.community?['id']?.toString()??''),onUnauthorized:()=>onEvent({'type':'auth_expired'}))
       .whenComplete(()=>_profileOpen=false));
   }
   Future<void> refreshGamesProfile()async{
@@ -337,6 +348,12 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       ]):null,
       body:SafeArea(top:!(authenticated&&!inGame&&!nativeHome),bottom:true,child:error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.cloud_off,size:48),const SizedBox(height:16),Text(error!,textAlign:TextAlign.center),const SizedBox(height:20),FilledButton(onPressed:start,child:const Text('إعادة المحاولة'))]))):!ready?const Center(child:CircularProgressIndicator()):!authenticated?AuthScreen(key:ValueKey(runtime),auth:NativeAuth(runtime!.api),onAuthenticated:(user)=>completeAuthentication(runtime!,user)):Column(children:[
         if((inGame?gameProgress:progress)<100&&(inGame||!nativeHome))LinearProgressIndicator(value:(inGame?gameProgress:progress)/100,minHeight:2),
+        if(inGame&&!table.begun&&!table.finished&&table.seat>=0&&table.ownerSeat==table.seat)Align(
+          alignment:Alignment.centerRight,child:PopupMenuButton<int>(tooltip:'إدارة الطاولة قبل اللعب',
+            onSelected:(seat)=>unawaited(manageTable(seat==-1?'close':'kick',seat==-1?null:seat)),
+            itemBuilder:(_)=>[const PopupMenuItem(value:-1,child:Text('إغلاق الطاولة')),
+              for(final player in table.roster.where((p)=>p['seat']!=table.seat))PopupMenuItem(value:(player['seat'] as num).toInt(),child:Text('إخراج ${player['name']}'))],
+            child:const Padding(padding:EdgeInsets.symmetric(horizontal:16,vertical:8),child:Text('إدارة الطاولة')))),
         if(!inGame&&gameController!=null)Material(color:Theme.of(context).colorScheme.primaryContainer,child:ListTile(dense:true,
           leading:const Icon(Icons.sports_esports_outlined),title:const Text('العودة إلى طاولتك',style:TextStyle(fontWeight:FontWeight.w700)),
           subtitle:Text(table.finished?'انتهت المباراة':table.begun?'المباراة جارية — دورك يستمر أثناء التصفح':table.started?'تجهيز المباراة':'بانتظار انضمام اللاعبين'),

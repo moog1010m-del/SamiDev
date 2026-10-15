@@ -117,7 +117,7 @@
     });
     if(Array.isArray(user.showcaseItems))window.SamiDevProfileDetails?.render($('#own-profile-details'),user,{own:true});
     else refreshOwnProfile();
-    const admin=['admin','moderator'].includes(user.role); $('#admin-nav').classList.toggle('hidden',!admin); $('#admin-bottom').classList.toggle('hidden',!admin);
+    const admin=user.role==='admin'; $('#admin-nav').classList.toggle('hidden',!admin); $('#admin-bottom').classList.toggle('hidden',!admin);
   }
   let ownProfileRequest=0;
   async function refreshOwnProfile(){
@@ -181,7 +181,7 @@
     document.body.classList.remove('profile-editor-open');
   }
   function showAuth(){ state.store=null; document.body.classList.remove('community-mode'); $('#auth-screen').classList.remove('hidden'); $('#app').classList.add('hidden'); clearInterval(state.poll); }
-  function showApp(){ $('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); }
+  function showApp(){ $('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
@@ -528,10 +528,10 @@
     const active=state.activeCommunity;if(!active)return loadCommunities(manual);
     try{
       const d=await api(`/api/communities/${encodeURIComponent(active.id)}`);
-      state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];state.communityMessages=d.messages||[];
+      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];state.communityMessages=d.messages||[];
       renderCommunityState();renderRooms();
       if(manual)toast('تم تحديث المساحة');
-    }catch(err){if(err.status===401)return showAuth();if(err.status===404){leaveCommunity();return;}if(manual)toast(err.message,true);}
+    }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
   }
   function visibleCommunityMembers(){
     const selfId=String(state.user?.id||'');
@@ -621,6 +621,23 @@
     return 'إضافة صديق';
   }
   function renderCommunityPublicProfile(user){
+    let moderation=$('#community-profile-moderation');
+    if(!moderation){moderation=document.createElement('div');moderation.id='community-profile-moderation';moderation.className='community-public-actions';$('#community-profile-actions').insertAdjacentElement('afterend',moderation);}
+    moderation.replaceChildren();
+    if(user.id!==state.user?.id&&state.activeCommunity&&state.communityCapabilities?.canModerate){
+      const options={kick:'إخراج لمدة دقيقة',mute:'كتم ١٠ دقائق',unmute:'إلغاء الكتم',ban:'حظر من المساحة',unban:'فك حظر المساحة'};
+      if(state.communityCapabilities.canAssignModerators){options.grant_moderator='تعيين مشرف لهذه المساحة';options.revoke_moderator='سحب إشراف هذه المساحة';}
+      for(const [action,title] of Object.entries(options)){
+        const button=document.createElement('button');button.type='button';button.className='ghost';button.textContent=title;
+        button.onclick=async()=>{
+          if(!confirm(title+' للمستخدم '+(user.displayName||user.username)+'؟'))return;
+          button.disabled=true;
+          try{await api('/api/communities/'+encodeURIComponent(state.activeCommunity.id)+'/moderation',{method:'POST',body:JSON.stringify({targetUserId:user.id,action})});toast('تم تنفيذ الإجراء في هذه المساحة');await loadCommunityState();}
+          catch(error){toast(error.message,true);}finally{button.disabled=false;}
+        };moderation.append(button);
+      }
+    }
+
     const keepFull=$('#community-profile-modal').classList.contains('sd-profile-expanded');
     activePublicProfile=user;window.SamiDevCosmetics?.cover($('#community-profile-modal .profile-cover'),user.profileBanner);
     const name=user.displayName||user.username||'Player';
@@ -783,7 +800,7 @@
     return d.toLocaleString('ar-SA',{dateStyle:'short',timeStyle:'short'});
   }
   async function loadAdmin(){
-    if(!state.user||!['admin','moderator'].includes(state.user.role))return;
+    if(!state.user||state.user.role!=='admin')return;
     try{
       const [s,u,r]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports')]);
       const st=s.stats;

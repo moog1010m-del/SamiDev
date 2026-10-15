@@ -78,6 +78,7 @@ class Conn:
     conn_id: str
     peer: str
     room_id: str | None = None
+    room_created_at: int = 0
     seat: int | None = None
     token: str | None = None
     connection_epoch: int = 0
@@ -88,6 +89,7 @@ class Conn:
     auth_version: str = "0"
     auth_expires_at: float = 0
     community_id: str = "majlis"
+    community_blocked: str | None = None
     spectator: bool = False
     tokens: float = RATE_BURST
     last_refill: float = field(default_factory=time.monotonic)
@@ -192,6 +194,9 @@ class SamiDevRealtime:
                 user = await self.platform.get_user(c.account_id)
             if not user or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != c.auth_version: return False
             c.account_role = str(user.get("role") or "user")
+            c.community_blocked = None
+            try: self.platform.community_rules.check(user,c.community_id)
+            except PlatformError as error: c.community_blocked = error.code
             return True
         except Exception as exc:
             raise AuthUnavailable(type(exc).__name__) from exc
@@ -205,16 +210,37 @@ class SamiDevRealtime:
                 except AuthUnavailable:
                     await c.ws.close(code=1013, message=b'authentication service unavailable; retry')
                     continue
+                if authorized and c.community_blocked and c.room_id and c.seat is not None and not c.spectator:
+                    rid = c.room_id
+                    try:
+                        departed=await self.store.leave_room(rid,c.seat,c.conn_id,c.connection_epoch,before_begin_only=True)
+                        if departed.get('seatFreed'):
+                            self.room_local[rid].discard(c.conn_id)
+                            c.room_id=None;c.seat=None;c.token=None
+                            await self.send(c,{'type':'left_room','reason':c.community_blocked,'message':'أُخرجت من هذه المساحة','roomId':rid})
+                            if not departed.get('roomDeleted'): await self.fanout(rid,await self.room_state_event(rid))
+                    except StoreError: pass
+                    except Exception: await c.ws.close(code=1013,message=b'community service unavailable; retry')
                 if not authorized:
                     await c.ws.close(code=4003, message=b"authentication expired")
 
     async def _sweeper(self) -> None:
+        ticks = 0
         while True:
-            await asyncio.sleep(60)
+            await asyncio.sleep(5)
             try:
-                await self.store.sweep()
+                await self.store.expire_waiting_rooms()
+                for rid in [rid for rid,ids in self.room_local.items() if not ids]: self.room_local.pop(rid,None)
+                # Recoverable notification: each gateway checks its own attached
+                # rooms, so a crash or a lost Pub/Sub message cannot strand users.
+                for event in await self.store.waiting_closures(list(self.room_local)):
+                    await self.deliver_local({"roomId":event["roomId"],"payload":{
+                        "type":"left_room", "roomId":event["roomId"], "createdAt":event["createdAt"],
+                        "reason":event.get("reason") or "ROOM_WAIT_EXPIRED", "message":"أُغلقت الطاولة أو انتهت مهلة انتظار اللاعبين"}})
+                ticks += 1
+                if ticks % 12 == 0: await self.store.sweep()
             except Exception as e:
-                print("[SamiDev] sweeper", e)
+                print("[SamiDev] sweeper", type(e).__name__)
 
     async def _listen_remote(self) -> None:
         backoff = 0.5
@@ -522,6 +548,8 @@ class SamiDevRealtime:
         if c.room_id:
             self.room_local[c.room_id].discard(c.conn_id)
         c.room_id = data["roomId"]
+        c.room_created_at = int(data.get("createdAt") or 0)
+        c.community_id = str(data.get("communityId") or c.community_id)
         c.seat = int(data["seat"])
         c.token = data["token"]
         c.connection_epoch = int(data.get("connectionEpoch", 1))
@@ -582,7 +610,7 @@ class SamiDevRealtime:
 
     async def room_state_event(self, rid: str) -> dict[str, Any]:
         state = await self.store.get_room_state(rid)
-        return {"type": "room_state", "cosmetics": await self.room_cosmetics(rid, state["settings"]), **{k: state[k] for k in ("roomId", "capacity", "settings", "started", "begun", "finished", "roster", "moveCount")}}
+        return {"type": "room_state", "cosmetics": await self.room_cosmetics(rid, state["settings"]), **{k: state[k] for k in ("roomId", "capacity", "settings", "started", "begun", "finished", "roster", "moveCount", "waitingExpiresAt", "waitingExpired", "ownerSeat")}}
 
     async def room_cosmetics(self, rid: str, settings: dict) -> dict:
         if game_id(settings) != "pool":
@@ -678,6 +706,12 @@ class SamiDevRealtime:
             if isinstance(payload_by_seat, dict) and not c.spectator and c.seat is not None:
                 selected = payload_by_seat.get(str(c.seat))
             if isinstance(selected, dict):
+                if selected.get("type") == "left_room" and selected.get("reason") in {"ROOM_WAIT_EXPIRED","TABLE_CLOSED","TABLE_KICKED"}:
+                    if selected.get("targetConnId") and selected["targetConnId"] != cid: continue
+                    if c.room_created_at != int(selected.get("createdAt") or 0): continue
+                    self.room_local[rid].discard(cid)
+                    c.room_id = None; c.seat = None; c.token = None; c.connection_epoch = 0
+                    if not self.room_local[rid]: self.room_local.pop(rid,None)
                 sends.append(self.send(c, selected))
         if sends:
             await asyncio.gather(*sends, return_exceptions=True)
@@ -713,6 +747,33 @@ class SamiDevRealtime:
 
     async def handle(self, c: Conn, msg: dict[str, Any]) -> None:
         kind = msg.get("type")
+        if c.account_id and kind in {'quick_play','create_room','join_room','watch_room','join_invite'}:
+            cid = c.community_id
+            if kind in {'join_room','watch_room'}:
+                room = await self.store.get_room_state(str(msg.get('roomId') or ''))
+                cid = room.get('communityId') or 'majlis'
+            if kind=='join_invite':
+                token=str(msg.get('inviteToken') or '')
+                if getattr(self.store,'distributed',False):
+                    rid=await self.store.r.get(self.store.kinvite(token))
+                else:
+                    entry=self.store.invites.get(token);rid=entry[0] if entry else None
+                if rid: cid=(await self.store.get_room_state(rid)).get('communityId') or 'majlis'
+            await self.platform.community_rules.access(c.account_id,cid)
+        if c.account_id and kind=='chat_send':
+            await self.platform.community_rules.access(c.account_id,c.community_id,chat=True)
+        if kind=='manage_table':
+            if c.room_id is None or c.seat is None or c.spectator:raise StoreError('NOT_IN_ROOM','ادخل طاولتك أولًا')
+            await self.enforce_action_rate(c,'manage-table',30)
+            target=msg.get('targetSeat',-1)
+            if type(target) is not int or not -1<=target<=3:raise StoreError('BAD_SEAT','المقعد غير صالح')
+            rid=c.room_id
+            result=await self.store.manage_waiting_table(rid,c.seat,c.conn_id,c.connection_epoch,str(msg.get('action') or ''),target)
+            payload={'type':'left_room',**{k:v for k,v in result.items() if k!='targetNodeId'},
+                'message':'أُغلقت الطاولة' if result['reason']=='TABLE_CLOSED' else 'أخرجك منشئ الطاولة قبل بدء اللعب'}
+            await self.fanout(rid,payload)
+            if result['reason']=='TABLE_KICKED': await self.fanout(rid,await self.room_state_event(rid))
+            return
         if kind == "quick_play":
             if c.room_id is not None:
                 raise StoreError("ALREADY_IN_ROOM", "الاتصال موجود بالفعل في غرفة")
@@ -1124,7 +1185,7 @@ class SamiDevRealtime:
                         continue
                     try:
                         await self.handle(c, msg)
-                    except StoreError as e:
+                    except (StoreError, PlatformError) as e:
                         await self.error(c, e.code, e.message)
                     except Exception as e:
                         print("[SamiDev] handler error", type(e).__name__, e)
@@ -1298,6 +1359,7 @@ def make_app() -> web.Application:
     app.router.add_post("/api/communities/{community_id}/enter", api.community_enter)
     app.router.add_post("/api/communities/{community_id}/leave", api.community_leave)
     app.router.add_post("/api/communities/{community_id}/chat", api.community_chat)
+    app.router.add_post("/api/communities/{community_id}/moderation", api.community_moderate)
     app.router.add_get("/api/lobby/rooms", api.lobby_rooms)
     app.router.add_post("/api/game-ticket", api.game_ticket)
     app.router.add_get("/api/friends", api.friends)
