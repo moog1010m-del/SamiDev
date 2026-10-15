@@ -48,7 +48,7 @@ void main() {
       ),
       vault,
     );
-    final auth = NativeAuth(api), transport = GoogleFixtureClient(server.port);
+    final auth = NativeAuth(api,linkGuest:true), transport = GoogleFixtureClient(server.port);
     var verified = false, providerDown = false, mailDown = false;
     var resets = 0, verifies = 0, exchanges = 0;
     server.listen((request) async {
@@ -64,6 +64,9 @@ void main() {
       var response = <String, dynamic>{};
       if (path == '/api/auth/config') {
         response = {'provider': 'firebase', 'apiKey': 'public-fixture'};
+      } else if (path == '/api/auth/guest') {
+        request.response.cookies.add(Cookie('samidev_session','G'*43)..httpOnly=true);
+        response={'ok':true,'user':{'id':'same-local-player','isGuest':true}};
       } else if (path == '/v1/accounts:signUp' ||
           path == '/v1/accounts:signInWithPassword') {
         expect(body['email'], 'player@example.test');
@@ -105,6 +108,8 @@ void main() {
       } else if (path == '/api/auth/firebase') {
         exchanges++;
         expect(body['idToken'], 'fresh-google-id');
+        expect(body['linkGuest'],true);
+        expect(request.headers.value('Cookie'),'samidev_session=${'G'*43}');
         expect(body.containsKey('password'), isFalse);
         expect(body.containsKey('refreshToken'), isFalse);
         if (!verified) {
@@ -137,6 +142,7 @@ void main() {
     try {
       await auth.prepare();
       expect(auth.usesFirebase, isTrue);
+      expect((await auth.guest())['id'],'same-local-player');
       api.firebase!.close();
       api.firebase = FirebaseClient('public-fixture', httpClient: transport);
       mailDown = true;
@@ -157,7 +163,7 @@ void main() {
       );
       expect(auth.hasPendingIdentity, isTrue);
       expect(exchanges, 0);
-      expect(vault.data, isEmpty);
+      expect(vault.data.values.single,'G'*43);
       mailDown = false;
       await auth.resendVerification();
       expect(verifies, 2);
@@ -171,7 +177,7 @@ void main() {
           ),
         ),
       );
-      expect(vault.data, isEmpty);
+      expect(vault.data.values.single,'G'*43);
       verified = true;
       final user = await auth.finishPending(username: 'new_player');
       expect(user['id'], 'same-local-player');

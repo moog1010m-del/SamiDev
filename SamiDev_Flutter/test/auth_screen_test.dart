@@ -166,14 +166,15 @@ void main() {
   );
 
   testWidgets(
-    'signed-out application renders native auth without any WebView',
+    'guest service outage offers retry without forcing registration',
     (tester) async {
       final runtime = SignedOutRuntime();
       await tester.pumpWidget(
         MaterialApp(home: PlatformScreen(runtimeFactory: () => runtime)),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(AuthScreen), findsOneWidget);
+      expect(find.byType(AuthScreen), findsNothing);
+      expect(find.text('إعادة المحاولة'),findsOneWidget);
       expect(find.byType(WebViewWidget), findsNothing);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());

@@ -60,6 +60,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _submit() async {
     if (_busy || !(_form.currentState?.validate() ?? false)) return;
+    if(!_register&&!finishing&&widget.auth.linkGuest){
+      final accepted=await showDialog<bool>(context:context,builder:(c)=>AlertDialog(title:const Text('الدخول لحساب موجود'),content:const Text('سيتم فتح حساب البريد بدون دمج تقدم الضيف. اختر إنشاء حساب جديد لربط بريد جديد بنفس تقدمك.'),actions:[TextButton(onPressed:()=>Navigator.pop(c,false),child:const Text('إلغاء')),FilledButton(onPressed:()=>Navigator.pop(c,true),child:const Text('دخول'))]));
+      if(accepted!=true||!mounted)return;
+    }
     FocusScope.of(context).unfocus();
     setState(() {
       _busy = true;

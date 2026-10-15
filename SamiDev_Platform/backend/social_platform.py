@@ -136,6 +136,8 @@ def system_notifications(user):
     except (ValueError, TypeError):
         return []
 
+STORE_CATALOG['rename_card'] = dict(name='بطاقة تغيير الاسم', description='تغيير اسم المستخدم بعد استهلاك التغيير المجاني. تُستهلك بطاقة لكل تغيير ناجح.', slot='rename_credit', category='profile', gameId='', asset='/platform/assets/profile/raster/prestige.webp', price=100, availableToAll=False, default=False, consumable=True)
+
 STORE_DEFAULT_EQUIPPED.update(chat_bubble="chat_default", profile_banner="banner_default")
 
 def cosmetic_id(value: Any, slot: str) -> str:
@@ -258,8 +260,11 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     out = {
         "id": str(raw.get("id") or ""),
         "username": str(raw.get("username") or ""),
-        "displayName": str(raw.get("displayName") or raw.get("username") or "Player"),
+        "displayName": str(raw.get("username") or "Player"),
         "role": str(raw.get("role") or "user"),
+        "isGuest": raw.get("guest") == "1",
+        "freeRenameAvailable": raw.get("freeRenameUsed") != "1",
+        "renameCredits": max(0, int(raw.get("renameCredits") or 0)),
         "createdAt": created_at,
         "accountAgeDays": int(account_age_days),
         "wins": max(0, int(raw.get("wins") or 0)),
@@ -317,6 +322,8 @@ class PlatformService:
         self.mem_reports: list[dict[str, Any]] = []
         self.mem_community_chat: dict[str, list[dict[str, Any]]] = {cid: [] for cid in COMMUNITIES}
         self.mem_active_community: dict[str, tuple[str, float]] = {}
+        from account_lifecycle import AccountLifecycle
+        self.accounts = AccountLifecycle(self)
         self.mem_inventory: dict[str, set[str]] = {}
         self.mem_equipped: dict[str, dict[str, str]] = {}
         self.mem_store_ledger: dict[str, list[dict[str, Any]]] = {}
@@ -499,7 +506,7 @@ class PlatformService:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         entry = {
             "id": secrets.token_urlsafe(8), "communityId": cid, "userId": uid,
-            "displayName": sanitize_plain_text(user.get("displayName") or user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
+            "displayName": sanitize_plain_text(user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
             "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
             "chatBubble": cosmetic_id(user.get("chatBubble"), "chat_bubble"),
         }
@@ -558,7 +565,7 @@ class PlatformService:
     async def create_user(self, username: str, password: str, display_name: str | None = None, *, role: str = "user", allow_existing: bool = False) -> dict[str, Any]:
         username = normalize_username(username)
         lower = username.lower()
-        display = normalize_display(display_name, username)
+        display = username
         encoded = await self.password_work(_hash_password, password)
         uid = secrets.token_urlsafe(12)
         created = now_ms()
@@ -647,7 +654,7 @@ class PlatformService:
                 raise PlatformError("USERNAME_TAKEN", "اسم المستخدم مستخدم بالفعل", 409)
             uid = secrets.token_urlsafe(12)
             user = dict(id=uid, username=username, usernameLower=username.lower(),
-                displayName=normalize_display(display_name, username), passwordHash="",
+                displayName=username, passwordHash="",
                 role="admin" if claims["uid"] == self.firebase.admin_uid else "user",
                 createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="badge_palm_swords",
                 firebaseUid=claims["uid"], firebaseProject=self.firebase.project,
@@ -662,10 +669,10 @@ class PlatformService:
         if not user:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         updates: dict[str, str] = {}
-        if display_name is not None:
-            updates["displayName"] = normalize_display(display_name, str(user.get("username") or "Player"))
         if update_avatar:
             updates["avatarData"] = normalize_avatar_data(avatar_data)
+        if display_name is not None:
+            user = await self.accounts.rename(uid, display_name)
         if not updates:
             return user
         if self.r is not None:
@@ -821,6 +828,7 @@ class PlatformService:
                     "equipped": equipped.get(slot) == item_id,
                 })
         return {
+            "renameCredits": max(0, int(user.get("renameCredits") or 0)),
             "coins": max(0, int(coins_raw or 0)),
             "starsCount": stars_count,
             "catalog": catalog,
@@ -874,6 +882,29 @@ class PlatformService:
                     rows.insert(0, entry)
                     del rows[STORE_LEDGER_MAX:]
             return {"bought": True, "itemId": item_id, "coins": new_coins, "starsCount": new_stars}
+
+        if item_id == 'rename_card':
+            async def purchase():
+                current = await self.get_user(uid)
+                balance = int(current.get('coins') or 0)
+                if balance < price:
+                    raise PlatformError('STORE_INSUFFICIENT_COINS', 'رصيدك غير كافٍ', 400)
+                credits = int(current.get('renameCredits') or 0)+1
+                fields = {'coins': str(balance-price), 'renameCredits': str(credits)}
+                entry = {'id':secrets.token_urlsafe(10),'type':'store_purchase','itemId':item_id,'amount':-price,'createdAt':now_ms(),'balance':balance-price}
+                if self.r is None:
+                    current.update(fields)
+                    rows=self.mem_store_ledger.setdefault(uid,[]);rows.insert(0,entry);del rows[STORE_LEDGER_MAX:]
+                else:
+                    await self.r.hset(self.k_user(uid),mapping=fields)
+                    await self.r.lpush(self.k_store_ledger(uid),json.dumps(entry))
+                    await self.r.ltrim(self.k_store_ledger(uid),0,STORE_LEDGER_MAX-1)
+                return {'bought':True,'itemId':item_id,'coins':balance-price,'renameCredits':credits}
+            if self.r is None:
+                async with self.lock: return await purchase()
+            if not hasattr(self.r,'pool'):
+                raise PlatformError('DURABLE_STORE_REQUIRED','الشراء يتطلب PostgreSQL',503)
+            return await purchase()  # PostgresPlatformService already owns purchase locks.
 
         if item.get("availableToAll") is True:
             raise PlatformError("STORE_ALREADY_OWNED", "هذا العنصر مجاني ومتاح للجميع بالفعل", 400)
@@ -929,7 +960,7 @@ class PlatformService:
         if not item:
             raise PlatformError("STORE_ITEM_NOT_FOUND", "العنصر غير موجود", 404)
         slot = str(item.get("slot") or "").strip()
-        if not slot or slot == "profile_stars":
+        if not slot or slot in {"profile_stars", "rename_credit"}:
             raise PlatformError("STORE_ITEM_INVALID", "العنصر غير قابل للتجهيز")
         user = await self.get_user(uid)
         if not user:
@@ -992,7 +1023,7 @@ class PlatformService:
                 return None
         except (ValueError, TypeError, KeyError):
             return None
-        if self.firebase.enabled and not user.get("firebaseUid"):
+        if self.firebase.enabled and not user.get("firebaseUid") and user.get("guest") != "1":
             return None
         if user.get("firebaseUid"):
             try:
@@ -1028,7 +1059,7 @@ class PlatformService:
         payload = {
             "uid": str(user["id"]),
             "username": str(user["username"]),
-            "displayName": str(user.get("displayName") or user["username"]),
+            "displayName": str(user["username"]),
             "role": str(user.get("role") or "user"),
             "issuedAt": now_ms(),
             "sessionKey": self.token_key(session_token),
@@ -1502,14 +1533,29 @@ class PlatformHttp:
             raise PlatformError(exc.code, exc.message, exc.status) from None
         if "legacyUsername" in body or "legacyPassword" in body:
             raise PlatformError("ACCOUNT_LINKING_DISABLED", "أنشئ حسابًا جديدًا باستخدام البريد الإلكتروني.", 400)
-        user = await self.platform.firebase_account(claims, username=body.get("username"),
-            display_name=body.get("displayName"))
+        if body.get('linkGuest') is True:
+            guest = await self._user(request)
+            user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
+        else:
+            user = await self.platform.firebase_account(claims, username=body.get("username"))
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
         token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"])
         response = web.json_response({"ok":True,"user":public_user(user, include_avatar=True)})
         response.set_cookie(SESSION_COOKIE, token, max_age=SESSION_TTL, httponly=True,
                             secure=self._secure(request), samesite="Lax", path="/")
         return response
+
+    async def guest(self, request: web.Request) -> web.Response:
+        user = await self._optional_user(request)
+        if user is None:
+            if not await self.platform.allow_rate(f"guest:{self._peer(request)}", 8, 300):
+                raise PlatformError('RATE_LIMIT','محاولات كثيرة؛ حاول لاحقًا',429)
+            user = await self.platform.accounts.guest()
+            token = await self.platform.create_session(str(user['id']))
+            response = web.json_response({'ok':True,'user':public_user(user,include_avatar=True)})
+            response.set_cookie(SESSION_COOKIE,token,max_age=SESSION_TTL,httponly=True,secure=self._secure(request),samesite='Lax',path='/')
+            return response
+        return web.json_response({'ok':True,'user':public_user(user,include_avatar=True)})
 
     async def register(self, request: web.Request) -> web.Response:
         if self.platform.firebase.enabled:
@@ -1621,7 +1667,7 @@ class PlatformHttp:
         body = await self._body(request)
         updated = await self.platform.update_profile(
             str(user["id"]),
-            display_name=body.get("displayName") if "displayName" in body else None,
+            display_name=body.get("username", body.get("displayName")) if "username" in body or "displayName" in body else None,
             avatar_data=body.get("avatarData"),
             update_avatar="avatarData" in body,
         )

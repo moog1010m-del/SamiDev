@@ -7,7 +7,8 @@ import 'player_profile.dart';
 import 'sticker_art.dart';
 
 class CommunityHub extends StatefulWidget {
-  const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity});
+  const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity,this.onAccount});
+  final VoidCallback? onAccount;
   final PlatformApi api;
   final bool active;
   final String? initialCommunity;
@@ -111,7 +112,7 @@ class CommunityHubState extends State<CommunityHub> {
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
         const SizedBox(height:5),ProfileStars(size:18,count:(user['starsCount'] as num?)?.toInt()??0),
-        if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('@${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
+        if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
         const SizedBox(height:8),Wrap(spacing:16,runSpacing:6,children:[
           Row(mainAxisSize:MainAxisSize.min,children:[const ProfileDecoration('trophy',size:18),const SizedBox(width:5),Text('فوز ${user['wins']??0}',style:const TextStyle(fontSize:12))]),
           Row(mainAxisSize:MainAxisSize.min,children:[const ProfileDecoration('reputation-flame',size:18),const SizedBox(width:5),Text('سمعة ${user['reputation']??0}',style:const TextStyle(fontSize:12))]),
@@ -144,6 +145,7 @@ class CommunityHubState extends State<CommunityHub> {
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
         if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
         const SizedBox(width:10),Expanded(child:Text(community?['name']?.toString()??'المساحات',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:17))),
+        if(widget.onAccount!=null)IconButton(tooltip:'إعدادات الحساب',onPressed:widget.onAccount,icon:const Icon(Icons.manage_accounts_outlined)),
         IconButton(tooltip:'المظهر',onPressed:widget.onTheme,icon:Icon(Theme.of(context).brightness==Brightness.dark?Icons.light_mode_outlined:Icons.dark_mode_outlined)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
       ])),

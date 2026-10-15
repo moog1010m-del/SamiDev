@@ -261,15 +261,15 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "62d806504ddc652eaf3d5c54629294e135801344f1b03bd9ea6ddaf38790f931",
     "platform/assets/stickers/samidev-stickers.png": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085",
-    "platform/build.json": "94ffe4b669642602dff9036570b65cbc4c751f0eed986cb6f46e474263aea5e6",
-    "platform/index.html": "ca68f7c5701083658894b1ddb32882707d4b978d8d166621b86ca01c7719c379",
+    "platform/build.json": "5a8293a03b13d3a912d3f6a34caad1c0dc6a0ffaae6a1afd9acec40406d5b684",
+    "platform/index.html": "71ee4f4c53fc18ef344771714e9a87dceaf6d4d192eb4167ace38d787f4bce41",
     "platform/platform.css": "6912ee5579beec4fac75622cfac99f9a38dfb29310176df5cdc49a59c0d0b656",
-    "platform/platform.js": "92fb300f64dec3a5a5e1221c123c0daccfc91441044e7e318866b0fccc0dd157",
+    "platform/platform.js": "0c31a557547bc0e2e2c8d1def7b1e068d90004ae0e2434462c57788ff74b0dbb",
     "platform/profile-identity.css": "2a456d9cae921b0b761a57d3d1f2583d1dcf2ad7838c5c2e5722791ada2e1c53",
     "platform/ranks.html": "afad05aaf7fe132081f4661adad2d5b3b42ef2b58ae8a849f340977691a1ff9a",
     "platform/store.css": "366d3a7ac41d0f42e76a2f4cc96aeb382f9d451c0e0d59938c556241aafa53ce",
     "player-profile-sheet.svg": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302",
-    "player-profile-ui.js": "5ec91871c7a6a43a41dd6401e262434fe601b7167740b9b00c7c54984f8098e2",
+    "player-profile-ui.js": "5b71ff8b0346983d73ec70a145320c53ebd08378629acf1d541dfb685e79ddfb",
     "profile-details.css": "266b5c252cb0d40ed3861c994208065bf02369dd64260f51448e22a0e99ad618",
     "profile-details.js": "c039faea20b85f32a6c52c1a585fa80e0768f7a2437fa8eac587c5ebea2deddc",
     "room-menu.js": "6ec3c189ebd9a6cf857a5503634de11f5633d48cffb1f8686972a2953ce39115",
@@ -335,6 +335,6 @@
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
     "waiting-room.js": "dbe6654edf54b4921bf5bb9809581066773c472e993b9b39a95f9b763a9613bc",
     "web-bridge.js": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e",
-    "platform/firebase-auth.js": "d5309289c38a4daef9771e7322e6512e1074838fcf3249ddb9a20cab6c8dfc8b"
+    "platform/firebase-auth.js": "c15d6f042a791bda74d3e031bf6e84ce5b403cbcb85cbd2e0a7554adfdd51ed5"
   }
 }

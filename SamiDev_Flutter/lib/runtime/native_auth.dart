@@ -11,7 +11,9 @@ class AuthFailure implements Exception {
 
 /// Uses the existing server session cookie. Passwords never enter a WebView.
 class NativeAuth {
-  NativeAuth(this.api);
+  NativeAuth(this.api, {this.linkGuest=false});
+  final bool linkGuest;
+  bool _linkPending=false;
   final PlatformApi api;
 
   Map<String, dynamic> _user(ApiResponse response) {
@@ -78,7 +80,7 @@ class NativeAuth {
     }
   }
 
-  void clearPending() => api.firebase?.clear();
+  void clearPending() { _linkPending=false; api.firebase?.clear(); }
   Future<Map<String, dynamic>> finishPending({
     String username = '',
     String displayName = '',
@@ -92,7 +94,7 @@ class NativeAuth {
           jsonEncode({
             'idToken': token,
             'username': username.trim(),
-            'displayName': displayName.trim(),
+            'linkGuest': _linkPending,
           }),
         ),
       );
@@ -100,9 +102,18 @@ class NativeAuth {
       if (!api.signedIn) throw const AuthFailure('لم تُحفظ جلسة الدخول.');
       api.firebase!.clear();
       return user;
+    } on AuthFailure catch(e) {
+      if(linkGuest&&e.code=='PROFILE_SETUP_REQUIRED')_linkPending=true;
+      rethrow;
     } on FirebaseClientFailure catch (e) {
       throw AuthFailure(e.message, code: e.code);
     }
+  }
+
+  Future<Map<String,dynamic>> guest() async {
+    final user=_user(await api.request('POST','/api/auth/guest',body:utf8.encode('{}')));
+    if(!api.signedIn)throw const AuthFailure('لم تُحفظ جلسة الضيف.');
+    return user;
   }
 
   Future<Map<String, dynamic>?> restore() async {
@@ -125,6 +136,7 @@ class NativeAuth {
     if (usesFirebase) {
       try {
         if (register) {
+          _linkPending=linkGuest;
           await api.firebase!.signUp(email, password);
           try {
             await api.firebase!.sendVerification();
@@ -139,6 +151,7 @@ class NativeAuth {
             code: 'EMAIL_NOT_VERIFIED',
           );
         }
+        _linkPending=false;
         await api.firebase!.signIn(email, password);
         return await finishPending(
           username: username,

@@ -1340,6 +1340,7 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
 def make_app() -> web.Application:
     app = web.Application(client_max_size=MAX_HTTP_BODY, middlewares=[platform_origin_middleware, platform_error_middleware])
     api = SERVICE.platform_http
+    app.router.add_post("/api/auth/guest", api.guest)
     app.router.add_post("/api/auth/register", api.register)
     app.router.add_get("/api/auth/config", api.auth_config)
     app.router.add_post("/api/auth/firebase", api.firebase_exchange)

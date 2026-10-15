@@ -12,8 +12,8 @@
     return data;
   }
   function remember(data){idToken=data.idToken||data.id_token;refreshToken=data.refreshToken||data.refresh_token;if(typeof idToken!=='string'||!idToken||typeof refreshToken!=='string'||!refreshToken)throw Error('رد خدمة المصادقة غير صالح.');}
-  window.SamiDevFirebaseAuth={clear,async mount({api,onAuthenticated}){
-    const config=await api('/api/auth/config');if(config.provider==='local')return false;if(config.provider!=='firebase'||!config.apiKey)throw Error('إعدادات المصادقة غير صالحة.');key=config.apiKey;
+  window.SamiDevFirebaseAuth={clear,async mount({api,onAuthenticated,currentUser=()=>null}){
+    const config=await api('/api/auth/config');if(config.provider==='local'){document.querySelector('[data-auth=register]')?.classList.add('hidden');return false;}if(config.provider!=='firebase'||!config.apiKey)throw Error('إعدادات المصادقة غير صالحة.');key=config.apiKey;
     const card=document.querySelector('.auth-card');
     for(const node of card.querySelectorAll('.auth-tabs,.auth-form,.auth-note'))node.classList.add('hidden');
     const form=document.createElement('form');form.className='auth-form';form.id='firebase-auth-form';
@@ -50,11 +50,12 @@
       busy=true;render();status.textContent='';
       try{
         if(!pending&&!setup){
+          if(!register&&currentUser()?.isGuest&&!confirm('سيتم الدخول إلى حساب البريد الموجود. تقدم الضيف لا ينتقل إلى حساب آخر. للاستمرار بنفس تقدمك اختر إنشاء حساب جديد.'))return;
           remember(await google(register?'signUp':'signInWithPassword',{email:field('email').value.trim(),password:field('password').value,returnSecureToken:true}));
           field('password').value='';
           if(register){pending=true;await google('sendOobCode',{requestType:'VERIFY_EMAIL',idToken});status.textContent='افتح رسالة التوثيق ثم اضغط تحققت من بريدي.';return;}
         }else remember(await google('',{grant_type:'refresh_token',refresh_token:refreshToken},true));
-        const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,username:(register||setup)?field('username').value.trim():''})});
+        const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,username:(register||setup)?field('username').value.trim():'',linkGuest:currentUser()?.isGuest===true&&(register||setup)})});
         clear();pending=false;setup=false;register=false;onAuthenticated(result.user);
       }catch(e){
         const code=e.code||e.error;
@@ -63,6 +64,7 @@
         else{status.textContent=e.message;if(['INVALID_ID_TOKEN','TOKEN_EXPIRED','INVALID_REFRESH_TOKEN'].includes(code)){clear();pending=false;setup=false;register=false;}}
       }finally{busy=false;render();}
     };
+    window.SamiDevFirebaseAuth.cancel=()=>{if(busy)return false;clear();register=false;pending=false;setup=false;field('password').value='';status.textContent='';render();return true;};
     render();return true;
   }};
 })();

@@ -136,7 +136,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
             const SizedBox(width:6),ProfileStars(size:18,count:(u['starsCount'] as num?)?.toInt()??0),
             const SizedBox(width:6),StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:22),
           ])),
-          if(u['username']!=null)Text('@${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
+          if(u['username']!=null)Text('${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[
             stat('لاعب منذ','${u['accountAgeDays']??0} يوم',const ProfileDecoration('calendar',size:18)),
             stat('الفوز','${u['wins']??0}',const ProfileDecoration('trophy')),

@@ -18,6 +18,7 @@ import 'ui/community_hub.dart';
 import 'ui/game_viewport.dart';
 import 'ui/games_hub.dart';
 import 'ui/auth_screen.dart';
+import 'ui/account_settings.dart';
 import 'runtime/native_auth.dart';
 
 final appTheme=ValueNotifier<ThemeMode>(ThemeMode.system);
@@ -81,9 +82,10 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       await r.start();if(!mounted)return;
       subscription=r.events.stream.listen(onEvent);
       await NativeAuth(r.api).prepare();
-      final user=await NativeAuth(r.api).restore();
+      final auth=NativeAuth(r.api);
+      final user=await auth.restore()??await auth.guest();
       if(!mounted||runtime!=r)return;
-      if(user!=null)await completeAuthentication(r,user);
+      await completeAuthentication(r,user);
       if(_background)await r.suspend();
       if(mounted)setState(()=>loading=false);
     }catch(e){if(mounted)setState(()=>error=e is FormatException?e.message:e is StateError?e.message.toString():e is AuthFailure?e.message:RuntimeFailure.from(e).toString());}
@@ -213,7 +215,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       case 'invite_created':final token=event['inviteToken'];if(token is String&&RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token)){unawaited(copyText(runtime!.api.policy.backend.replace(path:'/platform/',queryParameters:{'invite':token}).toString()));}
       case 'left_room':if({'ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(event['reason'])){unawaited(discardGame());notify(event['message']?.toString()??'أُغلقت الطاولة');}
       case 'error':notify(event['message']?.toString()??'تعذر تنفيذ العملية');
-      case 'auth_expired':final hadSession=authenticated||gameController!=null;unawaited(discardGame());setState((){authenticated=false;gamesProfile=null;webPage=null;selectedTab=0;});unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.setNativeActive(true);'));if(hadSession){notify('انتهت الجلسة، سجّل الدخول مجددًا');}
+      case 'auth_expired':final hadSession=authenticated||gameController!=null;unawaited(discardGame());setState((){authenticated=false;gamesProfile=null;webPage=null;selectedTab=0;});unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.setNativeActive(true);'));if(hadSession){notify('انتهت الجلسة. يمكنك الدخول إلى حسابك من الإعدادات.');}unawaited(start());
     }
   }
   void scrollChat(){WidgetsBinding.instance.addPostFrameCallback((_){if(chatScroll.hasClients)unawaited(chatScroll.animateTo(chatScroll.position.maxScrollExtent,duration:const Duration(milliseconds:160),curve:Curves.easeOut));});}
@@ -259,6 +261,10 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     setState(()=>webPage=page);chatFocus.unfocus();
     if(current==null||!current!.path.startsWith('/platform'))await controller!.loadRequest(runtime!.origin.replace(path:'/platform/'));
     else await configurePlatform();
+  }
+  Future<void> openAccountSettings() async {
+    if(runtime==null||gamesProfile==null)return;
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>AccountSettings(api:runtime!.api,user:gamesProfile!,onChanged:(user)async{await completeAuthentication(runtime!,user);})));
   }
   void openProfile(String id){
     if(_profileOpen||runtime==null||!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
@@ -362,7 +368,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
           if(controller!=null)Offstage(key:const ValueKey('platform-surface'),offstage:nativeHome||inGame,child:WebViewWidget(controller:controller!)),
           if(gameController!=null)Offstage(key:const ValueKey('retained-game'),offstage:!inGame,child:gameSurface()),
           if(authenticated)Offstage(key:const ValueKey('native-games'),offstage:!nativeGames,child:GamesHub(key:gamesKey,user:gamesProfile,onGame:openGame,onSelectionChanged:(){if(mounted)setState((){});})),
-          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
+          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
         ])),
         if(inGame)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
       ])),

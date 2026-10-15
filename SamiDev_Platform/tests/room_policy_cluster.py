@@ -18,6 +18,18 @@ async def main():
      while True:
       packet=await ws.receive_json()
       if packet.get('type')=='error':return packet
+   async with session.post(cluster.urls[0]+'/api/auth/guest',json={},headers=cluster.base_headers) as response:
+    anonymous=await response.json();assert response.status==200 and anonymous['user']['isGuest'],(response.status,anonymous)
+    guest_headers={**cluster.base_headers,'Cookie':'samidev_session='+response.cookies['samidev_session'].value}
+   async with session.get(cluster.urls[1]+'/api/me',headers=guest_headers) as response:
+    assert (await response.json())['user']['id']==anonymous['user']['id']
+   async with session.post(cluster.urls[1]+'/api/auth/guest',json={},headers=guest_headers) as response:
+    assert (await response.json())['user']['id']==anonymous['user']['id']
+   async with session.post(cluster.urls[1]+'/api/game-ticket',json={'communityId':'majlis'},headers=guest_headers) as response:
+    ticket=(await response.json())['ticket']
+   async with session.ws_connect(cluster.urls[0]+'/ws?ticket='+ticket,headers=guest_headers) as guest_socket:
+    await guest_socket.send_json({'type':'create_room','settings':{'gameId':'pool','gameType':7}})
+    assert (await receive(guest_socket,{'created'}))['roomId']
    uid=lambda i:cluster.prefix+'_'+str(i)
    await post(0,'/api/admin/users/'+uid(1)+'/role',{'role':'moderator'},400)
    await post(0,'/api/communities/majlis/moderation',{'targetUserId':uid(1),'action':'grant_moderator'})

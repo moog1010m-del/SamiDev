@@ -9,15 +9,17 @@
   <link rel="stylesheet" href="/profile-details.css?v=266b5c252cb0d40e">
   <link rel="stylesheet" href="/platform/platform.css?v=6912ee5579beec4f">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=2a456d9cae921b0b">
-<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=fa0b8cbd7933e560"><script src="/cosmetic-ui.js?v=0c97dfe029885812"></script><script src="/platform/firebase-auth.js?v=d5309289c38a4dae"></script></head>
+<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=fa0b8cbd7933e560"><script src="/cosmetic-ui.js?v=0c97dfe029885812"></script><script src="/platform/firebase-auth.js?v=c15d6f042a791bda"></script></head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
 
-  <section id="auth-screen" class="auth-screen">
+  <section id="auth-screen" class="auth-screen hidden">
+    <button id="auth-back" type="button" class="ghost">العودة للعب</button>
     <button id="auth-theme-toggle" class="theme-toggle auth-theme-toggle" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span><span class="theme-label">المظهر</span></button>
     <div class="auth-card">
       <div class="logo-mark">S</div>
       <h1>SamiDev</h1>
+      <p id="auth-context" class="muted">إنشاء حساب ببريد جديد يحفظ تقدم الضيف. الدخول ببريد موجود يفتح حسابه دون دمج.</p>
       <p class="muted">الكيرم وكرة الطاولة <span class="platform-version">V30</span></p>
       <div class="auth-tabs">
         <button class="auth-tab active" data-auth="login">تسجيل الدخول</button>
@@ -33,7 +35,7 @@
         <label>كلمة المرور<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
         <button class="primary" type="submit">إنشاء الحساب</button>
       </form>
-      <p class="auth-note">اسم المستخدم بدون @: حروف إنجليزية، أرقام و _ فقط.</p>
+      <p class="auth-note">يمكنك اللعب كضيف. ربط البريد متاح عند تفعيل Firebase؛ الدخول المحلي للحسابات التجريبية فقط.</p>
     </div>
   </section>
 
@@ -49,7 +51,7 @@
       </nav>
       <div class="topbar-user">
         <div id="avatar" class="avatar"><img id="avatar-image" alt="" class="avatar-image hidden"><span id="avatar-fallback">P</span></div>
-        <div class="topbar-user-copy"><strong id="side-name">Player</strong><small id="side-username">@player</small></div>
+        <div class="topbar-user-copy"><strong id="side-name">Player</strong><small id="side-username">player</small></div>
         <button id="theme-toggle" class="theme-toggle compact-theme" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span></button>
         <button id="logout-btn" class="icon-btn" title="تسجيل الخروج" aria-label="تسجيل الخروج">↪</button>
       </div>
@@ -80,7 +82,7 @@
                 <span id="lobby-avatar-fallback">P</span>
               </div>
               <div class="lobby-profile-name-row"><span class="profile-sprite profile-sprite-emblem" aria-hidden="true"></span><h3 id="lobby-profile-name">Player</h3></div>
-              <div id="lobby-profile-handle" class="lobby-profile-handle">@player</div>
+              <div id="lobby-profile-handle" class="lobby-profile-handle">player</div>
               <div class="lobby-profile-stars" aria-label="خمس نجوم"><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span></div>
               <div class="lobby-profile-divider"></div>
               <div class="lobby-profile-stats">
@@ -89,7 +91,7 @@
                 <div><small>السمعة</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="lobby-profile-reputation">0</strong></span></div>
               </div>
               <div class="lobby-profile-info">
-                <div><span>الحساب</span><strong id="lobby-profile-account">@player</strong></div>
+                <div><span>الحساب</span><strong id="lobby-profile-account">player</strong></div>
                 <div><span>الحالة</span><strong class="lobby-online"><i></i>متصل الآن</strong></div>
               </div>
               <div class="lobby-profile-spacer" aria-hidden="true"></div>
@@ -102,7 +104,7 @@
           <div class="community-userbar" aria-label="شريط الحساب داخل المساحة">
             <button id="community-self-profile" class="community-user-identity" type="button" aria-label="فتح الملف الشخصي">
               <span class="community-user-avatar avatar"><img id="community-user-avatar-image" alt="صورة الملف الشخصي" class="avatar-image hidden"><span id="community-user-avatar-fallback">P</span></span>
-              <span class="community-user-copy"><strong id="community-user-name">Player</strong><small id="community-user-handle">@player</small></span>
+              <span class="community-user-copy"><strong id="community-user-name">Player</strong><small id="community-user-handle">player</small></span>
             </button>
             <div class="community-user-actions">
               <button id="leave-community" class="room-utility-btn" type="button">المساحات</button>
@@ -232,7 +234,7 @@
 
 
 
-              <div id="profile-identity-handle" class="community-public-profile-handle">@player</div>
+              <div id="profile-identity-handle" class="community-public-profile-handle">player</div>
               <div class="profile-stats" aria-label="إحصاءات الملف الشخصي">
                 <div class="profile-stat profile-stat-since">
                   <small>لاعب منذ</small>
@@ -282,9 +284,11 @@
             </div>
 
             <label class="profile-field-group">
-              <span class="profile-field-label">الاسم</span>
-              <input id="profile-display-input" maxlength="24" autocomplete="nickname" placeholder="الاسم الظاهر">
-              <small><span id="profile-name-count">0</span>/24</small>
+              <span class="profile-field-label">اسم المستخدم</span>
+              <input id="profile-display-input" maxlength="20" autocomplete="username" placeholder="اسم المستخدم بدون @" pattern="[A-Za-z0-9_]{3,20}">
+              <p id="profile-rename-status"></p>
+              <button id="account-settings-btn" type="button" class="ghost">الحساب · ربط البريد أو تسجيل الدخول</button>
+              <small><span id="profile-name-count">0</span>/20</small>
             </label>
 
             <div class="profile-editor-actions">
@@ -339,7 +343,7 @@
           <div class="profile-stars" aria-label="خمس نجوم">
             <span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span>
           </div></div>
-          <div id="community-profile-handle" class="community-public-profile-handle">@player</div>
+          <div id="community-profile-handle" class="community-public-profile-handle">player</div>
 
           <div class="profile-stats" aria-label="إحصاءات اللاعب">
             <div class="profile-stat profile-stat-since"><small>لاعب منذ</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="community-profile-since">0 يوم</strong></div></div>
@@ -395,6 +399,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=c039faea20b85f32"></script><script src="/platform/platform.js?v=92fb300f64dec3a5"></script>
+  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=c039faea20b85f32"></script><script src="/platform/platform.js?v=0c31a557547bc0e2"></script>
 </body>
 </html>

@@ -66,7 +66,7 @@ class PlatformApi {
       if (response.statusCode == 401 || (path == '/api/auth/logout' && response.statusCode == 200)) {
         if(path=='/api/auth/logout')firebase?.clear();
         await clearSession();
-      } else if ({'/api/auth/login','/api/auth/register','/api/auth/firebase'}.contains(path) && response.statusCode == 200) {
+      } else if (({'/api/auth/login','/api/auth/register','/api/auth/firebase'}.contains(path) || (path=='/api/auth/guest'&&response.cookies.any((c)=>c.name=='samidev_session'))) && response.statusCode == 200) {
         final cookies=response.cookies.where((c)=>c.name=='samidev_session').toList();
         if(cookies.length!=1 || !cookies.single.httpOnly || !RegExp(r'^[A-Za-z0-9_-]{32,128}$').hasMatch(cookies.single.value)) {
           throw const RuntimeFailure('SESSION_COOKIE_INVALID','لم يرسل الخادم جلسة دخول صالحة. أبلغ الدعم.');

@@ -77,11 +77,12 @@
   }
   function setUser(user){
     state.user=user;
+    const renameStatus=$('#profile-rename-status');if(renameStatus)renameStatus.textContent=user.freeRenameAvailable?'تغيير اسم المستخدم مجانًا مرة واحدة.':`بطاقات تغيير الاسم: ${Number(user.renameCredits)||0} · يمكن شراؤها من المتجر.`;
     window.SamiDevMobile?.postMessage(JSON.stringify({type:'platform_ready',role:user.role||'user'}));
     const name=user.displayName||user.username;
-    $('#side-name').textContent=name; $('#side-username').textContent='@'+user.username;
+    $('#side-name').textContent=name; $('#side-username').textContent=user.username;
     $('#profile-name').textContent=name;
-    const handle=$('#profile-identity-handle');if(handle)handle.textContent='@'+String(user.username||'player');
+    const handle=$('#profile-identity-handle');if(handle)handle.textContent=String(user.username||'player');
     const sinceValue=$('#profile-since-value');if(sinceValue)sinceValue.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const wins=$('#profile-wins');if(wins)wins.textContent=formatProfileStat(user.wins);
     const reputation=$('#profile-reputation');if(reputation)reputation.textContent=formatProfileStat(user.reputation);
@@ -95,10 +96,10 @@
     renderAvatar('#community-user-avatar-image','#community-user-avatar-fallback',name,user.avatarData);
     document.querySelectorAll('.lobby-profile .lobby-profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
     const communityUserName=$('#community-user-name');if(communityUserName)communityUserName.textContent=name;
-    const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent='@'+String(user.username||'player');
+    const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent=String(user.username||'player');
     const lobbyName=$('#lobby-profile-name');if(lobbyName)lobbyName.textContent=name;
-    const lobbyHandle=$('#lobby-profile-handle');if(lobbyHandle)lobbyHandle.textContent='@'+String(user.username||'player');
-    const lobbyAccount=$('#lobby-profile-account');if(lobbyAccount)lobbyAccount.textContent='@'+String(user.username||'player');
+    const lobbyHandle=$('#lobby-profile-handle');if(lobbyHandle)lobbyHandle.textContent=String(user.username||'player');
+    const lobbyAccount=$('#lobby-profile-account');if(lobbyAccount)lobbyAccount.textContent=String(user.username||'player');
     const lobbySince=$('#lobby-profile-since');if(lobbySince)lobbySince.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const lobbyWins=$('#lobby-profile-wins');if(lobbyWins)lobbyWins.textContent=formatProfileStat(user.wins);
     const lobbyRep=$('#lobby-profile-reputation');if(lobbyRep)lobbyRep.textContent=formatProfileStat(user.reputation);
@@ -180,15 +181,21 @@
     if(backdrop){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');}
     document.body.classList.remove('profile-editor-open');
   }
-  function showAuth(){ state.store=null; document.body.classList.remove('community-mode'); $('#auth-screen').classList.remove('hidden'); $('#app').classList.add('hidden'); clearInterval(state.poll); }
+  let guestResume=null;
+  function resumeGuest(){
+    if(guestResume)return guestResume;
+    guestResume=api('/api/auth/guest',{method:'POST',body:'{}'}).then(d=>{setUser(d.user);showApp();}).catch(error=>toast(error.message,true)).finally(()=>{guestResume=null;});
+    return guestResume;
+  }
+  function showAuth({accountSettings=false}={}){ if(!accountSettings){clearInterval(state.poll);resumeGuest();return;}state.store=null; document.body.classList.remove('community-mode'); $('#auth-screen').classList.remove('hidden'); $('#app').classList.add('hidden'); clearInterval(state.poll); }
   function showApp(){ $('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
     bind();
     const authControls=$$('.auth-form input,.auth-form button,.auth-tab');authControls.forEach(node=>node.disabled=true);
-    try{await window.SamiDevFirebaseAuth.mount({api,onAuthenticated:user=>{setUser(user);showApp();}});authControls.forEach(node=>node.disabled=false);}catch(err){toast('تعذر تحميل إعدادات تسجيل الدخول. أعد تحميل الصفحة.',true);return;}
-    try{const d=await api('/api/me');setUser(d.user);showApp();}catch(_){showAuth();}
+    try{await window.SamiDevFirebaseAuth.mount({api,currentUser:()=>state.user,onAuthenticated:user=>{setUser(user);showApp();}});authControls.forEach(node=>node.disabled=false);}catch(err){toast('تعذر تحميل إعدادات تسجيل الدخول. أعد تحميل الصفحة.',true);return;}
+    try{let d;try{d=await api('/api/me');}catch(error){if(error.status!==401)throw error;d=await api('/api/auth/guest',{method:'POST',body:'{}'});}setUser(d.user);showApp();}catch(error){toast(error.message,true);}
   }
   function selectCreateGame(gameId){
     const pool=gameId==='pool';
@@ -219,7 +226,9 @@
     $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#login-form').classList.toggle('hidden',b.dataset.auth!=='login');$('#register-form').classList.toggle('hidden',b.dataset.auth!=='register');});
     $('#login-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#register-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/register',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
-    $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();showAuth();};
+    $('#account-settings-btn').onclick=()=>{closeProfileEditor();showAuth({accountSettings:true});};
+    $('#auth-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()===false)return;if(state.user)showApp();};
+    $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
     $$('.theme-toggle').forEach(b=>b.addEventListener('click',toggleTheme));
     $$('[data-community-tab]').forEach(button=>button.addEventListener('click',()=>{
@@ -286,9 +295,10 @@
     });
     $('#profile-display-input').addEventListener('input',e=>$('#profile-name-count').textContent=String(e.currentTarget.value.length));
     $('#profile-save-name').onclick=async()=>{
-      const displayName=$('#profile-display-input').value.trim();
-      if(!displayName)return toast('اكتب الاسم أولًا',true);
-      try{const d=await api('/api/profile',{method:'PATCH',body:JSON.stringify({displayName})});setUser(d.user);toast('تم حفظ التغييرات');}
+      const username=$('#profile-display-input').value.trim();
+      if(!/^[A-Za-z0-9_]{3,20}$/.test(username))return toast('اسم المستخدم: ٣–٢٠ حرفًا إنجليزيًا أو رقمًا أو _ بدون @',true);
+      if(!confirm('تغيير اسم المستخدم؟ '+(state.user?.freeRenameAvailable?'هذا التغيير مجاني.':'سيتم استهلاك بطاقة تغيير اسم.')))return;
+      try{const d=await api('/api/profile',{method:'PATCH',body:JSON.stringify({username})});setUser(d.user);toast('تم حفظ التغييرات');}
       catch(err){toast(err.message||'تعذر حفظ الاسم',true);}
     };
     $('#profile-remove-photo').onclick=async()=>{try{await saveAvatarData('','تمت إزالة الصورة');}catch(err){toast(err.message||'تعذر إزالة الصورة',true);}};
@@ -298,6 +308,8 @@
       const d=await api('/api/store');state.store=d;
       if(state.user){
         state.user.coins=Number(d.coins)||0;
+        state.user.renameCredits=Number(d.renameCredits)||0;
+        const renameStatus=$('#profile-rename-status');if(renameStatus&&!state.user.freeRenameAvailable)renameStatus.textContent=`بطاقات تغيير الاسم: ${state.user.renameCredits} · يمكن شراؤها من المتجر.`;
         if(d.starsCount!==undefined)state.user.starsCount=d.starsCount;
         const balance=$('#store-balance');if(balance)balance.textContent=formatProfileStat(d.coins);
       }
@@ -317,6 +329,7 @@
     });
   }
   function cosmeticProductArt(item,className=''){
+    if(item.consumable)return `<div class="store-name-preview">↻ <strong>تغيير الاسم</strong></div>`;
     if(item.slot==='chat_bubble')return `<div class="store-chat-sample ${escapeHtml(className)}"><div class="store-chat-preview-meta"><strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong><small>الآن</small></div><div class="store-chat-preview" data-chat-cosmetic="${escapeHtml(item.id)}"><span>مرحبًا</span></div></div>`;
     if(item.slot==='profile_banner'&&!item.asset)return '<img class="store-item-visual store-banner-art" src="/platform/assets/profile/identity/samidev-night-cover.png" alt="الغلاف الافتراضي">';
     return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
@@ -368,7 +381,7 @@
     const ledgerBox=$('#store-ledger');if(ledgerBox){ledgerBox.replaceChildren();if(!ledger.length){ledgerBox.append(emptyBlock('لا توجد حركات حتى الآن.'));}else for(const entry of ledger){
       const row=document.createElement('div');row.className='store-ledger-row';const mark=document.createElement('span');mark.className='coin-mark small';mark.textContent='C';
       const copy=document.createElement('div');const title=document.createElement('strong');
-      title.textContent=entry.type==='daily_match_reward'?'مكافأة مباراة يومية':entry.type==='store_purchase'?'شراء من المتجر':'حركة متجر';
+      title.textContent=entry.type==='daily_match_reward'?'مكافأة مباراة يومية':entry.type==='store_purchase'?'شراء من المتجر':entry.type==='username_change'?'تغيير اسم المستخدم':'حركة متجر';
       const meta=document.createElement('small');const d=new Date(Number(entry.createdAt)||Date.now());meta.textContent=(entry.roomId?`مباراة ${entry.roomId} · `:'')+d.toLocaleString('ar-SA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});copy.append(title,meta);
       const amount=document.createElement('b');const n=Math.trunc(Number(entry.amount)||0),abs=Math.abs(n).toLocaleString('en-US');amount.textContent=`${n>=0?'+':'-'}${abs}`;row.append(mark,copy,amount);ledgerBox.append(row);
     }}
@@ -393,7 +406,7 @@
     }
     const coins=Number(state.store?.coins??state.user?.coins??0),price=Number(item.price)||0;
     const isStar=item.slot==='profile_stars',stars=Math.max(0,Math.min(5,Number(state.store?.starsCount??state.user?.starsCount??0)));
-    const owned=isStar?stars>=5:(item.owned||item.availableToAll||item.default);
+    const owned=item.consumable?false:isStar?stars>=5:(item.owned||item.availableToAll||item.default);
     const active=!isStar&&state.store?.equipped?.[item.slot]===item.id;
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
     modal.innerHTML=`<section class="store-product-sheet${item.slot==='chat_bubble'?' has-chat-preview':''}" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
@@ -590,7 +603,7 @@
         stars.append(star);
       }
       const meta=document.createElement('div');meta.className='community-member-meta';
-      for(const text of [`@${String(u.username||'player')}`,`فوز ${formatProfileStat(u.wins)}`,`سمعة ${formatProfileStat(u.reputation)}`]){const span=document.createElement('span');span.textContent=text;meta.append(span);}
+      for(const text of [`${String(u.username||'player')}`,`فوز ${formatProfileStat(u.wins)}`,`سمعة ${formatProfileStat(u.reputation)}`]){const span=document.createElement('span');span.textContent=text;meta.append(span);}
       copy.append(title,stars,meta);const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);update.add(row);
     }update.finish();
   }
@@ -649,7 +662,7 @@
     const userStars=Math.max(0,Math.min(5,Number(user.starsCount??0)));
     $('#community-profile-modal .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
     $$('#community-profile-modal .community-public-profile-star').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
-    $('#community-profile-handle').textContent='@'+String(user.username||'player');
+    $('#community-profile-handle').textContent=String(user.username||'player');
     $('#community-profile-since').textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     $('#community-profile-wins').textContent=formatProfileStat(user.wins);
     $('#community-profile-reputation').textContent=formatProfileStat(user.reputation);
@@ -783,7 +796,7 @@
   async function watchRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);location.href=window.SamiDevGames.get(state.rooms.find(r=>r.roomId===room)?.settings?.gameId).entry+'?'+q;}catch(err){toast(err.message,true);}}
   async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}location.href=window.SamiDevGames.get(gid).entry+'?'+q;}catch(err){toast(err.message,true);}}
   async function loadFriends(){try{const d=await api('/api/friends');state.friends=d.friends||[];state.requests=d.requests||[];renderFriends();}catch(err){if(err.status===401)showAuth();}}
-  function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>@${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}
+  function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}
   function renderFriends(){
     const req=$('#friend-requests');req.innerHTML=state.requests.length?state.requests.map(u=>personRow(u,`<button class="small-btn accept" data-id="${u.id}">قبول</button><button class="danger-btn reject" data-id="${u.id}">رفض</button>`)).join(''):'<div class="empty small">لا توجد طلبات</div>';
     $('#request-badge').textContent=state.requests.length;$('#request-badge').classList.toggle('hidden',!state.requests.length);
@@ -807,7 +820,7 @@
       const communityNames=new Map((spaces.communities||[]).map(c=>[c.id,c.name]));
       const st=s.stats;
       $('#admin-stats').innerHTML=`<div><span>${st.users}</span><small>المستخدمون</small></div><div><span>${st.onlineUsers}</span><small>متصلون</small></div><div><span>${st.waitingRooms}</span><small>غرف انتظار</small></div><div><span>${st.runningRooms}</span><small>مباريات جارية</small></div>`;
-      $('#admin-users').innerHTML=u.users.map(x=>`<tr><td><strong>${escapeHtml(x.displayName)}</strong><br><small>@${escapeHtml(x.username)}</small></td><td>${x.online?'متصل':'غير متصل'}</td><td><select class="role-select" data-id="${x.id}" ${state.user.role!=='admin'||x.id===state.user.id?'disabled':''}><option value="user" ${x.role==='user'?'selected':''}>عضو</option>${x.role==='moderator'?'<option value="moderator" selected disabled>رتبة قديمة — عيّن المساحة أدناه</option>':''}<option value="admin" ${x.role==='admin'?'selected':''}>مدير المنصة</option></select>${x.id!==state.user.id?`<div class="admin-community-controls" data-user-id="${escapeHtml(x.id)}"><small>إشرافه: ${escapeHtml((x.moderatedCommunities||[]).map(cid=>communityNames.get(cid)||cid).join('، ')||'لا توجد مساحات')}</small><select aria-label="مساحة الإشراف">${communityOptions}</select><button class="small-btn scoped-moderation" data-action="grant_moderator">تعيين مشرف مساحة</button><button class="small-btn scoped-moderation" data-action="revoke_moderator">سحب إشراف المساحة</button></div>`:''}</td><td>${x.banned?'محظور':'—'}</td><td><button class="${x.banned?'small-btn':'danger-btn'} ban-user" data-id="${x.id}" data-ban="${x.banned?'0':'1'}" ${x.id===state.user.id?'disabled':''}>${x.banned?'فك الحظر':'حظر'}</button></td></tr>`).join('');
+      $('#admin-users').innerHTML=u.users.map(x=>`<tr><td><strong>${escapeHtml(x.displayName)}</strong><br><small>${escapeHtml(x.username)}</small></td><td>${x.online?'متصل':'غير متصل'}</td><td><select class="role-select" data-id="${x.id}" ${state.user.role!=='admin'||x.id===state.user.id?'disabled':''}><option value="user" ${x.role==='user'?'selected':''}>عضو</option>${x.role==='moderator'?'<option value="moderator" selected disabled>رتبة قديمة — عيّن المساحة أدناه</option>':''}<option value="admin" ${x.role==='admin'?'selected':''}>مدير المنصة</option></select>${x.id!==state.user.id?`<div class="admin-community-controls" data-user-id="${escapeHtml(x.id)}"><small>إشرافه: ${escapeHtml((x.moderatedCommunities||[]).map(cid=>communityNames.get(cid)||cid).join('، ')||'لا توجد مساحات')}</small><select aria-label="مساحة الإشراف">${communityOptions}</select><button class="small-btn scoped-moderation" data-action="grant_moderator">تعيين مشرف مساحة</button><button class="small-btn scoped-moderation" data-action="revoke_moderator">سحب إشراف المساحة</button></div>`:''}</td><td>${x.banned?'محظور':'—'}</td><td><button class="${x.banned?'small-btn':'danger-btn'} ban-user" data-id="${x.id}" data-ban="${x.banned?'0':'1'}" ${x.id===state.user.id?'disabled':''}>${x.banned?'فك الحظر':'حظر'}</button></td></tr>`).join('');
       $$('.ban-user').forEach(b=>b.onclick=()=>adminBan(b.dataset.id,b.dataset.ban==='1'));
       $$('.role-select').forEach(s=>s.onchange=()=>adminRole(s.dataset.id,s.value));
       $$('.scoped-moderation').forEach(button=>button.onclick=async()=>{

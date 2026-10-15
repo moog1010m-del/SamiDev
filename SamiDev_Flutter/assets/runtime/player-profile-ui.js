@@ -144,7 +144,7 @@
       <div class="sdpp-profile-body">
         <div class="sdpp-avatar">${img}</div>
         <div class="sdpp-name-row"><strong>${esc(user.displayName||player?.name||'لاعب')}</strong><div class="sdpp-stars" aria-label="${user.starsCount ?? 0} نجوم">${starsMarkup(user.starsCount ?? 0)}</div>${badgeMarkup(user)}</div>
-        <div class="sdpp-handle">${esc(user.username ? "@"+user.username : "")}</div>
+        <div class="sdpp-handle">${esc(user.username ? user.username : "")}</div>
         <div class="sdpp-stats">
           <div><small>لاعب منذ</small><b>${icon('calendar')}${esc(daysText(user.accountAgeDays))}</b></div>
           <div><small>الفوز</small><b>${icon('trophy')}${esc(numberText(user.wins))}</b></div>

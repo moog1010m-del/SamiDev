@@ -32,7 +32,7 @@ class PostgresPlatformService(PlatformService):
     async def create_user(self, username, password, display_name=None, *, role='user', allow_existing=False):
         username = normalize_username(username)
         lower = username.lower()
-        display = normalize_display(display_name, username)
+        display = username
         # Expensive password hashing happens before acquiring database locks.
         encoded = await self.password_work(_hash_password, password)
         uid = secrets.token_urlsafe(12)
@@ -82,7 +82,7 @@ class PostgresPlatformService(PlatformService):
                 if await self.r.get(self.k_username(normalized.lower())):
                     raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
                 user = dict(id=uid, username=normalized, usernameLower=normalized.lower(),
-                    displayName=normalize_display(display_name, normalized), passwordHash='',
+                    displayName=normalized, passwordHash='',
                     role='admin' if claims['uid'] == self.firebase.admin_uid else 'user',
                     createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
                     starsCount='0', nameBadge='badge_palm_swords', firebaseUid=claims['uid'],

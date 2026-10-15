@@ -43,10 +43,19 @@ async def main():
     server_app = web.Application(middlewares=[errors])
     server_app.on_response_prepare.append(application.security_headers)
     server_app.router.add_get('/api/auth/config', api.auth_config)
+    server_app.router.add_post('/api/auth/guest', api.guest)
+    server_app.router.add_patch('/api/profile', api.profile_update)
+    server_app.router.add_get('/api/store', api.store_state)
+    server_app.router.add_post('/api/store/buy', api.store_buy)
     server_app.router.add_post('/api/auth/firebase', api.firebase_exchange)
     server_app.router.add_post('/api/auth/login', api.login)
     server_app.router.add_post('/api/auth/logout', api.logout)
     server_app.router.add_get('/api/me', api.me)
+    async def seed_guest(request):
+        user=await api._user(request);user['coins']='500'
+        await service.grant_store_item(user['id'],'badge_ember')
+        return web.json_response({'ok':True})
+    server_app.router.add_post('/fixture/seed',seed_guest)
     async def unused(request): return web.json_response({'ok':True,'friends':[],'requests':[],'communities':[],'rooms':[]})
     server_app.router.add_get('/api/{tail:.*}', unused)
     async def index(request): return web.FileResponse(ROOT / 'game/platform/index.html')
@@ -58,7 +67,7 @@ async def main():
         assert await process.wait() == 0, 'Browser assertions failed'
         unchanged = await service.get_user(old['id'])
         assert not unchanged.get('firebaseUid') and unchanged['coins'] == '777'
-        assert len(service.mem_users) == 3, 'Expected two new Firebase profiles; test data stays untouched'
+        assert len(service.mem_firebase)==2, 'Expected two linked Firebase identities; old test account untouched'
     print('FIREBASE_BROWSER_HTTP_PASS: new profiles, no old account migration')
 
 if __name__ == '__main__': asyncio.run(main())
