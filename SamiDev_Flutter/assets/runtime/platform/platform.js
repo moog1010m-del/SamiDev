@@ -186,6 +186,8 @@
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
     bind();
+    const authControls=$$('.auth-form input,.auth-form button,.auth-tab');authControls.forEach(node=>node.disabled=true);
+    try{await window.SamiDevFirebaseAuth.mount({api,onAuthenticated:user=>{setUser(user);showApp();}});authControls.forEach(node=>node.disabled=false);}catch(err){toast('تعذر تحميل إعدادات تسجيل الدخول. أعد تحميل الصفحة.',true);return;}
     try{const d=await api('/api/me');setUser(d.user);showApp();}catch(_){showAuth();}
   }
   function selectCreateGame(gameId){
@@ -217,7 +219,7 @@
     $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#login-form').classList.toggle('hidden',b.dataset.auth!=='login');$('#register-form').classList.toggle('hidden',b.dataset.auth!=='register');});
     $('#login-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#register-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/register',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
-    $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}showAuth();};
+    $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();showAuth();};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
     $$('.theme-toggle').forEach(b=>b.addEventListener('click',toggleTheme));
     $$('[data-community-tab]').forEach(button=>button.addEventListener('click',()=>{

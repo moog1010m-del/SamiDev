@@ -80,6 +80,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         RuntimePolicy(const String.fromEnvironment('SAMIDEV_SERVER_URL'),allowLocalDevelopment:const bool.fromEnvironment('SAMIDEV_LOCAL_DEV')),SecureSessionVault()));runtime=r;
       await r.start();if(!mounted)return;
       subscription=r.events.stream.listen(onEvent);
+      await NativeAuth(r.api).prepare();
       final user=await NativeAuth(r.api).restore();
       if(!mounted||runtime!=r)return;
       if(user!=null)await completeAuthentication(r,user);

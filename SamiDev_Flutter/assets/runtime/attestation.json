@@ -261,10 +261,10 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "62d806504ddc652eaf3d5c54629294e135801344f1b03bd9ea6ddaf38790f931",
     "platform/assets/stickers/samidev-stickers.png": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085",
-    "platform/build.json": "724f140d02e803e2e16667e788856c03841922a825027d7b7d9ba20aba2d1874",
-    "platform/index.html": "011fc86909d75e00d02fcb0275f2dd8b8cb8bc831c7be03db6fe74d9f1f044da",
-    "platform/platform.css": "3dd4ecc86be1557d555a54b89562ad4f5e4ea421c314269754efd6acfd244dc9",
-    "platform/platform.js": "124af4eeef790468ea051b246ec5cd6fe8ba63f8ee501dca42a0b99097f7850f",
+    "platform/build.json": "3927c0c21eb3e28600b49ae559a2dee886f6c49594dad67617fe3e7a13a92768",
+    "platform/index.html": "91b13bbae71db9ba23c54d5da12b2b9974d9d494cc4fbf2725bf367c787f8d13",
+    "platform/platform.css": "88c83d377387ef4c7a6f0b7485c74dd0ff6ce1b0ff237546f05315cb8505b195",
+    "platform/platform.js": "921289da18a9a7aba2b00cd8b65249015e1d6e912d30b71453da2c6ae6850957",
     "platform/profile-identity.css": "2a456d9cae921b0b761a57d3d1f2583d1dcf2ad7838c5c2e5722791ada2e1c53",
     "platform/ranks.html": "afad05aaf7fe132081f4661adad2d5b3b42ef2b58ae8a849f340977691a1ff9a",
     "platform/store.css": "366d3a7ac41d0f42e76a2f4cc96aeb382f9d451c0e0d59938c556241aafa53ce",
@@ -334,6 +334,7 @@
     "sounds/woosh2.m4a": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b",
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
     "waiting-room.js": "042a6697f29931056b13347afb7d9198cd5b5845636e79dc84aa38c3f4e6c68f",
-    "web-bridge.js": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e"
+    "web-bridge.js": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e",
+    "platform/firebase-auth.js": "39711fe3484fb45186685946aadf071571e16c45684e51ff8adeec6e13c7a7c4"
   }
 }

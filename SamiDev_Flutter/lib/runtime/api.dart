@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'policy.dart';
 import 'failures.dart';
+import 'firebase_client.dart';
 
 abstract class SessionVault {
   Future<String?> read(String key);
@@ -29,6 +30,7 @@ class PlatformApi {
   final RuntimePolicy policy;
   final SessionVault vault;
   final HttpClient client;
+  FirebaseClient? firebase;
   String? _session;
   int _generation = 0;
   bool _closed = false;
@@ -62,8 +64,9 @@ class PlatformApi {
     }
     if (!_closed && generation == _generation) {
       if (response.statusCode == 401 || (path == '/api/auth/logout' && response.statusCode == 200)) {
+        if(path=='/api/auth/logout')firebase?.clear();
         await clearSession();
-      } else if ({'/api/auth/login','/api/auth/register'}.contains(path) && response.statusCode == 200) {
+      } else if ({'/api/auth/login','/api/auth/register','/api/auth/firebase'}.contains(path) && response.statusCode == 200) {
         final cookies=response.cookies.where((c)=>c.name=='samidev_session').toList();
         if(cookies.length!=1 || !cookies.single.httpOnly || !RegExp(r'^[A-Za-z0-9_-]{32,128}$').hasMatch(cookies.single.value)) {
           throw const RuntimeFailure('SESSION_COOKIE_INVALID','لم يرسل الخادم جلسة دخول صالحة. أبلغ الدعم.');
@@ -84,5 +87,5 @@ class PlatformApi {
     return ApiResponse(response.statusCode,response.headers.contentType?.mimeType??'application/json',bytes);
   }
   Future<void> clearSession() async {_generation++;_session=null;await vault.write(_key,null);}
-  void close(){_closed=true;client.close(force:true);}
+  void close(){_closed=true;firebase?.close();client.close(force:true);}
 }

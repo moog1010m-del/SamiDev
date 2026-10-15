@@ -54,6 +54,50 @@ class PostgresPlatformService(PlatformService):
             if existing: return existing
         raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
 
+    async def firebase_account(self, claims, *, username="", display_name=None, legacy_uid=None):
+        identity_key = self.k_firebase(claims["uid"])
+        # Re-read after a concurrent first bind. Never create a second profile for one UID.
+        for _ in range(3):
+            mapped = await self.r.get(identity_key)
+            if mapped and legacy_uid and mapped != legacy_uid:
+                raise PlatformError('IDENTITY_ALREADY_LINKED', 'هوية Firebase مرتبطة بحساب آخر.', 409)
+            uid = mapped or legacy_uid or secrets.token_urlsafe(12)
+            normalized = normalize_username(username) if not mapped and not legacy_uid and username else None
+            keys = [identity_key, self.k_user(uid)]
+            if normalized: keys.append(self.k_username(normalized.lower()))
+            async with self.r.transaction(keys):
+                current = await self.r.get(identity_key)
+                if current and current != uid:
+                    continue
+                user = await self.get_user(uid)
+                if current:
+                    if not user or user.get('firebaseUid') != claims['uid'] or user.get('firebaseProject') != self.firebase.project:
+                        raise PlatformError('IDENTITY_CONFLICT', 'تعذر مطابقة هوية الحساب.', 409)
+                    if str(user.get('banned') or '0') == '1':
+                        raise PlatformError('ACCOUNT_BANNED', 'هذا الحساب محظور', 403)
+                    return user
+                if legacy_uid:
+                    if not user or user.get('firebaseUid'):
+                        raise PlatformError('ACCOUNT_ALREADY_LINKED', 'الحساب غير متاح للربط.', 409)
+                    if str(user.get('banned') or '0') == '1':
+                        raise PlatformError('ACCOUNT_BANNED', 'هذا الحساب محظور', 403)
+                else:
+                    if not normalized:
+                        raise PlatformError('PROFILE_SETUP_REQUIRED', 'اختر اسم مستخدم لإكمال حسابك.', 409)
+                    if await self.r.get(self.k_username(normalized.lower())):
+                        raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
+                    user = dict(id=uid, username=normalized, usernameLower=normalized.lower(),
+                        displayName=normalize_display(display_name, normalized), passwordHash='', role='user',
+                        createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
+                        starsCount='0', nameBadge='badge_palm_swords')
+                    await self.r.set(self.k_username(normalized.lower()), uid)
+                user.update(firebaseUid=claims['uid'], firebaseProject=self.firebase.project,
+                            firebaseEmail=claims['email'], authVersion=str(int(user.get('authVersion') or 0)+1))
+                await self.r.hset(self.k_user(uid), mapping=user)
+                await self.r.set(identity_key, uid)
+                return user
+        raise PlatformError('AUTH_BUSY', 'الحساب يُحدّث الآن، حاول مجددًا.', 503)
+
     async def buy_store_item(self, uid, item_id):
         async with self.r.transaction([self.k_user(uid), self.k_inventory(uid), self.k_store_ledger(uid)]):
             return await super().buy_store_item(uid, item_id)

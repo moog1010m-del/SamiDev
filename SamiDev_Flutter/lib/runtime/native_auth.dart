@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'api.dart';
+import 'firebase_client.dart';
 
 class AuthFailure implements Exception {
-  const AuthFailure(this.message);
+  const AuthFailure(this.message, {this.code = 'AUTH_FAILED'});
   final String message;
+  final String code;
 }
 
 /// Uses the existing server session cookie. Passwords never enter a WebView.
@@ -25,6 +27,7 @@ class NativeAuth {
         message is String && message.isNotEmpty && message.length <= 300
             ? message
             : 'تعذر إكمال تسجيل الدخول. حاول مجددًا.',
+        code: data['error']?.toString() ?? 'AUTH_FAILED',
       );
     }
     final user = data['user'];
@@ -34,6 +37,78 @@ class NativeAuth {
       throw const AuthFailure('لم يرسل الخادم بيانات حساب صالحة.');
     }
     return Map<String, dynamic>.from(user);
+  }
+
+  bool get usesFirebase => api.firebase != null;
+  bool get hasPendingIdentity => api.firebase?.hasIdentity ?? false;
+  Future<void> prepare() async {
+    final response = await api.request('GET', '/api/auth/config');
+    if (response.status == 404) return; // older server compatibility
+    if (response.status != 200) {
+      throw const AuthFailure('تعذر تحميل إعدادات المصادقة.');
+    }
+    final config = response.json;
+    if (config['provider'] == 'firebase') {
+      final key = config['apiKey'];
+      if (key is! String || key.isEmpty) {
+        throw const AuthFailure('إعدادات Firebase غير مكتملة.');
+      }
+      api.firebase?.close();
+      api.firebase = FirebaseClient(key);
+    } else if (config['provider'] == 'local') {
+      api.firebase?.close();
+      api.firebase = null;
+    } else {
+      throw const AuthFailure('إعدادات المصادقة غير صالحة.');
+    }
+  }
+
+  Future<void> resendVerification() async {
+    try {
+      await api.firebase!.sendVerification();
+    } on FirebaseClientFailure catch (e) {
+      throw AuthFailure(e.message, code: e.code);
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await api.firebase!.resetPassword(email);
+    } on FirebaseClientFailure catch (e) {
+      throw AuthFailure(e.message, code: e.code);
+    }
+  }
+
+  void clearPending() => api.firebase?.clear();
+  Future<Map<String, dynamic>> finishPending({
+    String username = '',
+    String displayName = '',
+    String legacyUsername = '',
+    String legacyPassword = '',
+  }) async {
+    try {
+      final token = await api.firebase!.token(forceRefresh: true);
+      final response = await api.request(
+        'POST',
+        '/api/auth/firebase',
+        body: utf8.encode(
+          jsonEncode({
+            'idToken': token,
+            'username': username.trim(),
+            'displayName': displayName.trim(),
+            if (legacyUsername.isNotEmpty)
+              'legacyUsername': legacyUsername.trim(),
+            if (legacyUsername.isNotEmpty) 'legacyPassword': legacyPassword,
+          }),
+        ),
+      );
+      final user = _user(response);
+      if (!api.signedIn) throw const AuthFailure('لم تُحفظ جلسة الدخول.');
+      api.firebase!.clear();
+      return user;
+    } on FirebaseClientFailure catch (e) {
+      throw AuthFailure(e.message, code: e.code);
+    }
   }
 
   Future<Map<String, dynamic>?> restore() async {
@@ -51,7 +126,39 @@ class NativeAuth {
     required String username,
     required String password,
     String displayName = '',
+    String email = '',
+    String legacyUsername = '',
+    String legacyPassword = '',
+    bool legacyLogin = false,
   }) async {
+    if (usesFirebase && !legacyLogin) {
+      try {
+        if (register) {
+          await api.firebase!.signUp(email, password);
+          try {
+            await api.firebase!.sendVerification();
+          } catch (_) {
+            throw const AuthFailure(
+              "أُنشئ الحساب، لكن تعذر إرسال رسالة التوثيق. اضغط إعادة إرسال رسالة التوثيق.",
+              code: "EMAIL_NOT_VERIFIED",
+            );
+          }
+          throw const AuthFailure(
+            'أرسلنا رسالة توثيق إلى بريدك. افتحها ثم اضغط تحققت من بريدي.',
+            code: 'EMAIL_NOT_VERIFIED',
+          );
+        }
+        await api.firebase!.signIn(email, password);
+        return await finishPending(
+          username: username,
+          displayName: displayName,
+          legacyUsername: legacyUsername,
+          legacyPassword: legacyPassword,
+        );
+      } on FirebaseClientFailure catch (e) {
+        throw AuthFailure(e.message, code: e.code);
+      }
+    }
     final response = await api.request(
       'POST',
       register ? '/api/auth/register' : '/api/auth/login',

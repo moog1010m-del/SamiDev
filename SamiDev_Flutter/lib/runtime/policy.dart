@@ -21,10 +21,10 @@ class RuntimePolicy {
   static bool isGame(String path) => entries.contains(path) && !path.startsWith('/platform');
   static bool allowApi(String method, String path) {
     if (path.contains('%') || path.contains('..') || path.contains('\\')) return false;
-    const get = {'/api/me','/api/games','/api/build','/api/store','/api/communities',
+    const get = {'/api/auth/config','/api/me','/api/games','/api/build','/api/store','/api/communities',
       '/api/lobby/rooms','/api/friends','/api/users/search','/api/admin/users',
       '/api/admin/stats','/api/admin/reports'};
-    const post = {'/api/auth/login','/api/auth/register','/api/auth/logout',
+    const post = {'/api/auth/firebase','/api/auth/login','/api/auth/register','/api/auth/logout',
       '/api/store/equip','/api/heartbeat','/api/game-ticket','/api/friends/request','/api/friends/respond'};
     if (method == 'GET' && get.contains(path)) return true;
     if (method == 'POST' && post.contains(path)) return true;

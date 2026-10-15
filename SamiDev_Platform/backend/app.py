@@ -1268,7 +1268,10 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
         response.headers["Cache-Control"] = "private, no-store"
         response.headers["Vary"] = "Cookie, Origin"
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src " + script + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+    connect = "'self'"
+    if SERVICE.platform.firebase.enabled:
+        connect += " https://identitytoolkit.googleapis.com https://securetoken.googleapis.com"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src " + script + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src " + connect + "; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
     if PRODUCTION_MODE and SERVICE.platform_http._secure(request):
         response.headers["Strict-Transport-Security"] = "max-age=31536000"
 
@@ -1277,6 +1280,8 @@ def make_app() -> web.Application:
     app = web.Application(client_max_size=MAX_HTTP_BODY, middlewares=[platform_origin_middleware, platform_error_middleware])
     api = SERVICE.platform_http
     app.router.add_post("/api/auth/register", api.register)
+    app.router.add_get("/api/auth/config", api.auth_config)
+    app.router.add_post("/api/auth/firebase", api.firebase_exchange)
     app.router.add_post("/api/auth/login", api.login)
     app.router.add_post("/api/auth/logout", api.logout)
     app.router.add_get("/api/me", api.me)

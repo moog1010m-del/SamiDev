@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from firebase_identity import FirebaseIdentity, FirebaseFailure
+
 import asyncio
 import base64
 import hashlib
@@ -286,6 +288,8 @@ class PlatformService:
     """
 
     def __init__(self, redis_client: Any | None = None):
+        self.firebase = FirebaseIdentity()
+        self.mem_firebase = {}
         self.r = redis_client
         self.lock = asyncio.Lock()
         self.mem_users: dict[str, dict[str, Any]] = {}
@@ -601,7 +605,48 @@ class PlatformService:
             raise PlatformError("BAD_LOGIN", "اسم المستخدم أو كلمة المرور غير صحيحة", 401)
         if str(user.get("banned") or "0") == "1":
             raise PlatformError("ACCOUNT_BANNED", "هذا الحساب محظور", 403)
+        if user.get("firebaseUid"):
+            raise PlatformError("AUTH_MIGRATED", "هذا الحساب انتقل إلى Firebase. استخدم البريد وكلمة المرور الجديدة.", 403)
         return user
+
+    def k_firebase(self, firebase_uid: str) -> str:
+        return f"{PREFIX}:firebase:{self.firebase.project}:{hashlib.sha256(firebase_uid.encode()).hexdigest()}"
+
+    async def firebase_account(self, claims, *, username="", display_name=None, legacy_uid=None):
+        if self.r is not None:
+            raise PlatformError("FIREBASE_REQUIRES_POSTGRES", "ربط Firebase يتطلب تخزين الحسابات في PostgreSQL.", 503)
+        key = (self.firebase.project, claims["uid"])
+        async with self.lock:
+            mapped = self.mem_firebase.get(key)
+            if mapped:
+                if legacy_uid and mapped != legacy_uid:
+                    raise PlatformError("IDENTITY_ALREADY_LINKED", "هوية Firebase مرتبطة بحساب آخر.", 409)
+                user = self.mem_users[mapped]
+                if str(user.get("banned") or "0") == "1":
+                    raise PlatformError("ACCOUNT_BANNED", "هذا الحساب محظور", 403)
+                return user
+            if legacy_uid:
+                user = self.mem_users.get(legacy_uid)
+                if not user or str(user.get("banned") or "0") == "1":
+                    raise PlatformError("ACCOUNT_UNAVAILABLE", "الحساب غير متاح للربط.", 403)
+                if user.get("firebaseUid"):
+                    raise PlatformError("ACCOUNT_ALREADY_LINKED", "الحساب مرتبط بهوية أخرى.", 409)
+            else:
+                if not username:
+                    raise PlatformError("PROFILE_SETUP_REQUIRED", "اختر اسم مستخدم لإكمال حسابك.", 409)
+                username = normalize_username(username)
+                if username.lower() in self.mem_usernames:
+                    raise PlatformError("USERNAME_TAKEN", "اسم المستخدم مستخدم بالفعل", 409)
+                uid = secrets.token_urlsafe(12)
+                user = dict(id=uid, username=username, usernameLower=username.lower(),
+                    displayName=normalize_display(display_name, username), passwordHash="", role="user",
+                    createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="badge_palm_swords")
+                self.mem_users[uid] = user
+                self.mem_usernames[username.lower()] = uid
+            user.update(firebaseUid=claims["uid"], firebaseProject=self.firebase.project,
+                        firebaseEmail=claims["email"], authVersion=str(int(user.get("authVersion") or 0)+1))
+            self.mem_firebase[key] = user["id"]
+            return user
 
     async def update_profile(self, uid: str, *, display_name: Any = None, avatar_data: Any = None, update_avatar: bool = False) -> dict[str, Any]:
         user = await self.get_user(uid)
@@ -907,13 +952,13 @@ class PlatformService:
             return None
         return hashlib.sha256(token.encode()).hexdigest()
 
-    async def create_session(self, uid: str) -> str:
+    async def create_session(self, uid: str, *, firebase_auth_time: int | None = None) -> str:
         user = await self.get_user(uid)
         if not user or str(user.get("banned") or "0") == "1":
             raise PlatformError("AUTH_REQUIRED", "يجب تسجيل الدخول", 401)
         token = secrets.token_urlsafe(32)
         key = self.token_key(token)
-        value = json.dumps({"uid":uid, "version":str(user.get("authVersion") or "0")})
+        value = json.dumps({"uid":uid, "version":str(user.get("authVersion") or "0"), **({"firebaseAuthTime":firebase_auth_time} if firebase_auth_time is not None else {})})
         if self.r is not None:
             await self.r.set(self.k_session(key), value, ex=SESSION_TTL)
         else:
@@ -938,6 +983,12 @@ class PlatformService:
                 return None
         except (ValueError, TypeError, KeyError):
             return None
+        if user.get("firebaseUid"):
+            try:
+                valid = await self.firebase.session_valid(user["firebaseUid"], data.get("firebaseAuthTime"), user.get("firebaseProject"))
+            except FirebaseFailure as exc:
+                raise PlatformError(exc.code, exc.message, exc.status) from None
+            if not valid: return None
         if touch: await self.touch_presence(str(user["id"]))
         return user
 
@@ -1424,7 +1475,44 @@ class PlatformHttp:
         response._samidev_session_token = token  # type: ignore[attr-defined]
         return response
 
+    async def auth_config(self, request: web.Request) -> web.Response:
+        return web.json_response({"ok": True, **self.platform.firebase.config()}, headers={"Cache-Control":"no-store"})
+
+    async def firebase_exchange(self, request: web.Request) -> web.Response:
+        if not await self.platform.allow_rate(f"firebase-exchange:{self._peer(request)}", 30, 60):
+            raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
+        body = await self._body(request)
+        try:
+            claims = await self.platform.firebase.verify(body.get("idToken"))
+        except FirebaseFailure as exc:
+            raise PlatformError(exc.code, exc.message, exc.status) from None
+        legacy_uid = None
+        if body.get("legacyUsername") or body.get("legacyPassword"):
+            if time.time() - claims["auth_time"] > 300:
+                raise PlatformError("REAUTH_REQUIRED", "سجّل دخول Firebase مجددًا قبل ربط الحساب.", 401)
+            account = hashlib.sha256(str(body.get("legacyUsername") or "").strip().lower().encode()).hexdigest()
+            if not await self.platform.allow_rate(f"login-account:{account}", 30, 300):
+                raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
+            legacy_name = str(body.get("legacyUsername") or "")
+            legacy = await self.platform.find_user_by_username(legacy_name)
+            # A retry after a lost successful response may present the same link
+            # form. The already-bound verified identity is sufficient proof.
+            already_bound = legacy and legacy.get("firebaseUid") == claims["uid"] and legacy.get("firebaseProject") == self.platform.firebase.project
+            if not already_bound:
+                legacy = await self.platform.authenticate(legacy_name, str(body.get("legacyPassword") or ""))
+            legacy_uid = str(legacy["id"])
+        user = await self.platform.firebase_account(claims, username=body.get("username"),
+            display_name=body.get("displayName"), legacy_uid=legacy_uid)
+        await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
+        token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"])
+        response = web.json_response({"ok":True,"user":public_user(user, include_avatar=True)})
+        response.set_cookie(SESSION_COOKIE, token, max_age=SESSION_TTL, httponly=True,
+                            secure=self._secure(request), samesite="Lax", path="/")
+        return response
+
     async def register(self, request: web.Request) -> web.Response:
+        if self.platform.firebase.enabled:
+            raise PlatformError("FIREBASE_REQUIRED", "أنشئ الحساب عبر Firebase.", 409)
         peer = self._peer(request)
         if not await self.platform.allow_rate(f"register:{peer}", 8, 300):
             raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
