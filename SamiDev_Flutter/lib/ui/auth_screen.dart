@@ -22,21 +22,17 @@ class _AuthScreenState extends State<AuthScreen> {
       _password = TextEditingController();
   final _displayName = TextEditingController(),
       _confirmation = TextEditingController();
-  final _email = TextEditingController(),
-      _legacyName = TextEditingController(),
-      _legacyPassword = TextEditingController();
+  final _email = TextEditingController();
   bool _register = false,
       _busy = false,
       _obscured = true,
       _pending = false,
-      _setup = false,
-      _legacy = false,
-      _oldLogin = false;
+      _setup = false;
   String? _error;
-  bool get firebase => widget.auth.usesFirebase && !_oldLogin;
+  bool get firebase => widget.auth.usesFirebase;
   bool get finishing =>
       firebase && (_pending || _setup) && widget.auth.hasPendingIdentity;
-  bool get profileFields => (_register || _setup) && !_legacy;
+  bool get profileFields => _register || _setup;
   @override
   void dispose() {
     for (final c in [
@@ -45,8 +41,6 @@ class _AuthScreenState extends State<AuthScreen> {
       _displayName,
       _confirmation,
       _email,
-      _legacyName,
-      _legacyPassword,
     ]) {
       c.clear();
       c.dispose();
@@ -79,26 +73,20 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       final user = finishing
           ? await widget.auth.finishPending(
-              username: _legacy ? '' : _username.text,
+              username: firebase && !profileFields ? '' : _username.text,
               displayName: _displayName.text,
-              legacyUsername: _legacy ? _legacyName.text : '',
-              legacyPassword: _legacy ? _legacyPassword.text : '',
             )
           : await widget.auth.submit(
               register: _register,
-              username: _username.text,
+              username: firebase && !profileFields ? '' : _username.text,
               password: _password.text,
               displayName: _displayName.text,
               email: _email.text,
-              legacyUsername: _legacy ? _legacyName.text : '',
-              legacyPassword: _legacy ? _legacyPassword.text : '',
-              legacyLogin: _oldLogin,
             );
       if (!mounted) return;
       TextInput.finishAutofillContext();
       _password.clear();
       _confirmation.clear();
-      _legacyPassword.clear();
       await widget.onAuthenticated(user);
     } catch (e) {
       if (mounted) {
@@ -117,7 +105,6 @@ class _AuthScreenState extends State<AuthScreen> {
           }
           if (e is AuthFailure &&
               [
-                'REAUTH_REQUIRED',
                 'INVALID_ID_TOKEN',
                 'TOKEN_EXPIRED',
                 'INVALID_REFRESH_TOKEN',
@@ -232,16 +219,15 @@ class _AuthScreenState extends State<AuthScreen> {
                   style: TextStyle(color: colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: 28),
-                if (!_oldLogin)
-                  SegmentedButton<bool>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: false, label: Text('تسجيل الدخول')),
-                      ButtonSegment(value: true, label: Text('حساب جديد')),
-                    ],
-                    selected: {_register},
-                    onSelectionChanged: _busy ? null : (v) => _switch(v.single),
-                  ),
+                SegmentedButton<bool>(
+                  showSelectedIcon: false,
+                  segments: const [
+                    ButtonSegment(value: false, label: Text('تسجيل الدخول')),
+                    ButtonSegment(value: true, label: Text('حساب جديد')),
+                  ],
+                  selected: {_register},
+                  onSelectionChanged: _busy ? null : (v) => _switch(v.single),
+                ),
                 const SizedBox(height: 24),
                 Form(
                   key: _form,
@@ -269,50 +255,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               : 'أدخل بريدًا إلكترونيًا صالحًا',
                         ),
                         const SizedBox(height: 16),
-                        CheckboxListTile(
-                          contentPadding: EdgeInsets.zero,
-                          value: _legacy,
-                          onChanged: _busy
-                              ? null
-                              : (v) => setState(() => _legacy = v ?? false),
-                          title: const Text(
-                            'لدي حساب قديم وأريد الاحتفاظ بمقتنياتي',
-                          ),
-                          subtitle: const Text(
-                            'سنطلب كلمة مرور الحساب القديم لإثبات ملكيته.',
-                          ),
-                        ),
-                        if (_legacy) ...[
-                          TextFormField(
-                            key: const ValueKey('auth-legacy-username'),
-                            controller: _legacyName,
-                            enabled: !_busy,
-                            decoration: field(
-                              'اسم المستخدم القديم',
-                              Icons.person_outline,
-                            ),
-                            validator: (v) => (v ?? '').trim().isEmpty
-                                ? 'أدخل اسم الحساب القديم'
-                                : null,
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            key: const ValueKey('auth-legacy-password'),
-                            controller: _legacyPassword,
-                            enabled: !_busy,
-                            obscureText: true,
-                            autocorrect: false,
-                            enableSuggestions: false,
-                            decoration: field(
-                              'كلمة مرور الحساب القديم',
-                              Icons.lock_outline,
-                            ),
-                            validator: (v) => (v ?? '').isEmpty
-                                ? 'أدخل كلمة المرور القديمة'
-                                : null,
-                          ),
-                          const SizedBox(height: 16),
-                        ],
                       ],
                       if (profileFields) ...[
                         TextFormField(
@@ -471,27 +413,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           child: const Text('نسيت كلمة المرور؟'),
                         ),
                       ],
-                      if (widget.auth.usesFirebase)
-                        TextButton(
-                          onPressed: _busy
-                              ? null
-                              : () {
-                                  widget.auth.clearPending();
-                                  setState(() {
-                                    _oldLogin = !_oldLogin;
-                                    _register = false;
-                                    _pending = false;
-                                    _setup = false;
-                                    _error = null;
-                                    _password.clear();
-                                  });
-                                },
-                          child: Text(
-                            _oldLogin
-                                ? 'العودة للدخول بالبريد'
-                                : 'الدخول بالطريقة القديمة مؤقتًا',
-                          ),
-                        ),
                     ],
                   ),
                 ),

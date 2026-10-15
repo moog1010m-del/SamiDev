@@ -16,6 +16,8 @@ class FirebaseIdentity:
         self.enabled = os.getenv('SAMIDEV_FIREBASE_AUTH', '0') == '1'
         self.project = os.getenv('SAMIDEV_FIREBASE_PROJECT_ID', '').strip()
         self.api_key = os.getenv('SAMIDEV_FIREBASE_API_KEY', '').strip()
+        # Server-only bootstrap identity; never accept a role from client input.
+        self.admin_uid = os.getenv('SAMIDEV_FIREBASE_ADMIN_UID', '').strip()
         self._app = None
         self._init_lock = threading.Lock()
         self._slots = asyncio.Semaphore(16)

@@ -54,15 +54,13 @@ class PostgresPlatformService(PlatformService):
             if existing: return existing
         raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
 
-    async def firebase_account(self, claims, *, username="", display_name=None, legacy_uid=None):
+    async def firebase_account(self, claims, *, username="", display_name=None):
         identity_key = self.k_firebase(claims["uid"])
-        # Re-read after a concurrent first bind. Never create a second profile for one UID.
+        # Re-read after a concurrent first login; one Firebase UID gets one profile.
         for _ in range(3):
             mapped = await self.r.get(identity_key)
-            if mapped and legacy_uid and mapped != legacy_uid:
-                raise PlatformError('IDENTITY_ALREADY_LINKED', 'هوية Firebase مرتبطة بحساب آخر.', 409)
-            uid = mapped or legacy_uid or secrets.token_urlsafe(12)
-            normalized = normalize_username(username) if not mapped and not legacy_uid and username else None
+            uid = mapped or secrets.token_urlsafe(12)
+            normalized = normalize_username(username) if not mapped and username else None
             keys = [identity_key, self.k_user(uid)]
             if normalized: keys.append(self.k_username(normalized.lower()))
             async with self.r.transaction(keys):
@@ -75,24 +73,21 @@ class PostgresPlatformService(PlatformService):
                         raise PlatformError('IDENTITY_CONFLICT', 'تعذر مطابقة هوية الحساب.', 409)
                     if str(user.get('banned') or '0') == '1':
                         raise PlatformError('ACCOUNT_BANNED', 'هذا الحساب محظور', 403)
+                    if claims['uid'] == self.firebase.admin_uid and user.get('role') != 'admin':
+                        user['role'] = 'admin'
+                        await self.r.hset(self.k_user(uid), mapping={'role': 'admin'})
                     return user
-                if legacy_uid:
-                    if not user or user.get('firebaseUid'):
-                        raise PlatformError('ACCOUNT_ALREADY_LINKED', 'الحساب غير متاح للربط.', 409)
-                    if str(user.get('banned') or '0') == '1':
-                        raise PlatformError('ACCOUNT_BANNED', 'هذا الحساب محظور', 403)
-                else:
-                    if not normalized:
-                        raise PlatformError('PROFILE_SETUP_REQUIRED', 'اختر اسم مستخدم لإكمال حسابك.', 409)
-                    if await self.r.get(self.k_username(normalized.lower())):
-                        raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
-                    user = dict(id=uid, username=normalized, usernameLower=normalized.lower(),
-                        displayName=normalize_display(display_name, normalized), passwordHash='', role='user',
-                        createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
-                        starsCount='0', nameBadge='badge_palm_swords')
-                    await self.r.set(self.k_username(normalized.lower()), uid)
-                user.update(firebaseUid=claims['uid'], firebaseProject=self.firebase.project,
-                            firebaseEmail=claims['email'], authVersion=str(int(user.get('authVersion') or 0)+1))
+                if not normalized:
+                    raise PlatformError('PROFILE_SETUP_REQUIRED', 'اختر اسم مستخدم لإكمال حسابك.', 409)
+                if await self.r.get(self.k_username(normalized.lower())):
+                    raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
+                user = dict(id=uid, username=normalized, usernameLower=normalized.lower(),
+                    displayName=normalize_display(display_name, normalized), passwordHash='',
+                    role='admin' if claims['uid'] == self.firebase.admin_uid else 'user',
+                    createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
+                    starsCount='0', nameBadge='badge_palm_swords', firebaseUid=claims['uid'],
+                    firebaseProject=self.firebase.project, firebaseEmail=claims['email'], authVersion='1')
+                await self.r.set(self.k_username(normalized.lower()), uid)
                 await self.r.hset(self.k_user(uid), mapping=user)
                 await self.r.set(identity_key, uid)
                 return user

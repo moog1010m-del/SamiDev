@@ -49,9 +49,6 @@ class FakeAuth extends NativeAuth {
     required String password,
     String displayName = '',
     String email = '',
-    String legacyUsername = '',
-    String legacyPassword = '',
-    bool legacyLogin = false,
   }) {
     calls++;
     registering = register;
@@ -85,8 +82,6 @@ class FakeFirebaseAuth extends FakeAuth {
   Future<Map<String, dynamic>> finishPending({
     String username = '',
     String displayName = '',
-    String legacyUsername = '',
-    String legacyPassword = '',
   }) async {
     finishes++;
     expect(username, 'native_player');
@@ -124,6 +119,8 @@ void main() {
           ),
         ),
       );
+      expect(find.text('الدخول بالطريقة القديمة مؤقتًا'), findsNothing);
+      expect(find.byKey(const ValueKey('auth-legacy-username')), findsNothing);
       await tester.tap(find.text('حساب جديد'));
       await tester.pumpAndSettle();
       await tester.enterText(

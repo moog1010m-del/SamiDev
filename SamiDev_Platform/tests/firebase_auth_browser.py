@@ -23,6 +23,7 @@ async def main():
     service.firebase.enabled = True
     service.firebase.project = 'browser-test'
     service.firebase.api_key = 'public-fixture'
+    service.firebase.admin_uid = ''
     service.firebase.session_valid = AsyncMock(return_value=True)
     async def verify(token):
         if token not in {'fixture-verified', 'fixture-new'}:
@@ -55,9 +56,9 @@ async def main():
         env = dict(os.environ, SAMIDEV_TEST_BASE_URL=str(server.make_url('')))
         process = await asyncio.create_subprocess_exec('node',str(ROOT/'tests/firebase_auth_browser.mjs'),env=env)
         assert await process.wait() == 0, 'Browser assertions failed'
-        linked = await service.get_user(old['id'])
-        assert linked['firebaseUid'] == 'browser-user' and linked['coins'] == '777'
-        assert len(service.mem_users) == 2, 'Expected one linked account and one new profile'
-    print('FIREBASE_BROWSER_HTTP_PASS: verified linking keeps original player and balance')
+        unchanged = await service.get_user(old['id'])
+        assert not unchanged.get('firebaseUid') and unchanged['coins'] == '777'
+        assert len(service.mem_users) == 3, 'Expected two new Firebase profiles; test data stays untouched'
+    print('FIREBASE_BROWSER_HTTP_PASS: new profiles, no old account migration')
 
 if __name__ == '__main__': asyncio.run(main())

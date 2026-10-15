@@ -668,6 +668,5 @@ html[data-sd-native] .lobby-profile{display:none!important}
 @media(max-width:820px){.community-chat-panel{height:calc(100dvh - 230px);min-height:220px}.community-chat-messages{min-height:0;max-height:none}}
 
 /* Email authentication shares the native form spacing and responsive width. */
-#firebase-auth-form input[type="checkbox"]{width:18px;height:18px;padding:0;vertical-align:middle;accent-color:var(--blue);margin-inline-end:6px}
 #firebase-auth-form [data-status]{margin:0;line-height:1.7;font-size:13px;overflow-wrap:anywhere}
 #firebase-auth-form input:disabled{opacity:.65}

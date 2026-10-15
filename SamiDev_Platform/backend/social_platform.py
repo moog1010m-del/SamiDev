@@ -506,6 +506,8 @@ class PlatformService:
         return entry
 
     async def start(self) -> None:
+        if self.firebase.enabled:
+            return
         admin_username = os.getenv("SAMIDEV_ADMIN_USERNAME", "").strip()
         admin_password = os.getenv("SAMIDEV_ADMIN_PASSWORD", "")
         if admin_username and admin_password and not admin_password.startswith("CHANGE_ME"):
@@ -612,40 +614,34 @@ class PlatformService:
     def k_firebase(self, firebase_uid: str) -> str:
         return f"{PREFIX}:firebase:{self.firebase.project}:{hashlib.sha256(firebase_uid.encode()).hexdigest()}"
 
-    async def firebase_account(self, claims, *, username="", display_name=None, legacy_uid=None):
+    async def firebase_account(self, claims, *, username="", display_name=None):
         if self.r is not None:
-            raise PlatformError("FIREBASE_REQUIRES_POSTGRES", "ربط Firebase يتطلب تخزين الحسابات في PostgreSQL.", 503)
+            raise PlatformError("FIREBASE_REQUIRES_POSTGRES", "حسابات Firebase تتطلب PostgreSQL.", 503)
         key = (self.firebase.project, claims["uid"])
         async with self.lock:
             mapped = self.mem_firebase.get(key)
             if mapped:
-                if legacy_uid and mapped != legacy_uid:
-                    raise PlatformError("IDENTITY_ALREADY_LINKED", "هوية Firebase مرتبطة بحساب آخر.", 409)
                 user = self.mem_users[mapped]
                 if str(user.get("banned") or "0") == "1":
                     raise PlatformError("ACCOUNT_BANNED", "هذا الحساب محظور", 403)
+                if claims["uid"] == self.firebase.admin_uid:
+                    user["role"] = "admin"
                 return user
-            if legacy_uid:
-                user = self.mem_users.get(legacy_uid)
-                if not user or str(user.get("banned") or "0") == "1":
-                    raise PlatformError("ACCOUNT_UNAVAILABLE", "الحساب غير متاح للربط.", 403)
-                if user.get("firebaseUid"):
-                    raise PlatformError("ACCOUNT_ALREADY_LINKED", "الحساب مرتبط بهوية أخرى.", 409)
-            else:
-                if not username:
-                    raise PlatformError("PROFILE_SETUP_REQUIRED", "اختر اسم مستخدم لإكمال حسابك.", 409)
-                username = normalize_username(username)
-                if username.lower() in self.mem_usernames:
-                    raise PlatformError("USERNAME_TAKEN", "اسم المستخدم مستخدم بالفعل", 409)
-                uid = secrets.token_urlsafe(12)
-                user = dict(id=uid, username=username, usernameLower=username.lower(),
-                    displayName=normalize_display(display_name, username), passwordHash="", role="user",
-                    createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="badge_palm_swords")
-                self.mem_users[uid] = user
-                self.mem_usernames[username.lower()] = uid
-            user.update(firebaseUid=claims["uid"], firebaseProject=self.firebase.project,
-                        firebaseEmail=claims["email"], authVersion=str(int(user.get("authVersion") or 0)+1))
-            self.mem_firebase[key] = user["id"]
+            if not username:
+                raise PlatformError("PROFILE_SETUP_REQUIRED", "اختر اسم مستخدم لإكمال حسابك.", 409)
+            username = normalize_username(username)
+            if username.lower() in self.mem_usernames:
+                raise PlatformError("USERNAME_TAKEN", "اسم المستخدم مستخدم بالفعل", 409)
+            uid = secrets.token_urlsafe(12)
+            user = dict(id=uid, username=username, usernameLower=username.lower(),
+                displayName=normalize_display(display_name, username), passwordHash="",
+                role="admin" if claims["uid"] == self.firebase.admin_uid else "user",
+                createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="badge_palm_swords",
+                firebaseUid=claims["uid"], firebaseProject=self.firebase.project,
+                firebaseEmail=claims["email"], authVersion="1")
+            self.mem_users[uid] = user
+            self.mem_usernames[username.lower()] = uid
+            self.mem_firebase[key] = uid
             return user
 
     async def update_profile(self, uid: str, *, display_name: Any = None, avatar_data: Any = None, update_avatar: bool = False) -> dict[str, Any]:
@@ -982,6 +978,8 @@ class PlatformService:
             if not user or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != data["version"]:
                 return None
         except (ValueError, TypeError, KeyError):
+            return None
+        if self.firebase.enabled and not user.get("firebaseUid"):
             return None
         if user.get("firebaseUid"):
             try:
@@ -1486,23 +1484,10 @@ class PlatformHttp:
             claims = await self.platform.firebase.verify(body.get("idToken"))
         except FirebaseFailure as exc:
             raise PlatformError(exc.code, exc.message, exc.status) from None
-        legacy_uid = None
-        if body.get("legacyUsername") or body.get("legacyPassword"):
-            if time.time() - claims["auth_time"] > 300:
-                raise PlatformError("REAUTH_REQUIRED", "سجّل دخول Firebase مجددًا قبل ربط الحساب.", 401)
-            account = hashlib.sha256(str(body.get("legacyUsername") or "").strip().lower().encode()).hexdigest()
-            if not await self.platform.allow_rate(f"login-account:{account}", 30, 300):
-                raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
-            legacy_name = str(body.get("legacyUsername") or "")
-            legacy = await self.platform.find_user_by_username(legacy_name)
-            # A retry after a lost successful response may present the same link
-            # form. The already-bound verified identity is sufficient proof.
-            already_bound = legacy and legacy.get("firebaseUid") == claims["uid"] and legacy.get("firebaseProject") == self.platform.firebase.project
-            if not already_bound:
-                legacy = await self.platform.authenticate(legacy_name, str(body.get("legacyPassword") or ""))
-            legacy_uid = str(legacy["id"])
+        if "legacyUsername" in body or "legacyPassword" in body:
+            raise PlatformError("ACCOUNT_LINKING_DISABLED", "أنشئ حسابًا جديدًا باستخدام البريد الإلكتروني.", 400)
         user = await self.platform.firebase_account(claims, username=body.get("username"),
-            display_name=body.get("displayName"), legacy_uid=legacy_uid)
+            display_name=body.get("displayName"))
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
         token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"])
         response = web.json_response({"ok":True,"user":public_user(user, include_avatar=True)})
@@ -1525,6 +1510,8 @@ class PlatformHttp:
         return response
 
     async def login(self, request: web.Request) -> web.Response:
+        if self.platform.firebase.enabled:
+            raise PlatformError("FIREBASE_REQUIRED", "سجّل الدخول باستخدام البريد الإلكتروني.", 409)
         peer = self._peer(request)
         if not await self.platform.allow_rate(f"login:{peer}", 20, 300):
             raise PlatformError("RATE_LIMIT", "محاولات تسجيل دخول كثيرة؛ حاول لاحقًا", 429)

@@ -31,6 +31,7 @@ def provider(service):
     service.firebase.enabled = True
     service.firebase.project = 'isolated-test'
     service.firebase.api_key = 'public-test-key'
+    service.firebase.admin_uid = ''
     service.firebase.verify = AsyncMock(return_value=claims())
     service.firebase.session_valid = AsyncMock(return_value=True)
 
@@ -113,13 +114,17 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         response = await self.client.post('/api/auth/firebase', json={'idToken': 'x'*120, **body})
         return response, await response.json()
 
-    async def test_disabled_default_and_no_legacy_registration_when_enabled(self):
+    async def test_local_login_registration_and_sessions_disabled_when_firebase_enabled(self):
         self.assertEqual(FirebaseIdentity().config(), {'provider': 'local'})
         config = await (await self.client.get('/api/auth/config')).json()
         self.assertEqual(set(config), {'ok', 'provider', 'apiKey', 'projectId'})
         response = await self.client.post('/api/auth/register', json={})
         self.assertEqual(response.status, 409)
+        response = await self.client.post('/api/auth/login', json={'username':'old_player', 'password':'Original-password-123'})
+        self.assertEqual(response.status, 409)
+        self.assertIsNone(await self.service.resolve_session(self.old_session))
         self.service.firebase.enabled = False
+        self.assertIsNotNone(await self.service.resolve_session(self.old_session))
         response = await self.client.post('/api/auth/login', json={'username':'old_player', 'password':'Original-password-123'})
         self.assertEqual(response.status, 200)
 
@@ -139,34 +144,31 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.service.mem_users), 2)
         self.assertEqual((await self.service.get_user(uid))['passwordHash'], '')
 
-    async def test_link_proof_preserves_identity_and_revokes_old_password_and_sessions(self):
-        response, data = await self.exchange(legacyUsername='old_player', legacyPassword='wrong')
-        self.assertEqual(response.status, 401)
-        self.assertFalse(self.old.get('firebaseUid'))
+    async def test_account_linking_is_rejected_without_mutating_old_test_data(self):
+        before = dict(self.old)
+        response, data = await self.exchange(legacyUsername='old_player', legacyPassword='Original-password-123', username='new_player')
+        self.assertEqual(response.status, 400)
+        self.assertEqual(data['error'], 'ACCOUNT_LINKING_DISABLED')
+        self.assertEqual(self.old, before)
         response, data = await self.exchange(username='old_player')
-        self.assertEqual(data['error'], 'USERNAME_TAKEN')  # no auto-merge by username/email
-        response, data = await self.exchange(legacyUsername='old_player', legacyPassword='Original-password-123')
-        self.assertEqual(response.status, 200)
-        self.assertEqual(data['user']['id'], self.old['id'])
-        self.assertEqual(data['user']['role'], 'moderator')
-        self.assertEqual(int((await self.service.get_user(self.old['id']))['coins']), 1234)
-        response, repeated = await self.exchange(legacyUsername='old_player', legacyPassword='Original-password-123')
-        self.assertEqual(response.status, 200)
-        self.assertEqual(repeated['user']['id'], self.old['id'])
+        self.assertEqual(data['error'], 'USERNAME_TAKEN')
         self.assertEqual(len(self.service.mem_users), 1)
-        self.assertIsNone(await self.service.resolve_session(self.old_session))
-        with self.assertRaises(PlatformError) as caught:
-            await self.service.authenticate('old_player', 'Original-password-123')
-        self.assertEqual(caught.exception.code, 'AUTH_MIGRATED')
-        self.service.firebase.enabled = False
-        with self.assertRaises(PlatformError):
-            await self.service.authenticate('old_player', 'Original-password-123')
+        self.assertFalse(self.service.mem_firebase)
 
-    async def test_recent_proof_required_and_unverified_provider_rejected(self):
-        stale = claims(); stale['auth_time'] -= 301
-        self.service.firebase.verify.return_value = stale
-        response, data = await self.exchange(legacyUsername='old_player', legacyPassword='Original-password-123')
-        self.assertEqual(data['error'], 'REAUTH_REQUIRED')
+    async def test_admin_bootstrap_only_from_configured_verified_uid(self):
+        self.service.firebase.admin_uid = 'trusted-admin'
+        response, data = await self.exchange(username='regular_player', role='admin', firebaseUid='trusted-admin')
+        self.assertEqual(data['user']['role'], 'user')
+        self.service.firebase.verify.return_value = claims('trusted-admin')
+        response, data = await self.exchange(username='trusted_admin')
+        self.assertEqual(data['user']['role'], 'admin')
+        self.assertEqual((await (await self.client.get('/api/auth/config')).json()).get('adminUid'), None)
+        self.service.firebase.admin_uid = 'firebase-a'
+        self.service.firebase.verify.return_value = claims()
+        response, data = await self.exchange()
+        self.assertEqual(data['user']['role'], 'admin')
+
+    async def test_unverified_provider_rejected_before_profile_creation(self):
         self.service.firebase.verify.side_effect = FirebaseFailure('EMAIL_NOT_VERIFIED', 'verify', 403)
         response, data = await self.exchange(username='new_player')
         self.assertEqual(response.status, 403)
@@ -214,21 +216,19 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
         uid = results[0]['id']
         self.assertEqual(await b.r.get(b.k_firebase('firebase-a')), uid)
         self.assertIsNone(await self.redis.get(b.k_firebase('firebase-a')))
-        old = await a.create_user('existing', 'Original-password-123', role='moderator')
-        await a.r.hset(a.k_user(old['id']), mapping={'coins':'1000', 'wins':'17'})
-        await a.buy_store_item(old['id'], 'badge_shard')
-        bound = await b.firebase_account(claims('second-identity'), legacy_uid=old['id'])
-        self.assertEqual((bound['id'], bound['coins'], bound['wins'], bound['role']), (old['id'], '850', '17', 'moderator'))
-        self.assertIn('badge_shard', (await a.store_snapshot(old['id']))['inventory'])
-        # Two different identities racing to link one account: exactly one wins.
-        target = await a.create_user('target', 'Original-password-123')
-        race = await asyncio.gather(a.firebase_account(claims('c'), legacy_uid=target['id']), b.firebase_account(claims('d'), legacy_uid=target['id']), return_exceptions=True)
+        await a.r.hset(a.k_user(uid), mapping={'coins':'1000'})
+        await a.buy_store_item(uid, 'badge_shard')
+        # Two new identities racing for one username: exactly one succeeds.
+        race = await asyncio.gather(a.firebase_account(claims('c'), username='target'), b.firebase_account(claims('d'), username='target'), return_exceptions=True)
         self.assertEqual(sum(isinstance(x, dict) for x in race), 1)
-        self.assertEqual(sum(isinstance(x, PlatformError) for x in race), 1)
+        self.assertEqual([x.code for x in race if isinstance(x, PlatformError)], ['USERNAME_TAKEN'])
+        b.firebase.admin_uid = 'firebase-a'
+        self.assertEqual((await b.firebase_account(claims()))['role'], 'admin')
         await a.close(); await a.start()
         async for key in self.redis.scan_iter(match=os.environ['SAMIDEV_PLATFORM_PREFIX'] + ':*'): await self.redis.delete(key)
-        self.assertEqual((await a.firebase_account(claims()))['id'], uid)
-        self.assertEqual((await b.firebase_account(claims('second-identity')))['coins'], '850')
+        restored = await a.firebase_account(claims())
+        self.assertEqual((restored['id'], restored['coins'], restored['role']), (uid, '850', 'admin'))
+        self.assertIn('badge_shard', (await a.store_snapshot(uid))['inventory'])
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

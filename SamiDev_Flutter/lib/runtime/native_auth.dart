@@ -43,7 +43,6 @@ class NativeAuth {
   bool get hasPendingIdentity => api.firebase?.hasIdentity ?? false;
   Future<void> prepare() async {
     final response = await api.request('GET', '/api/auth/config');
-    if (response.status == 404) return; // older server compatibility
     if (response.status != 200) {
       throw const AuthFailure('تعذر تحميل إعدادات المصادقة.');
     }
@@ -83,8 +82,6 @@ class NativeAuth {
   Future<Map<String, dynamic>> finishPending({
     String username = '',
     String displayName = '',
-    String legacyUsername = '',
-    String legacyPassword = '',
   }) async {
     try {
       final token = await api.firebase!.token(forceRefresh: true);
@@ -96,9 +93,6 @@ class NativeAuth {
             'idToken': token,
             'username': username.trim(),
             'displayName': displayName.trim(),
-            if (legacyUsername.isNotEmpty)
-              'legacyUsername': legacyUsername.trim(),
-            if (legacyUsername.isNotEmpty) 'legacyPassword': legacyPassword,
           }),
         ),
       );
@@ -127,11 +121,8 @@ class NativeAuth {
     required String password,
     String displayName = '',
     String email = '',
-    String legacyUsername = '',
-    String legacyPassword = '',
-    bool legacyLogin = false,
   }) async {
-    if (usesFirebase && !legacyLogin) {
+    if (usesFirebase) {
       try {
         if (register) {
           await api.firebase!.signUp(email, password);
@@ -152,8 +143,6 @@ class NativeAuth {
         return await finishPending(
           username: username,
           displayName: displayName,
-          legacyUsername: legacyUsername,
-          legacyPassword: legacyPassword,
         );
       } on FirebaseClientFailure catch (e) {
         throw AuthFailure(e.message, code: e.code);

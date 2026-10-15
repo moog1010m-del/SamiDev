@@ -25,9 +25,8 @@ try {
   assert(!await page.locator('#login-form').isVisible());
   await form.locator('[data-mode]').click();
   await form.locator('[name=email]').fill('browser@example.test');
-  await form.locator('[name=linkLegacy]').check();
-  await form.locator('[name=legacyUsername]').fill('old_browser');
-  await form.locator('[name=legacyPassword]').fill('wrong');
+  assert.equal(await form.locator('[name=linkLegacy], [data-old]').count(),0);
+  await form.locator('[name=username]').fill('browser_player');
   await form.locator('[name=password]').fill('New-password-123456');
   await form.locator('[name=confirmation]').fill('New-password-123456');
   await form.locator('[data-submit]').click();
@@ -37,15 +36,11 @@ try {
   await form.locator('[data-submit]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('وثّق'));
   verified=true;
-  await form.locator('[data-submit]').click();
-  await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('غير صحيحة'));
-  assert(await form.isVisible());
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-  await form.locator('[name=legacyPassword]').fill('Original-password-123');
   await form.locator('[data-submit]').click();
   await page.locator('#app').waitFor({state:'visible'});
   const me=await page.evaluate(()=>fetch('/api/me').then(r=>r.json()));
-  assert.equal(me.user.username,'old_browser');
+  assert.equal(me.user.username,'browser_player');
   const cookie=(await page.context().cookies()).find(c=>c.name==='samidev_session');
   assert(cookie.httpOnly);
   assert(!await page.evaluate(()=>JSON.stringify({...localStorage,...sessionStorage}).includes('fixture-')));
@@ -54,9 +49,7 @@ try {
   await form.locator('[data-reset]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));
   assert(google.some(x=>x.data.requestType==='PASSWORD_RESET'));
-  // Switching out of pending verification must not leave hidden required fields.
-  await form.locator('[data-old]').click();await page.locator('#login-form').waitFor();
-  await page.getByRole('button',{name:'العودة للدخول بالبريد'}).click();
+  assert.equal(await page.getByText('الدخول بالطريقة القديمة مؤقتًا').count(),0);
   assert(await form.locator('[name=password]').isVisible());
   assert(await form.locator('[name=email]').isEditable());
   const out=process.env.SAMIDEV_TEST_ARTIFACTS||'/tmp/samidev-firebase-review';fs.mkdirSync(out,{recursive:true});
@@ -84,7 +77,7 @@ try {
   await page.route('**/api/auth/config',route=>route.fulfill({status:503,contentType:'application/json',body:'{"ok":false}'}));
   await page.reload();
   await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('تعذر تحميل'));
-  assert(await page.locator('#login-form button').isDisabled(),'configuration outage must not silently enable legacy login');
+  assert(await page.locator('#login-form button').isDisabled(),'configuration outage must not silently enable local login');
   assert.deepEqual(errors,[]);
-  console.log('FIREBASE_WEB_PASS: signup, verify, old-account proof retry, logout, reset, fixed Google destinations');
+  console.log('FIREBASE_WEB_PASS: signup, verify, logout, reset, fixed Google destinations');
 }finally{await browser.close();}
