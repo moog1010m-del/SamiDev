@@ -22,6 +22,8 @@ class CommunityHubState extends State<CommunityHub> {
   List<Map<String,dynamic>> spaces=[],rooms=[],members=[],messages=[];
   final input=TextEditingController(),scroll=ScrollController();
   bool busy=false,sending=false,navigating=false;
+  List<Map<String,dynamic>> notifications=[];
+  bool canModerate=false;
   String? error;
   int tab=0,generation=0;
   static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'أونو','tablesoccer':'كرة الطاولة'};
@@ -41,7 +43,7 @@ class CommunityHubState extends State<CommunityHub> {
       if(!mounted||version!=generation)return;
       final nearEnd=!scroll.hasClients||scroll.position.maxScrollExtent-scroll.offset<80;
       final previous=messages.isEmpty?null:messages.last['id'];
-      setState((){error=null;if(cid==null){spaces=rows(d['communities']);}else{community=Map<String,dynamic>.from(d['community']);rooms=rows(d['rooms']);members=rows(d['members']);messages=rows(d['messages']);}});
+      setState((){error=null;if(cid==null){spaces=rows(d['communities']);notifications=rows(d['notifications']);}else{canModerate=(d['capabilities'] as Map?)?['canModerate']==true;community=Map<String,dynamic>.from(d['community']);rooms=rows(d['rooms']);members=rows(d['members']);messages=rows(d['messages']);}});
       if(nearEnd&&(messages.isNotEmpty&&messages.last['id']!=previous))scrollToEnd();
     }catch(e){report(e);}finally{busy=false;}
   }
@@ -137,6 +139,7 @@ class CommunityHubState extends State<CommunityHub> {
   @override Widget build(BuildContext context){
     final colors=Theme.of(context).colorScheme;
     return Column(children:[
+      if(community==null)for(final n in notifications)Card(child:ListTile(leading:const Icon(Icons.card_giftcard),title:Text("${n['sender']} · هدية الإشراف"),subtitle:Text(n['text']?.toString()??''))),
       SizedBox(height:58,child:Row(children:[
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
         if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
@@ -144,6 +147,7 @@ class CommunityHubState extends State<CommunityHub> {
         IconButton(tooltip:'المظهر',onPressed:widget.onTheme,icon:Icon(Theme.of(context).brightness==Brightness.dark?Icons.light_mode_outlined:Icons.dark_mode_outlined)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
       ])),
+      if(community!=null&&canModerate)const Padding(padding:EdgeInsets.symmetric(horizontal:16,vertical:6),child:Text('أنت مشرف هذه المساحة · افتح ملف عضو للكتم أو الحظر أو الإخراج.',style:TextStyle(fontSize:12))),
       if(community!=null)Row(children:List.generate(3,(i)=>Expanded(child:InkWell(onTap:()=>setState((){tab=i;if(i==1){scrollToEnd();}else{FocusScope.of(context).unfocus();}}),child:Container(height:49,alignment:Alignment.center,decoration:BoxDecoration(border:Border(bottom:BorderSide(color:tab==i?colors.primary:colors.outlineVariant,width:tab==i?3:.5))),child:Text(['الألعاب (${rooms.length})','الدردشة','متصل (${members.length})'][i],style:TextStyle(color:tab==i?colors.primary:colors.onSurfaceVariant,fontWeight:tab==i?FontWeight.w700:FontWeight.normal,fontSize:14))))))),
       if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:refresh,child:const Text('إعادة المحاولة'))]),
       Expanded(child:RefreshIndicator(onRefresh:refresh,child:community==null?

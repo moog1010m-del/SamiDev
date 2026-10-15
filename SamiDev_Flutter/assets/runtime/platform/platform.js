@@ -480,7 +480,7 @@
   }
   async function loadCommunities(manual=false){
     try{
-      const d=await api('/api/communities');state.communities=d.communities||[];renderCommunities();
+      const d=await api('/api/communities');const notices=$('#system-notifications');if(notices){notices.replaceChildren();for(const n of d.notifications||[]){const card=document.createElement('section');card.className='panel';card.style.padding='16px';const title=document.createElement('strong');title.textContent=n.sender+' · هدية الإشراف';const text=document.createElement('p');text.textContent=n.text;card.append(title,text);notices.append(card);}}state.communities=d.communities||[];renderCommunities();
       if(manual)toast('تم تحديث المساحات');
     }catch(err){if(err.status===401)return showAuth();if(manual)toast(err.message,true);}
   }
@@ -540,7 +540,7 @@
   function renderCommunityState(){
     const c=state.activeCommunity;if(!c)return;
     const room=$('#community-room');room.style.setProperty('--community-accent',c.accent||'#d5a34c');
-    $('#active-community-name').textContent=c.name||'المساحة';$('#active-community-description').textContent=c.description||'';$('#active-community-mark').textContent=c.mark||initials(c.name);$('#active-community-mark').style.setProperty('--community-accent',c.accent||'#d5a34c');
+    $('#active-community-name').textContent=c.name||'المساحة';$('#active-community-description').textContent=(c.description||'')+(state.communityCapabilities?.canModerate?' · لديك صلاحية إدارة المساحة: افتح ملف عضو للكتم أو الحظر أو الإخراج.':'');$('#active-community-mark').textContent=c.mark||initials(c.name);$('#active-community-mark').style.setProperty('--community-accent',c.accent||'#d5a34c');
     $('#community-chat-title').textContent=`شات ${c.name||'المساحة'}`;$('#community-member-count').textContent=String(visibleCommunityMembers().length);
     renderCommunityMembers();renderCommunityMessages();
   }
@@ -802,12 +802,21 @@
   async function loadAdmin(){
     if(!state.user||state.user.role!=='admin')return;
     try{
-      const [s,u,r]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports')]);
+      const [s,u,r,spaces]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports'),api('/api/communities')]);
+      const communityOptions=(spaces.communities||[]).map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+      const communityNames=new Map((spaces.communities||[]).map(c=>[c.id,c.name]));
       const st=s.stats;
       $('#admin-stats').innerHTML=`<div><span>${st.users}</span><small>المستخدمون</small></div><div><span>${st.onlineUsers}</span><small>متصلون</small></div><div><span>${st.waitingRooms}</span><small>غرف انتظار</small></div><div><span>${st.runningRooms}</span><small>مباريات جارية</small></div>`;
-      $('#admin-users').innerHTML=u.users.map(x=>`<tr><td><strong>${escapeHtml(x.displayName)}</strong><br><small>@${escapeHtml(x.username)}</small></td><td>${x.online?'متصل':'غير متصل'}</td><td><select class="role-select" data-id="${x.id}" ${state.user.role!=='admin'||x.id===state.user.id?'disabled':''}><option value="user" ${x.role==='user'?'selected':''}>user</option><option value="moderator" ${x.role==='moderator'?'selected':''}>moderator</option><option value="admin" ${x.role==='admin'?'selected':''}>admin</option></select></td><td>${x.banned?'محظور':'—'}</td><td><button class="${x.banned?'small-btn':'danger-btn'} ban-user" data-id="${x.id}" data-ban="${x.banned?'0':'1'}" ${x.id===state.user.id?'disabled':''}>${x.banned?'فك الحظر':'حظر'}</button></td></tr>`).join('');
+      $('#admin-users').innerHTML=u.users.map(x=>`<tr><td><strong>${escapeHtml(x.displayName)}</strong><br><small>@${escapeHtml(x.username)}</small></td><td>${x.online?'متصل':'غير متصل'}</td><td><select class="role-select" data-id="${x.id}" ${state.user.role!=='admin'||x.id===state.user.id?'disabled':''}><option value="user" ${x.role==='user'?'selected':''}>عضو</option>${x.role==='moderator'?'<option value="moderator" selected disabled>رتبة قديمة — عيّن المساحة أدناه</option>':''}<option value="admin" ${x.role==='admin'?'selected':''}>مدير المنصة</option></select>${x.id!==state.user.id?`<div class="admin-community-controls" data-user-id="${escapeHtml(x.id)}"><small>إشرافه: ${escapeHtml((x.moderatedCommunities||[]).map(cid=>communityNames.get(cid)||cid).join('، ')||'لا توجد مساحات')}</small><select aria-label="مساحة الإشراف">${communityOptions}</select><button class="small-btn scoped-moderation" data-action="grant_moderator">تعيين مشرف مساحة</button><button class="small-btn scoped-moderation" data-action="revoke_moderator">سحب إشراف المساحة</button></div>`:''}</td><td>${x.banned?'محظور':'—'}</td><td><button class="${x.banned?'small-btn':'danger-btn'} ban-user" data-id="${x.id}" data-ban="${x.banned?'0':'1'}" ${x.id===state.user.id?'disabled':''}>${x.banned?'فك الحظر':'حظر'}</button></td></tr>`).join('');
       $$('.ban-user').forEach(b=>b.onclick=()=>adminBan(b.dataset.id,b.dataset.ban==='1'));
       $$('.role-select').forEach(s=>s.onchange=()=>adminRole(s.dataset.id,s.value));
+      $$('.scoped-moderation').forEach(button=>button.onclick=async()=>{
+        const controls=button.closest('.admin-community-controls'),select=controls.querySelector('select'),cid=select.value;
+        if(!cid)return toast('اختر المساحة أولًا',true);
+        if(!confirm(button.textContent+' في '+select.selectedOptions[0].textContent+'؟'))return;
+        button.disabled=true;
+        try{await api('/api/communities/'+encodeURIComponent(cid)+'/moderation',{method:'POST',body:JSON.stringify({targetUserId:controls.dataset.userId,action:button.dataset.action})});toast(button.dataset.action==='grant_moderator'?'تم تعيين مشرف المساحة؛ أدواته داخل ملفات الأعضاء':'تم سحب إشراف المساحة');await loadAdmin();}catch(error){toast(error.message,true);button.disabled=false;}
+      });
       const reports=Array.isArray(r.reports)?r.reports:[];
       const count=$('#admin-reports-count');if(count)count.textContent=String(reports.length);
       const box=$('#admin-reports');

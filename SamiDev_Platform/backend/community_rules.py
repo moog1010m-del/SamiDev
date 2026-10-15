@@ -60,9 +60,9 @@ class CommunityRules:
         if actor_id == target_id:
             raise PlatformError('CANNOT_MODERATE_SELF', 'لا تنفذ هذا الإجراء على حسابك')
         service = self.service
-        from social_platform import PREFIX
+        from social_platform import PREFIX, COMMUNITIES, system_notifications
         audit_key=f"{PREFIX}:moderation-audit:{cid}"
-        async with self.transaction([service.k_user(actor_id),service.k_user(target_id),audit_key]):
+        async with self.transaction([service.k_user(actor_id),service.k_user(target_id),audit_key,service.k_inventory(target_id),service.k_equipped(target_id)]):
             actor = await service.get_user(actor_id)
             target = await service.get_user(target_id)
             if not actor or str(actor.get('banned') or '0')=='1' or not self.can_moderate(actor,cid):
@@ -92,6 +92,34 @@ class CommunityRules:
             encoded=json.dumps(value,separators=(',',':'))
             if service.r is None: target[field]=encoded
             else: await service.r.hset(service.k_user(target_id),mapping={field:encoded})
+            # Ownership follows active community assignments, not the notification history.
+            if granting:
+                has_scope=any(value.get(key) is True for key in COMMUNITIES)
+                if service.r is None:
+                    inventory=service.mem_inventory.setdefault(target_id,set())
+                    equipment=service.mem_equipped.setdefault(target_id,{})
+                    if has_scope: inventory.add('badge_steward')
+                    else:
+                        inventory.discard('badge_steward')
+                        if equipment.get('name_badge')=='badge_steward': equipment['name_badge']='badge_palm_swords'
+                        if target.get('nameBadge')=='badge_steward': target['nameBadge']='badge_palm_swords'
+                elif has_scope:
+                    await service.r.sadd(service.k_inventory(target_id),'badge_steward')
+                else:
+                    await service.r.srem(service.k_inventory(target_id),'badge_steward')
+                    if await service.r.hget(service.k_equipped(target_id),'name_badge')=='badge_steward':
+                        await service.r.hset(service.k_equipped(target_id),'name_badge','badge_palm_swords')
+                    if target.get('nameBadge')=='badge_steward':
+                        await service.r.hset(service.k_user(target_id),'nameBadge','badge_palm_swords')
+            # Welcome once per account; reappointment restores the badge without spam.
+            if action=='grant_moderator' and not target.get('moderatorGiftGrantedAt'):
+                clock=int(time.time()*1000)
+                notice={'id':'moderator-welcome','sender':'سيتم','type':'moderator_gift','communityId':cid,'itemId':'badge_steward','createdAt':clock,'text':f"مبروك! أصبحت مشرفًا في {COMMUNITIES[cid]['name']}. أهديتك ملصق أمانة المجلس؛ شكرًا لاهتمامك بالمجتمع."}
+                fields={'moderatorGiftGrantedAt':str(clock),'systemNotifications':json.dumps((system_notifications(target)+[notice])[-20:],ensure_ascii=False,separators=(',',':'))}
+                if service.r is None:
+                    target.update(fields)
+                else:
+                    await service.r.hset(service.k_user(target_id),mapping=fields)
             record={'actorId':actor_id,'targetId':target_id,'communityId':cid,'action':action,'at':int(time.time()*1000),'duration':duration if action=='mute' else None}
             if service.r is None:
                 rows=self.audit.setdefault(cid,[]);rows.append(record);del rows[:-1000]

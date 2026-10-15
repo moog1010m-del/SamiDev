@@ -127,6 +127,15 @@ for _id, _name, _description, _slot, _category, _price in [
 for _id, _slot, _category, _name in [("chat_default", "chat_bubble", "chat", "الشات البسيط"), ("banner_default", "profile_banner", "banners", "الغلاف الافتراضي")]:
     STORE_CATALOG[_id] = dict(name=_name, description="العودة إلى التصميم الافتراضي.", slot=_slot, category=_category, gameId="", asset="", price=0, availableToAll=True, default=True)
 
+STORE_CATALOG['badge_steward'] = dict(name='أمانة المجلس', description='ملصق مشرفي المجتمع من سيتم. متاح ما دمت مشرفًا في مساحة واحدة على الأقل، ولا يمنح صلاحيات إضافية.', slot='name_badge', category='profile', gameId='', asset='/platform/assets/cosmetics/badge_steward.webp', price=0, availableToAll=False, default=False, retired=True)
+
+def system_notifications(user):
+    try:
+        rows = json.loads(user.get('systemNotifications') or '[]')
+        return rows[-20:] if isinstance(rows, list) else []
+    except (ValueError, TypeError):
+        return []
+
 STORE_DEFAULT_EQUIPPED.update(chat_bubble="chat_default", profile_banner="banner_default")
 
 def cosmetic_id(value: Any, slot: str) -> str:
@@ -1385,7 +1394,10 @@ class PlatformService:
         for uid in ids[:limit]:
             raw = await self.get_user(str(uid))
             if raw:
-                out.append(public_user(raw, online=await self.is_online(str(uid))))
+                item=public_user(raw, online=await self.is_online(str(uid)))
+                assignments=self.community_rules.data(raw,'communityModeratorOf')
+                item['moderatedCommunities']=[cid for cid in COMMUNITIES if assignments.get(cid) is True]
+                out.append(item)
         out.sort(key=lambda x: x.get("createdAt", 0), reverse=True)
         return out
 
@@ -1621,7 +1633,7 @@ class PlatformHttp:
         return web.json_response({"ok": True})
 
     async def communities(self, request: web.Request) -> web.Response:
-        await self._user(request)
+        user = await self._user(request)
         rooms = await self.room_store.list_public_rooms(200)
         room_counts: dict[str, int] = {cid: 0 for cid in COMMUNITIES}
         for room in rooms:
@@ -1631,7 +1643,7 @@ class PlatformHttp:
         items = await self.platform.community_catalog()
         for item in items:
             item["gameRoomCount"] = room_counts.get(str(item["id"]), 0)
-        return web.json_response({"ok": True, "communities": items, "ts": now_ms()})
+        return web.json_response({"ok": True, "communities": items, "notifications": system_notifications(user), "ts": now_ms()})
 
     async def community_state(self, request: web.Request) -> web.Response:
         user = await self._user(request)
@@ -1825,5 +1837,7 @@ class PlatformHttp:
         if target_id == str(admin["id"]):
             raise PlatformError("CANNOT_CHANGE_SELF", "لا تغيّر صلاحية حسابك الحالي")
         body = await self._body(request)
+        if body.get('role')=='moderator':
+            raise PlatformError('COMMUNITY_REQUIRED','اختر المساحة ثم استخدم تعيين مشرف مساحة؛ الرتبة القديمة لا تمنح إشرافًا',400)
         user = await self.platform.set_role(target_id, str(body.get("role") or "user"))
         return web.json_response({"ok": True, "user": user})

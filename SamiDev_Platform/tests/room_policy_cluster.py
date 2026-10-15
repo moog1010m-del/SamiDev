@@ -19,7 +19,14 @@ async def main():
       packet=await ws.receive_json()
       if packet.get('type')=='error':return packet
    uid=lambda i:cluster.prefix+'_'+str(i)
+   await post(0,'/api/admin/users/'+uid(1)+'/role',{'role':'moderator'},400)
    await post(0,'/api/communities/majlis/moderation',{'targetUserId':uid(1),'action':'grant_moderator'})
+   async with session.get(cluster.urls[1]+'/api/communities',headers=cookies[1]) as response:
+    home=await response.json();assert response.status==200
+    assert home['notifications'][0]['sender']=='سيتم'
+    assert home['notifications'][0]['itemId']=='badge_steward'
+   async with session.get(cluster.urls[0]+'/api/communities',headers=cookies[2]) as response:
+    assert (await response.json())['notifications']==[]
    await post(1,'/api/communities/diwan/moderation',{'targetUserId':uid(2),'action':'ban'},403)
    await post(1,'/api/communities/majlis/moderation',{'targetUserId':uid(2),'action':'mute'})
    await post(2,'/api/communities/majlis/chat',{'text':'not allowed'},403)
@@ -54,7 +61,7 @@ async def main():
    await post(1,'/api/communities/majlis/moderation',{'targetUserId':uid(2),'action':'ban'})
    assert (await receive(b,{'left_room'},timeout=12))['reason']=='COMMUNITY_BANNED'
    await post(1,'/api/communities/majlis/moderation',{'targetUserId':uid(2),'action':'unban'})
-   env=dict(os.environ,SAMIDEV_TEST_BASE_URL=cluster.urls[0],SAMIDEV_POLICY_ADMIN_COOKIE=cookies[0]['Cookie'].split('=',1)[1],SAMIDEV_POLICY_MEMBER=uid(2))
+   env=dict(os.environ,SAMIDEV_TEST_BASE_URL=cluster.urls[0],SAMIDEV_POLICY_ADMIN_COOKIE=cookies[0]['Cookie'].split('=',1)[1],SAMIDEV_POLICY_MEMBER=uid(2),SAMIDEV_POLICY_MEMBER_COOKIE=cookies[2]['Cookie'].split('=',1)[1],SAMIDEV_POLICY_COLLEAGUE=uid(1))
    process=await asyncio.create_subprocess_exec('node',str(__import__('pathlib').Path(__file__).with_name('room_policy_browser.mjs')),env=env)
    assert await process.wait()==0
   print('ROOM_POLICY_TWO_GATEWAY_HTTP_WS_PASS')

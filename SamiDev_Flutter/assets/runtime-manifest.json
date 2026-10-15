@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "b202d181dd42abbd2afdb55fbba15de5c12185efa4d4193817d67e12943783c1"
+      "sha256": "a061659a8d1d9338059c078d9ea668a0ada015aa74d8b80801f7b178ae87a456"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -1471,6 +1471,10 @@
       "size": 188228,
       "sha256": "c2e41ffef48092fa24a0cd5b49712aefbe66a95a5660c1dccf4d91c14d98186d"
     },
+    "platform/assets/cosmetics/badge_steward.webp": {
+      "size": 994,
+      "sha256": "4ea2ff76ef8e04675c52e84112c450732c09db3b52ac4bbb89c6a25f5b35abd5"
+    },
     "platform/assets/cosmetics/banner_canyon.webp": {
       "size": 131280,
       "sha256": "20be061a261b3b014b1597030d447190d95d0670387744ba9d637b118275ef79"
@@ -2377,23 +2381,23 @@
     },
     "platform/build.json": {
       "size": 2705,
-      "sha256": "97872f11f148b88fd84736847afceac841fb15756e25ad1c0c61d8993aebb044"
+      "sha256": "4d7b37701fbfa510ff3d062d8a3532f6149303580d57b7000f8aa0398748f6c7"
     },
     "platform/firebase-auth.js": {
       "size": 7866,
       "sha256": "18309bc135c72374d7cea7ab655b5ef799ed657b367c3bfcf2eaa3cc857ae064"
     },
     "platform/index.html": {
-      "size": 37106,
-      "sha256": "8a2f0111d8b6a2bb8136f77c0034e0cfd6e99d441ad82626fad02871a2bc998c"
+      "size": 37175,
+      "sha256": "abd047ce465dcd69ad4b1c3e85f248c352fb24755f3f0c5a6f0ac4dc36354b70"
     },
     "platform/platform.css": {
       "size": 101408,
       "sha256": "6912ee5579beec4fac75622cfac99f9a38dfb29310176df5cdc49a59c0d0b656"
     },
     "platform/platform.js": {
-      "size": 72931,
-      "sha256": "159d3856c824d874016d42142f8aaa1130766efbcb525368841089e80db0555a"
+      "size": 75283,
+      "sha256": "92fb300f64dec3a5a5e1221c123c0daccfc91441044e7e318866b0fccc0dd157"
     },
     "platform/profile-identity.css": {
       "size": 10976,

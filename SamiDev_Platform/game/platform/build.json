@@ -1,6 +1,6 @@
 {
-  "release": "V30",
-  "buildId": "samidev-v30-84c68517c4e2357f",
+  "release": "V37",
+  "buildId": "samidev-v37-ddae731f12b989d1",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,7 +8,7 @@
     "pool"
   ],
   "files": {
-    "platform/index.html": "8a2f0111d8b6a2bb8136f77c0034e0cfd6e99d441ad82626fad02871a2bc998c",
+    "platform/index.html": "abd047ce465dcd69ad4b1c3e85f248c352fb24755f3f0c5a6f0ac4dc36354b70",
     "platform/firebase-auth.js": "18309bc135c72374d7cea7ab655b5ef799ed657b367c3bfcf2eaa3cc857ae064",
     "cosmetic-ui.css": "fa0b8cbd7933e56028e9105124334af6f50359504aec8a6a796f901b39045ba2",
     "cosmetic-ui.js": "0c97dfe02988581270a5605f486e9a9eb759c70c8f8fd9905ca8d844172c4252",
@@ -16,7 +16,7 @@
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
     "platform/platform.css": "6912ee5579beec4fac75622cfac99f9a38dfb29310176df5cdc49a59c0d0b656",
     "platform/profile-identity.css": "2a456d9cae921b0b761a57d3d1f2583d1dcf2ad7838c5c2e5722791ada2e1c53",
-    "platform/platform.js": "159d3856c824d874016d42142f8aaa1130766efbcb525368841089e80db0555a",
+    "platform/platform.js": "92fb300f64dec3a5a5e1221c123c0daccfc91441044e7e318866b0fccc0dd157",
     "samidev-games.js": "30f9761386dd7be736ad3c854a0f1cafc55290ba40515d2590a02d4f3450edc8",
     "profile-details.css": "266b5c252cb0d40ed3861c994208065bf02369dd64260f51448e22a0e99ad618",
     "profile-details.js": "c039faea20b85f32a6c52c1a585fa80e0768f7a2437fa8eac587c5ebea2deddc",
