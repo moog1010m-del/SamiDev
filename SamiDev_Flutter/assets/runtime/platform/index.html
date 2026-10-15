@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/profile-details.css?v=266b5c252cb0d40e">
   <link rel="stylesheet" href="/platform/platform.css?v=6912ee5579beec4f">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=2a456d9cae921b0b">
-<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=fa0b8cbd7933e560"><script src="/cosmetic-ui.js?v=0c97dfe029885812"></script><script src="/platform/firebase-auth.js?v=18309bc135c72374"></script></head>
+<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=fa0b8cbd7933e560"><script src="/cosmetic-ui.js?v=0c97dfe029885812"></script><script src="/platform/firebase-auth.js?v=d5309289c38a4dae"></script></head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
 
@@ -24,17 +24,16 @@
         <button class="auth-tab" data-auth="register">حساب جديد</button>
       </div>
       <form id="login-form" class="auth-form">
-        <label>اسم المستخدم<input name="username" autocomplete="username" maxlength="20" required></label>
+        <label>اسم المستخدم (بدون @)<input name="username" autocomplete="username" maxlength="20" required></label>
         <label>كلمة المرور<input name="password" type="password" autocomplete="current-password" minlength="1" maxlength="128" required></label>
         <button class="primary" type="submit">دخول</button>
       </form>
       <form id="register-form" class="auth-form hidden">
-        <label>اسم المستخدم<input name="username" autocomplete="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" required></label>
-        <label>الاسم الظاهر<input name="displayName" maxlength="24" placeholder="الاسم الذي يراه اللاعبون"></label>
+        <label>اسم المستخدم (بدون @)<input name="username" autocomplete="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" required></label>
         <label>كلمة المرور<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
         <button class="primary" type="submit">إنشاء الحساب</button>
       </form>
-      <p class="auth-note">اسم المستخدم: حروف إنجليزية، أرقام و _ فقط.</p>
+      <p class="auth-note">اسم المستخدم بدون @: حروف إنجليزية، أرقام و _ فقط.</p>
     </div>
   </section>
 

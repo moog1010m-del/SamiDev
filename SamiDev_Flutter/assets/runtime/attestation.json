@@ -261,8 +261,8 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "62d806504ddc652eaf3d5c54629294e135801344f1b03bd9ea6ddaf38790f931",
     "platform/assets/stickers/samidev-stickers.png": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085",
-    "platform/build.json": "23dd9f1baae198f1bb26f4f1d005d2f43d4172a510a0fd4505c04e6d73b157d2",
-    "platform/index.html": "f24a2684d9bdfae08c3ab1256e6ed800c919d6fc63a9ad8341c65c5a93511993",
+    "platform/build.json": "94ffe4b669642602dff9036570b65cbc4c751f0eed986cb6f46e474263aea5e6",
+    "platform/index.html": "ca68f7c5701083658894b1ddb32882707d4b978d8d166621b86ca01c7719c379",
     "platform/platform.css": "6912ee5579beec4fac75622cfac99f9a38dfb29310176df5cdc49a59c0d0b656",
     "platform/platform.js": "92fb300f64dec3a5a5e1221c123c0daccfc91441044e7e318866b0fccc0dd157",
     "platform/profile-identity.css": "2a456d9cae921b0b761a57d3d1f2583d1dcf2ad7838c5c2e5722791ada2e1c53",
@@ -335,6 +335,6 @@
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
     "waiting-room.js": "dbe6654edf54b4921bf5bb9809581066773c472e993b9b39a95f9b763a9613bc",
     "web-bridge.js": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e",
-    "platform/firebase-auth.js": "18309bc135c72374d7cea7ab655b5ef799ed657b367c3bfcf2eaa3cc857ae064"
+    "platform/firebase-auth.js": "d5309289c38a4daef9771e7322e6512e1074838fcf3249ddb9a20cab6c8dfc8b"
   }
 }

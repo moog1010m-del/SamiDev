@@ -18,10 +18,8 @@
     for(const node of card.querySelectorAll('.auth-tabs,.auth-form,.auth-note'))node.classList.add('hidden');
     const form=document.createElement('form');form.className='auth-form';form.id='firebase-auth-form';
     form.innerHTML=`<label>البريد الإلكتروني<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
-      <label data-new-profile class="hidden">اسم المستخدم<input name="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" autocomplete="username"></label>
-      <label data-new-profile class="hidden">الاسم الظاهر<input name="displayName" maxlength="24" autocomplete="nickname"></label>
+      <label data-new-profile class="hidden">اسم المستخدم (بدون @)<input name="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" autocomplete="username"></label>
       <label data-password>كلمة مرور حساب SamiDev<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
-      <label data-confirm class="hidden">تأكيد كلمة المرور<input name="confirmation" type="password" autocomplete="new-password" maxlength="128"></label>
       <p data-status role="status" aria-live="polite"></p><button class="primary" data-submit type="submit">دخول</button>
       <button class="ghost hidden" data-resend type="button">إعادة إرسال رسالة التوثيق</button>
       <button class="ghost" data-reset type="button">نسيت كلمة المرور؟</button>
@@ -32,7 +30,6 @@
     function render(){
       for(const n of form.querySelectorAll('[data-new-profile]'))n.classList.toggle('hidden',!(register||setup));
       field('username').required=(register||setup);
-      form.querySelector('[data-confirm]').classList.toggle('hidden',!register||pending||setup);field('confirmation').required=register&&!pending&&!setup;
       form.querySelector('[data-password]').classList.toggle('hidden',pending||setup);field('password').required=!pending&&!setup;field('password').minLength=register?15:1;field('password').autocomplete=register?'new-password':'current-password';
       form.querySelector('[data-resend]').classList.toggle('hidden',!pending);
       form.querySelector('[data-submit]').textContent=pending?'تحققت من بريدي':setup?'إكمال الحساب':register?'إنشاء الحساب':'دخول';
@@ -40,7 +37,7 @@
       for(const input of form.querySelectorAll('button,input'))input.disabled=busy;
       field('email').readOnly=pending||setup;
     }
-    form.querySelector('[data-mode]').onclick=()=>{clear();register=!register;pending=false;setup=false;field('password').value='';field('confirmation').value='';status.textContent='';render();};
+    form.querySelector('[data-mode]').onclick=()=>{clear();register=!register;pending=false;setup=false;field('password').value='';status.textContent='';render();};
     async function mail(reset=false){
       if(busy)return;if(reset&&!field('email').reportValidity())return;busy=true;render();
       try{await google('sendOobCode',reset?{requestType:'PASSWORD_RESET',email:field('email').value.trim()}:{requestType:'VERIFY_EMAIL',idToken});status.textContent=reset?'إذا كان البريد مسجلًا فستصلك رسالة لاستعادة كلمة المرور.':'أرسلنا رسالة التوثيق. افتحها ثم اضغط تحققت من بريدي.';}
@@ -50,15 +47,14 @@
     form.querySelector('[data-reset]').onclick=()=>mail(true);form.querySelector('[data-resend]').onclick=()=>mail();
     form.onsubmit=async event=>{
       event.preventDefault();if(busy)return;
-      if(register&&!pending&&!setup&&field('password').value!==field('confirmation').value){status.textContent='كلمتا المرور غير متطابقتين.';return;}
       busy=true;render();status.textContent='';
       try{
         if(!pending&&!setup){
           remember(await google(register?'signUp':'signInWithPassword',{email:field('email').value.trim(),password:field('password').value,returnSecureToken:true}));
-          field('password').value='';field('confirmation').value='';
+          field('password').value='';
           if(register){pending=true;await google('sendOobCode',{requestType:'VERIFY_EMAIL',idToken});status.textContent='افتح رسالة التوثيق ثم اضغط تحققت من بريدي.';return;}
         }else remember(await google('',{grant_type:'refresh_token',refresh_token:refreshToken},true));
-        const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,username:(register||setup)?field('username').value.trim():'',displayName:field('displayName').value.trim()})});
+        const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,username:(register||setup)?field('username').value.trim():''})});
         clear();pending=false;setup=false;register=false;onAuthenticated(result.user);
       }catch(e){
         const code=e.code||e.error;

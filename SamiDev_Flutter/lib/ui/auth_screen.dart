@@ -20,8 +20,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
   final _username = TextEditingController(),
       _password = TextEditingController();
-  final _displayName = TextEditingController(),
-      _confirmation = TextEditingController();
   final _email = TextEditingController();
   bool _register = false,
       _busy = false,
@@ -38,8 +36,6 @@ class _AuthScreenState extends State<AuthScreen> {
     for (final c in [
       _username,
       _password,
-      _displayName,
-      _confirmation,
       _email,
     ]) {
       c.clear();
@@ -59,7 +55,6 @@ class _AuthScreenState extends State<AuthScreen> {
       _error = null;
       _obscured = true;
       _password.clear();
-      _confirmation.clear();
     });
   }
 
@@ -74,19 +69,16 @@ class _AuthScreenState extends State<AuthScreen> {
       final user = finishing
           ? await widget.auth.finishPending(
               username: firebase && !profileFields ? '' : _username.text,
-              displayName: _displayName.text,
             )
           : await widget.auth.submit(
               register: _register,
               username: firebase && !profileFields ? '' : _username.text,
               password: _password.text,
-              displayName: _displayName.text,
               email: _email.text,
             );
       if (!mounted) return;
       TextInput.finishAutofillContext();
       _password.clear();
-      _confirmation.clear();
       await widget.onAuthenticated(user);
     } catch (e) {
       if (mounted) {
@@ -97,8 +89,7 @@ class _AuthScreenState extends State<AuthScreen> {
           if (e is AuthFailure && e.code == 'EMAIL_NOT_VERIFIED') {
             _pending = true;
             _password.clear();
-            _confirmation.clear();
-          }
+                }
           if (e is AuthFailure && e.code == 'PROFILE_SETUP_REQUIRED') {
             _setup = true;
             _password.clear();
@@ -171,7 +162,7 @@ class _AuthScreenState extends State<AuthScreen> {
     enableSuggestions: false,
     textInputAction: TextInputAction.next,
     autofillHints: const [AutofillHints.username],
-    decoration: field('اسم المستخدم', Icons.person_outline),
+    decoration: field('اسم المستخدم (بدون @)', Icons.person_outline),
     validator: (v) => RegExp(r'^[A-Za-z0-9_]{3,20}$').hasMatch((v ?? '').trim())
         ? null
         : 'استخدم ٣–٢٠ حرفًا إنجليزيًا أو رقمًا أو _',
@@ -256,20 +247,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      if (profileFields) ...[
-                        TextFormField(
-                          key: const ValueKey('auth-display-name'),
-                          controller: _displayName,
-                          enabled: !_busy,
-                          maxLength: 24,
-                          autofillHints: const [AutofillHints.nickname],
-                          decoration: field(
-                            'الاسم الظاهر (اختياري)',
-                            Icons.badge_outlined,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                      ],
                       if (!firebase || profileFields) ...[
                         usernameField(),
                         const SizedBox(height: 16),
@@ -288,11 +265,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ? AutofillHints.newPassword
                                 : AutofillHints.password,
                           ],
-                          textInputAction: _register
-                              ? TextInputAction.next
-                              : TextInputAction.done,
+                          textInputAction: TextInputAction.done,
                           onFieldSubmitted: (_) {
-                            if (!_register) _submit();
+                            _submit();
                           },
                           decoration:
                               field(
@@ -330,26 +305,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             return null;
                           },
                         ),
-                        if (_register) ...[
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            key: const ValueKey('auth-confirm-password'),
-                            controller: _confirmation,
-                            enabled: !_busy,
-                            obscureText: _obscured,
-                            autocorrect: false,
-                            enableSuggestions: false,
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) => _submit(),
-                            decoration: field(
-                              'تأكيد كلمة المرور',
-                              Icons.lock_reset_outlined,
-                            ),
-                            validator: (v) => v == _password.text
-                                ? null
-                                : 'كلمتا المرور غير متطابقتين',
-                          ),
-                        ],
                       ],
                       if (_pending)
                         const Padding(

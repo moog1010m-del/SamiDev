@@ -28,7 +28,8 @@ try {
   assert.equal(await form.locator('[name=linkLegacy], [data-old]').count(),0);
   await form.locator('[name=username]').fill('browser_player');
   await form.locator('[name=password]').fill('New-password-123456');
-  await form.locator('[name=confirmation]').fill('New-password-123456');
+  assert.equal(await form.locator('input:visible').count(),3);
+  assert.equal(await form.locator('[name=displayName]').count(),0);
   await form.locator('[data-submit]').click();
   await form.locator('[data-resend]').waitFor({state:'visible'});
   assert(google.some(x=>x.data.requestType==='VERIFY_EMAIL'));

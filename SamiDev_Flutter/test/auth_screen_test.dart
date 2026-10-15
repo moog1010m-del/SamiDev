@@ -135,10 +135,8 @@ void main() {
         find.byKey(const ValueKey('auth-password')),
         'Native-password-123',
       );
-      await tester.enterText(
-        find.byKey(const ValueKey('auth-confirm-password')),
-        'Native-password-123',
-      );
+      expect(find.byKey(const ValueKey('auth-display-name')),findsNothing);
+      expect(find.byKey(const ValueKey('auth-confirm-password')),findsNothing);
       final submit = find.byKey(const ValueKey('auth-submit'));
       await tester.ensureVisible(submit);
       await tester.tap(submit);
@@ -219,22 +217,16 @@ void main() {
           find.byKey(const ValueKey('auth-password')),
           'short',
         );
-        await tester.enterText(
-          find.byKey(const ValueKey('auth-confirm-password')),
-          'different',
-        );
         final submit = find.byKey(const ValueKey('auth-submit'));
         await tester.ensureVisible(submit);
         await tester.tap(submit);
         await tester.pumpAndSettle();
         expect(auth.calls, 0);
-        expect(find.text('كلمتا المرور غير متطابقتين'), findsOneWidget);
+        expect(find.text('كلمة المرور يجب ألا تقل عن ١٥ حرفًا'), findsOneWidget);
+        expect(find.byKey(const ValueKey('auth-display-name')),findsNothing);
+        expect(find.byKey(const ValueKey('auth-confirm-password')),findsNothing);
         await tester.enterText(
           find.byKey(const ValueKey('auth-password')),
-          'Native-password-123',
-        );
-        await tester.enterText(
-          find.byKey(const ValueKey('auth-confirm-password')),
           'Native-password-123',
         );
         await tester.ensureVisible(submit);

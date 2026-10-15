@@ -1,6 +1,6 @@
 {
   "release": "V37",
-  "buildId": "samidev-v37-ddae731f12b989d1",
+  "buildId": "samidev-v37-7fc9a34aa659ab33",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,8 +8,8 @@
     "pool"
   ],
   "files": {
-    "platform/index.html": "abd047ce465dcd69ad4b1c3e85f248c352fb24755f3f0c5a6f0ac4dc36354b70",
-    "platform/firebase-auth.js": "18309bc135c72374d7cea7ab655b5ef799ed657b367c3bfcf2eaa3cc857ae064",
+    "platform/index.html": "cf5310947c4a316644e1d1fd51040bab1f43ebfa633683b823ee606a06ef019a",
+    "platform/firebase-auth.js": "d5309289c38a4daef9771e7322e6512e1074838fcf3249ddb9a20cab6c8dfc8b",
     "cosmetic-ui.css": "fa0b8cbd7933e56028e9105124334af6f50359504aec8a6a796f901b39045ba2",
     "cosmetic-ui.js": "0c97dfe02988581270a5605f486e9a9eb759c70c8f8fd9905ca8d844172c4252",
     "platform/store.css": "366d3a7ac41d0f42e76a2f4cc96aeb382f9d451c0e0d59938c556241aafa53ce",
