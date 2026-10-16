@@ -313,6 +313,21 @@
   };
   const clearHostTimer=(id)=>{ const t=timers.get(id); if(!t)return; t.repeat?clearInterval(t.real):clearTimeout(t.real); timers.delete(id); };
 
+  const poolAngleAdapters = new WeakSet();
+  function bindPoolAngles(logic) {
+    if(!isPool || !logic || typeof logic.localMove!=='function' || poolAngleAdapters.has(logic)) return;
+    const localMove=logic.localMove;
+    // Fine aim accumulates revolutions. Canonicalize BEFORE native prediction and
+    // sequence allocation so the client and authority execute the same command.
+    logic.localMove=function(move,...args){
+      if((move?.a===1 || move?.a===3) && Number.isFinite(move.an) && Math.abs(move.an)>Math.PI*2){
+        move={...move,an:move.an%(Math.PI*2)};
+      }
+      return localMove.call(this,move,...args);
+    };
+    poolAngleAdapters.add(logic);
+  }
+
   const hostBridge = {
     // Keep production consoles quiet. Append ?debug=1 when Trace/Debug logs are needed.
     globals:{}, is_server:false, is_develop:runtimeDebug, mobileUI:mobileDevice, version:30, dpi:96, language:'en', os:'web', isRTL:()=>false,
@@ -354,7 +369,7 @@
       }
       return state.network.online?window.SamiDevNetwork?.sendMove?.(move):ackLocalMove(move);
     }, resetSynchronizationStream:()=>state.network.waiting?false:state.network.online?window.SamiDevNetwork?.requestResync?.():localResync(),
-    setGameLogic:(logic)=>{ state.gameLogic=logic; window.__gameLogic=logic; window.SamiDevCardAudio?.bindLocal(logic); }
+    setGameLogic:(logic)=>{ bindPoolAngles(logic); state.gameLogic=logic; window.__gameLogic=logic; window.SamiDevCardAudio?.bindLocal(logic); }
   };
   window[HOST_GLOBAL]=hostBridge;
 

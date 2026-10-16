@@ -23,6 +23,12 @@ try{
    await pages[turn].waitForFunction(()=>window.__gameLogic.canShoot(window.__gameLogic.localSeat),{},{timeout:15000});
    const shot=await pages[turn].evaluate(i=>{const g=window.__gameLogic,c=g.table.cueBall;const target=g.table.balls.find(x=>!x.isPocketed()&&x.rank!==8);return {a:1,st:i===0?.8:.2,an:i===0?-Math.PI/2:Math.atan2(target.position[1]-c.position[1],target.position[0]-c.position[0])+.12,sp:[0,0]};},i);
    const before=await a.evaluate(()=>window.__gameLogic.noAnimations);
+   // Exercise accumulated fine-aim revolutions through the real native client,
+   // before its optimistic move/sequence bookkeeping, then shoot the same angle.
+   const turns=(i%2===0?1:-1)*Math.PI*20;
+   assert(await pages[turn].evaluate(an=>window.__gameLogic.localMove({a:3,an}),shot.an+turns));
+   await pages[turn].waitForFunction(()=>window.__gameLogic._localMoves.length===0,{},{timeout:15000});
+   shot.an+=turns;
    if(i===0){
     assert(await pages[turn].evaluate(shot=>{const g=window.__gameLogic,before=[...g._sequence];SamiDevNetwork.state.connected=false;const blocked=!g.localMove(shot);SamiDevNetwork.state.connected=true;return blocked&&JSON.stringify(before)===JSON.stringify(g._sequence);},shot),'disconnected transport blocks local mutation');
     assert(await pages[turn].evaluate(shot=>{const g=window.__gameLogic,before=[...g._sequence];window.__samidevGameState.network.snapshotBusy=true;const blocked=!g.localMove(shot);window.__samidevGameState.network.snapshotBusy=false;return blocked&&JSON.stringify(before)===JSON.stringify(g._sequence);},shot),'checkpoint blocks local mutation');
