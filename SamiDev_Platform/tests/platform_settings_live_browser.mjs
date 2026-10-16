@@ -13,10 +13,8 @@ try{
   await page.goto(base+'/platform/');await page.locator('#home-profile #own-profile-card').waitFor({state:'visible'});
   const dimensions=()=>{const card=document.querySelector('#own-profile-card'),name=card.querySelector('#profile-name');return {width:card.getBoundingClientRect().width,cover:card.querySelector('.profile-cover').getBoundingClientRect().height,avatar:card.querySelector('.profile-avatar').getBoundingClientRect().width,name:name.textContent,nameClipped:name.scrollWidth>name.clientWidth+1,details:getComputedStyle(card.querySelector('#own-profile-details')).display};};
   const home=await page.evaluate(dimensions);assert(home.width>=340&&home.width<=400);assert(!home.nameClipped);assert.notEqual(home.details,'none');
-  await page.locator('.topbar-nav [data-page=profile]').click();
-  const profile=await page.evaluate(dimensions);assert.equal(home.name,profile.name);assert.equal(home.details,profile.details);assert(profile.width>home.width);assert(!profile.nameClipped);
-  await page.locator('.topbar-nav [data-page=lobby]').click();
-  await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=notifications]').click();
+  assert.equal(await page.locator('.topbar-nav [data-page=profile]').count(),0);
+  await page.locator('#desktop-settings').click();await page.locator('[data-settings-tab=notifications]').click();
   await page.locator('#system-notifications').waitFor({state:'visible'});await page.locator('[data-settings-tab=account]').click();
   assert(!await page.locator('#account-settings-btn').isVisible());assert(!await page.locator('#settings-auth-slot').isVisible());assert(await page.locator('#account-saved').isVisible());await page.keyboard.press('Escape');
   assert(!await page.locator('#platform-settings').isVisible());
@@ -72,10 +70,10 @@ try{
  await sender.locator('.bottom-nav [data-page=profile]').click();await sender.locator('#profile-settings-btn').click();assert(await sender.locator('#platform-settings').isVisible());await sender.locator('#settings-close').click();
  await sender.locator('.bottom-nav [data-page=lobby]').click();
  await sender.setViewportSize({width:1440,height:1000});await sender.screenshot({path:out+'/home.png',fullPage:true});
- await sender.locator('#profile-settings-btn').click();await sender.screenshot({path:out+'/settings.png',fullPage:true});
+ await sender.locator('#desktop-settings').click();await sender.screenshot({path:out+'/settings.png',fullPage:true});
  await sender.locator('#settings-close').click();
  await sender.evaluate(()=>{window.nativeMessages=[];window.SamiDevMobile={postMessage:value=>window.nativeMessages.push(JSON.parse(value))};});
- await sender.locator('#profile-settings-btn').click();
+ await sender.locator('#desktop-settings').click();
  assert.equal(await sender.evaluate(()=>window.nativeMessages.at(-1).type),'open_settings');assert(!await sender.locator('#platform-settings').isVisible());
  assert.deepEqual(errors,[]);console.log('PLATFORM_SETTINGS_LIVE_BROWSER_PASS');
 }finally{await browser.close();}

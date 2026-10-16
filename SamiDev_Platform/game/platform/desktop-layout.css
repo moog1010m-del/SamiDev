@@ -1,0 +1,32 @@
+/* Desktop workspace: one profile beside spaces, with a separate utility rail. */
+.platform-topbar .topbar-nav .nav-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;font-size:13px;font-weight:600}
+.topbar-nav .nav-btn svg,.desktop-tool svg,#profile-settings-btn svg{width:21px;height:21px;flex:none;display:block}
+.topbar-nav .nav-btn svg{color:var(--muted)}.topbar-nav .nav-btn.active svg{color:#428afa}
+.desktop-tools{display:none}
+@media(min-width:821px){
+ .platform-topbar{height:76px;grid-template-columns:minmax(190px,1fr) auto minmax(190px,1fr);gap:20px;padding-inline:32px}
+ .platform-topbar .topbar-user{grid-template-columns:38px minmax(0,160px);gap:12px}.topbar-user-copy strong{font-size:13px}.topbar-user-copy small{font-size:10px}
+ .topbar-nav{gap:7px}.topbar-nav .nav-btn{padding:11px 17px;border-radius:13px}
+ .main{padding:108px clamp(24px,3vw,56px) 48px 118px}
+ .page{max-width:1450px}
+ .desktop-tools{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:34;width:72px;display:flex;flex-direction:column;align-items:stretch;gap:7px;padding:12px 7px;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 42px #15293712}
+ .desktop-tools-caption{text-align:center;color:var(--muted);font-size:10px;padding:3px 0 7px}
+ .desktop-tool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:62px;border:0;background:transparent;color:var(--muted);border-radius:12px;cursor:pointer;padding:9px 3px}
+ .desktop-tool span{font-size:10px;font-weight:500}.desktop-tool:hover,.desktop-tool:focus-visible{color:#428afa;background:#428afa12}.desktop-tool:focus-visible{outline:2px solid #428afa;outline-offset:2px}
+ .desktop-tools-divider{height:1px;background:var(--line);margin:4px 10px}
+ #profile-settings-btn{visibility:hidden;pointer-events:none}
+ #home-profile{position:sticky;top:102px;max-height:calc(100dvh - 126px);overflow:auto;overscroll-behavior:contain;border-radius:18px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+ .community-page-head h2{font-size:25px}.community-page-head{margin-bottom:20px}
+ .community-grid{gap:16px}.community-card{min-height:195px;padding:22px}
+ body.community-mode .main{padding-left:118px}
+}
+@media(min-width:1101px){
+ .community-home{grid-template-columns:minmax(0,1fr) clamp(330px,26vw,380px);grid-template-areas:"browser profile";gap:28px}
+ #home-profile{max-width:none}.community-browser{min-width:0}.community-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(min-width:821px) and (max-width:1100px){
+ .platform-topbar{padding-inline:22px;grid-template-columns:auto 1fr auto;gap:12px}.topbar-nav .nav-btn{padding-inline:12px}.main{padding-right:22px;padding-left:104px}.desktop-tools{left:14px;width:66px}
+ .community-home{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:"browser profile";gap:18px}#home-profile{max-width:none}.community-grid{grid-template-columns:minmax(0,1fr)}.community-card{min-height:170px;padding:18px}.community-card-mark{width:46px;height:46px;font-size:20px}
+}
+@media(max-width:820px){.desktop-tools{display:none!important}#profile-settings-btn{visibility:visible;pointer-events:auto}.topbar-nav .nav-btn svg{width:20px;height:20px}}
+html[data-sd-native] .desktop-tools{display:none!important}

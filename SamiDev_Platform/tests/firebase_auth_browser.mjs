@@ -96,8 +96,7 @@ try {
   assert(cookie.httpOnly);
   assert(!await page.evaluate(()=>JSON.stringify({...localStorage,...sessionStorage}).includes('fixture-')));
   await page.setViewportSize({width:1280,height:900});
-  await page.locator('.topbar-nav [data-page=profile]').click();
-  await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
+  await page.locator('#desktop-settings').click();await page.locator('[data-settings-tab=account]').click();
   await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor({state:'visible'});
   await form.locator('[name=email]').fill('browser@example.test');
   await form.locator('[data-reset]').click();

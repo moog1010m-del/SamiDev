@@ -248,6 +248,10 @@
     document.body.append($('#profile-editor'),$('#profile-editor-backdrop'));
     $('#settings-auth-slot').append($('#auth-screen .auth-card'));
     $('#profile-settings-btn').onclick=()=>openSettings();
+    $('#desktop-settings').onclick=()=>openSettings();
+    $('#desktop-notifications').onclick=()=>openSettings('notifications');
+    $('#desktop-theme').onclick=toggleTheme;
+    window.matchMedia('(min-width:821px)').addEventListener('change',event=>{if(event.matches&&state.page==='profile'&&!window.SamiDevMobile)navigate('lobby');});
     $('#settings-close').onclick=()=>closeSettings();
     $('#settings-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()!==false)openSettings('menu');};
     $('#platform-settings').onclick=event=>{if(event.target===$('#platform-settings'))closeSettings();};
