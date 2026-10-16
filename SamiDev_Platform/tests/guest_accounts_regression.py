@@ -70,4 +70,26 @@ class Accounts(unittest.IsolatedAsyncioTestCase):
    for value in ['@hello','a','name with space']:
     with self.assertRaises(PlatformError):await s.accounts.rename(loser['id'],value)
 
+ async def test_concurrent_chat_retries_and_bounded_streams(self):
+  from contextlib import AsyncExitStack
+  for s in self.services:
+   user=await s.accounts.guest();uid=user['id'];cid='diwan'
+   async with s.live.subscribe(cid,uid) as queue:
+    result=await asyncio.gather(*(s.append_community_chat(uid,cid,'retry safe','retry_nonce_123') for _ in range(12)))
+    self.assertEqual(len({row['id'] for row in result}),1)
+    history=await s.community_chat_history(cid)
+    self.assertEqual(sum(row.get('clientMessageId')=='retry_nonce_123' for row in history),1)
+    pushed=await asyncio.wait_for(queue.get(),3)
+    self.assertEqual(pushed['message']['nameBadgeAsset'],public_user(user)['nameBadgeAsset'])
+    with self.assertRaises(PlatformError):await s.append_community_chat(uid,cid,'different','retry_nonce_123')
+   async with AsyncExitStack() as stack:
+    for _ in range(4):await stack.enter_async_context(s.live.subscribe(cid,uid))
+    with self.assertRaises(PlatformError):await stack.enter_async_context(s.live.subscribe(cid,uid))
+   self.assertNotIn(uid,s.live.connections)
+   async with s.live.subscribe(cid,uid) as queue:
+    for i in range(129):s.live.deliver(cid,{'type':'message','message':{'id':i}})
+    self.assertEqual((await queue.get())['type'],'resync')
+    await s.live.close()
+    self.assertEqual((await queue.get())['type'],'closed')
+
 if __name__=='__main__':unittest.main(verbosity=2)

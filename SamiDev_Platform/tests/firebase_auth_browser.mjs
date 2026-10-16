@@ -27,8 +27,9 @@ try {
   await page.reload();await page.locator('#app').waitFor({state:'visible'});
   assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.id,guest.user.id);
   await page.evaluate(()=>fetch('/fixture/seed',{method:'POST'}));
-  await page.locator('.bottom-nav [data-page=profile]').click();
-  await page.locator('#profile-edit-toggle').click();
+  assert(await page.locator('#home-profile #own-profile-card').isVisible());
+  await page.locator('#mobile-settings-btn').click();
+  await page.locator('[data-settings-tab=account]').click();
   await page.locator('#account-settings-btn').click();
   const form=page.locator('#firebase-auth-form');await form.waitFor({state:'visible'});
   assert(!await page.locator('#login-form').isVisible());
@@ -49,6 +50,7 @@ try {
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await form.locator('[data-submit]').click();
   await page.locator('#app').waitFor({state:'visible'});
+  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='browser_player');
   const me=await page.evaluate(()=>fetch('/api/me').then(r=>r.json()));
   assert.equal(me.user.username,'browser_player');assert.equal(me.user.displayName,'browser_player');
   assert.equal(me.user.id,guest.user.id);assert.equal(me.user.isGuest,false);
@@ -76,6 +78,7 @@ try {
   assert(cookie.httpOnly);
   assert(!await page.evaluate(()=>JSON.stringify({...localStorage,...sessionStorage}).includes('fixture-')));
   await page.setViewportSize({width:1280,height:900});
+  await page.locator('#platform-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
   await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor({state:'visible'});
   await form.locator('[data-reset]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));
@@ -99,6 +102,7 @@ try {
   await form.locator('[name=username]').fill('new_browser');
   await form.locator('[data-submit]').click();
   await page.locator('#app').waitFor({state:'visible'});
+  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='new_browser');
   assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.username,'new_browser');
   // Default-off configuration keeps the original login and issues no Google calls.
   await page.context().clearCookies();const googleBefore=google.length;

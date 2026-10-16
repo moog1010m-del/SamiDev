@@ -264,7 +264,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   }
   Future<void> openAccountSettings() async {
     if(runtime==null||gamesProfile==null)return;
-    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>AccountSettings(api:runtime!.api,user:gamesProfile!,onChanged:(user)async{await completeAuthentication(runtime!,user);})));
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>AccountSettings(api:runtime!.api,onTheme:chooseTheme,user:gamesProfile!,onChanged:(user)async{await completeAuthentication(runtime!,user);})));
   }
   void openProfile(String id){
     if(_profileOpen||runtime==null||!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
@@ -368,7 +368,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
           if(controller!=null)Offstage(key:const ValueKey('platform-surface'),offstage:nativeHome||inGame,child:WebViewWidget(controller:controller!)),
           if(gameController!=null)Offstage(key:const ValueKey('retained-game'),offstage:!inGame,child:gameSurface()),
           if(authenticated)Offstage(key:const ValueKey('native-games'),offstage:!nativeGames,child:GamesHub(key:gamesKey,user:gamesProfile,onGame:openGame,onSelectionChanged:(){if(mounted)setState((){});})),
-          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
+          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,user:gamesProfile,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
         ])),
         if(inGame)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
       ])),

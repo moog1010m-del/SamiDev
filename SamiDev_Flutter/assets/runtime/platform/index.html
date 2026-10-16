@@ -7,7 +7,7 @@
   <meta name="samidev-release" content="V30">
   <title>SamiDev V25 — الكيرم وكرة الطاولة</title>
   <link rel="stylesheet" href="/profile-details.css?v=266b5c252cb0d40e">
-  <link rel="stylesheet" href="/platform/platform.css?v=6912ee5579beec4f">
+  <link rel="stylesheet" href="/platform/platform.css?v=e29e77c986a6ecb6">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=2a456d9cae921b0b">
 <link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=fa0b8cbd7933e560"><script src="/cosmetic-ui.js?v=0c97dfe029885812"></script><script src="/platform/firebase-auth.js?v=c15d6f042a791bda"></script></head>
 <body>
@@ -52,14 +52,23 @@
       <div class="topbar-user">
         <div id="avatar" class="avatar"><img id="avatar-image" alt="" class="avatar-image hidden"><span id="avatar-fallback">P</span></div>
         <div class="topbar-user-copy"><strong id="side-name">Player</strong><small id="side-username">player</small></div>
-        <button id="theme-toggle" class="theme-toggle compact-theme" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span></button>
-        <button id="logout-btn" class="icon-btn" title="تسجيل الخروج" aria-label="تسجيل الخروج">↪</button>
+        <button id="platform-settings-btn" class="icon-btn" type="button" aria-label="إعدادات المنصة" title="إعدادات المنصة">⚙</button>
       </div>
     </header>
 
+    <div id="platform-settings" class="platform-settings hidden" role="dialog" aria-modal="true" aria-labelledby="platform-settings-title">
+      <section class="settings-window panel">
+        <header><h2 id="platform-settings-title">إعدادات المنصة</h2><button id="settings-close" class="icon-btn" type="button" aria-label="إغلاق الإعدادات">×</button></header>
+        <nav aria-label="أقسام الإعدادات"><button data-settings-tab="general" class="ghost">عام</button><button data-settings-tab="account" class="ghost">الحساب</button><button data-settings-tab="notifications" class="ghost">الإشعارات</button></nav>
+        <section data-settings-panel="general"><h3>المظهر والملف الشخصي</h3><p>اختر المظهر الذي يناسبك، أو عدّل صورتك واسم المستخدم.</p><button id="settings-theme" class="ghost" type="button">تبديل المظهر الفاتح والداكن</button><button id="settings-profile" class="ghost" type="button">تعديل الملف الشخصي</button></section>
+        <section data-settings-panel="account" class="hidden"><p id="settings-account-state"></p><button id="account-settings-btn" type="button" class="ghost">ربط البريد أو تسجيل الدخول</button><div id="settings-auth-slot"></div><button id="logout-btn" class="danger-btn" type="button">تسجيل الخروج والعودة كضيف</button></section>
+        <section data-settings-panel="notifications" class="hidden"><label><input id="settings-chat-alerts" type="checkbox"> تنبيه برسائل المساحة أثناء فتح المنصة</label><p class="muted">تنبيهات داخل المنصة، وليست إشعارات هاتف خارج التطبيق.</p><div id="system-notifications" aria-live="polite"></div></section>
+      </section>
+    </div>
     <main class="main">
       <header class="mobile-header">
         <div class="brand"><span class="logo-small">S</span><strong>SamiDev</strong></div>
+        <button id="mobile-settings-btn" class="icon-btn" type="button" aria-label="إعدادات المنصة">⚙</button>
         <button id="mobile-menu" class="icon-btn" aria-label="القائمة">☰</button>
       </header>
 
@@ -70,34 +79,10 @@
               <div><span class="eyebrow">المجتمع</span><h2>اختر مساحتك</h2><p>كل مساحة لها شاتها، أعضاؤها وغرف لعبها الخاصة.</p></div>
               <button id="refresh-communities" class="ghost">تحديث</button>
             </div>
-            <div id="system-notifications" aria-live="polite"></div>
             <div id="community-grid" class="community-grid"><div class="empty">جارٍ تحميل المساحات...</div></div>
           </section>
 
-          <aside class="lobby-profile panel" aria-label="ملف اللاعب">
-            <div class="lobby-profile-cover"><span class="lobby-profile-cover-mark">S</span><span class="lobby-profile-cover-glow"></span></div>
-            <div class="lobby-profile-body">
-              <div class="lobby-avatar avatar">
-                <img id="lobby-avatar-image" alt="صورة الملف الشخصي" class="avatar-image hidden">
-                <span id="lobby-avatar-fallback">P</span>
-              </div>
-              <div class="lobby-profile-name-row"><span class="profile-sprite profile-sprite-emblem" aria-hidden="true"></span><h3 id="lobby-profile-name">Player</h3></div>
-              <div id="lobby-profile-handle" class="lobby-profile-handle">player</div>
-              <div class="lobby-profile-stars" aria-label="خمس نجوم"><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span><span class="profile-sprite lobby-profile-star"></span></div>
-              <div class="lobby-profile-divider"></div>
-              <div class="lobby-profile-stats">
-                <div><small>لاعب منذ</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="lobby-profile-since">0 يوم</strong></span></div>
-                <div><small>الفوز</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="lobby-profile-wins">0</strong></span></div>
-                <div><small>السمعة</small><span class="lobby-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="lobby-profile-reputation">0</strong></span></div>
-              </div>
-              <div class="lobby-profile-info">
-                <div><span>الحساب</span><strong id="lobby-profile-account">player</strong></div>
-                <div><span>الحالة</span><strong class="lobby-online"><i></i>متصل الآن</strong></div>
-              </div>
-              <div class="lobby-profile-spacer" aria-hidden="true"></div>
-              <button class="ghost lobby-profile-open" type="button" data-page="profile"><span>عرض الملف الكامل</span><span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span></button>
-            </div>
-          </aside>
+          <aside id="home-profile" class="profile-page" aria-label="ملف اللاعب"></aside>
         </div>
 
         <div id="community-room" class="community-room hidden">
@@ -110,12 +95,13 @@
               <button id="leave-community" class="room-utility-btn" type="button">المساحات</button>
               <button id="community-profile-page" class="room-utility-btn" type="button">الملف الشخصي</button>
               <button id="community-profile-edit" class="room-utility-btn accent" type="button"><span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span><span>تعديل</span></button>
-              <button id="room-theme-toggle" class="theme-toggle room-theme-toggle" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span><span class="theme-label">المظهر</span></button>
+                            <button id="room-theme-toggle" class="theme-toggle room-theme-toggle" type="button" aria-label="تغيير المظهر"><span class="theme-glyph" aria-hidden="true"></span><span class="theme-label">المظهر</span></button>
             </div>
           </div>
           <div class="community-room-head">
             <div class="community-active-identity"><span id="active-community-mark" class="community-mark">م</span><div><small>المساحة الحالية</small><h2 id="active-community-name">المجلس</h2><p id="active-community-description"></p></div></div>
             <div class="community-room-head-actions">
+              <button id="room-settings-btn" class="room-utility-btn" type="button" aria-label="إعدادات المنصة">⚙ الإعدادات</button>
               <button id="exit-community" class="community-exit-btn" type="button" aria-label="الخروج من الروم العام">خروج من الروم</button>
               <button id="open-create" class="primary" type="button">+ إنشاء مباراة</button>
             </div>
@@ -201,8 +187,8 @@
 
       <section id="page-profile" class="page profile-page">
         <div class="page-head profile-page-heading"><div><h2>الملف الشخصي</h2><p>هويتك التي يراها اللاعبون.</p></div></div>
-        <div class="profile-workspace">
-          <article class="profile-showcase panel" aria-label="الملف الشخصي">
+        <div id="profile-page-slot" class="profile-workspace">
+          <article id="own-profile-card" class="profile-showcase panel" aria-label="الملف الشخصي">
             <div class="profile-card-bar">
               <button id="profile-edit-toggle" class="profile-card-action" type="button" aria-label="تعديل الملف الشخصي" title="تعديل الملف الشخصي">
                 <span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span>
@@ -287,7 +273,6 @@
               <span class="profile-field-label">اسم المستخدم</span>
               <input id="profile-display-input" maxlength="20" autocomplete="username" placeholder="اسم المستخدم بدون @" pattern="[A-Za-z0-9_]{3,20}">
               <p id="profile-rename-status"></p>
-              <button id="account-settings-btn" type="button" class="ghost">الحساب · ربط البريد أو تسجيل الدخول</button>
               <small><span id="profile-name-count">0</span>/20</small>
             </label>
 
@@ -399,6 +384,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=c039faea20b85f32"></script><script src="/platform/platform.js?v=0c31a557547bc0e2"></script>
+  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=c039faea20b85f32"></script><script src="/platform/platform.js?v=f4dd5b85825cf488"></script>
 </body>
 </html>

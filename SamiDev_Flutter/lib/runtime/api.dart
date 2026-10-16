@@ -86,6 +86,22 @@ class PlatformApi {
     }
     return ApiResponse(response.statusCode,response.headers.contentType?.mimeType??'application/json',bytes);
   }
+  Stream<Map<String,dynamic>> events(String path) async* {
+    if(_closed||!RuntimePolicy.allowApi('GET',path))throw const HttpException('Route denied');
+    final generation=_generation;
+    final request=await client.getUrl(policy.upstream(path)).timeout(const Duration(seconds:20));
+    request.followRedirects=false;headers.forEach((k,v)=>request.headers.set(k,v));request.headers.set('Accept','text/event-stream');
+    try{
+      final response=await request.close().timeout(const Duration(seconds:20));
+      if(_closed||generation!=_generation)return;
+      if(response.statusCode!=200){await response.drain<void>();if(response.statusCode==401){await clearSession();yield {'type':'access_denied'};}return;}
+      if(response.headers.contentType?.mimeType!='text/event-stream')throw const HttpException('Expected event stream');
+      await for(final line in response.timeout(const Duration(seconds:30)).transform(utf8.decoder).transform(const LineSplitter())){
+        if(_closed||generation!=_generation)break;
+        if(line.startsWith('data: ')&&line.length<256*1024){final value=jsonDecode(line.substring(6));if(value is Map)yield Map<String,dynamic>.from(value);}
+      }
+    }finally{request.abort();}
+  }
   Future<void> clearSession() async {_generation++;_session=null;await vault.write(_key,null);}
   void close(){_closed=true;firebase?.close();client.close(force:true);}
 }

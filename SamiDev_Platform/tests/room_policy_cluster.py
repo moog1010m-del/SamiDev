@@ -31,6 +31,23 @@ async def main():
     await guest_socket.send_json({'type':'create_room','settings':{'gameId':'pool','gameType':7}})
     assert (await receive(guest_socket,{'created'}))['roomId']
    uid=lambda i:cluster.prefix+'_'+str(i)
+   async def sse(response,wanted):
+    async with asyncio.timeout(5):
+     while True:
+      line=await response.content.readline()
+      assert line,'event stream closed'
+      if line.startswith(b'data: '):
+       event=json.loads(line[6:])
+       if event.get('type')==wanted:return event
+   async with session.get(cluster.urls[0]+'/api/communities/diwan/events',headers=cookies[2]) as stream:
+    assert stream.status==200;await sse(stream,'snapshot')
+    body={'text':'cross gateway live','clientMessageId':'cluster_live_123'}
+    first=await post(1,'/api/communities/diwan/chat',body)
+    pushed=await sse(stream,'message');assert pushed['message']['id']==first['message']['id']
+    assert pushed['message']['nameBadgeAsset']
+    second=await post(1,'/api/communities/diwan/chat',body)
+    assert second['message']['id']==first['message']['id']
+
    await post(0,'/api/admin/users/'+uid(1)+'/role',{'role':'moderator'},400)
    await post(0,'/api/communities/majlis/moderation',{'targetUserId':uid(1),'action':'grant_moderator'})
    async with session.get(cluster.urls[1]+'/api/communities',headers=cookies[1]) as response:
@@ -75,6 +92,8 @@ async def main():
    await post(1,'/api/communities/majlis/moderation',{'targetUserId':uid(2),'action':'unban'})
    env=dict(os.environ,SAMIDEV_TEST_BASE_URL=cluster.urls[0],SAMIDEV_POLICY_ADMIN_COOKIE=cookies[0]['Cookie'].split('=',1)[1],SAMIDEV_POLICY_MEMBER=uid(2),SAMIDEV_POLICY_MEMBER_COOKIE=cookies[2]['Cookie'].split('=',1)[1],SAMIDEV_POLICY_COLLEAGUE=uid(1))
    process=await asyncio.create_subprocess_exec('node',str(__import__('pathlib').Path(__file__).with_name('room_policy_browser.mjs')),env=env)
+   assert await process.wait()==0
+   process=await asyncio.create_subprocess_exec('node',str(__import__('pathlib').Path(__file__).with_name('platform_settings_live_browser.mjs')),env=env)
    assert await process.wait()==0
   print('ROOM_POLICY_TWO_GATEWAY_HTTP_WS_PASS')
  finally:

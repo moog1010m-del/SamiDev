@@ -324,6 +324,8 @@ class PlatformService:
         self.mem_active_community: dict[str, tuple[str, float]] = {}
         from account_lifecycle import AccountLifecycle
         self.accounts = AccountLifecycle(self)
+        from community_live import CommunityLive
+        self.live = CommunityLive(self)
         self.mem_inventory: dict[str, set[str]] = {}
         self.mem_equipped: dict[str, dict[str, str]] = {}
         self.mem_store_ledger: dict[str, list[dict[str, Any]]] = {}
@@ -497,10 +499,12 @@ class PlatformService:
         async with self.lock:
             return [dict(x) for x in self.mem_community_chat.setdefault(cid, [])[-limit:]]
 
-    async def append_community_chat(self, uid: str, community_id: str, text: Any) -> dict[str, Any]:
+    async def append_community_chat(self, uid: str, community_id: str, text: Any, client_message_id=None) -> dict[str, Any]:
         cid = normalize_community_id(community_id)
         await self.community_rules.access(uid,cid,chat=True)
         clean = sanitize_community_chat_text(text)
+        if client_message_id is not None and (not isinstance(client_message_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{8,64}',client_message_id)):
+            raise PlatformError('BAD_MESSAGE_ID','معرّف الرسالة غير صالح')
         user = await self.get_user(uid)
         if not user:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
@@ -509,19 +513,38 @@ class PlatformService:
             "displayName": sanitize_plain_text(user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
             "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
             "chatBubble": cosmetic_id(user.get("chatBubble"), "chat_bubble"),
+            "nameBadgeAsset": public_user(user)["nameBadgeAsset"],
+            "nameBadgeName": public_user(user)["nameBadgeName"],
+            **({"clientMessageId":client_message_id} if client_message_id else {}),
         }
-        if self.r is not None:
-            key = self.k_community_chat(cid)
-            p = self.r.pipeline(transaction=True)
-            p.rpush(key, json.dumps(entry, ensure_ascii=False, separators=(",", ":")))
-            p.ltrim(key, -COMMUNITY_CHAT_MAX, -1)
-            await p.execute()
-        else:
-            async with self.lock:
+        key = self.k_community_chat(cid)
+        async def append():
+            if self.r is None:
                 rows = self.mem_community_chat.setdefault(cid, [])
-                rows.append(entry)
-                if len(rows) > COMMUNITY_CHAT_MAX:
-                    del rows[:-COMMUNITY_CHAT_MAX]
+            else:
+                rows = await self.community_chat_history(cid, COMMUNITY_CHAT_MAX)
+            if client_message_id:
+                previous=next((row for row in rows if row.get('userId')==uid and row.get('clientMessageId')==client_message_id),None)
+                if previous:
+                    if previous.get('text')!=clean: raise PlatformError('MESSAGE_ID_CONFLICT','معرّف الرسالة مستخدم لنص آخر',409)
+                    return previous
+            if self.r is None:
+                rows.append(entry);del rows[:-COMMUNITY_CHAT_MAX]
+            else:
+                pipeline=self.r.pipeline(transaction=True)
+                pipeline.rpush(key,json.dumps(entry,ensure_ascii=False,separators=(',',':')))
+                pipeline.ltrim(key,-COMMUNITY_CHAT_MAX,-1)
+                await pipeline.execute()
+            return entry
+        if self.r is None:
+            async with self.lock: entry=await append()
+        elif hasattr(self.r,'pool'):
+            async with self.r.transaction([key]): entry=await append()
+        else:
+            # Legacy Redis mode remains compatible, without client correlation.
+            if client_message_id: raise PlatformError('DURABLE_STORE_REQUIRED','المحادثة المباشرة تتطلب PostgreSQL',503)
+            entry=await append()
+        await self.live.publish(cid,{'type':'message','message':entry})
         await self.touch_community(uid, cid)
         return entry
 
@@ -1700,7 +1723,7 @@ class PlatformHttp:
             "ok": True, "community": dict(COMMUNITIES[cid]),
             "capabilities": {"canModerate":self.platform.community_rules.can_moderate(user,cid),"canAssignModerators":user.get("role")=="admin"},
             "members": await self.platform.community_members(cid),
-            "messages": await self.platform.community_chat_history(cid),
+            "messages": await self.platform.community_chat_history(cid) if request.query.get("chat") != "0" else [],
             "rooms": rooms, "ts": now_ms(),
         })
 
@@ -1726,6 +1749,39 @@ class PlatformHttp:
         await self.platform.leave_community(str(user["id"]), cid)
         return web.json_response({"ok": True, "communityId": cid})
 
+    async def community_events(self, request: web.Request) -> web.StreamResponse:
+        user=await self._user(request)
+        cid=normalize_community_id(request.match_info.get('community_id'))
+        await self.platform.community_rules.access(str(user['id']),cid)
+        if not await self.platform.allow_rate(f"community-stream:{user['id']}",30,60):
+            raise PlatformError('RATE_LIMIT','اتصالات كثيرة؛ حاول لاحقًا',429)
+        response=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'private, no-store','X-Accel-Buffering':'no'})
+        async def emit(event):
+            payload=('data: '+json.dumps(event,ensure_ascii=False,separators=(',',':'))+'\n\n').encode()
+            await asyncio.wait_for(response.write(payload),5)
+        async with self.platform.live.subscribe(cid,str(user['id'])) as queue:
+            await response.prepare(request)
+            try:
+                await emit({'type':'snapshot','messages':await self.platform.community_chat_history(cid,COMMUNITY_CHAT_MAX)})
+                checked=time.monotonic()
+                while True:
+                    try: event=await asyncio.wait_for(queue.get(),12)
+                    except TimeoutError: event={'type':'resync'}
+                    if event.get('type')=='closed': break
+                    if time.monotonic()-checked>=12:
+                        try:
+                            await self._user(request)
+                            await self.platform.community_rules.access(str(user['id']),cid)
+                        except PlatformError as error:
+                            await emit({'type':'access_denied','error':error.code});break
+                        checked=time.monotonic()
+                        event={'type':'resync'}
+                    if event.get('type')=='resync':
+                        event={'type':'snapshot','messages':await self.platform.community_chat_history(cid,COMMUNITY_CHAT_MAX)}
+                    await emit(event)
+            except (ConnectionError,TimeoutError,RuntimeError): pass
+        return response
+
     async def community_chat(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         cid = normalize_community_id(request.match_info.get("community_id"))
@@ -1734,7 +1790,7 @@ class PlatformHttp:
         if not await self.platform.allow_rate(f"community-chat-room:{cid}", COMMUNITY_CHAT_ROOM_RATE, COMMUNITY_CHAT_RATE_WINDOW):
             raise PlatformError("ROOM_RATE_LIMIT", "المحادثة نشطة جدًا الآن؛ حاول بعد لحظات", 429)
         body = await self._body(request)
-        entry = await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"))
+        entry = await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"), body.get("clientMessageId"))
         return web.json_response({"ok": True, "message": entry})
 
     async def lobby_rooms(self, request: web.Request) -> web.Response:

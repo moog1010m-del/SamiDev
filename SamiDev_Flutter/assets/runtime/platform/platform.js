@@ -94,7 +94,7 @@
     renderAvatar('#profile-editor-avatar-image','#profile-editor-avatar-fallback',name,user.avatarData);
     renderAvatar('#lobby-avatar-image','#lobby-avatar-fallback',name,user.avatarData);
     renderAvatar('#community-user-avatar-image','#community-user-avatar-fallback',name,user.avatarData);
-    document.querySelectorAll('.lobby-profile .lobby-profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
+    document.querySelectorAll('#home-profile .profile-cover,#page-profile .profile-cover').forEach(el=>window.SamiDevCosmetics?.cover(el,user.profileBanner));
     const communityUserName=$('#community-user-name');if(communityUserName)communityUserName.textContent=name;
     const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent=String(user.username||'player');
     const lobbyName=$('#lobby-profile-name');if(lobbyName)lobbyName.textContent=name;
@@ -112,7 +112,7 @@
       el.setAttribute('title',badgeName);
     });
     const userStars=Math.max(0,Math.min(5,Number(user.starsCount??0)));
-    $$('#page-profile .profile-stars,.lobby-profile-stars,#profile-editor .profile-stars').forEach(root=>{
+    $$('#page-profile .profile-stars,#home-profile .profile-stars,#profile-editor .profile-stars').forEach(root=>{
       root.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
       root.querySelectorAll('.profile-sprite').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
     });
@@ -187,8 +187,8 @@
     guestResume=api('/api/auth/guest',{method:'POST',body:'{}'}).then(d=>{setUser(d.user);showApp();}).catch(error=>toast(error.message,true)).finally(()=>{guestResume=null;});
     return guestResume;
   }
-  function showAuth({accountSettings=false}={}){ if(!accountSettings){clearInterval(state.poll);resumeGuest();return;}state.store=null; document.body.classList.remove('community-mode'); $('#auth-screen').classList.remove('hidden'); $('#app').classList.add('hidden'); clearInterval(state.poll); }
-  function showApp(){ $('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
+  function showAuth({accountSettings=false}={}){if(!accountSettings){clearInterval(state.poll);resumeGuest();return;}openSettings('account');}
+  function showApp(){ stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
@@ -222,13 +222,41 @@
     $('#create-modal').classList.remove('hidden');
     $('#create-modal .modal-card').scrollTop=0;
   }
+  let settingsReturnFocus=null;
+  function openSettings(tab='general'){
+    settingsReturnFocus=document.activeElement;
+    $('#platform-settings').classList.remove('hidden');document.body.classList.add('settings-open');
+    $$('[data-settings-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.settingsPanel!==tab));
+    $$('[data-settings-tab]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.settingsTab===tab)));
+    $('#settings-account-state').textContent=state.user?.isGuest?'أنت ضيف. إنشاء حساب ببريد جديد يحفظ نفس تقدمك، والدخول ببريد موجود يفتح حسابه.':'حسابك محفوظ. يمكنك الدخول إلى حساب آخر من هنا.';
+    $('#settings-close').focus();if(tab==='notifications')loadCommunities();
+  }
+  function closeSettings(force=false){
+    if(!force&&window.SamiDevFirebaseAuth?.cancel?.()===false)return;
+    $('#platform-settings').classList.add('hidden');document.body.classList.remove('settings-open');settingsReturnFocus?.focus?.();
+  }
+  function placeOwnProfile(page){
+    const card=$('#own-profile-card'),slot=page==='profile'?$('#profile-page-slot'):$('#home-profile');
+    if(card&&slot&&card.parentElement!==slot)slot.append(card);
+  }
   function bind(){
+    document.body.append($('#profile-editor'),$('#profile-editor-backdrop'));
+    $('#settings-auth-slot').append($('#auth-screen .auth-card'));
+    $('#platform-settings-btn').onclick=()=>openSettings();$('#mobile-settings-btn').onclick=()=>openSettings();$('#room-settings-btn').onclick=()=>openSettings();
+    $('#settings-close').onclick=()=>closeSettings();
+    $('#platform-settings').onclick=event=>{if(event.target===$('#platform-settings'))closeSettings();};
+    $$('[data-settings-tab]').forEach(button=>button.onclick=()=>openSettings(button.dataset.settingsTab));
+    $('#settings-theme').onclick=toggleTheme;
+    $('#settings-profile').onclick=()=>{closeSettings();navigate('profile');openProfileEditor();};
+    try{$('#settings-chat-alerts').checked=localStorage.getItem('samidev_chat_alerts')!=='0';}catch(_){}
+    $('#settings-chat-alerts').onchange=event=>{try{localStorage.setItem('samidev_chat_alerts',event.target.checked?'1':'0');}catch(_){}};
+    document.addEventListener('keydown',event=>{if($('#platform-settings').classList.contains('hidden'))return;if(event.key==='Escape')closeSettings();if(event.key==='Tab'){const controls=Array.from($('#platform-settings').querySelectorAll('button,input,a')).filter(el=>el.offsetParent!==null&&!el.disabled);const first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});
     $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#login-form').classList.toggle('hidden',b.dataset.auth!=='login');$('#register-form').classList.toggle('hidden',b.dataset.auth!=='register');});
     $('#login-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#register-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/register',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#account-settings-btn').onclick=()=>{closeProfileEditor();showAuth({accountSettings:true});};
     $('#auth-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()===false)return;if(state.user)showApp();};
-    $('#logout-btn').onclick=async()=>{try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
+    $('#logout-btn').onclick=async()=>{if(state.user?.isGuest&&!confirm('الخروج ينشئ ضيفًا جديدًا. اربط البريد أولًا إذا أردت استرداد تقدمك. هل تريد المتابعة؟'))return;try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
     $$('.theme-toggle').forEach(b=>b.addEventListener('click',toggleTheme));
     $$('[data-community-tab]').forEach(button=>button.addEventListener('click',()=>{
@@ -467,7 +495,7 @@
   function navigate(page){
     if(!page)return;
     if(page!=='profile')closeProfileEditor();
-    state.page=page;
+    state.page=page;placeOwnProfile(page);if(page!=='lobby')stopCommunityLive();
     syncBottomNavigation();
     document.body.classList.toggle('community-mode',page==='lobby'&&!!state.activeCommunity);
     $$('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${page}`));
@@ -493,7 +521,7 @@
   }
   async function loadCommunities(manual=false){
     try{
-      const d=await api('/api/communities');const notices=$('#system-notifications');if(notices){notices.replaceChildren();for(const n of d.notifications||[]){const card=document.createElement('section');card.className='panel';card.style.padding='16px';const title=document.createElement('strong');title.textContent=n.sender+' · هدية الإشراف';const text=document.createElement('p');text.textContent=n.text;card.append(title,text);notices.append(card);}}state.communities=d.communities||[];renderCommunities();
+      const d=await api('/api/communities');state.notifications=d.notifications||[];const notices=$('#system-notifications');if(notices){notices.replaceChildren();if(!d.notifications?.length)notices.append(emptyBlock('لا توجد إشعارات حاليًا'));for(const n of d.notifications||[]){const card=document.createElement('section');card.className='panel';card.style.padding='16px';const title=document.createElement('strong');title.textContent=n.sender+' · هدية الإشراف';const text=document.createElement('p');text.textContent=n.text;card.append(title,text);notices.append(card);}}state.communities=d.communities||[];renderCommunities();
       if(manual)toast('تم تحديث المساحات');
     }catch(err){if(err.status===401)return showAuth();if(manual)toast(err.message,true);}
   }
@@ -535,13 +563,14 @@
     }
     state.activeCommunity=null;state.rooms=[];state.communityMembers=[];state.communityMessages=[];syncBottomNavigation();
     $('#community-room').classList.add('hidden');$('#community-home').classList.remove('hidden');document.body.classList.remove('community-mode');
-    syncCommunityLocation('');loadCommunities();
+    stopCommunityLive();syncCommunityLocation('');loadCommunities();
   }
   async function loadCommunityState(manual=false){
     const active=state.activeCommunity;if(!active)return loadCommunities(manual);
     try{
-      const d=await api(`/api/communities/${encodeURIComponent(active.id)}`);
-      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];state.communityMessages=d.messages||[];
+      const d=await api(`/api/communities/${encodeURIComponent(active.id)}${communityStream?.readyState===1?'?chat=0':''}`);
+      if(state.activeCommunity?.id!==active.id)return;
+      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);
       renderCommunityState();renderRooms();
       if(manual)toast('تم تحديث المساحة');
     }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
@@ -612,11 +641,13 @@
     const box=$('#community-chat-messages');if(!box)return;const wasNearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70,update=stableList(box);
     if(!state.communityMessages.length){if(!update.reuse('empty',null))update.add(emptyBlock('ابدأ أول محادثة هنا.'));update.finish();return;}
     for(const [index,m] of state.communityMessages.entries()){
-      if(update.reuse(String(m.id||JSON.stringify([m.userId,m.createdAt,index])),[m,state.user?.id]))continue;
+      if(update.reuse(String(m.id||JSON.stringify([m.userId,m.createdAt,index])),[JSON.stringify(m),state.user?.id]))continue;
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const content=document.createElement('div');content.className='community-chat-content';const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');meta.append(name,time);bubble.append(text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');const sticker=document.createElement('span');sticker.className='community-chat-sticker';window.SamiDevStickerArt?.render(sticker,m.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp',m.nameBadgeName||'ملصق الاسم');meta.append(name,sticker,time);
+      if(m.pending){const status=document.createElement('span');status.className='chat-delivery-status';status.textContent=m.failed?'تعذر الإرسال':'جارٍ الإرسال';meta.append(status);if(m.failed){const retry=document.createElement('button');retry.type='button';retry.className='ghost';retry.textContent='إعادة المحاولة';retry.onclick=()=>{m.failed=false;renderCommunityMessages();submitChatMessage(m);};meta.append(retry);}}
+      bubble.append(text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
     }update.finish();
     if(wasNearBottom||!box.dataset.loaded){box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
   }
@@ -723,12 +754,42 @@
     catch(err){toast(err.message||'تعذر إرسال البلاغ',true);}finally{btn.disabled=false;}
   }
 
-  async function sendCommunityChat(event){
+  let communityStream=null,communityStreamId=null;
+  function stopCommunityLive(){communityStream?.close();communityStream=null;communityStreamId=null;}
+  function mergeCommunityMessages(rows){
+    const messages=new Map(state.communityMessages.map(row=>[row.id,row]));
+    for(const row of rows){
+      if(row.clientMessageId)for(const [key,old] of messages){if(old.pending&&old.userId===row.userId&&old.clientMessageId===row.clientMessageId)messages.delete(key);}
+      messages.set(row.id,row);
+    }
+    state.communityMessages=Array.from(messages.values()).sort((a,b)=>Number(a.createdAt)-Number(b.createdAt)).slice(-200);
+  }
+  function startCommunityLive(cid){
+    if(window.SamiDevMobile||state.page!=='lobby'||(communityStreamId===cid&&communityStream?.readyState!==2))return;
+    stopCommunityLive();if(!window.EventSource)return;
+    communityStreamId=cid;communityStream=new EventSource('/api/communities/'+encodeURIComponent(cid)+'/events');
+    communityStream.onmessage=event=>{
+      if(state.activeCommunity?.id!==cid)return;
+      try{const data=JSON.parse(event.data);if(data.type==='access_denied'){stopCommunityLive();loadCommunityState();return;}
+        const rows=data.type==='message'?[data.message]:data.messages||[];mergeCommunityMessages(rows);renderCommunityMessages();
+        if(data.type==='message'&&data.message.userId!==state.user?.id&&$('#settings-chat-alerts').checked&&(document.hidden||$('#platform-settings').classList.contains('hidden')===false))toast('رسالة جديدة من '+data.message.username);
+      }catch(_){}
+    };
+  }
+  async function submitChatMessage(message){
+    const cid=message.communityId;
+    try{
+      const result=await api(`/api/communities/${encodeURIComponent(cid)}/chat`,{method:'POST',body:JSON.stringify({text:message.text,clientMessageId:message.clientMessageId})});
+      if(state.activeCommunity?.id===cid){mergeCommunityMessages([result.message]);renderCommunityMessages();}
+    }catch(error){if(state.activeCommunity?.id===cid){message.failed=true;renderCommunityMessages();}toast(error.message||'تعذر إرسال الرسالة',true);}
+  }
+  function sendCommunityChat(event){
     event?.preventDefault?.();const c=state.activeCommunity,input=$('#community-chat-input');if(!c||!input)return;
     const text=input.value.trim();if(!text)return;
-    input.disabled=true;
-    try{await api(`/api/communities/${encodeURIComponent(c.id)}/chat`,{method:'POST',body:JSON.stringify({text})});input.value='';await loadCommunityState();}
-    catch(err){toast(err.message||'تعذر إرسال الرسالة',true);}finally{input.disabled=false;input.focus();}
+    if(Array.from(text).length>280)return toast('الرسالة طويلة جدًا',true);
+    const nonce=crypto.randomUUID(),message={id:'pending_'+nonce,clientMessageId:nonce,communityId:c.id,userId:state.user.id,username:state.user.username,displayName:state.user.username,text,createdAt:Date.now(),chatBubble:state.user.chatBubble,nameBadgeAsset:state.user.nameBadgeAsset,nameBadgeName:state.user.nameBadgeName,pending:true};
+    input.value='';mergeCommunityMessages([message]);renderCommunityMessages();$('#community-chat-messages').scrollTop=$('#community-chat-messages').scrollHeight;
+    submitChatMessage(message);input.focus();
   }
   async function loadRooms(manual=false){return state.activeCommunity?loadCommunityState(manual):loadCommunities(manual);}
   function roomKind(r){if(r.settings?.gameId==='crazy8')return Number(r.settings.seats)===4?'2v2':`${Number(r.capacity)||4}P`;return Number(r.capacity)===4?'2v2':'1v1';}

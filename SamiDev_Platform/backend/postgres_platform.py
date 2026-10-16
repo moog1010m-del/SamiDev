@@ -27,6 +27,7 @@ class PostgresPlatformService(PlatformService):
             raise
 
     async def close(self):
+        await self.live.close()
         await self.r.close()
 
     async def create_user(self, username, password, display_name=None, *, role='user', allow_existing=False):

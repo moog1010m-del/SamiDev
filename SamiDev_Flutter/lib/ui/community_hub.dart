@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'chat_cosmetic.dart';
 import '../runtime/api.dart';
@@ -7,7 +8,8 @@ import 'player_profile.dart';
 import 'sticker_art.dart';
 
 class CommunityHub extends StatefulWidget {
-  const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity,this.onAccount});
+  const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity,this.onAccount,this.user});
+  final Map<String,dynamic>? user;
   final VoidCallback? onAccount;
   final PlatformApi api;
   final bool active;
@@ -18,7 +20,9 @@ class CommunityHub extends StatefulWidget {
   @override State<CommunityHub> createState()=>CommunityHubState();
 }
 class CommunityHubState extends State<CommunityHub> {
-  Timer? timer;
+  Timer? timer,liveRetry;
+  StreamSubscription<Map<String,dynamic>>? live;
+  String? liveCid;
   Map<String,dynamic>? community;
   List<Map<String,dynamic>> spaces=[],rooms=[],members=[],messages=[];
   final input=TextEditingController(),scroll=ScrollController();
@@ -29,22 +33,41 @@ class CommunityHubState extends State<CommunityHub> {
   int tab=0,generation=0;
   static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'أونو','tablesoccer':'كرة الطاولة'};
   List<Map<String,dynamic>> rows(dynamic data)=>(data as List? ?? []).whereType<Map>().map((e)=>Map<String,dynamic>.from(e)).toList();
-  Future<Map<String,dynamic>> request(String path,{String method='GET',Map<String,dynamic>? body}) async {
-    final r=await widget.api.request(method,path,body:body==null?null:utf8.encode(jsonEncode(body)));
+  Future<Map<String,dynamic>> request(String path,{String method='GET',String? query,Map<String,dynamic>? body}) async {
+    final r=await widget.api.request(method,path,query:query,body:body==null?null:utf8.encode(jsonEncode(body)));
     final data=r.json;if(r.status==403&&{'COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(data['error'])){final denied=path.split('/').length>3?path.split('/')[3]:null;WidgetsBinding.instance.addPostFrameCallback((_){if(mounted&&community?['id']==denied)unawaited(back());});}if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
   }
   @override void initState(){super.initState();final cid=widget.initialCommunity;if({'majlis','square','diwan','elite'}.contains(cid))community={'id':cid};WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});restart();}
-  @override void didUpdateWidget(covariant CommunityHub old){super.didUpdateWidget(old);if(old.active!=widget.active)restart();}
-  void restart(){timer?.cancel();if(widget.active){unawaited(refresh());timer=Timer.periodic(const Duration(seconds:3),(_)=>refresh());}}
+  @override void didUpdateWidget(covariant CommunityHub old){super.didUpdateWidget(old);if(old.active!=widget.active||old.user?['id']!=widget.user?['id']||old.user?['isGuest']!=widget.user?['isGuest']){stopLive();restart();}}
+  void stopLive(){liveRetry?.cancel();unawaited(live?.cancel());live=null;liveCid=null;}
+  void mergeMessages(List<Map<String,dynamic>> incoming){
+    final all={for(final row in messages)row['id']:row};
+    for(final row in incoming){if(row['clientMessageId']!=null)all.removeWhere((_,old)=>old['pending']==true&&old['userId']==row['userId']&&old['clientMessageId']==row['clientMessageId']);all[row['id']]=row;}
+    messages=all.values.toList()..sort((a,b)=>(a['createdAt'] as num? ?? 0).compareTo(b['createdAt'] as num? ?? 0));
+    if(messages.length>200)messages=messages.sublist(messages.length-200);
+  }
+  void startLive(String cid){
+    if(!widget.active||liveCid==cid)return;stopLive();liveCid=cid;
+    void retry(){if(!mounted||!widget.active||community?['id']!=cid||liveCid!=cid)return;live=null;liveCid=null;liveRetry=Timer(const Duration(seconds:2),()=>startLive(cid));}
+    live=widget.api.events('/api/communities/$cid/events').listen((event){
+      if(!mounted||community?['id']!=cid)return;
+      if(event['type']=='access_denied'){stopLive();unawaited(refresh());return;}
+      final incoming=event['type']=='message'?rows([event['message']]):rows(event['messages']);
+      final nearEnd=!scroll.hasClients||scroll.position.maxScrollExtent-scroll.offset<80;
+      setState(()=>mergeMessages(incoming));if(nearEnd)scrollToEnd();
+    },onError:(Object error){retry();},onDone:retry,cancelOnError:true);
+  }
+  void restart(){timer?.cancel();if(widget.active){unawaited(refresh());timer=Timer.periodic(const Duration(seconds:3),(_)=>refresh());}else{stopLive();}}
   void report(Object e){if(mounted)setState(()=>error=e is StateError?e.message.toString():'تعذر الاتصال. اسحب للتحديث.');}
   Future<void> refresh() async {
     if(busy||!widget.active)return;busy=true;final version=generation,cid=community?['id'];
     try{
-      final d=await request(cid==null?'/api/communities':'/api/communities/$cid');
+      final d=await request(cid==null?'/api/communities':'/api/communities/$cid',query:cid!=null&&liveCid==cid?'chat=0':null);
       if(!mounted||version!=generation)return;
       final nearEnd=!scroll.hasClients||scroll.position.maxScrollExtent-scroll.offset<80;
       final previous=messages.isEmpty?null:messages.last['id'];
-      setState((){error=null;if(cid==null){spaces=rows(d['communities']);notifications=rows(d['notifications']);}else{canModerate=(d['capabilities'] as Map?)?['canModerate']==true;community=Map<String,dynamic>.from(d['community']);rooms=rows(d['rooms']);members=rows(d['members']);messages=rows(d['messages']);}});
+      setState((){error=null;if(cid==null){spaces=rows(d['communities']);notifications=rows(d['notifications']);}else{canModerate=(d['capabilities'] as Map?)?['canModerate']==true;community=Map<String,dynamic>.from(d['community']);rooms=rows(d['rooms']);members=rows(d['members']);mergeMessages(rows(d['messages']));}});
+      if(cid!=null)startLive(cid.toString());
       if(nearEnd&&(messages.isNotEmpty&&messages.last['id']!=previous))scrollToEnd();
     }catch(e){report(e);}finally{busy=false;}
   }
@@ -65,13 +88,19 @@ class CommunityHubState extends State<CommunityHub> {
     if(community==null)return false;
     final cid=community!['id'];
     try{await request('/api/communities/$cid/leave',method:'POST',body:{});}catch(e){report(e);}
-    if(!mounted)return true;generation++;setState((){community=null;rooms=[];members=[];messages=[];error=null;});widget.onNavigationChanged();await refresh();return true;
+    if(!mounted)return true;stopLive();generation++;setState((){community=null;rooms=[];members=[];messages=[];error=null;});widget.onNavigationChanged();await refresh();return true;
+  }
+  Future<void> submitMessage(Map<String,dynamic> message) async {
+    final cid=message['communityId'];
+    try{final result=await request('/api/communities/$cid/chat',method:'POST',body:{'text':message['text'],'clientMessageId':message['clientMessageId']});if(!mounted||community?['id']!=cid)return;setState(()=>mergeMessages(rows([result['message']])));}
+    catch(e){if(mounted&&community?['id']==cid){setState(()=>message['failed']=true);report(e);}}
   }
   Future<void> send() async {
-    final text=input.text.trim();if(text.isEmpty||sending||community==null)return;
-    final cid=community!['id'];setState(()=>sending=true);
-    try{await request('/api/communities/$cid/chat',method:'POST',body:{'text':text});if(!mounted)return;input.clear();await refresh();scrollToEnd();}
-    catch(e){report(e);}finally{if(mounted)setState(()=>sending=false);}
+    final text=input.text.trim();if(text.isEmpty||community==null||widget.user==null)return;
+    if(text.runes.length>280){report(StateError('الحد الأقصى ٢٨٠ حرفًا'));return;}
+    final nonce='${DateTime.now().microsecondsSinceEpoch}_${List.generate(12,(_)=>Random.secure().nextInt(256).toRadixString(16).padLeft(2,'0')).join()}';
+    final message=<String,dynamic>{'id':'pending_$nonce','clientMessageId':nonce,'communityId':community!['id'],'userId':widget.user!['id'],'username':widget.user!['username'],'displayName':widget.user!['username'],'nameBadgeAsset':widget.user!['nameBadgeAsset'],'chatBubble':widget.user!['chatBubble'],'text':text,'createdAt':DateTime.now().millisecondsSinceEpoch,'pending':true};
+    setState((){input.clear();mergeMessages([message]);});scrollToEnd();unawaited(submitMessage(message));
   }
   String name(Map user)=>user['displayName']?.toString()??user['name']?.toString()??user['username']?.toString()??'لاعب';
   Widget avatar(Map user,{double radius=23})=>user.isEmpty
@@ -121,12 +150,13 @@ class CommunityHubState extends State<CommunityHub> {
     ])));
   Widget messageRow(Map<String,dynamic> message){
     final ts=(message['createdAt'] as num?)?.toInt(),date=ts==null?null:DateTime.fromMillisecondsSinceEpoch(ts).toLocal();
-    return Directionality(textDirection:TextDirection.ltr,child:Padding(padding:const EdgeInsets.fromLTRB(14,8,18,8),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
+    return Directionality(textDirection:message['userId']==widget.user?['id']?TextDirection.rtl:TextDirection.ltr,child:Padding(padding:const EdgeInsets.fromLTRB(14,8,18,8),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
       InkWell(onTap:()=>widget.onProfile(message['userId'].toString()),child:avatar(message,radius:20)),const SizedBox(width:12),
-      Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(mainAxisSize:MainAxisSize.min,children:[
-        Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:8),
+      Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(textDirection:TextDirection.rtl,mainAxisSize:MainAxisSize.min,children:[
+        Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:5),
+        StickerArtwork(asset:message['nameBadgeAsset']?.toString()??'/platform/assets/profile/raster/palm-swords.webp',size:18),const SizedBox(width:5),
         if(date!=null)Text(TimeOfDay.fromDateTime(date).format(context),style:TextStyle(fontSize:10,color:Theme.of(context).colorScheme.onSurfaceVariant)),
-      ]),const SizedBox(height:5),ChatCosmetic(id:message['chatBubble']?.toString()??'',
+      ]),if(message['pending']==true)TextButton(onPressed:message['failed']==true?(){setState(()=>message['failed']=false);unawaited(submitMessage(message));}:null,child:Text(message['failed']==true?'تعذر الإرسال · إعادة المحاولة':'جارٍ الإرسال',style:const TextStyle(fontSize:10))),const SizedBox(height:5),ChatCosmetic(id:message['chatBubble']?.toString()??'',
         child:Text(message['text']?.toString()??'',textDirection:TextDirection.rtl,style:const TextStyle(fontSize:15,height:1.4))),])),
     ])));
   }
@@ -136,16 +166,15 @@ class CommunityHubState extends State<CommunityHub> {
     final config=await showModalBottomSheet<Map<String,String>>(context:context,isScrollControlled:true,useSafeArea:true,builder:(_)=>const CreateMatchSheet());
     if(config==null||!mounted)return;await widget.onGame(config['game']!,{'online':'1','action':'create','community':community!['id'].toString(),...config});
   }
-  @override void dispose(){timer?.cancel();input.dispose();scroll.dispose();super.dispose();}
+  @override void dispose(){stopLive();timer?.cancel();input.dispose();scroll.dispose();super.dispose();}
   @override Widget build(BuildContext context){
     final colors=Theme.of(context).colorScheme;
     return Column(children:[
-      if(community==null)for(final n in notifications)Card(child:ListTile(leading:const Icon(Icons.card_giftcard),title:Text("${n['sender']} · هدية الإشراف"),subtitle:Text(n['text']?.toString()??''))),
       SizedBox(height:58,child:Row(children:[
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
         if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
         const SizedBox(width:10),Expanded(child:Text(community?['name']?.toString()??'المساحات',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:17))),
-        if(widget.onAccount!=null)IconButton(tooltip:'إعدادات الحساب',onPressed:widget.onAccount,icon:const Icon(Icons.manage_accounts_outlined)),
+        if(widget.onAccount!=null)IconButton(tooltip:'إعدادات المنصة',onPressed:widget.onAccount,icon:const Icon(Icons.settings_outlined)),
         IconButton(tooltip:'المظهر',onPressed:widget.onTheme,icon:Icon(Theme.of(context).brightness==Brightness.dark?Icons.light_mode_outlined:Icons.dark_mode_outlined)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
       ])),

@@ -18,7 +18,9 @@ try{
  await member.addCookies([{name:'samidev_session',value:process.env.SAMIDEV_POLICY_MEMBER_COOKIE,url:base}]);
  const memberPage=await member.newPage();
  await memberPage.goto(base+'/platform/');
+ await memberPage.locator('#mobile-settings-btn').click();await memberPage.locator('[data-settings-tab=notifications]').click();
  await memberPage.locator('#system-notifications').getByText('سيتم · هدية الإشراف').waitFor();
+ await memberPage.locator('#settings-close').click();
  await memberPage.goto(base+'/platform/?community=majlis');
  await memberPage.waitForFunction(()=>document.querySelector('#active-community-description')?.textContent.includes('لديك صلاحية'));
  await memberPage.evaluate(id=>{const b=document.createElement('button');b.dataset.publicProfile=id;document.body.append(b);b.click();b.remove();},process.env.SAMIDEV_POLICY_COLLEAGUE);

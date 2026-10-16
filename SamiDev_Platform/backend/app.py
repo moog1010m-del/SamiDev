@@ -181,6 +181,7 @@ class SamiDevRealtime:
             except (TimeoutError, ConnectionError): pass
         await asyncio.gather(*(close_client(c) for c in list(self.connections.values())), return_exceptions=True)
         await self.gamehost.close()
+        await self.platform.live.close()
         if PLATFORM_STORE == "postgres": await self.platform.close()
         if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
 
@@ -1359,6 +1360,7 @@ def make_app() -> web.Application:
     app.router.add_get("/api/communities/{community_id}", api.community_state)
     app.router.add_post("/api/communities/{community_id}/enter", api.community_enter)
     app.router.add_post("/api/communities/{community_id}/leave", api.community_leave)
+    app.router.add_get("/api/communities/{community_id}/events", api.community_events)
     app.router.add_post("/api/communities/{community_id}/chat", api.community_chat)
     app.router.add_post("/api/communities/{community_id}/moderation", api.community_moderate)
     app.router.add_get("/api/lobby/rooms", api.lobby_rooms)
@@ -1377,6 +1379,9 @@ def make_app() -> web.Application:
     app.router.add_post("/api/admin/users/{user_id}/ban", api.admin_ban)
     app.router.add_post("/api/admin/users/{user_id}/role", api.admin_role)
     app.router.add_get("/ws", SERVICE.websocket)
+    async def close_community_streams(app):
+        await SERVICE.platform.live.close()
+    app.on_shutdown.append(close_community_streams)
     app.router.add_get("/health", SERVICE.health)
     app.router.add_get("/metrics", SERVICE.metrics_endpoint)
     app.router.add_get("/client-config.js", SERVICE.client_config)
