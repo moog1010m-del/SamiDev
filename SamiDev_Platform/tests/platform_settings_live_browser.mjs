@@ -53,6 +53,15 @@ try{
  await sender.setViewportSize({width:390,height:844});await sender.locator('#room-settings-btn').click();
  assert(await sender.locator('#platform-settings').isVisible());assert(await sender.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await sender.locator('#settings-close').click();
+ await sender.locator('#community-tab-chat').click();
+ for(const height of [844,520]){
+  await sender.setViewportSize({width:390,height});
+  const layout=await sender.evaluate(()=>{const r=s=>document.querySelector(s).getBoundingClientRect();return {bottom:r('#community-chat-form').bottom,height:r('#community-chat-messages').height,scroll:document.documentElement.scrollHeight};});
+  assert(layout.height>100);assert(layout.bottom<=height+1);assert(layout.bottom>=height-2,JSON.stringify(layout));assert(layout.scroll<=height+1,'room must not scroll the page');
+ }
+ await sender.setViewportSize({width:390,height:844});
+ await sender.locator('#community-chat-messages').evaluate(box=>{for(const id of ['chat_mist','chat_turquoise','chat_ember']){const p=document.createElement('p');p.textContent='رسالة قصيرة ثم رسالة أطول للتأكد من تعبئة الفقاعة';window.SamiDevCosmetics.bubble(p,id);box.append(p);}box.scrollTop=box.scrollHeight;});
+ await sender.screenshot({path:'/tmp/samidev-phone-room.png'});
  const out='/tmp/samidev-settings-live';fs.mkdirSync(out,{recursive:true});
  await sender.evaluate(()=>sessionStorage.removeItem('samidev_return_community'));
  await sender.goto(base+'/platform/');await sender.locator('#home-profile #own-profile-card').waitFor({state:'visible'});

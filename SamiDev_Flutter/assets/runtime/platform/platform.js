@@ -269,6 +269,7 @@
     $('#community-profile-page').onclick=()=>navigate('profile');
     $('#community-profile-edit').onclick=()=>{navigate('profile');requestAnimationFrame(openProfileEditor);};
     $('#refresh-communities').onclick=()=>loadCommunities(true);
+    $('#community-composer-create').onclick=()=>$('#open-create').click();
     $('#refresh-rooms').onclick=()=>loadCommunityState(true);
     $('#mobile-menu').onclick=()=>navigate('lobby');
     $('#leave-community').onclick=leaveCommunity;
@@ -583,6 +584,7 @@
     const c=state.activeCommunity;if(!c)return;
     const room=$('#community-room');room.style.setProperty('--community-accent',c.accent||'#d5a34c');
     $('#active-community-name').textContent=c.name||'المساحة';$('#active-community-description').textContent=(c.description||'')+(state.communityCapabilities?.canModerate?' · لديك صلاحية إدارة المساحة: افتح ملف عضو للكتم أو الحظر أو الإخراج.':'');$('#active-community-mark').textContent=c.mark||initials(c.name);$('#active-community-mark').style.setProperty('--community-accent',c.accent||'#d5a34c');
+    $('#community-tab-members').textContent=`متصل (${state.communityMembers.length})`;$('#community-tab-games').textContent=`الألعاب (${state.rooms.length})`;
     $('#community-chat-title').textContent=`شات ${c.name||'المساحة'}`;$('#community-member-count').textContent=String(visibleCommunityMembers().length);
     renderCommunityMembers();renderCommunityMessages();
   }

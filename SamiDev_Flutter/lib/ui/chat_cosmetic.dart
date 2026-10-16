@@ -27,20 +27,26 @@ class ChatCosmetic extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 42),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 14),
-            child: ColoredBox(
-              color: const Color(0xff12242d),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                child: DefaultTextStyle.merge(
-                  style: const TextStyle(color: Color(0xffedf3f5)),
-                  child: child,
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(7, 7, 7, 6),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: const {
+                    'chat_mist': Color(0xff24212e),
+                    'chat_turquoise': Color(0xff12312f),
+                    'chat_ember': Color(0xff38201c),
+                  }[id],
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 22, 30, 20),
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(color: Color(0xffedf3f5)),
+              child: child,
             ),
           ),
           Positioned.fill(

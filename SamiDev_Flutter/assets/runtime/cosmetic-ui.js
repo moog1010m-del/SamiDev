@@ -6,8 +6,10 @@
   function bubble(element,id){
     if(!element)return;
     element.classList.toggle('sd-decorated-message',bubbles.has(id));
-    if(bubbles.has(id))element.style.setProperty('--sd-bubble-frame',`url("${path(id)}")`);
-    else element.style.removeProperty('--sd-bubble-frame');
+    if(bubbles.has(id)){
+      element.style.setProperty('--sd-bubble-frame',`url("${path(id)}")`);
+      element.style.setProperty('--sd-bubble-fill',({chat_mist:'#24212e',chat_turquoise:'#12312f',chat_ember:'#38201c'})[id]);
+    }else{element.style.removeProperty('--sd-bubble-frame');element.style.removeProperty('--sd-bubble-fill');}
   }
   function cover(element,id){
     if(!element)return;

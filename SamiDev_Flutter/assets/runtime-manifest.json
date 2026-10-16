@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "bc276a2e759c4fc3577ac40bc528496b602a9944a45bf12f0bcbbb1d3576ca51"
+      "sha256": "dfefdecab23c045b2722ddcf70b54c55ef70e8526258ca6e2ccec5a3ef88b588"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -32,12 +32,12 @@
       "sha256": "6a680fd62c6be9af4220acfadb18772f6275d669fed852a2b4b7005fe766b37d"
     },
     "cosmetic-ui.css": {
-      "size": 5550,
-      "sha256": "fa0b8cbd7933e56028e9105124334af6f50359504aec8a6a796f901b39045ba2"
+      "size": 5895,
+      "sha256": "efd16f01f2a1581065746c9bd7721a84c203ddc7a3165dbaac4f798aa0a60283"
     },
     "cosmetic-ui.js": {
-      "size": 1227,
-      "sha256": "0c97dfe02988581270a5605f486e9a9eb759c70c8f8fd9905ca8d844172c4252"
+      "size": 1413,
+      "sha256": "054aab92744e5b56cfd0d49e5fd050cdea548d899c46aeeaeceea80b05e39080"
     },
     "crazy8-audio.js": {
       "size": 3985,
@@ -2381,23 +2381,23 @@
     },
     "platform/build.json": {
       "size": 2705,
-      "sha256": "71773de77f6e2097773bf4882a4b41b8e2cd2f456748ceb9901fde99178c5322"
+      "sha256": "abd92de842a19a14e8cd928fbe9f1f278e66a659bcb553a9719ba2a7b25922d9"
     },
     "platform/firebase-auth.js": {
       "size": 7745,
       "sha256": "c15d6f042a791bda74d3e031bf6e84ce5b403cbcb85cbd2e0a7554adfdd51ed5"
     },
     "platform/index.html": {
-      "size": 37115,
-      "sha256": "82e8b4c271323b24f61c0b25154bc5093e0930792f7996a74855af1685351d6f"
+      "size": 37298,
+      "sha256": "925ad2344398d7e15c65cefac891f38eaaa402e212c69e5344c03f24268efef7"
     },
     "platform/platform.css": {
-      "size": 103384,
-      "sha256": "46af865b1ae89b07a7444df49ffed169b54ac01c02090178db360a1d1c1a9930"
+      "size": 107222,
+      "sha256": "eca902b831b346478d1e196e853fc3a1f5eb5ee5ce305fc46e25f4c5d4d1d05d"
     },
     "platform/platform.js": {
-      "size": 83661,
-      "sha256": "f4dd5b85825cf4886de0d08dbafcddf2b208ce044f9d0edb7415b7018add5b05"
+      "size": 83906,
+      "sha256": "f98d3c2827cef6c0324ae2fa93cdeabc6de9dd36d0f2608dd1aff37559cea75b"
     },
     "platform/profile-identity.css": {
       "size": 11211,
