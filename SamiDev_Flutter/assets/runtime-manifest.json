@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "80cd3bf0977c8d6a5e98c1d61f7a7307aad59c636a58b27f381abd3bfcf1841d"
+      "sha256": "bc276a2e759c4fc3577ac40bc528496b602a9944a45bf12f0bcbbb1d3576ca51"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -2381,27 +2381,27 @@
     },
     "platform/build.json": {
       "size": 2705,
-      "sha256": "8f46dad44acf481f076c92dcd7f93ef52667449136b531780b0c2922f6dfb092"
+      "sha256": "71773de77f6e2097773bf4882a4b41b8e2cd2f456748ceb9901fde99178c5322"
     },
     "platform/firebase-auth.js": {
       "size": 7745,
       "sha256": "c15d6f042a791bda74d3e031bf6e84ce5b403cbcb85cbd2e0a7554adfdd51ed5"
     },
     "platform/index.html": {
-      "size": 37097,
-      "sha256": "3fc74a4f141d64d28c20b05e911c256ec1395a15049f4a0a00d24445a3ba5edd"
+      "size": 37115,
+      "sha256": "82e8b4c271323b24f61c0b25154bc5093e0930792f7996a74855af1685351d6f"
     },
     "platform/platform.css": {
-      "size": 103593,
-      "sha256": "e29e77c986a6ecb6f844155ba633601fdd75f68cd4d986baa7572e32e72b96a5"
+      "size": 103384,
+      "sha256": "46af865b1ae89b07a7444df49ffed169b54ac01c02090178db360a1d1c1a9930"
     },
     "platform/platform.js": {
       "size": 83661,
       "sha256": "f4dd5b85825cf4886de0d08dbafcddf2b208ce044f9d0edb7415b7018add5b05"
     },
     "platform/profile-identity.css": {
-      "size": 10976,
-      "sha256": "2a456d9cae921b0b761a57d3d1f2583d1dcf2ad7838c5c2e5722791ada2e1c53"
+      "size": 11211,
+      "sha256": "92aaa6d158ba4236e1851e04cca4bf16430f4fc534f34da7cf72a1d3bd3ebbd3"
     },
     "platform/ranks.html": {
       "size": 8381,

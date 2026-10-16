@@ -11,6 +11,11 @@ try{
   await context.addCookies([{name:'samidev_session',value,url:base}]);
   const page=await context.newPage();pages.push(page);page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/platform/');await page.locator('#home-profile #own-profile-card').waitFor({state:'visible'});
+  const dimensions=()=>{const card=document.querySelector('#own-profile-card'),name=card.querySelector('#profile-name');return {width:card.getBoundingClientRect().width,cover:card.querySelector('.profile-cover').getBoundingClientRect().height,avatar:card.querySelector('.profile-avatar').getBoundingClientRect().width,name:name.textContent,nameClipped:name.scrollWidth>name.clientWidth+1,details:getComputedStyle(card.querySelector('#own-profile-details')).display};};
+  const home=await page.evaluate(dimensions);assert(home.width>=500);assert(!home.nameClipped);assert.notEqual(home.details,'none');
+  await page.locator('.topbar-nav [data-page=profile]').click();
+  const profile=await page.evaluate(dimensions);assert.deepEqual(home,profile,'home uses the full profile appearance without shrinking or hidden sections');
+  await page.locator('.topbar-nav [data-page=lobby]').click();
   await page.locator('#platform-settings-btn').click();await page.locator('[data-settings-tab=notifications]').click();
   await page.locator('#system-notifications').waitFor({state:'visible'});await page.locator('[data-settings-tab=account]').click();
   assert(await page.locator('#account-settings-btn').isVisible());await page.keyboard.press('Escape');

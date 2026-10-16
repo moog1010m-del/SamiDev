@@ -53,3 +53,6 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 .sd-profile-expanded .sd-open-full{display:none}.profile-showcase .sd-game-statistics>.sd-detail-heading{margin-bottom:5px}
 
 .profile-showcase .profile-stat{border-right:0!important}.profile-showcase .profile-stat-wins{order:0}.profile-showcase .profile-stat-since{order:1;border-right:1px solid var(--identity-line)!important}.profile-showcase .profile-stat-reputation{order:2;border-right:1px solid var(--identity-line)!important}.profile-showcase .sd-rank-progress{margin-top:10px}
+
+/* One username, fully readable in both placements of the same profile. */
+.profile-showcase .profile-name-row h3{min-width:0;max-width:100%;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;flex:0 1 auto}
