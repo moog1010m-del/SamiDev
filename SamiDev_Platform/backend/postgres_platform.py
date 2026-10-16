@@ -98,6 +98,27 @@ class PostgresPlatformService(PlatformService):
         async with self.r.transaction([self.k_user(uid), self.k_inventory(uid), self.k_store_ledger(uid)]):
             return await super().buy_store_item(uid, item_id)
 
+    async def update_profile(self, uid, **kwargs):
+        # Renames manage their own username locks. An avatar update takes the
+        # account lock so an in-flight request cannot recreate deleted data.
+        display_name = kwargs.pop('display_name', None)
+        if display_name is not None:
+            await self.accounts.rename(uid, display_name)
+        async with self.r.transaction([self.k_user(uid)]):
+            return await super().update_profile(uid, **kwargs)
+
+    async def submit_report(self, reporter_id, target_id, **kwargs):
+        async with self.r.transaction([self.k_user(reporter_id), self.k_user(target_id), self.k_reports()]):
+            return await super().submit_report(reporter_id, target_id, **kwargs)
+
+    async def set_role(self, target_id, role):
+        async with self.r.transaction([self.k_user(target_id)]):
+            return await super().set_role(target_id, role)
+
+    async def set_banned(self, target_id, banned):
+        async with self.r.transaction([self.k_user(target_id)]):
+            return await super().set_banned(target_id, banned)
+
     async def record_game_result(self, uid, game, match, *, won, drawn=False):
         from games import GAMES
         if game not in GAMES or not match or len(match) > 128 or (won and drawn):

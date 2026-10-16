@@ -41,6 +41,7 @@ class PlatformApi {
     if (saved != null && RegExp(r'^[A-Za-z0-9_-]{32,128}$').hasMatch(saved)) _session = saved;
   }
   Map<String, String> get headers => {'Origin':policy.backend.origin,
+    'User-Agent':'SamiDev/1.0.3+4 (${Platform.isIOS ? 'iPhone' : Platform.isAndroid ? 'Android' : Platform.operatingSystem})',
     if (_session != null) 'Cookie':'samidev_session=$_session'};
   Future<ApiResponse> request(String method, String path, {String? query, List<int>? body}) async {
     if (_closed || !RuntimePolicy.allowApi(method,path)) throw const HttpException('Route denied');
@@ -63,8 +64,9 @@ class PlatformApi {
       data.add(chunk);
     }
     if (!_closed && generation == _generation) {
-      if (response.statusCode == 401 || (path == '/api/auth/logout' && response.statusCode == 200)) {
-        if(path=='/api/auth/logout')firebase?.clear();
+      final ended = path.startsWith('/api/account/') && {200,202}.contains(response.statusCode) && (jsonDecode(utf8.decode(data.toBytes())) as Map)['signedOut'] == true;
+      if (response.statusCode == 401 || ended || (path == '/api/auth/logout' && response.statusCode == 200)) {
+        if(path=='/api/auth/logout'||ended)firebase?.clear();
         await clearSession();
       } else if (({'/api/auth/login','/api/auth/register','/api/auth/firebase'}.contains(path) || (path=='/api/auth/guest'&&response.cookies.any((c)=>c.name=='samidev_session'))) && response.statusCode == 200) {
         final cookies=response.cookies.where((c)=>c.name=='samidev_session').toList();

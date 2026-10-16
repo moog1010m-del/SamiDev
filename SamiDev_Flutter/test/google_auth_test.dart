@@ -118,6 +118,10 @@ void main() {
         expect(idp, 1);
         expect(exchanges, 2);
         expect(auth.hasPendingIdentity, false);
+        // Sensitive-action proof does not exchange or switch the app account.
+        final proof=await auth.reauthenticate(google:true,email:'unused@example.test');
+        expect(proof,'firebase-id');expect(exchanges,2);expect(idp,2);
+        expect(auth.hasPendingIdentity,false);
       } finally {
         api.firebase?.close();
         api.close();

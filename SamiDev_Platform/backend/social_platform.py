@@ -334,6 +334,10 @@ class PlatformService:
         self.mem_active_community: dict[str, tuple[str, float]] = {}
         from account_lifecycle import AccountLifecycle
         self.accounts = AccountLifecycle(self)
+        from account_security import AccountSecurity
+        self.security = AccountSecurity(self)
+        from account_deletion import AccountDeletion
+        self.deletions = AccountDeletion(self)
         from community_live import CommunityLive
         self.live = CommunityLive(self)
         self.mem_inventory: dict[str, set[str]] = {}
@@ -529,6 +533,8 @@ class PlatformService:
         }
         key = self.k_community_chat(cid)
         async def append():
+            if not await self.get_user(uid):
+                raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
             if self.r is None:
                 rows = self.mem_community_chat.setdefault(cid, [])
             else:
@@ -549,7 +555,7 @@ class PlatformService:
         if self.r is None:
             async with self.lock: entry=await append()
         elif hasattr(self.r,'pool'):
-            async with self.r.transaction([key]): entry=await append()
+            async with self.r.transaction([key, self.k_user(uid)]): entry=await append()
         else:
             # Legacy Redis mode remains compatible, without client correlation.
             if client_message_id: raise PlatformError('DURABLE_STORE_REQUIRED','المحادثة المباشرة تتطلب PostgreSQL',503)
@@ -639,8 +645,9 @@ class PlatformService:
     async def get_user(self, uid: str) -> dict[str, Any] | None:
         if self.r is not None:
             value = await self.r.hgetall(self.k_user(uid))
-            return value or None
-        return self.mem_users.get(uid)
+        else:
+            value = self.mem_users.get(uid)
+        return value if value and value.get('deleting') != '1' else None
 
     async def find_user_by_username(self, username: str) -> dict[str, Any] | None:
         lower = str(username or "").strip().lower()
@@ -650,7 +657,7 @@ class PlatformService:
             uid = await self.r.get(self.k_username(lower))
             return await self.get_user(str(uid)) if uid else None
         uid = self.mem_usernames.get(lower)
-        return self.mem_users.get(uid) if uid else None
+        return await self.get_user(uid) if uid else None
 
     async def authenticate(self, username: str, password: str) -> dict[str, Any]:
         user = await self.find_user_by_username(username)
@@ -674,7 +681,7 @@ class PlatformService:
         async with self.lock:
             mapped = self.mem_firebase.get(key)
             if mapped:
-                user = self.mem_users.get(mapped)
+                user = await self.get_user(mapped)
                 if not user or user.get('firebaseUid') != claims['uid'] or user.get('firebaseProject') != self.firebase.project:
                     raise PlatformError('IDENTITY_CONFLICT', 'تعذر مطابقة هوية الحساب.', 409)
                 if str(user.get("banned") or "0") == "1":
@@ -715,7 +722,7 @@ class PlatformService:
             return await self.get_user(uid) or {**user, **updates}
         async with self.lock:
             current = self.mem_users.get(uid)
-            if not current:
+            if not current or current.get('deleting') == '1':
                 raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
             current.update(updates)
             return current
@@ -1027,18 +1034,8 @@ class PlatformService:
             return None
         return hashlib.sha256(token.encode()).hexdigest()
 
-    async def create_session(self, uid: str, *, firebase_auth_time: int | None = None) -> str:
-        user = await self.get_user(uid)
-        if not user or str(user.get("banned") or "0") == "1":
-            raise PlatformError("AUTH_REQUIRED", "يجب تسجيل الدخول", 401)
-        token = secrets.token_urlsafe(32)
-        key = self.token_key(token)
-        value = json.dumps({"uid":uid, "version":str(user.get("authVersion") or "0"), **({"firebaseAuthTime":firebase_auth_time} if firebase_auth_time is not None else {})})
-        if self.r is not None:
-            await self.r.set(self.k_session(key), value, ex=SESSION_TTL)
-        else:
-            self.mem_sessions[key] = MemoryEntry(value, time.monotonic() + SESSION_TTL)
-        await self.touch_presence(uid)
+    async def create_session(self, uid: str, *, firebase_auth_time: int | None = None, metadata=None) -> str:
+        token = await self.security.create(uid, firebase_auth_time=firebase_auth_time, metadata=metadata)
         return token
 
     async def resolve_session_key(self, key: str | None, *, touch=False) -> dict[str, Any] | None:
@@ -1054,19 +1051,26 @@ class PlatformService:
         try:
             data = json.loads(raw)
             user = await self.get_user(str(data["uid"]))
-            if not user or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != data["version"]:
+            if not user or str(user.get('id') or '') != str(data['uid']) or user.get('deleting') == '1' or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != data["version"]:
                 return None
         except (ValueError, TypeError, KeyError):
             return None
         if self.firebase.enabled and not user.get("firebaseUid") and user.get("guest") != "1":
             return None
         if user.get("firebaseUid"):
+            # Bind each new cookie to the verified identity as well as the local
+            # account. Pre-fix Firebase cookies deliberately require fresh login.
+            if (data.get('firebaseUid') != user['firebaseUid']
+                    or data.get('firebaseProject') != user.get('firebaseProject')):
+                return None
             try:
                 valid = await self.firebase.session_valid(user["firebaseUid"], data.get("firebaseAuthTime"), user.get("firebaseProject"))
             except FirebaseFailure as exc:
                 raise PlatformError(exc.code, exc.message, exc.status) from None
             if not valid: return None
-        if touch: await self.touch_presence(str(user["id"]))
+        if touch:
+            await self.touch_presence(str(user["id"]))
+            await self.security.touch(key)
         return user
 
     async def resolve_session(self, token: str | None) -> dict[str, Any] | None:
@@ -1075,8 +1079,7 @@ class PlatformService:
     async def delete_session(self, token: str | None) -> None:
         key = self.token_key(token)
         if not key: return
-        if self.r is not None: await self.r.delete(self.k_session(key))
-        else: self.mem_sessions.pop(key, None)
+        await self.security.drop(key)
 
     async def touch_presence(self, uid: str) -> None:
         if self.r is not None:
@@ -1137,6 +1140,8 @@ class PlatformService:
         return data
 
     async def send_friend_request(self, sender: dict[str, Any], target_username: str) -> dict[str, Any]:
+        if not await self.get_user(str(sender['id'])):
+            raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
         target = await self.find_user_by_username(target_username)
         if not target:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
@@ -1181,6 +1186,8 @@ class PlatformService:
 
     async def respond_friend_request(self, user: dict[str, Any], sender_id: str, accept: bool) -> dict[str, Any]:
         uid = str(user["id"])
+        if not await self.get_user(uid):
+            raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
         sender = await self.get_user(sender_id)
         if not sender:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
@@ -1520,6 +1527,10 @@ class PlatformHttp:
                 peer = value
         return peer
 
+    def _device(self, request):
+        from account_security import device_metadata
+        return device_metadata(request, trust_proxy=self.trust_proxy)
+
     def _secure(self, request: web.Request) -> bool:
         if request.secure:
             return True
@@ -1582,7 +1593,9 @@ class PlatformHttp:
                  'identityHash': identity_hash, 'linkGuest': body.get('linkGuest') is True}
         try:
             if body.get('linkGuest') is True:
-                guest = await self._user(request)
+                guest = await self._optional_user(request)
+                if not guest:
+                    raise PlatformError('GUEST_SESSION_EXPIRED', 'انتهت جلسة الضيف. أعد الدخول إلى ضيفك إن أمكن، أو ابدأ حسابًا مستقلًا باختيارك.', 409)
                 user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
             else:
                 user = await self.platform.firebase_account(claims, username=body.get("username"))
@@ -1596,7 +1609,7 @@ class PlatformHttp:
             AUTH_AUDIT.info(json.dumps({**audit, 'result': exc.code}, separators=(',', ':')))
             raise
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
-        token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"])
+        token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"], metadata=self._device(request))
         AUTH_AUDIT.info(json.dumps({**audit, 'result': 'accepted', 'accountId': str(user['id']),
                                    'role': str(user.get('role') or 'user')}, separators=(',', ':')))
         response = web.json_response({"ok":True,"user":public_user(user, include_avatar=True)})
@@ -1610,7 +1623,7 @@ class PlatformHttp:
             if not await self.platform.allow_rate(f"guest:{self._peer(request)}", 8, 300):
                 raise PlatformError('RATE_LIMIT','محاولات كثيرة؛ حاول لاحقًا',429)
             user = await self.platform.accounts.guest()
-            token = await self.platform.create_session(str(user['id']))
+            token = await self.platform.create_session(str(user['id']), metadata=self._device(request))
             response = web.json_response({'ok':True,'user':public_user(user,include_avatar=True)})
             response.set_cookie(SESSION_COOKIE,token,max_age=SESSION_TTL,httponly=True,secure=self._secure(request),samesite='Lax',path='/')
             return response
@@ -1625,7 +1638,7 @@ class PlatformHttp:
         body = await self._body(request)
         user = await self.platform.create_user(body.get("username"), str(body.get("password") or ""), body.get("displayName"))
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
-        token = await self.platform.create_session(str(user["id"]))
+        token = await self.platform.create_session(str(user["id"]), metadata=self._device(request))
         response = web.json_response({"ok": True, "user": public_user(user, include_avatar=True)})
         response.set_cookie(SESSION_COOKIE, token, max_age=SESSION_TTL, httponly=True, secure=self._secure(request), samesite="Lax", path="/")
         return response
@@ -1642,7 +1655,7 @@ class PlatformHttp:
             raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
         user = await self.platform.authenticate(str(body.get("username") or ""), str(body.get("password") or ""))
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
-        token = await self.platform.create_session(str(user["id"]))
+        token = await self.platform.create_session(str(user["id"]), metadata=self._device(request))
         response = web.json_response({"ok": True, "user": public_user(user, include_avatar=True)})
         response.set_cookie(SESSION_COOKIE, token, max_age=SESSION_TTL, httponly=True, secure=self._secure(request), samesite="Lax", path="/")
         return response

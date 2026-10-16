@@ -55,6 +55,20 @@ class VerifierTests(unittest.IsolatedAsyncioTestCase):
                     await self.identity.verify('x' * 120)
                 self.assertEqual(caught.exception.code, 'INVALID_ID_TOKEN')
 
+    async def test_account_controls_use_official_sdk_and_delete_is_idempotent(self):
+        user = SimpleNamespace(email='private@example.test', provider_data=[SimpleNamespace(provider_id='google.com')])
+        with patch.object(sdk_auth, 'get_user', return_value=user) as get:
+            self.assertEqual(await self.identity.account_info('official-uid'), {'email':'private@example.test','providers':['google.com']})
+            get.assert_called_once_with('official-uid', app=self.identity._app)
+        with patch.object(sdk_auth, 'revoke_refresh_tokens') as revoke:
+            await self.identity.revoke_sessions('official-uid')
+            revoke.assert_called_once_with('official-uid', app=self.identity._app)
+        with patch.object(sdk_auth, 'delete_user') as delete:
+            await self.identity.delete_user('official-uid')
+            delete.assert_called_once_with('official-uid', app=self.identity._app)
+        with patch.object(sdk_auth, 'delete_user', side_effect=sdk_auth.UserNotFoundError('already removed')):
+            await self.identity.delete_user('official-uid')
+
     async def test_unverified_email_malformed_token_and_provider_outage(self):
         with self.assertRaises(FirebaseFailure):
             await self.identity.verify({'uid': 'forged'})

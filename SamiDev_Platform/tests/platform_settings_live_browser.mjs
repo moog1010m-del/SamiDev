@@ -18,7 +18,7 @@ try{
   await page.locator('.topbar-nav [data-page=lobby]').click();
   await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=notifications]').click();
   await page.locator('#system-notifications').waitFor({state:'visible'});await page.locator('[data-settings-tab=account]').click();
-  assert(await page.locator('#account-settings-btn').isVisible());await page.keyboard.press('Escape');
+  assert(!await page.locator('#account-settings-btn').isVisible());assert(!await page.locator('#settings-auth-slot').isVisible());assert(await page.locator('#account-saved').isVisible());await page.keyboard.press('Escape');
   assert(!await page.locator('#platform-settings').isVisible());
   const connected=page.waitForResponse(r=>r.url().endsWith('/diwan/events')&&r.status()===200);
   await page.goto(base+'/platform/?community=diwan');await page.locator('#community-room').waitFor({state:'visible'});

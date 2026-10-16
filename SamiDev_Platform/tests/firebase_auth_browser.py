@@ -16,6 +16,7 @@ os.environ['SAMIDEV_PLATFORM_STORE'] = 'memory'
 os.environ['SAMIDEV_PRODUCTION'] = '0'
 from social_platform import PlatformService, PlatformHttp, PlatformError
 from firebase_identity import FirebaseFailure
+from account_security import AccountSecurityHttp
 import app as application
 
 async def main():
@@ -25,6 +26,7 @@ async def main():
     service.firebase.api_key = 'public-fixture'
     service.firebase.admin_uid = ''
     service.firebase.session_valid = AsyncMock(return_value=True)
+    service.firebase.account_info = AsyncMock(return_value={'email':'browser@example.test','providers':['password','google.com']})
     async def verify(token):
         if token not in {'fixture-verified', 'fixture-new', 'fixture-google-new'}:
             raise FirebaseFailure('EMAIL_NOT_VERIFIED', 'وثق بريدك', 403)
@@ -41,6 +43,7 @@ async def main():
         except PlatformError as e:
             return web.json_response({'ok':False,'error':e.code,'message':e.message}, status=e.status)
     server_app = web.Application(middlewares=[errors])
+    AccountSecurityHttp(api).install(server_app.router)
     server_app.on_response_prepare.append(application.security_headers)
     server_app.router.add_get('/api/auth/config', api.auth_config)
     server_app.router.add_post('/api/auth/guest', api.guest)

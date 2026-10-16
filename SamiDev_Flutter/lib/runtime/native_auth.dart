@@ -71,13 +71,11 @@ class NativeAuth {
     }
   }
 
-  Future<Map<String, dynamic>> signInGoogle() async {
+  Future<String> googleIdentity() async {
+    if (_config.isEmpty) await prepare();
     if (!usesFirebase) {
       throw const AuthFailure('فعّل Firebase على الخادم أولًا.');
     }
-    // AccountSettings may create a fresh auth controller after app bootstrap.
-    if (_config.isEmpty) await prepare();
-    clearPending();
     try {
       String token;
       if (googleTokenProvider != null) {
@@ -110,21 +108,42 @@ class NativeAuth {
         token,
         _config['projectId']?.toString() ?? '',
       );
-      // An existing identity switches accounts. A new one asks for a username,
-      // then finishPending links the guest through the server transaction.
-      _linkPending = false;
-      return await finishPending();
+      return await api.firebase!.token();
     } on GoogleSignInException catch (e) {
       clearPending();
       throw AuthFailure(
         e.code == GoogleSignInExceptionCode.canceled
             ? 'أُلغي الدخول باستخدام Google.'
-            : 'تعذر فتح Google. تحقق من إعدادات التطبيق ومعرّفات OAuth.',
+            : 'تعذر فتح Google. تحقق من إعدادات التطبيق.',
         code: 'GOOGLE_SIGN_IN_FAILED',
       );
     } on FirebaseClientFailure catch (e) {
       clearPending();
       throw AuthFailure(e.message, code: e.code);
+    }
+  }
+
+  Future<Map<String, dynamic>> signInGoogle() async {
+    clearPending();
+    await googleIdentity();
+    _linkPending = false;
+    return await finishPending();
+  }
+
+  Future<String> reauthenticate({
+    required bool google,
+    required String email,
+    String password = '',
+  }) async {
+    try {
+      if (google) return await googleIdentity();
+      if (api.firebase == null) await prepare();
+      await api.firebase!.signIn(email, password);
+      return await api.firebase!.token();
+    } on FirebaseClientFailure catch (e) {
+      throw AuthFailure(e.message, code: e.code);
+    } finally {
+      api.firebase?.clear();
     }
   }
 

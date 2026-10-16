@@ -1,6 +1,6 @@
 {
   "release": "V37",
-  "buildId": "samidev-v37-eda155563f101738",
+  "buildId": "samidev-v37-5045875ee82ae6a7",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,15 +8,18 @@
     "pool"
   ],
   "files": {
-    "platform/index.html": "2f6d6ed282ebf440e0a2104e41549160cb30187189bc91b19fe3d7a9dc0273ec",
-    "platform/firebase-auth.js": "a75175662abcb53217eb48ba16b16cb720bbd168bf5a63a062b8a9caa0785c28",
+    "platform/index.html": "5115562a6d0c87324cd1aa7c56e34ce89a79ed74986892423e654392c4202719",
+    "platform/account-deletion.html": "8c5e101b6614e70a015253d3e5e45467f2f5bf9b66bddb511d6a8df775609d97",
+    "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
+    "platform/account-settings.js": "02b8339526324df5958d6195a3f8f84fa901f497a5ae5179c2391209fea4f199",
+    "platform/firebase-auth.js": "4d860d35360e8c43ae556cf72f1f1b3d1116fa59f75453288e0684a86b8d65a7",
     "cosmetic-ui.css": "efd16f01f2a1581065746c9bd7721a84c203ddc7a3165dbaac4f798aa0a60283",
     "cosmetic-ui.js": "054aab92744e5b56cfd0d49e5fd050cdea548d899c46aeeaeceea80b05e39080",
     "platform/store.css": "366d3a7ac41d0f42e76a2f4cc96aeb382f9d451c0e0d59938c556241aafa53ce",
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
-    "platform/platform.css": "050a5bd048a2431dcd4ad72f4bc9d7ea3fed3d8ae6844435887560aa3881bb49",
+    "platform/platform.css": "0c2eb01bdd0845f28eb529860f1590bb5503bc725792edc5f4db8db692012752",
     "platform/profile-identity.css": "92aaa6d158ba4236e1851e04cca4bf16430f4fc534f34da7cf72a1d3bd3ebbd3",
-    "platform/platform.js": "d3418d3adb3b6249e274139351139627ccad7fee8ff349b7ecc007aa29101fc5",
+    "platform/platform.js": "f1eaa130781259af3d2b59c50cdf5a338f1066e8b5ae77f83a7626a8dedf08b0",
     "samidev-games.js": "30f9761386dd7be736ad3c854a0f1cafc55290ba40515d2590a02d4f3450edc8",
     "profile-details.css": "6a2697986baa8e191233a9adfaf6ee07c5fdf68238e6e20b4c82e443f775e69f",
     "profile-details.js": "1f628ca4b0479fb584e838a7b51ec42a124117799365aee69f9fc39c405f64cb",

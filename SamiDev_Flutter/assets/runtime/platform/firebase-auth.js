@@ -28,6 +28,12 @@
     let register=false,pending=false,setup=false,busy=false;
     let googleModule=null;
     const loadGoogle=()=>googleModule||(googleModule=import('/platform/vendor/google-auth.js'));
+    window.SamiDevFirebaseAuth.resetPassword=async email=>{try{await google('sendOobCode',{requestType:'PASSWORD_RESET',email});}catch(e){if(e.code!=='EMAIL_NOT_FOUND')throw e;}};
+    window.SamiDevFirebaseAuth.reauthenticate=async options=>{
+      // Verify again without exchanging the platform session or switching users.
+      const result=options.google?await (await loadGoogle()).authenticateGoogle(config):await google('signInWithPassword',{email:options.email,password:options.password,returnSecureToken:true});
+      return result.idToken;
+    };
     // Load before the click, so popup creation retains the browser user gesture.
     loadGoogle().catch(()=>{googleModule=null;});
     const field=name=>form.elements.namedItem(name),status=form.querySelector('[data-status]');

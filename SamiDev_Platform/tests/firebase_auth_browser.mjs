@@ -81,7 +81,7 @@ try {
   await page.setViewportSize({width:1280,height:900});
   await page.locator('.topbar-nav [data-page=profile]').click();
   await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
-  await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor({state:'visible'});
+  await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor({state:'visible'});
   await form.locator('[data-reset]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));
   assert(google.some(x=>x.data.requestType==='PASSWORD_RESET'));
@@ -113,7 +113,7 @@ try {
   await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
   const googleGuest=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
   await page.evaluate(()=>fetch('/fixture/seed',{method:'POST'}));
-  await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor();
+  await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor();
   await page.evaluate(()=>{window.googleFixtureToken='fixture-google-new';window.googleCancel=true;});
   page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('أُغلقت'));
@@ -130,14 +130,14 @@ try {
   assert.equal(linked.id,googleGuest.id);assert.equal(linked.isGuest,false);
   const kept=await page.evaluate(()=>fetch('/api/store').then(r=>r.json()));assert.equal(kept.coins,500);assert(kept.inventory.includes('badge_ember'));
   await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
-  await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor();
+  await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor();
   await page.evaluate(()=>window.googleFixtureToken='fixture-verified');
   page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
   await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='Final_user');
   // Default-off configuration keeps the original login and issues no Google calls.
   await page.context().clearCookies();const googleBefore=google.length;
   await page.route('**/api/auth/config',route=>route.fulfill({contentType:'application/json',body:'{"ok":true,"provider":"local"}'}));
-  await page.reload();await page.locator('#app').waitFor({state:'visible'});await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await page.locator('#login-form').waitFor({state:'visible'});
+  await page.reload();await page.locator('#app').waitFor({state:'visible'});await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await page.locator('#login-form').waitFor({state:'visible'});
   assert.equal(await page.locator('#firebase-auth-form').count(),0);assert.equal(google.length,googleBefore);
   await page.unroute('**/api/auth/config');
   await page.route('**/api/auth/config',route=>route.fulfill({status:503,contentType:'application/json',body:'{"ok":false}'}));

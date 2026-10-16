@@ -10,6 +10,31 @@ class MemoryVault implements SessionVault {
  @override Future<void> write(String key,String? value)async{if(value==null){data.remove(key);}else{data[key]=value;}}
 }
 void main(){
+ test('device self-revoke, global logout and accepted deletion remove secure session',()async{
+  final server=await HttpServer.bind(InternetAddress.loopbackIPv4,0);
+  final vault=MemoryVault();
+  final api=PlatformApi(RuntimePolicy('http://127.0.0.1:${server.port}',allowLocalDevelopment:true),vault);
+  server.listen((request)async{
+   expect(request.headers.value('User-Agent'),contains('SamiDev/'));
+   request.response.headers.contentType=ContentType.json;
+   if(request.uri.path=='/api/auth/login'){
+    request.response.cookies.add(Cookie('samidev_session','S'*43)..httpOnly=true);
+    request.response.write('{"ok":true}');
+   }else{
+    expect(request.headers.value('Cookie'),'samidev_session=${'S'*43}');
+    request.response.statusCode=request.uri.path=='/api/account/delete'?202:200;
+    request.response.write('{"ok":true,"signedOut":true}');
+   }
+   await request.response.close();
+  });
+  try{
+   for(final entry in [('DELETE','/api/account/devices/current'),('POST','/api/account/logout-all'),('POST','/api/account/delete')]){
+    await api.request('POST','/api/auth/login',body:utf8.encode('{}'));expect(api.signedIn,isTrue);
+    await api.request(entry.$1,entry.$2,body:entry.$1=='POST'?utf8.encode('{}'):null);
+    expect(api.signedIn,isFalse);expect(vault.data,isEmpty);
+   }
+  }finally{api.close();await server.close(force:true);}
+ });
  test('cookie stays native, accompanies API, clears on 401, redirects blocked',()async{
   final server=await HttpServer.bind(InternetAddress.loopbackIPv4,0);
   final policy=RuntimePolicy('http://127.0.0.1:${server.port}',allowLocalDevelopment:true);

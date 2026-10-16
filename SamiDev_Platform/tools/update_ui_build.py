@@ -6,7 +6,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
-ASSETS = ["platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
+ASSETS = ["platform/account-settings.js", "platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
 
 
 def build() -> dict:
@@ -22,7 +22,7 @@ def build() -> dict:
             raise RuntimeError(f"Expected one asset reference for {rel}; got {count}")
     index.write_bytes(html.encode("utf-8"))
     files = {rel: hashlib.sha256((GAME / rel).read_bytes()).hexdigest()
-             for rel in ["platform/index.html", *ASSETS, "index.html", "browser-runtime.js",  "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "waiting-room.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
+             for rel in ["platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js",  "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "waiting-room.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
     digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()[:16]
     manifest = {"release": "V37", "buildId": "samidev-v37-" + digest,
                 "games": ["carrom", "tablesoccer", "crazy8", "pool"], "files": files}

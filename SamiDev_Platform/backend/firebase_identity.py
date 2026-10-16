@@ -105,3 +105,27 @@ class FirebaseIdentity:
                     self._users.pop(next(iter(self._users)))
             self._users[uid] = (time.monotonic() + 30, valid_after, enabled)
         return enabled and auth_time >= valid_after
+
+    async def account_info(self, uid):
+        def lookup():
+            auth = self._sdk()
+            user = auth.get_user(uid, app=self._app)
+            return {'email': user.email or '', 'providers': sorted({p.provider_id for p in user.provider_data})}
+        return await self._work(lookup)
+
+    async def delete_user(self, uid):
+        def remove():
+            auth = self._sdk()
+            try:
+                auth.delete_user(uid, app=self._app)
+            except auth.UserNotFoundError:
+                pass  # Idempotent retry after a partially completed deletion.
+        await self._work(remove)
+        self._users.pop(uid, None)
+
+    async def revoke_sessions(self, uid):
+        def revoke():
+            auth = self._sdk()
+            auth.revoke_refresh_tokens(uid, app=self._app)
+        await self._work(revoke)
+        self._users.pop(uid, None)

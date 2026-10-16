@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "dca156975a8e6f1ac610417c1d80c012b9bd6a51efd898de88af9e05302496c2"
+      "sha256": "49526459cb786d4af24fe12f9f35a788a0f67768b6088a715091606c3840242a"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -1459,6 +1459,18 @@
       "size": 2851,
       "sha256": "fff9a0efd8b9d88a5aed0d6ed37d478673ee8a902d23d857741e217f7bc53758"
     },
+    "platform/account-deletion.html": {
+      "size": 2600,
+      "sha256": "8c5e101b6614e70a015253d3e5e45467f2f5bf9b66bddb511d6a8df775609d97"
+    },
+    "platform/account-deletion.js": {
+      "size": 4315,
+      "sha256": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687"
+    },
+    "platform/account-settings.js": {
+      "size": 7412,
+      "sha256": "02b8339526324df5958d6195a3f8f84fa901f497a5ae5179c2391209fea4f199"
+    },
     "platform/assets/cosmetics/badge_ember.webp": {
       "size": 183518,
       "sha256": "773306f7e942a7bb891626fb3d726be076a893fe36a07248969700ed75bcbce2"
@@ -2380,24 +2392,24 @@
       "sha256": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085"
     },
     "platform/build.json": {
-      "size": 2705,
-      "sha256": "ac04406749b3afc3dfe7c15dd8041762a1b7fc66ea54f7894de3428f37d5d944"
+      "size": 3019,
+      "sha256": "bd119a82075504194c9463137728d4979daec87360cbb54ecfac3f4cee6e71aa"
     },
     "platform/firebase-auth.js": {
-      "size": 10283,
-      "sha256": "a75175662abcb53217eb48ba16b16cb720bbd168bf5a63a062b8a9caa0785c28"
+      "size": 10839,
+      "sha256": "4d860d35360e8c43ae556cf72f1f1b3d1116fa59f75453288e0684a86b8d65a7"
     },
     "platform/index.html": {
-      "size": 36763,
-      "sha256": "2f6d6ed282ebf440e0a2104e41549160cb30187189bc91b19fe3d7a9dc0273ec"
+      "size": 39779,
+      "sha256": "5115562a6d0c87324cd1aa7c56e34ce89a79ed74986892423e654392c4202719"
     },
     "platform/platform.css": {
-      "size": 109781,
-      "sha256": "050a5bd048a2431dcd4ad72f4bc9d7ea3fed3d8ae6844435887560aa3881bb49"
+      "size": 111042,
+      "sha256": "0c2eb01bdd0845f28eb529860f1590bb5503bc725792edc5f4db8db692012752"
     },
     "platform/platform.js": {
-      "size": 83869,
-      "sha256": "d3418d3adb3b6249e274139351139627ccad7fee8ff349b7ecc007aa29101fc5"
+      "size": 83940,
+      "sha256": "f1eaa130781259af3d2b59c50cdf5a338f1066e8b5ae77f83a7626a8dedf08b0"
     },
     "platform/profile-identity.css": {
       "size": 11211,

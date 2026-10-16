@@ -15,8 +15,8 @@ class AccountLifecycle:
             async with self.service.lock:
                 yield
         elif hasattr(self.service.r, 'pool'):
-            async with self.service.r.transaction(keys):
-                yield
+            async with self.service.r.transaction(keys) as conn:
+                yield conn
         else:
             raise PlatformError('DURABLE_STORE_REQUIRED', 'الحسابات تتطلب PostgreSQL', 503)
 
@@ -56,6 +56,8 @@ class AccountLifecycle:
             identity = s.k_firebase(claims['uid'])
             async with self.transaction([s.k_user(uid), s.k_username(old), s.k_username(lower), identity]):
                 user = await s.get_user(uid)
+                if not user:
+                    raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
                 if user['usernameLower'] != old:
                     continue
                 if str(user.get('banned') or '0') == '1':
@@ -98,6 +100,8 @@ class AccountLifecycle:
             old = previous['usernameLower']
             async with self.transaction([s.k_user(uid), s.k_username(old), s.k_username(lower), s.k_store_ledger(uid)]):
                 user = await s.get_user(uid)
+                if not user:
+                    raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
                 if user['usernameLower'] != old:
                     continue
                 if user['username'] == name:
