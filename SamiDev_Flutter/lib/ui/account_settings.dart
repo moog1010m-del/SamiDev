@@ -56,7 +56,7 @@ class _AccountSettingsState extends State<AccountSettings> {
   Future<void> account() async {
     if(widget.api.firebase==null){setState(()=>error='ربط البريد يتطلب تفعيل Firebase على الخادم أولًا. اللعب كضيف متاح.');return;}
     final auth=NativeAuth(widget.api,linkGuest:user['isGuest']==true);
-    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(c)=>Scaffold(appBar:AppBar(title:const Text('البريد وكلمة المرور')),body:AuthScreen(auth:auth,onAuthenticated:(updated)async{await widget.onChanged(updated);if(mounted){setState((){user=updated;name.text=updated['username']?.toString()??'';});if(c.mounted)Navigator.pop(c);}}))));
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(c)=>Scaffold(appBar:AppBar(title:const Text('تسجيل الدخول وربط الحساب')),body:AuthScreen(auth:auth,onAuthenticated:(updated)async{await widget.onChanged(updated);if(mounted){setState((){user=updated;name.text=updated['username']?.toString()??'';});if(c.mounted)Navigator.pop(c);}}))));
     auth.clearPending();
   }
   @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('إعدادات المنصة')),body:ListView(padding:const EdgeInsets.all(24),children:[
@@ -65,7 +65,7 @@ class _AccountSettingsState extends State<AccountSettings> {
     TextButton(onPressed:notifications,child:const Text('الإشعارات')),
     const Divider(),const Text('الحساب',style:TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
     Text(user['isGuest']==true?'تلعب كضيف. اربط بريدًا جديدًا لحفظ تقدمك والوصول إليه من جهاز آخر.':'حسابك مرتبط. يمكنك الدخول إلى حساب آخر من هنا.'),
-    const SizedBox(height:16),FilledButton(onPressed:busy?null:account,child:const Text('ربط البريد أو تسجيل الدخول')),
+    const SizedBox(height:16),FilledButton(onPressed:busy?null:account,child:const Text('ربط الحساب أو تسجيل الدخول')),
     const SizedBox(height:28),TextField(controller:name,enabled:!busy,textDirection:TextDirection.ltr,decoration:const InputDecoration(labelText:'اسم المستخدم بدون @')),
     const SizedBox(height:12),Text(user['freeRenameAvailable']==true?'تغيير مجاني مرة واحدة.':'بطاقات تغيير الاسم: ${user['renameCredits']??0} · تتوفر في المتجر.'),
     TextButton(onPressed:busy?null:rename,child:const Text('حفظ اسم المستخدم')),

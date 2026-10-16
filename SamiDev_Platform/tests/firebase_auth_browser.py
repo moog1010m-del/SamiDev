@@ -26,9 +26,9 @@ async def main():
     service.firebase.admin_uid = ''
     service.firebase.session_valid = AsyncMock(return_value=True)
     async def verify(token):
-        if token not in {'fixture-verified', 'fixture-new'}:
+        if token not in {'fixture-verified', 'fixture-new', 'fixture-google-new'}:
             raise FirebaseFailure('EMAIL_NOT_VERIFIED', 'وثق بريدك', 403)
-        return dict(uid='browser-user' if token == 'fixture-verified' else 'new-browser-user', email='browser@example.test', email_verified=True, auth_time=int(time.time()))
+        return dict(uid='browser-user' if token == 'fixture-verified' else 'google-new-user' if token == 'fixture-google-new' else 'new-browser-user', email='browser@example.test', email_verified=True, auth_time=int(time.time()))
     service.firebase.verify = verify
     # Use the actual production CSP and route handlers, not a permissive test CSP.
     application.SERVICE.platform = service
@@ -67,7 +67,7 @@ async def main():
         assert await process.wait() == 0, 'Browser assertions failed'
         unchanged = await service.get_user(old['id'])
         assert not unchanged.get('firebaseUid') and unchanged['coins'] == '777'
-        assert len(service.mem_firebase)==2, 'Expected two linked Firebase identities; old test account untouched'
+        assert len(service.mem_firebase)==3, 'Expected three linked Firebase identities; old test account untouched'
     print('FIREBASE_BROWSER_HTTP_PASS: new profiles, no old account migration')
 
 if __name__ == '__main__': asyncio.run(main())

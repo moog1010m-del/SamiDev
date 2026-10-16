@@ -27,7 +27,10 @@ class FirebaseIdentity:
 
     def config(self):
         return {'provider': 'firebase' if self.enabled else 'local',
-                **({'apiKey': self.api_key, 'projectId': self.project} if self.enabled else {})}
+                **({'apiKey': self.api_key, 'projectId': self.project,
+                    'authDomain': self.project + '.firebaseapp.com',
+                    'googleClientId': os.getenv('SAMIDEV_GOOGLE_WEB_CLIENT_ID', '').strip(),
+                    'googleIosClientId': os.getenv('SAMIDEV_GOOGLE_IOS_CLIENT_ID', '').strip()} if self.enabled else {})}
 
     def _sdk(self):
         import firebase_admin

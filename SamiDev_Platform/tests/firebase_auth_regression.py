@@ -117,7 +117,7 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
     async def test_local_login_registration_and_sessions_disabled_when_firebase_enabled(self):
         self.assertEqual(FirebaseIdentity().config(), {'provider': 'local'})
         config = await (await self.client.get('/api/auth/config')).json()
-        self.assertEqual(set(config), {'ok', 'provider', 'apiKey', 'projectId'})
+        self.assertEqual(set(config), {'ok', 'provider', 'apiKey', 'projectId', 'authDomain', 'googleClientId', 'googleIosClientId'})
         response = await self.client.post('/api/auth/register', json={})
         self.assertEqual(response.status, 409)
         response = await self.client.post('/api/auth/login', json={'username':'old_player', 'password':'Original-password-123'})

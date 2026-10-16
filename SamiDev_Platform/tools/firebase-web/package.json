@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "esbuild": "^0.25.10",
+    "firebase": "^12.4.0"
+  }
+}

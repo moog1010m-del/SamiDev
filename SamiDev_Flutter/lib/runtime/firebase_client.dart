@@ -122,6 +122,23 @@ class FirebaseClient {
     );
   }
 
+  Future<void> signInGoogle(String googleIdToken, String projectId) async {
+    clear();
+    _remember(
+      await _request('signInWithIdp', {
+        'postBody': Uri(
+          queryParameters: {
+            'id_token': googleIdToken,
+            'providerId': 'google.com',
+          },
+        ).query,
+        'requestUri': 'https://$projectId.firebaseapp.com',
+        'returnSecureToken': true,
+        'returnIdpCredential': true,
+      }),
+    );
+  }
+
   Future<void> sendVerification() async {
     if (_idToken == null) {
       throw const FirebaseClientFailure('AUTH_REQUIRED', 'سجّل الدخول أولًا.');

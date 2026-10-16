@@ -14,6 +14,7 @@ dependencies:
   flutter_secure_storage: 11.2.0
   image_picker: 1.2.4
   crypto: 3.0.7
+  google_sign_in: 7.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -63,6 +64,7 @@ flutter:
     - assets/runtime/platform/assets/profile/raster/
     - assets/runtime/platform/assets/ranks/
     - assets/runtime/platform/assets/stickers/
+    - assets/runtime/platform/vendor/
     - assets/runtime/room-sprites/
     - assets/runtime/scene-avatars/
     - assets/runtime/scene-reactions/

@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'api.dart';
 import 'firebase_client.dart';
@@ -11,9 +14,12 @@ class AuthFailure implements Exception {
 
 /// Uses the existing server session cookie. Passwords never enter a WebView.
 class NativeAuth {
-  NativeAuth(this.api, {this.linkGuest=false});
+  NativeAuth(this.api, {this.linkGuest = false, this.googleTokenProvider});
+  final Future<String> Function()? googleTokenProvider;
+  static Future<void>? _googleInitialization;
+  Map<String, dynamic> _config = {};
   final bool linkGuest;
-  bool _linkPending=false;
+  bool _linkPending = false;
   final PlatformApi api;
 
   Map<String, dynamic> _user(ApiResponse response) {
@@ -49,6 +55,7 @@ class NativeAuth {
       throw const AuthFailure('تعذر تحميل إعدادات المصادقة.');
     }
     final config = response.json;
+    _config = config;
     if (config['provider'] == 'firebase') {
       final key = config['apiKey'];
       if (key is! String || key.isEmpty) {
@@ -61,6 +68,63 @@ class NativeAuth {
       api.firebase = null;
     } else {
       throw const AuthFailure('إعدادات المصادقة غير صالحة.');
+    }
+  }
+
+  Future<Map<String, dynamic>> signInGoogle() async {
+    if (!usesFirebase) {
+      throw const AuthFailure('فعّل Firebase على الخادم أولًا.');
+    }
+    // AccountSettings may create a fresh auth controller after app bootstrap.
+    if (_config.isEmpty) await prepare();
+    clearPending();
+    try {
+      String token;
+      if (googleTokenProvider != null) {
+        token = await googleTokenProvider!();
+      } else {
+        final clientId = _config['googleClientId']?.toString() ?? '';
+        final iosId = _config['googleIosClientId']?.toString() ?? '';
+        if (clientId.isEmpty || (Platform.isIOS && iosId.isEmpty)) {
+          throw const AuthFailure(
+            'إعدادات Google للتطبيق غير مكتملة. يلزم ربط معرّفات OAuth الخاصة بأندرويد وiOS.',
+          );
+        }
+        _googleInitialization ??= GoogleSignIn.instance.initialize(
+          serverClientId: clientId,
+          clientId: Platform.isIOS ? iosId : null,
+        );
+        try {
+          await _googleInitialization;
+        } catch (_) {
+          _googleInitialization = null;
+          rethrow;
+        }
+        final account = await GoogleSignIn.instance.authenticate();
+        token = account.authentication.idToken ?? '';
+      }
+      if (token.isEmpty) {
+        throw const AuthFailure('لم ترسل Google إثبات هوية صالحًا.');
+      }
+      await api.firebase!.signInGoogle(
+        token,
+        _config['projectId']?.toString() ?? '',
+      );
+      // An existing identity switches accounts. A new one asks for a username,
+      // then finishPending links the guest through the server transaction.
+      _linkPending = false;
+      return await finishPending();
+    } on GoogleSignInException catch (e) {
+      clearPending();
+      throw AuthFailure(
+        e.code == GoogleSignInExceptionCode.canceled
+            ? 'أُلغي الدخول باستخدام Google.'
+            : 'تعذر فتح Google. تحقق من إعدادات التطبيق ومعرّفات OAuth.',
+        code: 'GOOGLE_SIGN_IN_FAILED',
+      );
+    } on FirebaseClientFailure catch (e) {
+      clearPending();
+      throw AuthFailure(e.message, code: e.code);
     }
   }
 
@@ -80,7 +144,11 @@ class NativeAuth {
     }
   }
 
-  void clearPending() { _linkPending=false; api.firebase?.clear(); }
+  void clearPending() {
+    _linkPending = false;
+    api.firebase?.clear();
+  }
+
   Future<Map<String, dynamic>> finishPending({
     String username = '',
     String displayName = '',
@@ -102,17 +170,19 @@ class NativeAuth {
       if (!api.signedIn) throw const AuthFailure('لم تُحفظ جلسة الدخول.');
       api.firebase!.clear();
       return user;
-    } on AuthFailure catch(e) {
-      if(linkGuest&&e.code=='PROFILE_SETUP_REQUIRED')_linkPending=true;
+    } on AuthFailure catch (e) {
+      if (linkGuest && e.code == 'PROFILE_SETUP_REQUIRED') _linkPending = true;
       rethrow;
     } on FirebaseClientFailure catch (e) {
       throw AuthFailure(e.message, code: e.code);
     }
   }
 
-  Future<Map<String,dynamic>> guest() async {
-    final user=_user(await api.request('POST','/api/auth/guest',body:utf8.encode('{}')));
-    if(!api.signedIn)throw const AuthFailure('لم تُحفظ جلسة الضيف.');
+  Future<Map<String, dynamic>> guest() async {
+    final user = _user(
+      await api.request('POST', '/api/auth/guest', body: utf8.encode('{}')),
+    );
+    if (!api.signedIn) throw const AuthFailure('لم تُحفظ جلسة الضيف.');
     return user;
   }
 
@@ -136,7 +206,7 @@ class NativeAuth {
     if (usesFirebase) {
       try {
         if (register) {
-          _linkPending=linkGuest;
+          _linkPending = linkGuest;
           await api.firebase!.signUp(email, password);
           try {
             await api.firebase!.sendVerification();
@@ -151,7 +221,7 @@ class NativeAuth {
             code: 'EMAIL_NOT_VERIFIED',
           );
         }
-        _linkPending=false;
+        _linkPending = false;
         await api.firebase!.signIn(email, password);
         return await finishPending(
           username: username,

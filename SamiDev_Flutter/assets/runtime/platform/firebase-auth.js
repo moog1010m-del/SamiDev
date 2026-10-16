@@ -1,4 +1,4 @@
-/* Firebase email authentication via fixed Google REST endpoints; no remote scripts. */
+/* Email REST + the locally bundled official Firebase popup flow. */
 (() => {
   'use strict';
   let idToken=null,refreshToken=null,key=null;
@@ -17,7 +17,7 @@
     const card=document.querySelector('.auth-card');
     for(const node of card.querySelectorAll('.auth-tabs,.auth-form,.auth-note'))node.classList.add('hidden');
     const form=document.createElement('form');form.className='auth-form';form.id='firebase-auth-form';
-    form.innerHTML=`<label>البريد الإلكتروني<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+    form.innerHTML=`<button class="google-auth-button" data-google type="button"><span class="google-auth-mark" aria-hidden="true">G</span><span>المتابعة باستخدام Google</span></button><div class="auth-divider">أو بالبريد الإلكتروني</div><label>البريد الإلكتروني<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
       <label data-new-profile class="hidden">اسم المستخدم (بدون @)<input name="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" autocomplete="username"></label>
       <label data-password>كلمة مرور حساب SamiDev<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
       <p data-status role="status" aria-live="polite"></p><button class="primary" data-submit type="submit">دخول</button>
@@ -26,10 +26,18 @@
       <button class="ghost" data-mode type="button">إنشاء حساب جديد</button>`;
     card.append(form);
     let register=false,pending=false,setup=false,busy=false;
+    let googleModule=null;
+    const loadGoogle=()=>googleModule||(googleModule=import('/platform/vendor/google-auth.js'));
+    // Load before the click, so popup creation retains the browser user gesture.
+    loadGoogle().catch(()=>{googleModule=null;});
     const field=name=>form.elements.namedItem(name),status=form.querySelector('[data-status]');
     function render(){
       for(const n of form.querySelectorAll('[data-new-profile]'))n.classList.toggle('hidden',!(register||setup));
       field('username').required=(register||setup);
+      form.querySelector('[data-google]').classList.toggle('hidden',pending||setup);
+      form.querySelector('.auth-divider').classList.toggle('hidden',pending||setup);
+      field('email').required=!setup;
+      field('email').closest('label').classList.toggle('hidden',setup);
       form.querySelector('[data-password]').classList.toggle('hidden',pending||setup);field('password').required=!pending&&!setup;field('password').minLength=register?15:1;field('password').autocomplete=register?'new-password':'current-password';
       form.querySelector('[data-resend]').classList.toggle('hidden',!pending);
       form.querySelector('[data-submit]').textContent=pending?'تحققت من بريدي':setup?'إكمال الحساب':register?'إنشاء الحساب':'دخول';
@@ -45,6 +53,20 @@
       finally{busy=false;render();}
     }
     form.querySelector('[data-reset]').onclick=()=>mail(true);form.querySelector('[data-resend]').onclick=()=>mail();
+    form.querySelector('[data-google]').onclick=async()=>{
+      if(busy)return;
+      if(currentUser()?.isGuest&&!confirm('حساب Google الجديد يحفظ تقدم الضيف. إذا كان مرتبطًا بحساب موجود فستدخل إليه دون دمج تقدم الضيف. هل تريد المتابعة؟'))return;
+      busy=true;clear();status.textContent='';render();
+      try{
+        const module=await loadGoogle();remember(await module.authenticateGoogle(config));
+        const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,linkGuest:false})});
+        clear();register=false;pending=false;setup=false;onAuthenticated(result.user);
+      }catch(e){
+        const code=e.code||e.error;
+        if(code==='PROFILE_SETUP_REQUIRED'){register=false;setup=true;status.textContent='اختر اسم مستخدم لإكمال حسابك وحفظ تقدمك.';}
+        else{clear();status.textContent=({'auth/popup-closed-by-user':'أُغلقت نافذة Google. يمكنك المحاولة مجددًا.','auth/cancelled-popup-request':'أُلغي الدخول باستخدام Google.','auth/popup-blocked':'اسمح بفتح نافذة Google ثم أعد المحاولة.','auth/unauthorized-domain':'نطاق الموقع غير مضاف إلى النطاقات المسموحة في Firebase.','auth/operation-not-allowed':'فعّل تسجيل الدخول باستخدام Google في Firebase.','auth/account-exists-with-different-credential':'هذا البريد مرتبط بطريقة دخول أخرى. ادخل بها أولًا.'})[code]||'تعذر الدخول باستخدام Google. تحقق من الاتصال وإعدادات المصادقة.';}
+      }finally{busy=false;render();}
+    };
     form.onsubmit=async event=>{
       event.preventDefault();if(busy)return;
       busy=true;render();status.textContent='';

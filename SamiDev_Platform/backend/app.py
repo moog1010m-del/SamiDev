@@ -1331,9 +1331,12 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
         response.headers["Vary"] = "Cookie, Origin"
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"
+    frame = "'self'"
     if SERVICE.platform.firebase.enabled:
-        connect += " https://identitytoolkit.googleapis.com https://securetoken.googleapis.com"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src " + script + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src " + connect + "; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+        connect += " https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://apis.google.com"
+        script += " https://apis.google.com"
+        frame += " https://" + SERVICE.platform.firebase.project + ".firebaseapp.com"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src " + script + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src " + connect + "; frame-src " + frame + "; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
     if PRODUCTION_MODE and SERVICE.platform_http._secure(request):
         response.headers["Strict-Transport-Security"] = "max-age=31536000"
 

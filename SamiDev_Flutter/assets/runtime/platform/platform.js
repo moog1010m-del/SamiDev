@@ -228,7 +228,7 @@
     $('#platform-settings').classList.remove('hidden');document.body.classList.add('settings-open');
     $$('[data-settings-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.settingsPanel!==tab));
     $$('[data-settings-tab]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.settingsTab===tab)));
-    $('#settings-account-state').textContent=state.user?.isGuest?'أنت ضيف. إنشاء حساب ببريد جديد يحفظ نفس تقدمك، والدخول ببريد موجود يفتح حسابه.':'حسابك محفوظ. يمكنك الدخول إلى حساب آخر من هنا.';
+    $('#settings-account-state').textContent=state.user?.isGuest?'أنت ضيف. اربط حسابًا جديدًا عبر البريد أو Google لحفظ تقدمك، أو ادخل إلى حسابك المحفوظ.':'حسابك محفوظ. يمكنك الدخول إلى حساب آخر من هنا.';
     $('#settings-close').focus();if(tab==='notifications')loadCommunities();
   }
   function closeSettings(force=false){

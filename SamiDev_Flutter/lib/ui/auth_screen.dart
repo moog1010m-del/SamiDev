@@ -33,11 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
   bool get profileFields => _register || _setup;
   @override
   void dispose() {
-    for (final c in [
-      _username,
-      _password,
-      _email,
-    ]) {
+    for (final c in [_username, _password, _email]) {
       c.clear();
       c.dispose();
     }
@@ -58,11 +54,77 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
+  Future<void> _google() async {
+    if (_busy) return;
+    if (widget.auth.linkGuest) {
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: const Text('المتابعة باستخدام Google'),
+          content: const Text(
+            'حساب Google الجديد يحفظ تقدم الضيف. الحساب المرتبط مسبقًا يفتح تقدمه دون دمج تقدم الضيف.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(c, false),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(c, true),
+              child: const Text('متابعة'),
+            ),
+          ],
+        ),
+      );
+      if (accepted != true || !mounted) return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final user = await widget.auth.signInGoogle();
+      if (mounted) await widget.onAuthenticated(user);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e is AuthFailure
+              ? e.message
+              : 'تعذر الدخول باستخدام Google.';
+          if (e is AuthFailure && e.code == 'PROFILE_SETUP_REQUIRED') {
+            _setup = true;
+            _register = false;
+          }
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   Future<void> _submit() async {
     if (_busy || !(_form.currentState?.validate() ?? false)) return;
-    if(!_register&&!finishing&&widget.auth.linkGuest){
-      final accepted=await showDialog<bool>(context:context,builder:(c)=>AlertDialog(title:const Text('الدخول لحساب موجود'),content:const Text('سيتم فتح حساب البريد بدون دمج تقدم الضيف. اختر إنشاء حساب جديد لربط بريد جديد بنفس تقدمك.'),actions:[TextButton(onPressed:()=>Navigator.pop(c,false),child:const Text('إلغاء')),FilledButton(onPressed:()=>Navigator.pop(c,true),child:const Text('دخول'))]));
-      if(accepted!=true||!mounted)return;
+    if (!_register && !finishing && widget.auth.linkGuest) {
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: const Text('الدخول لحساب موجود'),
+          content: const Text(
+            'سيتم فتح حساب البريد بدون دمج تقدم الضيف. اختر إنشاء حساب جديد لربط بريد جديد بنفس تقدمك.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(c, false),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(c, true),
+              child: const Text('دخول'),
+            ),
+          ],
+        ),
+      );
+      if (accepted != true || !mounted) return;
     }
     FocusScope.of(context).unfocus();
     setState(() {
@@ -93,7 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
           if (e is AuthFailure && e.code == 'EMAIL_NOT_VERIFIED') {
             _pending = true;
             _password.clear();
-                }
+          }
           if (e is AuthFailure && e.code == 'PROFILE_SETUP_REQUIRED') {
             _setup = true;
             _password.clear();
@@ -229,7 +291,27 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (firebase) ...[
+                      if (firebase && !finishing) ...[
+                        OutlinedButton.icon(
+                          key: const ValueKey('auth-google'),
+                          onPressed: _busy ? null : _google,
+                          icon: const Text(
+                            'G',
+                            style: TextStyle(
+                              color: Color(0xff4285f4),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          label: const Text('المتابعة باستخدام Google'),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         TextFormField(
                           key: const ValueKey('auth-email'),
                           controller: _email,

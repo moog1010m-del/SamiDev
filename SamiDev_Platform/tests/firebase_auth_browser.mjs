@@ -104,6 +104,34 @@ try {
   await page.locator('#app').waitFor({state:'visible'});
   await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='new_browser');
   assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.username,'new_browser');
+  assert(await page.evaluate(()=>import('/platform/vendor/google-auth.js').then(m=>typeof m.authenticateGoogle==='function')));
+  // The popup boundary is mocked; server exchange, session, profile setup and
+  // guest preservation use the real HTTP implementation and production CSP.
+  await page.route('**/platform/vendor/google-auth.js',route=>route.fulfill({contentType:'application/javascript',body:`export async function authenticateGoogle(){if(window.googleCancel)throw {code:'auth/popup-closed-by-user'};return {idToken:window.googleFixtureToken,refreshToken:'fixture-refresh'};}`}));
+  await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
+  const googleGuest=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
+  await page.evaluate(()=>fetch('/fixture/seed',{method:'POST'}));
+  await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor();
+  await page.evaluate(()=>{window.googleFixtureToken='fixture-google-new';window.googleCancel=true;});
+  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
+  await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('أُغلقت'));
+  assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.id,googleGuest.id);
+  await page.evaluate(()=>window.googleCancel=false);
+  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
+  await form.locator('[data-submit]').filter({hasText:'إكمال الحساب'}).waitFor();
+  assert(!await form.locator('[name=email]').isVisible());assert(!await form.locator('[name=password]').isVisible());
+  // Refresh must continue the Google identity instead of reverting to email.
+  await page.route('https://securetoken.googleapis.com/**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({id_token:'fixture-google-new',refresh_token:'fixture-refresh'})}));
+  await form.locator('[name=username]').fill('google_player');await form.locator('[data-submit]').click();
+  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='google_player');
+  const linked=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
+  assert.equal(linked.id,googleGuest.id);assert.equal(linked.isGuest,false);
+  const kept=await page.evaluate(()=>fetch('/api/store').then(r=>r.json()));assert.equal(kept.coins,500);assert(kept.inventory.includes('badge_ember'));
+  await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
+  await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor();
+  await page.evaluate(()=>window.googleFixtureToken='fixture-verified');
+  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
+  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='Final_user');
   // Default-off configuration keeps the original login and issues no Google calls.
   await page.context().clearCookies();const googleBefore=google.length;
   await page.route('**/api/auth/config',route=>route.fulfill({contentType:'application/json',body:'{"ok":true,"provider":"local"}'}));
