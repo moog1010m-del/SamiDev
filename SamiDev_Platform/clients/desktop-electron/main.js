@@ -1,7 +1,13 @@
 const { app, BrowserWindow, shell, session } = require('electron');
 
-const PLATFORM_URL = process.env.SAMIDEV_PLATFORM_URL || 'http://127.0.0.1:8088/platform/';
-const allowedOrigin = new URL(PLATFORM_URL).origin;
+const configuredUrl = process.env.SAMIDEV_PLATFORM_URL || (!app.isPackaged ? 'http://127.0.0.1:8088/platform/' : '');
+if (!configuredUrl) throw new Error('Set SAMIDEV_PLATFORM_URL to your HTTPS platform origin');
+const platform = new URL(configuredUrl);
+const localDevelopment = !app.isPackaged && ['127.0.0.1','localhost','[::1]'].includes(platform.hostname);
+if ((platform.protocol !== 'https:' && !(localDevelopment && platform.protocol === 'http:')) || platform.username || platform.password || platform.search || platform.hash || !['/','/platform/'].includes(platform.pathname) || ['game.example.com','example.com'].includes(platform.hostname)) throw new Error('Invalid platform URL');
+platform.pathname = '/platform/';
+const PLATFORM_URL = platform.href;
+const allowedOrigin = platform.origin;
 
 function createWindow() {
   const win = new BrowserWindow({

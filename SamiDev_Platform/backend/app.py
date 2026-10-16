@@ -1332,7 +1332,7 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"
     frame = "'self'"
-    if SERVICE.platform.firebase.enabled:
+    if SERVICE.platform.firebase.enabled and request.path.startswith("/platform"):
         connect += " https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://apis.google.com"
         script += " https://apis.google.com"
         frame += " https://" + SERVICE.platform.firebase.project + ".firebaseapp.com"

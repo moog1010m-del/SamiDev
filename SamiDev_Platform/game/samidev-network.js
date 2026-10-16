@@ -57,15 +57,13 @@
   }
 
   function socketUrl(ticketOverride) {
-    const base = window.__SAMIDEV_WS_URL || `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`;
-    try {
-      const q = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
-      const ticket = ticketOverride ?? q.get('ticket');
-      if (!ticket) return base;
-      const u = new URL(base, location.href);
-      u.searchParams.set('ticket', ticket);
-      return u.toString();
-    } catch (_) { return base; }
+    // Always use this origin's gateway. Never send a game ticket to an override.
+    const u = new URL('/ws', location.href);
+    u.protocol = u.protocol === 'https:' ? 'wss:' : 'ws:';
+    const q = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
+    const ticket = ticketOverride ?? q.get('ticket');
+    if (ticket) u.searchParams.set('ticket', ticket);
+    return u.toString();
   }
 
   function send(payload) {

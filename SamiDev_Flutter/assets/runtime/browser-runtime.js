@@ -43,9 +43,12 @@
   }
 
   const norm = (uri) => {
-    if (typeof uri !== 'string') return uri;
+    if (typeof uri !== 'string') throw new TypeError('Invalid game asset path');
     uri = uri.replace(/^~\//, '');
     uri = uri.replace(/^(?:carrom|tablesoccer|crazy8|pool)\//, '');
+    if (/^[\s]|[\x00-\x1f\x7f\\]|^[a-z][a-z0-9+.-]*:|^\/\//i.test(uri)) {
+      throw new Error('External game assets are not allowed');
+    }
     return uri;
   };
 
@@ -1169,13 +1172,14 @@
       img.onerror=()=>{
         if(themeAtlas && !fallback){
           fallback=true; state.carromTheme='carrom_classic';
-          img.src=window.SamiDevCarromThemes.defaultTheme.atlas; return;
+          img.src=norm(window.SamiDevCarromThemes.defaultTheme.atlas); return;
         }
         console.warn('img failed',path);resolve();
       };
       const source=(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
       const refreshedAsset = ['images/table-background.webp','images/ui/ui.webp','images/imported/themes/th_basic_background.webp'].includes(path);
-      img.src=refreshedAsset && !source.startsWith('data:') ? source+(source.includes('?')?'&':'?')+'v=36' : source;
+      const safeSource = /^data:image\/(?:png|jpeg|webp);base64,[a-z0-9+/=\s]+$/i.test(source) ? source : norm(source);
+      img.src=refreshedAsset && !safeSource.startsWith('data:') ? safeSource+(safeSource.includes('?')?'&':'?')+'v=36' : safeSource;
     }))]);
     status.textContent='تشغيل اللعبة...';
     if (!state.gameLogic) {

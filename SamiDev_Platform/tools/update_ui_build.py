@@ -21,6 +21,17 @@ def build() -> dict:
         if count != 1:
             raise RuntimeError(f"Expected one asset reference for {rel}; got {count}")
     index.write_bytes(html.encode("utf-8"))
+    # Invalidate game-shell caches when transport or resource guards change.
+    for entry in ["index.html", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]:
+        shell = GAME / entry
+        text = shell.read_text(encoding="utf-8")
+        for rel in ["browser-runtime.js", "samidev-network.js"]:
+            version = hashlib.sha256((GAME / rel).read_bytes()).hexdigest()[:16]
+            text, count = re.subn(r'(["\'])(/?)' + re.escape(rel) + r'(?:\?[^"\']*)?(["\'])',
+                                 lambda m: m[1] + m[2] + rel + "?v=" + version + m[3], text)
+            if count != 1:
+                raise RuntimeError(f"Expected one {rel} reference in {entry}; got {count}")
+        shell.write_text(text, encoding="utf-8")
     files = {rel: hashlib.sha256((GAME / rel).read_bytes()).hexdigest()
              for rel in ["platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js",  "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "waiting-room.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
     digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()[:16]
