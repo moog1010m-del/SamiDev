@@ -104,6 +104,7 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         app.router.add_post('/api/auth/login', api.login)
         app.router.add_post('/api/auth/logout', api.logout)
         app.router.add_get('/api/me', api.me)
+        app.router.add_get('/api/admin/users', api.admin_users)
         self.client = TestClient(TestServer(app))
         await self.client.start_server()
 
@@ -168,6 +169,82 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         response, data = await self.exchange()
         self.assertEqual(data['user']['role'], 'admin')
 
+    async def test_second_google_identity_cannot_claim_admin_name_or_session(self):
+        self.service.firebase.admin_uid = 'admin-google'
+        self.service.firebase.verify.return_value = claims('admin-google')
+        response, data = await self.exchange(username='Incident_Admin')
+        self.assertEqual(response.status, 200)
+        original = dict(await self.service.get_user(data['user']['id']))
+        admin_cookie = response.cookies['samidev_session'].value
+        self.service.firebase.verify.return_value = claims('other-google')
+        for name in ['Incident_Admin', 'incident_admin', 'INCIDENT_ADMIN']:
+            response, rejected = await self.exchange(username=name, role='admin', firebaseUid='admin-google')
+            self.assertEqual(response.status, 409)
+            self.assertEqual(rejected['error'], 'USERNAME_TAKEN')
+            self.assertNotIn('samidev_session', response.cookies)
+        guest = await self.service.accounts.guest()
+        with self.assertRaises(PlatformError) as collision:
+            await self.service.accounts.link(guest['id'], claims('other-google'), 'incident_admin')
+        self.assertEqual(collision.exception.code, 'USERNAME_TAKEN')
+        self.assertEqual((await self.service.get_user(guest['id']))['guest'], '1')
+        self.assertEqual(await self.service.get_user(original['id']), original)
+        self.assertEqual((await self.service.resolve_session(admin_cookie))['id'], original['id'])
+        response, other = await self.exchange(username='Other_Account')
+        self.assertEqual(response.status, 200)
+        self.assertNotEqual(other['user']['id'], original['id'])
+        self.assertEqual(other['user']['role'], 'user')
+        denied = await self.client.get('/api/admin/users')
+        self.assertEqual(denied.status, 403)
+        self.assertEqual((await (await self.client.get('/api/admin/users')).json())['error'], 'ADMIN_REQUIRED')
+        self.assertEqual((await (await self.client.get('/api/me')).json())['user']['id'], other['user']['id'])
+        # An already linked Google identity cannot select a different player by name.
+        response, again = await self.exchange(username='Incident_Admin')
+        self.assertEqual(again['user']['id'], other['user']['id'])
+        self.assertEqual(again['user']['role'], 'user')
+        self.assertEqual(await self.service.get_user(original['id']), original)
+
+    async def test_inconsistent_identity_mapping_fails_without_issuing_session(self):
+        admin = await self.service.firebase_account(claims('trusted-admin'), username='Protected_Admin')
+        admin['role'] = 'admin'
+        self.service.mem_firebase[(self.service.firebase.project, 'firebase-a')] = admin['id']
+        response, data = await self.exchange(username='Protected_Admin')
+        self.assertEqual(response.status, 409)
+        self.assertEqual(data['error'], 'IDENTITY_CONFLICT')
+        self.assertNotIn('samidev_session', response.cookies)
+        self.assertEqual(admin['firebaseUid'], 'trusted-admin')
+
+    async def test_exchange_rechecks_identity_before_creating_session(self):
+        with patch.object(self.service, 'firebase_account', AsyncMock(return_value=self.old)):
+            response, data = await self.exchange(username='old_player')
+        self.assertEqual(response.status, 409)
+        self.assertEqual(data['error'], 'IDENTITY_CONFLICT')
+        self.assertNotIn('samidev_session', response.cookies)
+
+    async def test_auth_audit_contains_no_credentials_or_email(self):
+        with self.assertLogs('samidev.auth', level='INFO') as records:
+            response, data = await self.exchange(username='audit_player')
+        self.assertEqual(response.status, 200)
+        entry = json.loads(records.records[-1].getMessage())
+        self.assertEqual(entry['result'], 'accepted')
+        self.assertEqual(entry['accountId'], data['user']['id'])
+        self.assertEqual(entry['role'], 'user')
+        self.assertEqual(entry['store'], 'memory')
+        for secret in ['x' * 120, 'player@example.test', 'firebase-a', 'samidev_session']:
+            self.assertNotIn(secret, records.records[-1].getMessage())
+        self.assertEqual(set(entry), {'event','at','attemptId','instance','store','identityHash','linkGuest','result','accountId','role'})
+
+    async def test_memory_restart_can_reuse_name_but_cannot_inherit_admin_identity(self):
+        self.service.firebase.admin_uid = 'trusted-admin'
+        original = await self.service.firebase_account(claims('trusted-admin'), username='Restart_Admin')
+        restarted = PlatformService()
+        provider(restarted)
+        restarted.firebase.admin_uid = 'trusted-admin'
+        recreated = await restarted.firebase_account(claims('new-google'), username='Restart_Admin')
+        self.assertEqual(original['role'], 'admin')
+        self.assertEqual(recreated['role'], 'user')
+        self.assertNotEqual(recreated['id'], original['id'])
+        self.assertNotEqual(recreated['firebaseUid'], original['firebaseUid'])
+
     async def test_unverified_provider_rejected_before_profile_creation(self):
         self.service.firebase.verify.side_effect = FirebaseFailure('EMAIL_NOT_VERIFIED', 'verify', 403)
         response, data = await self.exchange(username='new_player')
@@ -208,6 +285,29 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
         for service in self.services: await service.close()
         async for key in self.redis.scan_iter(match=prefix + ':*'): await self.redis.delete(key)
         await self.redis.aclose()
+
+    async def test_admin_name_isolation_across_gateways_and_guest_upgrade(self):
+        a, b = self.services
+        a.firebase.admin_uid = 'incident-admin'
+        admin = await a.firebase_account(claims('incident-admin'), username='Protected_Admin')
+        before = dict(await b.get_user(admin['id']))
+        outsider = claims('incident-outsider')
+        for name in ['Protected_Admin','protected_admin','PROTECTED_ADMIN']:
+            with self.assertRaises(PlatformError) as failure:
+                await b.firebase_account(outsider, username=name)
+            self.assertEqual(failure.exception.code, 'USERNAME_TAKEN')
+        guest = await b.accounts.guest()
+        with self.assertRaises(PlatformError) as failure:
+            await b.accounts.link(guest['id'], outsider, 'protected_admin')
+        self.assertEqual(failure.exception.code, 'USERNAME_TAKEN')
+        self.assertEqual(await a.get_user(admin['id']), before)
+        self.assertTrue((await b.get_user(guest['id']))['guest'] == '1')
+        self.assertIsNone(await a.r.get(a.k_firebase('incident-outsider')))
+        other = await b.accounts.link(guest['id'], outsider, 'Independent_User')
+        self.assertNotEqual(other['id'], admin['id'])
+        self.assertEqual(other['role'], 'user')
+        self.assertEqual((await a.firebase_account(outsider, username='Protected_Admin'))['id'], other['id'])
+        self.assertEqual(await a.get_user(admin['id']), before)
 
     async def test_atomic_mapping_preserved_inventory_and_durability(self):
         a, b = self.services

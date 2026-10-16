@@ -10,6 +10,7 @@ import hmac
 import io
 from PIL import Image
 import json
+import logging
 import os
 import re
 import secrets
@@ -19,6 +20,14 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from dataclasses import dataclass
 from typing import Any
+
+AUTH_AUDIT = logging.getLogger('samidev.auth')
+if not AUTH_AUDIT.handlers:
+    _audit_handler = logging.StreamHandler()
+    _audit_handler.setFormatter(logging.Formatter('%(message)s'))
+    AUTH_AUDIT.addHandler(_audit_handler)
+AUTH_AUDIT.setLevel(logging.INFO)
+AUTH_AUDIT.propagate = False
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
 DISPLAY_MAX = 24
@@ -306,6 +315,7 @@ class PlatformService:
         self.firebase = FirebaseIdentity()
         self.community_rules = CommunityRules(self)
         self.mem_firebase = {}
+        self.auth_audit_instance = secrets.token_hex(8)
         self.r = redis_client
         self.lock = asyncio.Lock()
         self.mem_users: dict[str, dict[str, Any]] = {}
@@ -664,7 +674,9 @@ class PlatformService:
         async with self.lock:
             mapped = self.mem_firebase.get(key)
             if mapped:
-                user = self.mem_users[mapped]
+                user = self.mem_users.get(mapped)
+                if not user or user.get('firebaseUid') != claims['uid'] or user.get('firebaseProject') != self.firebase.project:
+                    raise PlatformError('IDENTITY_CONFLICT', 'تعذر مطابقة هوية الحساب.', 409)
                 if str(user.get("banned") or "0") == "1":
                     raise PlatformError("ACCOUNT_BANNED", "هذا الحساب محظور", 403)
                 if claims["uid"] == self.firebase.admin_uid:
@@ -1562,13 +1574,31 @@ class PlatformHttp:
             raise PlatformError(exc.code, exc.message, exc.status) from None
         if "legacyUsername" in body or "legacyPassword" in body:
             raise PlatformError("ACCOUNT_LINKING_DISABLED", "أنشئ حسابًا جديدًا باستخدام البريد الإلكتروني.", 400)
-        if body.get('linkGuest') is True:
-            guest = await self._user(request)
-            user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
-        else:
-            user = await self.platform.firebase_account(claims, username=body.get("username"))
+        attempt_id = secrets.token_hex(8)
+        identity_hash = hashlib.sha256((self.platform.firebase.project + ':' + claims['uid']).encode()).hexdigest()[:24]
+        audit = {'event': 'auth.firebase', 'at': now_ms(), 'attemptId': attempt_id,
+                 'instance': self.platform.auth_audit_instance,
+                 'store': 'memory' if self.platform.r is None else type(self.platform).__name__,
+                 'identityHash': identity_hash, 'linkGuest': body.get('linkGuest') is True}
+        try:
+            if body.get('linkGuest') is True:
+                guest = await self._user(request)
+                user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
+            else:
+                user = await self.platform.firebase_account(claims, username=body.get("username"))
+            # Verify identity again at the session boundary. A name or a corrupt
+            # mapping must never select another Firebase user's player account.
+            if (not user.get('id') or user.get('guest') == '1'
+                    or user.get('firebaseUid') != claims['uid']
+                    or user.get('firebaseProject') != self.platform.firebase.project):
+                raise PlatformError('IDENTITY_CONFLICT', 'تعذر مطابقة هوية الحساب.', 409)
+        except PlatformError as exc:
+            AUTH_AUDIT.info(json.dumps({**audit, 'result': exc.code}, separators=(',', ':')))
+            raise
         await self.platform.delete_session(request.cookies.get(SESSION_COOKIE))
         token = await self.platform.create_session(str(user["id"]), firebase_auth_time=claims["auth_time"])
+        AUTH_AUDIT.info(json.dumps({**audit, 'result': 'accepted', 'accountId': str(user['id']),
+                                   'role': str(user.get('role') or 'user')}, separators=(',', ':')))
         response = web.json_response({"ok":True,"user":public_user(user, include_avatar=True)})
         response.set_cookie(SESSION_COOKIE, token, max_age=SESSION_TTL, httponly=True,
                             secure=self._secure(request), samesite="Lax", path="/")
