@@ -19,6 +19,7 @@
     const form=document.createElement('form');form.className='auth-form';form.id='firebase-auth-form';
     form.innerHTML=`<button class="google-auth-button" data-google type="button"><span class="google-auth-mark" aria-hidden="true">G</span><span>المتابعة باستخدام Google</span></button><div class="auth-divider">أو بالبريد الإلكتروني</div><label>البريد الإلكتروني<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
       <label data-password>كلمة مرور حساب SamiDev<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+      <label data-confirm-password class="hidden">تأكيد كلمة المرور<input name="confirmPassword" type="password" autocomplete="new-password" maxlength="128"></label>
       <p data-status role="status" aria-live="polite"></p><button class="primary" data-submit type="submit">دخول</button>
       <button class="ghost hidden" data-resend type="button">إعادة إرسال رسالة التوثيق</button>
       <button class="ghost" data-reset type="button">نسيت كلمة المرور؟</button>
@@ -40,14 +41,15 @@
       form.querySelector('[data-google]').classList.toggle('hidden',pending);
       form.querySelector('.auth-divider').classList.toggle('hidden',pending);
       field('email').required=true;
-      form.querySelector('[data-password]').classList.toggle('hidden',pending);field('password').required=!pending;field('password').minLength=register?15:1;field('password').autocomplete=register?'new-password':'current-password';
+      form.querySelector('[data-password]').classList.toggle('hidden',pending);field('password').required=!pending;field('password').minLength=register?8:1;field('password').autocomplete=register?'new-password':'current-password';
+      form.querySelector('[data-confirm-password]').classList.toggle('hidden',!register||pending);field('confirmPassword').required=register&&!pending;
       form.querySelector('[data-resend]').classList.toggle('hidden',!pending);
       form.querySelector('[data-submit]').textContent=pending?'تحققت من بريدي':register?'إنشاء الحساب':'دخول';
       form.querySelector('[data-mode]').textContent=register?'لدي حساب بالفعل':'إنشاء حساب جديد';
       for(const input of form.querySelectorAll('button,input'))input.disabled=busy;
-      field('email').readOnly=pending;
+      field('email').readOnly=pending;field('confirmPassword').disabled=!register||pending||busy;
     }
-    form.querySelector('[data-mode]').onclick=()=>{clear();register=!register;pending=false;field('password').value='';status.textContent='';render();};
+    form.querySelector('[data-mode]').onclick=()=>{clear();register=!register;pending=false;field('password').value='';field('confirmPassword').value='';status.textContent='';render();};
     async function mail(reset=false){
       if(busy)return;if(reset&&!field('email').reportValidity())return;busy=true;render();
       try{await google('sendOobCode',reset?{requestType:'PASSWORD_RESET',email:field('email').value.trim()}:{requestType:'VERIFY_EMAIL',idToken});status.textContent=reset?'إذا كان البريد مسجلًا فستصلك رسالة لاستعادة كلمة المرور.':'أرسلنا رسالة التوثيق. افتحها ثم اضغط تحققت من بريدي.';}
@@ -61,7 +63,7 @@
       try{
         const module=await loadGoogle();remember(await module.authenticateGoogle(config));
         const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,linkGuest:currentUser()?.isGuest===true})});
-        clear();register=false;pending=false;onAuthenticated(result.user);
+        clear();register=false;pending=false;field('password').value='';field('confirmPassword').value='';onAuthenticated(result.user);
       }catch(e){
         const code=e.code||e.error;
         clear();status.textContent=({'auth/popup-closed-by-user':'أُغلقت نافذة Google. يمكنك المحاولة مجددًا.','auth/cancelled-popup-request':'أُلغي الدخول باستخدام Google.','auth/popup-blocked':'اسمح بفتح نافذة Google ثم أعد المحاولة.','auth/unauthorized-domain':'نطاق الموقع غير مضاف إلى النطاقات المسموحة في Firebase.','auth/operation-not-allowed':'فعّل تسجيل الدخول باستخدام Google في Firebase.','auth/account-exists-with-different-credential':'هذا البريد مرتبط بطريقة دخول أخرى. ادخل بها أولًا.'})[code]||'تعذر الدخول باستخدام Google. تحقق من الاتصال وإعدادات المصادقة.';
@@ -69,11 +71,15 @@
     };
     form.onsubmit=async event=>{
       event.preventDefault();if(busy)return;
+      if(register&&!pending){
+        if(Array.from(field('password').value).length<8){status.textContent='كلمة المرور يجب ألا تقل عن ٨ أحرف';return;}
+        if(field('password').value!==field('confirmPassword').value){status.textContent='كلمتا المرور غير متطابقتين';field('confirmPassword').focus();return;}
+      }
       busy=true;render();status.textContent='';
       try{
         if(!pending){
           remember(await google(register?'signUp':'signInWithPassword',{email:field('email').value.trim(),password:field('password').value,returnSecureToken:true}));
-          field('password').value='';
+          field('password').value='';field('confirmPassword').value='';
           if(register){pending=true;await google('sendOobCode',{requestType:'VERIFY_EMAIL',idToken});status.textContent='افتح رسالة التوثيق ثم اضغط تحققت من بريدي.';return;}
         }else remember(await google('',{grant_type:'refresh_token',refresh_token:refreshToken},true));
         const result=await api('/api/auth/firebase',{method:'POST',body:JSON.stringify({idToken,linkGuest:currentUser()?.isGuest===true})});
@@ -84,7 +90,7 @@
         else{status.textContent=e.message;if(['INVALID_ID_TOKEN','TOKEN_EXPIRED','INVALID_REFRESH_TOKEN'].includes(code)){clear();pending=false;register=false;}}
       }finally{busy=false;render();}
     };
-    window.SamiDevFirebaseAuth.cancel=()=>{if(busy)return false;clear();register=false;pending=false;field('password').value='';status.textContent='';render();return true;};
+    window.SamiDevFirebaseAuth.cancel=()=>{if(busy)return false;clear();register=false;pending=false;field('password').value='';field('confirmPassword').value='';status.textContent='';render();return true;};
     render();return true;
   }};
 })();

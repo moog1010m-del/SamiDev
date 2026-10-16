@@ -51,7 +51,7 @@ async def main():
   await request(admin,f'/api/admin/users/{uid}/ban',{'banned':True});await request(admin,f'/api/admin/users/{uid}/ban',{'banned':False})
   assert await app.SERVICE.platform.resolve_session(raw) is None
   checks.append('Unbanning never revives old sessions')
-  assert (await request(probe,'/api/auth/register',{'username':'short_user','password':'short123'}))[0]==400
+  assert (await request(probe,'/api/auth/register',{'username':'short_user','password':'short12'}))[0]==400
   u=await app.SERVICE.platform.get_user(uid);assert '$600000$' in u['passwordHash'] and verify_password('Test-password-123',u['passwordHash'])
   for _ in range(30):await app.SERVICE.platform.allow_rate('login-account:'+__import__('hashlib').sha256(b'release_user_0').hexdigest(),30,300)
   assert (await request(probe,'/api/auth/login',{'username':'RELEASE_USER_0','password':'Test-password-123'}))[0]==429

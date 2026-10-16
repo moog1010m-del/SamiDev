@@ -21,13 +21,15 @@ class _AuthScreenState extends State<AuthScreen> {
   final _username = TextEditingController(),
       _password = TextEditingController();
   final _email = TextEditingController();
+  final _confirmPassword = TextEditingController();
+  bool _confirmObscured = true;
   bool _register = false, _busy = false, _obscured = true, _pending = false;
   String? _error;
   bool get firebase => widget.auth.usesFirebase;
   bool get finishing => firebase && _pending && widget.auth.hasPendingIdentity;
   @override
   void dispose() {
-    for (final c in [_username, _password, _email]) {
+    for (final c in [_username, _password, _email, _confirmPassword]) {
       c.clear();
       c.dispose();
     }
@@ -43,7 +45,9 @@ class _AuthScreenState extends State<AuthScreen> {
       _pending = false;
       _error = null;
       _obscured = true;
+      _confirmObscured = true;
       _password.clear();
+      _confirmPassword.clear();
     });
   }
 
@@ -55,6 +59,9 @@ class _AuthScreenState extends State<AuthScreen> {
     });
     try {
       final user = await widget.auth.signInGoogle();
+      if (!mounted) return;
+      _password.clear();
+      _confirmPassword.clear();
       if (mounted) await widget.onAuthenticated(user);
     } catch (e) {
       if (mounted) {
@@ -90,6 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
       TextInput.finishAutofillContext();
       _password.clear();
+      _confirmPassword.clear();
       await widget.onAuthenticated(user);
     } catch (e) {
       if (mounted) {
@@ -100,6 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
           if (e is AuthFailure && e.code == 'EMAIL_NOT_VERIFIED') {
             _pending = true;
             _password.clear();
+            _confirmPassword.clear();
           }
           if (e is AuthFailure &&
               [
@@ -293,7 +302,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ? AutofillHints.newPassword
                                   : AutofillHints.password,
                             ],
-                            textInputAction: TextInputAction.done,
+                            textInputAction: _register
+                                ? TextInputAction.next
+                                : TextInputAction.done,
                             onFieldSubmitted: (_) {
                               _submit();
                             },
@@ -305,7 +316,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   Icons.lock_outline,
                                 ).copyWith(
                                   helperText: _register
-                                      ? '١٥ حرفًا على الأقل، وحتى ١٢٨ حرفًا'
+                                      ? '٨ أحرف على الأقل، وحتى ١٢٨ حرفًا'
                                       : null,
                                   suffixIcon: IconButton(
                                     onPressed: _busy
@@ -327,12 +338,54 @@ class _AuthScreenState extends State<AuthScreen> {
                               final n = (v ?? '').runes.length;
                               if (n == 0) return 'أدخل كلمة المرور';
                               if (n > 128) return 'الحد الأقصى ١٢٨ حرفًا';
-                              if (_register && n < 15) {
-                                return 'كلمة المرور يجب ألا تقل عن ١٥ حرفًا';
+                              if (_register && n < 8) {
+                                return 'كلمة المرور يجب ألا تقل عن ٨ أحرف';
                               }
                               return null;
                             },
                           ),
+                          if (_register) ...[
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              key: const ValueKey('auth-confirm-password'),
+                              controller: _confirmPassword,
+                              enabled: !_busy,
+                              obscureText: _confirmObscured,
+                              textDirection: TextDirection.ltr,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              autofillHints: const [AutofillHints.newPassword],
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => _submit(),
+                              decoration:
+                                  field(
+                                    'تأكيد كلمة المرور',
+                                    Icons.lock_outline,
+                                  ).copyWith(
+                                    suffixIcon: IconButton(
+                                      onPressed: _busy
+                                          ? null
+                                          : () => setState(
+                                              () => _confirmObscured =
+                                                  !_confirmObscured,
+                                            ),
+                                      tooltip: _confirmObscured
+                                          ? 'إظهار تأكيد كلمة المرور'
+                                          : 'إخفاء تأكيد كلمة المرور',
+                                      icon: Icon(
+                                        _confirmObscured
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                      ),
+                                    ),
+                                  ),
+                              validator: (v) => v == null || v.isEmpty
+                                  ? 'أعد كتابة كلمة المرور'
+                                  : v != _password.text
+                                  ? 'كلمتا المرور غير متطابقتين'
+                                  : null,
+                            ),
+                          ],
                         ],
                         if (_pending)
                           const Padding(

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/profile-details.css?v=6a2697986baa8e19">
   <link rel="stylesheet" href="/platform/platform.css?v=0c2eb01bdd0845f2">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=92aaa6d158ba4236">
-<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=efd16f01f2a15810"><script src="/cosmetic-ui.js?v=054aab92744e5b56"></script><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=01122f0e705ae41c"></script></head>
+<link rel="stylesheet" href="/platform/store.css?v=366d3a7ac41d0f42"><link rel="stylesheet" href="/cosmetic-ui.css?v=efd16f01f2a15810"><script src="/cosmetic-ui.js?v=054aab92744e5b56"></script><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=86aecd86cd9617f5"></script></head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
 
@@ -32,7 +32,8 @@
       </form>
       <form id="register-form" class="auth-form hidden">
         <label>اسم المستخدم (بدون @)<input name="username" autocomplete="username" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" required></label>
-        <label>كلمة المرور<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
+        <label>كلمة المرور<input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label>
+        <label>تأكيد كلمة المرور<input name="confirmPassword" type="password" autocomplete="new-password" maxlength="128" required></label>
         <button class="primary" type="submit">إنشاء الحساب</button>
       </form>
       <p class="auth-note">يمكنك اللعب كضيف. ربط البريد متاح عند تفعيل Firebase؛ الدخول المحلي للحسابات التجريبية فقط.</p>
@@ -391,6 +392,6 @@
     </div>
   </div>
 
-  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=1f628ca4b0479fb5"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/platform.js?v=c8e78a282f714a4b"></script>
+  <script src="/samidev-games.js?v=30f9761386dd7be7"></script><script src="/sticker-art.js?v=84531b52db8077a8"></script><script src="/profile-details.js?v=1f628ca4b0479fb5"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/platform.js?v=9d1c3b0f0dff3f46"></script>
 </body>
 </html>

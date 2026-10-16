@@ -193,14 +193,32 @@ void main() {
       expect(find.byKey(const ValueKey('auth-username')), findsNothing);
       await tester.enterText(
         find.byKey(const ValueKey('auth-password')),
-        'Native-password-123',
+        'New-pass',
       );
       expect(find.byKey(const ValueKey('auth-display-name')), findsNothing);
-      expect(find.byKey(const ValueKey('auth-confirm-password')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('auth-confirm-password')),
+        findsOneWidget,
+      );
       final submit = find.byKey(const ValueKey('auth-submit'));
+      await tester.ensureVisible(submit);
+      await tester.enterText(
+        find.byKey(const ValueKey('auth-confirm-password')),
+        'Wrong-pass',
+      );
+      await tester.ensureVisible(submit);
+      await tester.tap(submit);
+      await tester.pumpAndSettle();
+      expect(auth.calls, 0);
+      expect(find.text('كلمتا المرور غير متطابقتين'), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const ValueKey('auth-confirm-password')),
+        'New-pass',
+      );
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
+      expect(auth.calls, 1);
       auth.identity = true;
       auth.pending!.completeError(
         const AuthFailure(
@@ -210,6 +228,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('auth-password')), findsNothing);
+      expect(find.byKey(const ValueKey('auth-confirm-password')), findsNothing);
       expect(find.byType(WebViewWidget), findsNothing);
       final resend = find.text('إعادة إرسال رسالة التوثيق');
       await tester.ensureVisible(resend);
@@ -283,18 +302,19 @@ void main() {
         await tester.tap(submit);
         await tester.pumpAndSettle();
         expect(auth.calls, 0);
-        expect(
-          find.text('كلمة المرور يجب ألا تقل عن ١٥ حرفًا'),
-          findsOneWidget,
-        );
+        expect(find.text('كلمة المرور يجب ألا تقل عن ٨ أحرف'), findsOneWidget);
         expect(find.byKey(const ValueKey('auth-display-name')), findsNothing);
         expect(
           find.byKey(const ValueKey('auth-confirm-password')),
-          findsNothing,
+          findsOneWidget,
         );
         await tester.enterText(
           find.byKey(const ValueKey('auth-password')),
-          'Native-password-123',
+          'New-pass',
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey('auth-confirm-password')),
+          'New-pass',
         );
         await tester.ensureVisible(submit);
         await tester.tap(submit);

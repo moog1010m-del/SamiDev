@@ -31,7 +31,7 @@ AUTH_AUDIT.propagate = False
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
 DISPLAY_MAX = 24
-PASSWORD_MIN = 15
+PASSWORD_MIN = 8
 PASSWORD_MAX = 128
 AVATAR_MAX_BYTES = 300 * 1024
 SESSION_TTL = max(3600, min(7 * 86400, int(os.getenv("SAMIDEV_SESSION_TTL_SECONDS", str(7 * 86400)))))

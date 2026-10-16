@@ -14,6 +14,8 @@ try {
     assert(!request.headers().cookie);
     const data=refresh?Object.fromEntries(new URLSearchParams(request.postData())):request.postDataJSON();
     google.push({path:url.pathname,data});
+    assert(!Object.hasOwn(data,'confirmPassword'));
+    if(url.pathname.endsWith('signUp')){assert.equal(data.password,'New-pass');assert(!Object.hasOwn(data,'username'));}
     const token=newIdentity?'fixture-new':verified?'fixture-verified':'fixture-unverified';
     if(refresh){assert.equal(data.grant_type,'refresh_token');assert.equal(data.refresh_token,'fixture-refresh');}
     let body=refresh?{id_token:token,refresh_token:'fixture-refresh'}:{idToken:token,refreshToken:'fixture-refresh'};
@@ -38,13 +40,21 @@ try {
   await form.locator('[name=email]').fill('browser@example.test');
   assert.equal(await form.locator('[name=linkLegacy], [data-old]').count(),0);
   assert.equal(await form.locator('[name=username]').count(),0);
-  await form.locator('[name=password]').fill('New-password-123456');
-  assert.equal(await form.locator('input:visible').count(),2);
+  const beforeSignup=google.length;
+  await form.locator('[name=password]').fill('seven12');await form.locator('[name=confirmPassword]').fill('seven12');
+  await form.locator('[data-submit]').click();
+  assert.equal(google.length,beforeSignup);assert(await form.locator('[name=password]').evaluate(input=>input.validity.tooShort));
+  await form.locator('[name=password]').fill('New-pass');await form.locator('[name=confirmPassword]').fill('Wrong-pass');
+  await form.locator('[data-submit]').click();
+  await form.locator('[data-status]').filter({hasText:'كلمتا المرور غير متطابقتين'}).waitFor();assert.equal(google.length,beforeSignup);
+  await form.locator('[name=confirmPassword]').fill('New-pass');
+  assert.equal(await form.locator('input:visible').count(),3);
   assert.equal(await form.locator('[name=displayName]').count(),0);
   await form.locator('[data-submit]').click();
   await form.locator('[data-resend]').waitFor({state:'visible'});
   assert(google.some(x=>x.data.requestType==='VERIFY_EMAIL'));
   assert(!await form.locator('[name=password]').isVisible());
+  assert(!await form.locator('[name=confirmPassword]').isVisible());assert(await form.locator('[name=confirmPassword]').isDisabled());assert.equal(await form.locator('[name=confirmPassword]').inputValue(),'');
   await form.locator('[data-submit]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('وثّق'));
   verified=true;
@@ -94,7 +104,7 @@ try {
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));
   assert(google.some(x=>x.data.requestType==='PASSWORD_RESET'));
   assert.equal(await page.getByText('الدخول بالطريقة القديمة مؤقتًا').count(),0);
-  assert(await form.locator('[name=password]').isVisible());
+  assert(await form.locator('[name=password]').isVisible());assert(!await form.locator('[name=confirmPassword]').isVisible());
   assert(await form.locator('[name=email]').isEditable());
   const out=process.env.SAMIDEV_TEST_ARTIFACTS||'/tmp/samidev-firebase-review';fs.mkdirSync(out,{recursive:true});
   await page.setViewportSize({width:390,height:844});
@@ -146,5 +156,5 @@ try {
   await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('تعذر تحميل'));
   assert(await page.locator('#login-form button').isDisabled(),'configuration outage must not silently enable local login');
   assert.deepEqual(errors,[]);
-  console.log('FIREBASE_WEB_PASS: signup without username, preserved guest/free rename, close/reload, optional rename, saved Google identity switch, reset');
+  console.log('FIREBASE_WEB_PASS: 7-character rejection, 8-character signup, mismatched confirmation blocked without requests, signup without username, preserved guest/free rename, close/reload, optional rename, saved Google identity switch, reset');
 }finally{await browser.close();}

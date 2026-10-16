@@ -143,6 +143,16 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         response = await self.client.post('/api/auth/login', json={'username':'old_player', 'password':'Original-password-123'})
         self.assertEqual(response.status, 200)
 
+    async def test_local_password_policy_accepts_eight_and_rejects_seven_characters(self):
+        self.service.firebase.enabled = False
+        rejected = await self.client.post('/api/auth/register',json={'username':'short_player','password':'seven12'})
+        self.assertEqual(rejected.status,400)
+        self.assertEqual((await rejected.json())['error'],'WEAK_PASSWORD')
+        accepted = await self.client.post('/api/auth/register',json={'username':'eight_player','password':'New-pass'})
+        self.assertEqual(accepted.status,200)
+        login = await self.client.post('/api/auth/login',json={'username':'eight_player','password':'New-pass'})
+        self.assertEqual(login.status,200)
+
     async def test_new_verified_profile_and_repeated_exchange(self):
         response, data = await self.exchange()
         self.assertEqual(response.status, 200)
