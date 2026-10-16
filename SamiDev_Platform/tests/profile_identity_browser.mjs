@@ -48,7 +48,7 @@ asyncio.run(main())`,accounts[0]);
  assert(coverArt.includes('samidev-night-cover.png'));
  await publicPage.locator('.community-public-profile-card').screenshot({path:out+'/profile-compact.png'});
  await publicPage.locator('#community-profile-full').click();
- assert(await publicPage.locator('#sd-public-extra').isVisible());assert.equal(await publicPage.locator('#sd-public-extra .sd-owned-card').count(),3);assert.equal(await publicPage.locator('#sd-public-extra .sd-rank-row').count(),4);
+ assert(await publicPage.locator('#sd-public-extra').isVisible());assert.equal(await publicPage.locator('#sd-public-extra .sd-owned-card').count(),3);assert.equal(await publicPage.locator('#sd-public-extra .sd-rank-row').count(),2);
  const card=publicPage.locator('.community-public-profile-card');
  for(const width of [320,390,768]) {
   await publicPage.setViewportSize({width,height:1050});
@@ -63,7 +63,7 @@ asyncio.run(main())`,accounts[0]);
  await publicPage.locator('#community-profile-friend').click();await publicPage.waitForFunction(()=>document.querySelector('#community-profile-friend').textContent.includes('تم إرسال الطلب'));assert((await publicPage.locator('#community-profile-friend').innerText()).includes('تم إرسال الطلب'));
  assert(await publicPage.locator('#sd-public-extra').isVisible(),'Friend action preserves full profile mode');
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({ok:true,checks:['Original raster cover and 4x2 atlas','Compact card and full-profile transition','Real top game, owned sample and four game ranks','Responsive 320/390/768 layouts','Friend action preserves full view; collection shortcut works'],artifacts:out}));
+ console.log(JSON.stringify({ok:true,checks:['Original raster cover and 4x2 atlas','Compact card and full-profile transition','Real top game, owned sample and played game ranks','Responsive 320/390/768 layouts','Friend action preserves full view; collection shortcut works'],artifacts:out}));
 } finally {
  await browser.close();
  if(accounts.length)runPython(`import asyncio,json,os,sys,asyncpg

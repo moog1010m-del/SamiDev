@@ -22,6 +22,7 @@ async def exercise(service, other):
     await service.increment_wins(uid, 12)
     initial = await service.public_profile(uid)
     assert initial['showcaseItems'] == []
+    assert initial['collectionOwnedCount'] == 0 and initial['collectionTotalCount'] > 0
     assert initial['legacyWins'] == 12
     assert all(x['wins'] == 0 and x['level'] == 1 for x in initial['gameStatistics'])
     for game in GAMES:
@@ -44,6 +45,8 @@ async def exercise(service, other):
     profile = await other.public_profile(uid)
     assert {x['id'] for x in profile['showcaseItems']} == {'badge_crown', 'profile_star'}
     assert profile['ownedItemCount'] == 2
+    assert profile['collectionOwnedCount'] == 2
+    assert profile['collectionTotalCount'] >= profile['collectionOwnedCount']
     assert not {'passwordHash','coins','authVersion','ledger'} & profile.keys()
     return uid
 

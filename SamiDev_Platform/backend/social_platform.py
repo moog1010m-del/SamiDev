@@ -1253,6 +1253,12 @@ class PlatformService:
             item = STORE_CATALOG['profile_star']
             out['showcaseItems'].append(dict(id='profile_star', name=item['name'], asset=item['asset'], gameId='', quantity=stars, category='profile'))
         out['ownedItemCount'] = sum(x['quantity'] for x in out['showcaseItems'])
+        # Collection completion counts distinct cosmetics, not repeat purchases.
+        collectible = {item_id for item_id, item in STORE_CATALOG.items()
+                       if not item.get('consumable') and (not item.get('retired') or item_id in owned)}
+        collected = {x['id'] for x in out['showcaseItems']} & collectible
+        out['collectionOwnedCount'] = len(collected)
+        out['collectionTotalCount'] = len(collectible)
         out['gameStatistics'] = await self.game_statistics(target_id)
         out['statisticsHistory'] = 'tracked_matches_only'
         out['legacyWins'] = max(0, out['wins'] - sum(x['wins'] for x in out['gameStatistics']))

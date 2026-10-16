@@ -10,20 +10,25 @@
     if (!root) return;
     const items = (Array.isArray(user.showcaseItems) ? user.showcaseItems : []).filter(x => x && x.id && number(x.quantity || 1));
     const stats = Array.isArray(user.gameStatistics) ? user.gameStatistics : [];
+    const playedGames = games.filter(([id]) => stats.some(s => s.gameId === id && number(s.played) > 0));
+    const collected = number(user.collectionOwnedCount ?? new Set(items.map(x=>x.id)).size);
+    const catalogTotal = Math.max(collected, number(user.collectionTotalCount));
+    const completion = catalogTotal ? Math.min(100, collected / catalogTotal * 100) : 0;
     const total = items.reduce((sum, x) => sum + number(x.quantity || 1), 0);
     let expanded = false, full = false;
     root.classList.add('sd-profile-details');
     root.setAttribute('dir', 'rtl');
     root.innerHTML = `<section class="sd-collection-section" aria-label="المقتنيات">
-      <header class="sd-detail-heading"><h3>${own ? 'مقتنياتي' : 'مقتنيات اللاعب'}</h3><span>${count(total)} قطعة</span></header>
+      <header class="sd-detail-heading"><h3>${own ? 'مقتنياتي' : 'مقتنيات اللاعب'}</h3><span class="sd-collection-count" dir="ltr">(${count(collected)} / ${count(catalogTotal)})</span></header>
+      <div class="sd-collection-progress" role="progressbar" aria-label="تقدم جمع المقتنيات" aria-valuemin="0" aria-valuemax="${catalogTotal}" aria-valuenow="${collected}"><span style="width:${completion}%"></span></div>
       <div class="sd-collection-controls" hidden><label>تصفّح حسب اللعبة <select aria-label="تصفية المقتنيات"><option value="all">كل المقتنيات</option><option value="profile">زينة الملف</option>${games.map(([id, name]) => `<option value="${id}">${name}</option>`).join('')}</select></label></div>
       <div class="sd-collection-grid"></div>
       <p class="sd-collection-empty" ${items.length ? 'hidden' : ''}>${own ? 'ستظهر هنا المقتنيات التي تجمعها أو تشتريها.' : 'لا توجد مقتنيات مملوكة للعرض بعد.'}</p>
       <button class="sd-collection-more" type="button" aria-expanded="false" ${items.length ? '' : 'hidden'}>تصفّح كل المقتنيات (${count(total)})</button>
       <div class="sd-item-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المقتنى" hidden><button class="sd-item-close" type="button" aria-label="إغلاق تفاصيل المقتنى">×</button><div class="sd-item-art"></div><h4></h4><p></p></div>
-      </section><section class="sd-game-statistics" aria-label="إحصاءات الألعاب">
+      </section><section class="sd-game-statistics" aria-label="إحصاءات الألعاب" ${playedGames.length ? '' : 'hidden'}>
       <header class="sd-detail-heading"><h3>رحلتي في الألعاب</h3><button class="sd-profile-full" type="button" aria-expanded="false">عرض التفاصيل</button></header>
-      ${games.map(([id, name, mark]) => {
+      ${playedGames.map(([id, name, mark]) => {
         const s = stats.find(x => x.gameId === id);
         if (!s) return `<article class="sd-rank-row"><img class="sd-game-logo" src="/room-sprites/${mark}.png" alt=""><div><h4>${name}</h4><p class="sd-history-note">السجل غير متاح حاليًا</p></div></article>`;
         const level = Math.max(1, Math.min(100, number(s.level)));

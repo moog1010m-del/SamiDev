@@ -9,16 +9,20 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final user = <String, dynamic>{
-      'relation': 'self', 'legacyWins': 4,
+      'relation': 'self', 'legacyWins': 4, 'collectionOwnedCount':4,'collectionTotalCount':20,
       'showcaseItems': [
         for (var i = 0; i < 4; i++) {'id': 'item_$i', 'name': 'مقتنى $i', 'gameId': i == 3 ? 'pool' : '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-0', 'quantity': i == 0 ? 2 : 1},
       ],
       'gameStatistics': [
+        {'gameId':'carrom','played':0,'wins':0},
         {'gameId': 'pool', 'level': 3, 'wins': 23, 'played': 30, 'losses': 7, 'draws': 0, 'rankName': 'بداية', 'progress': .53, 'winsToNextLevel': 7},
       ],
     };
     await tester.pumpWidget(MaterialApp(home: Scaffold(body: SingleChildScrollView(child: ProfileDetails(user: user)))));
     await tester.pumpAndSettle();
+    expect(find.text('(4 / 20)'), findsOneWidget);
+    expect(find.byType(GameRankCard),findsOneWidget);
+    expect(tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator).first).value,.2);
     expect(find.text('مقتنى 0'), findsOneWidget);
     expect(find.text('مقتنى 3'), findsNothing);
     expect(find.text('23 فوز'), findsOneWidget);

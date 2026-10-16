@@ -14,3 +14,8 @@ html[data-theme="light"] .sd-profile-details{--sd-rank-bg:#f1f6f6;--sd-rank-line
 .sd-rank-star{display:grid;place-items:center;background-image:url('/platform/assets/profile/identity/profile-atlas.png');background-repeat:no-repeat;background-size:400% 200%;background-position:0% 0%;filter:drop-shadow(0 2px 4px #0007) var(--rank-color,brightness(1))}
 .sd-rank-star b{color:#30210a;font:900 14px/1 system-ui;position:relative;top:4px;text-shadow:0 1px 0 #ffffff80}
 .sd-rank-star[data-tier="1"]{--rank-color:saturate(.6)}.sd-rank-star[data-tier="2"]{--rank-color:hue-rotate(55deg)}.sd-rank-star[data-tier="3"]{--rank-color:hue-rotate(120deg)}.sd-rank-star[data-tier="4"]{--rank-color:hue-rotate(170deg)}.sd-rank-star[data-tier="5"]{--rank-color:hue-rotate(220deg)}.sd-rank-star[data-tier="6"]{--rank-color:hue-rotate(285deg)}.sd-rank-star[data-tier="7"]{--rank-color:hue-rotate(315deg)}.sd-rank-star[data-tier="8"]{--rank-color:saturate(.15) brightness(1.2)}.sd-rank-star[data-tier="9"]{--rank-color:saturate(1.3) brightness(1.12)}
+
+.sd-collection-progress{height:8px;background:var(--identity-line,var(--sd-rank-line));border-radius:99px;overflow:hidden;direction:ltr;margin:0 0 14px}
+.sd-collection-progress>span{display:block;height:100%;background:#79b845;border-radius:inherit;transition:width .25s}
+.sd-collection-count{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--identity-muted,var(--sd-rank-muted));font-size:12px}
+.sd-game-statistics[hidden]{display:none!important}

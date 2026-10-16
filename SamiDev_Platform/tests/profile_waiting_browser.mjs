@@ -46,7 +46,7 @@ try{
   await page.goto(base+'/platform/');await page.waitForFunction(()=>window.SamiDevMobilePlatform);await page.locator('#app').waitFor({state:'visible'});
   await page.evaluate(()=>window.SamiDevMobilePlatform.navigate('profile'));
   const own=page.locator('#own-profile-details');await own.locator('.sd-rank-row').first().waitFor();
-  assert.equal(await own.locator('.sd-rank-row').count(),4);
+  assert.equal(await own.locator('.sd-rank-row').count(),3);
   assert.equal(await own.locator('.sd-owned-card').count(),3);
   await own.locator('.sd-collection-more').click();assert.equal(await own.locator('.sd-owned-card').count(),4);
   await own.locator('select').selectOption('pool');assert.equal(await own.locator('.sd-owned-card').count(),1);
@@ -62,7 +62,7 @@ try{
   }
   await page.setViewportSize({width:390,height:1000});
   await own.screenshot({path:path.join(out,'profile-own.png')});
-  checks.push('own profile: real inventory preview/browse/filter/detail, four games, rank progress, compact/full and responsive widths');
+  checks.push('own profile: real inventory preview/browse/filter/detail, played games, rank progress, compact/full and responsive widths');
 
   const visitor=await contexts[1].newPage();visitor.on('pageerror',e=>errors.push(e.message));
   await visitor.goto(base+'/platform/');await visitor.waitForFunction(()=>window.SamiDevMobilePlatform);await visitor.locator('#app').waitFor({state:'visible'});
@@ -70,7 +70,7 @@ try{
   await visitor.locator('#community-profile-full').click();
   const publicCard=visitor.locator('#sd-public-extra');await publicCard.locator('.sd-owned-card').first().waitFor();
   assert.equal(await publicCard.locator('.sd-owned-card').count(),3);
-  assert.equal(await publicCard.locator('.sd-rank-row').count(),4);
+  assert.equal(await publicCard.locator('.sd-rank-row').count(),3);
   const api=await contexts[1].request.get(base+'/api/public-profile/'+accounts[0].id);const profile=(await api.json()).user;
   assert(!('coins' in profile)&&!('passwordHash' in profile));
   await publicCard.locator('.sd-collection-more').click();assert.equal(await publicCard.locator('.sd-owned-card').count(),4);
@@ -98,7 +98,7 @@ try{
     await host.screenshot({path:path.join(out,game+'-profile-compact.png')});
     await host.locator('#sdpp-card [data-action=full]').click();
     await host.waitForSelector('#sdpp-card [data-profile-details] .sd-rank-row',{timeout:10000});
-    assert.equal(await host.locator('#sdpp-card .sd-rank-row').count(),4);
+    assert.equal(await host.locator('#sdpp-card .sd-rank-row').count(),3);
     assert.equal(await host.locator('#sdpp-card .sd-owned-card').count(),3);
     await host.screenshot({path:path.join(out,game+'-profile-full.png')});
     await host.locator('.sdpp-close').click();
