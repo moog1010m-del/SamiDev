@@ -56,3 +56,13 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 
 /* One username, fully readable in both placements of the same profile. */
 .profile-showcase .profile-name-row h3{min-width:0;max-width:100%;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;flex:0 1 auto}
+
+/* Profile controls use the same fine strokes as the navigation bar. */
+.profile-showcase .profile-sprite-calendar,.profile-showcase .profile-sprite-trophy{display:none!important}
+.profile-card-action .profile-sprite-edit{background:none!important;background-color:currentColor!important;mask: url('/platform/assets/profile/edit.svg?v=2') center/contain no-repeat;-webkit-mask:url('/platform/assets/profile/edit.svg?v=2') center/contain no-repeat;width:22px!important;height:22px!important}
+.profile-showcase .profile-photo-btn,.profile-editor-camera{background:var(--identity-surface,#f6faf9)!important;color:var(--identity-muted,#607b80)!important;border:1px solid var(--identity-line,#ccdadc)!important;box-shadow:0 2px 8px #142e3510!important;width:34px!important;height:34px!important}
+.profile-showcase .profile-card-action{color:var(--identity-muted)!important}
+.profile-showcase .profile-stat-value .sd-reputation-slot{width:32px!important;height:36px!important}
+.profile-showcase .profile-sprite-camera,.profile-editor-camera .profile-sprite-camera{background:none!important;background-color:currentColor!important;mask:url('/platform/assets/profile/camera.svg?v=2') center/contain no-repeat;-webkit-mask:url('/platform/assets/profile/camera.svg?v=2') center/contain no-repeat;width:22px!important;height:22px!important}
+.profile-showcase .profile-sprite-reputation.sd-reputation-slot{background:none!important}
+.profile-showcase .profile-name-row .profile-sticker{width:32px!important;height:32px!important;min-width:32px;flex:0 0 32px!important}

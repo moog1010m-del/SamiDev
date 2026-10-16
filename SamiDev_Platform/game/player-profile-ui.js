@@ -146,9 +146,9 @@
         <div class="sdpp-name-row"><strong>${esc(user.displayName||player?.name||'لاعب')}</strong><div class="sdpp-stars" aria-label="${user.starsCount ?? 0} نجوم">${starsMarkup(user.starsCount ?? 0)}</div>${badgeMarkup(user)}</div>
         <div class="sdpp-handle">${esc(user.username ? user.username : "")}</div>
         <div class="sdpp-stats">
-          <div><small>لاعب منذ</small><b>${icon('calendar')}${esc(daysText(user.accountAgeDays))}</b></div>
-          <div><small>الفوز</small><b>${icon('trophy')}${esc(numberText(user.wins))}</b></div>
-          <div><small>السمعة</small><b>${icon('fire')}${esc(numberText(user.reputation))}</b></div>
+          <div><small>لاعب منذ</small><b>${esc(daysText(user.accountAgeDays))}</b></div>
+          <div><small>الفوز</small><b>${esc(numberText(user.wins))}</b></div>
+          <div><small>السمعة</small><b>${window.SamiDevProfileDetails.flameMarkup(user.reputation)}${esc(numberText(user.reputation))}</b></div>
         </div>
         <div class="sdpp-actions">
           <button class="sdpp-action report" data-action="report" type="button" title="إبلاغ" ${user.relation==='self'?'disabled':''}>${icon('report')}<span>إبلاغ</span></button>

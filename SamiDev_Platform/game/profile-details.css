@@ -10,12 +10,36 @@
 html[data-theme="light"] .sd-profile-details{--sd-rank-bg:#f1f6f6;--sd-rank-line:#c5d7d7;--sd-rank-ink:#173334;--sd-rank-muted:#587577}html[data-theme="light"] .sd-rank-title>span,html[data-theme="light"] .sd-collection-more,html[data-theme="light"] .sd-profile-full{color:#806323}
 @media(max-width:380px){.sd-rank-row{grid-template-columns:60px minmax(0,1fr);gap:9px;padding:12px 9px}.sd-game-emblem{width:60px}.sd-game-logo{width:55px;height:55px}.sd-rank-star{width:46px;height:46px;bottom:10px}.sd-rank-title h4{font-size:12px}.sd-owned-card img{height:58px}.sd-rank-title>span{font-size:11px}}
 
-/* Illustrated rank star from the original atlas; numeric level is real game data. */
-.sd-rank-star{display:grid;place-items:center;background-image:url('/platform/assets/profile/identity/profile-atlas.png');background-repeat:no-repeat;background-size:400% 200%;background-position:0% 0%;filter:drop-shadow(0 2px 4px #0007) var(--rank-color,brightness(1))}
-.sd-rank-star b{color:#30210a;font:900 14px/1 system-ui;position:relative;top:4px;text-shadow:0 1px 0 #ffffff80}
-.sd-rank-star[data-tier="1"]{--rank-color:saturate(.6)}.sd-rank-star[data-tier="2"]{--rank-color:hue-rotate(55deg)}.sd-rank-star[data-tier="3"]{--rank-color:hue-rotate(120deg)}.sd-rank-star[data-tier="4"]{--rank-color:hue-rotate(170deg)}.sd-rank-star[data-tier="5"]{--rank-color:hue-rotate(220deg)}.sd-rank-star[data-tier="6"]{--rank-color:hue-rotate(285deg)}.sd-rank-star[data-tier="7"]{--rank-color:hue-rotate(315deg)}.sd-rank-star[data-tier="8"]{--rank-color:saturate(.15) brightness(1.2)}.sd-rank-star[data-tier="9"]{--rank-color:saturate(1.3) brightness(1.12)}
-
 .sd-collection-progress{height:8px;background:var(--identity-line,var(--sd-rank-line));border-radius:99px;overflow:hidden;direction:ltr;margin:0 0 14px}
 .sd-collection-progress>span{display:block;height:100%;background:#79b845;border-radius:inherit;transition:width .25s}
 .sd-collection-count{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--identity-muted,var(--sd-rank-muted));font-size:12px}
 .sd-game-statistics[hidden]{display:none!important}
+
+/* Soft original league stars: one appearance for each ten earned levels. */
+.sd-rank-star{--star-edge:#a99b69;--star-face:#e9dfb4;background:none!important;filter:none!important;width:48px;height:48px}
+.sd-rank-star svg{width:100%;height:100%;position:absolute;inset:0;overflow:visible}
+.sd-star-edge{fill:var(--star-edge);stroke:var(--star-edge);stroke-width:4;stroke-linejoin:round}
+.sd-star-face{fill:var(--star-face);stroke:#ffffff75;stroke-width:1.5;stroke-linejoin:round}
+.sd-rank-star b{font:700 13px/1 system-ui;top:1px;color:#263c43;text-shadow:none;z-index:1}
+.sd-rank-star[data-tier="1"]{--star-edge:#b98369;--star-face:#efc7ae}.sd-rank-star[data-tier="2"]{--star-edge:#8c9eaf;--star-face:#e1ebf2}.sd-rank-star[data-tier="3"]{--star-edge:#c79c43;--star-face:#f7df93}.sd-rank-star[data-tier="4"]{--star-edge:#75a7b0;--star-face:#d3eeee}.sd-rank-star[data-tier="5"]{--star-edge:#a083c0;--star-face:#e2cef2}.sd-rank-star[data-tier="6"]{--star-edge:#6b98c3;--star-face:#bcdcf5}.sd-rank-star[data-tier="7"]{--star-edge:#64a78c;--star-face:#b9e8ce}.sd-rank-star[data-tier="8"]{--star-edge:#c47d91;--star-face:#f4c0cc}.sd-rank-star[data-tier="9"]{--star-edge:#7aaec0;--star-face:#d0f3fa}
+.sd-reputation-slot{display:inline-flex!important;align-items:center;justify-content:center;background:none!important;width:32px!important;height:36px!important;flex:0 0 32px!important}
+.sd-reputation-flame{--flame:#c89e66;--halo:#ecd6a6;display:inline-flex;width:32px;height:36px;flex:0 0 32px;vertical-align:middle;align-items:center;justify-content:center}
+.sd-reputation-flame svg{width:100%;height:100%;overflow:visible}.sd-flame-body{fill:var(--flame)}.sd-flame-core{fill:#fff4cc}.sd-flame-halo{fill:var(--halo);opacity:.5}.sd-flame-sparks{fill:none;stroke:var(--flame);stroke-width:1.6;stroke-linecap:round;opacity:0}
+.sd-reputation-flame[data-reputation-tier="0"]{--flame:#9aafb1;--halo:#dbe4e5}
+.sd-reputation-flame[data-reputation-tier="1"]{--flame:#e4ab63;--halo:#f5d7a5}
+.sd-reputation-flame[data-reputation-tier="2"]{--flame:#e98672;--halo:#f5c0ad}
+.sd-reputation-flame[data-reputation-tier="3"]{--flame:#69b9ac;--halo:#b4e3cd}
+.sd-reputation-flame[data-reputation-tier="4"]{--flame:#6eaff0;--halo:#bae2fc}
+.sd-reputation-flame[data-reputation-tier="5"]{--flame:#a18be0;--halo:#e1cef9}
+.sd-reputation-flame[data-reputation-tier="6"]{--flame:#d781ba;--halo:#b9c9ff}
+.sd-reputation-flame:is([data-reputation-tier="4"],[data-reputation-tier="5"],[data-reputation-tier="6"]) .sd-flame-sparks{opacity:.8}
+.sd-reputation-flame[data-reputation-tier="5"] .sd-flame-halo{stroke:var(--flame);stroke-width:.7}
+.sd-reputation-flame[data-reputation-tier="6"] .sd-flame-halo{stroke:#a6b5f5;stroke-width:1.5;animation:sd-flame-breathe 2.4s ease-in-out infinite;transform-origin:20px 42px}
+.sd-reputation-flame[data-reputation-tier="6"] .sd-flame-core{animation:sd-flame-core 2.4s ease-in-out infinite}
+@keyframes sd-flame-breathe{50%{transform:scale(.94,1.06);opacity:.85}}
+@keyframes sd-flame-core{50%{opacity:.65}}
+@media(prefers-reduced-motion:reduce){.sd-reputation-flame *{animation:none!important}}
+/* Keep decorative marks legible at desktop sizes as well as on touch screens. */
+.profile-showcase .profile-name-row .profile-sticker{width:32px!important;height:32px!important;min-width:32px;flex-basis:32px!important;flex-shrink:0}
+#sdpp-card .sdpp-stats b{display:flex;align-items:center;justify-content:center;gap:5px}
+#sdpp-card .sdpp-name-row .sdpp-emblem-wrap,#sdpp-card .sdpp-name-row .sdpp-emblem{width:32px!important;height:32px!important;min-width:32px;flex:0 0 32px!important}

@@ -25,7 +25,7 @@ def build() -> dict:
     for entry in ["index.html", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]:
         shell = GAME / entry
         text = shell.read_text(encoding="utf-8")
-        for rel in ["browser-runtime.js", "samidev-network.js"]:
+        for rel in ["browser-runtime.js", "samidev-network.js", "profile-details.js", "profile-details.css", "player-profile-ui.js"]:
             version = hashlib.sha256((GAME / rel).read_bytes()).hexdigest()[:16]
             text, count = re.subn(r'(["\'])(/?)' + re.escape(rel) + r'(?:\?[^"\']*)?(["\'])',
                                  lambda m: m[1] + m[2] + rel + "?v=" + version + m[3], text)

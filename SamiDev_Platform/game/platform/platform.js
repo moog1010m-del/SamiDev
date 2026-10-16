@@ -85,6 +85,7 @@
     const handle=$('#profile-identity-handle');if(handle)handle.textContent=String(user.username||'player');
     const sinceValue=$('#profile-since-value');if(sinceValue)sinceValue.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const wins=$('#profile-wins');if(wins)wins.textContent=formatProfileStat(user.wins);
+    window.SamiDevProfileDetails?.renderReputation($('#profile-reputation')?.previousElementSibling,user.reputation);
     const reputation=$('#profile-reputation');if(reputation)reputation.textContent=formatProfileStat(user.reputation);
     const displayInput=$('#profile-display-input');
     if(displayInput&&document.activeElement!==displayInput)displayInput.value=name;
@@ -125,7 +126,7 @@
     const id=state.user?.id;if(!id)return;const request=++ownProfileRequest;
     try{const data=await api('/api/public-profile/'+encodeURIComponent(id));
       if(request!==ownProfileRequest||state.user?.id!==id)return;
-      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins,profileBanner:data.user.profileBanner,chatBubble:data.user.chatBubble,nameBadge:data.user.nameBadge,starsCount:data.user.starsCount,nameBadgeAsset:data.user.nameBadgeAsset,nameBadgeName:data.user.nameBadgeName});
+      Object.assign(state.user,{showcaseItems:data.user.showcaseItems,collectionOwnedCount:data.user.collectionOwnedCount,collectionTotalCount:data.user.collectionTotalCount,gameStatistics:data.user.gameStatistics,legacyWins:data.user.legacyWins,profileBanner:data.user.profileBanner,chatBubble:data.user.chatBubble,nameBadge:data.user.nameBadge,starsCount:data.user.starsCount,nameBadgeAsset:data.user.nameBadgeAsset,nameBadgeName:data.user.nameBadgeName});
       setUser(state.user);
     }catch(_){const node=$('#own-profile-details');if(node&&!node.children.length)node.textContent='تعذر تحميل المقتنيات والإحصاءات. افتح الملف مجددًا للمحاولة.';}
   }
@@ -708,6 +709,7 @@
     $('#community-profile-since').textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     $('#community-profile-wins').textContent=formatProfileStat(user.wins);
     $('#community-profile-reputation').textContent=formatProfileStat(user.reputation);
+    window.SamiDevProfileDetails?.renderReputation($('#community-profile-reputation')?.previousElementSibling,user.reputation);
     const img=$('#community-profile-avatar-image'),fallback=$('#community-profile-avatar-fallback');fallback.textContent=initials(name);
     wireAvatarImage(img,fallback);img.src=user.id?'/api/avatar/'+encodeURIComponent(user.id)+'?v='+Date.now():DEFAULT_AVATAR_URL;
     const self=user.relation==='self'||String(user.id)===String(state.user?.id);
