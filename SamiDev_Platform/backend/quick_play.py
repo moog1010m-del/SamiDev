@@ -39,7 +39,7 @@ class QuickPlay:
             async with self.locks.setdefault(key, asyncio.Lock()):
                 yield
 
-    async def match(self, preset, name, node_id, conn_id, account_id, community_id):
+    async def match(self, preset, name, node_id, conn_id, account_id, community_id, *, allow_create=True):
         if not account_id:
             raise StoreError('AUTH_REQUIRED', 'سجّل الدخول للبحث عن مباراة')
         if preset not in PRESETS:
@@ -65,6 +65,7 @@ class QuickPlay:
                         raise
             created = data is None
             if created:
+                if not allow_create:raise StoreError('COMMUNITY_TABLE_LIMIT','وصلت المساحة إلى الحد الأقصى للطاولات')
                 data = await self.store.create_room(name, settings, node_id, conn_id, account_id, community_id)
             # Waiting rooms are real rooms and keep their usual TTL/reconnect/disconnect rules.
             if self.store.distributed:

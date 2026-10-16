@@ -24,7 +24,7 @@ class ChatCosmetic extends StatelessWidget {
       );
     }
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 42),
+      constraints: const BoxConstraints(minHeight: 58, minWidth: 84),
       child: Stack(
         children: [
           Positioned.fill(
@@ -53,11 +53,12 @@ class ChatCosmetic extends StatelessWidget {
             child: IgnorePointer(
               child: Image.asset(
                 'assets/runtime/platform/assets/cosmetics/$id.webp',
+                scale: 4,
                 centerSlice: Rect.fromLTRB(
-                  85,
-                  55,
-                  size.width - 85,
-                  size.height - 50,
+                  85 / 4,
+                  55 / 4,
+                  (size.width - 85) / 4,
+                  (size.height - 50) / 4,
                 ),
                 fit: BoxFit.fill,
               ),

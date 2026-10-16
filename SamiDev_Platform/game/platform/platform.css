@@ -751,3 +751,17 @@ html[data-sd-native] .lobby-profile{display:none!important}
 #community-chat-messages>.community-chat-message{direction:ltr;margin-left:0;margin-right:auto;align-self:flex-start}
 #community-chat-messages>.community-chat-message.me{margin-left:auto;margin-right:0;align-self:flex-end}
 #community-chat-messages .community-chat-content{direction:ltr}
+/* Small line controls keep the room header and composer clear. */
+.community-header-actions #exit-community,.community-exit-btn,#open-create{width:38px;min-width:38px;height:38px;padding:8px!important;border-radius:12px;display:inline-grid;place-items:center}
+.community-exit-btn{color:var(--muted,#657c86)!important;background:transparent!important;border-color:transparent!important}
+.community-exit-btn svg,#open-create svg,.chat-send-icon svg,#community-stickers svg{width:22px;height:22px;display:block}
+.chat-send-icon{width:42px;min-width:42px;padding:9px!important;border-radius:50%!important;align-self:center}
+#community-stickers{padding:7px;align-self:center}.room-policy-form{padding:20px;display:flex;flex-wrap:wrap;gap:14px;margin:18px 0}.room-policy-form h3,.room-policy-form p{width:100%;margin:0}.room-policy-form label{display:grid;gap:7px;flex:1 1 180px}.room-policy-form input,.room-policy-form select{width:100%;padding:10px;border:1px solid #93a9ad66;border-radius:9px;font:inherit}.room-policy-form p{font-size:12px}
+.community-room-head{position:relative;padding-inline-start:48px}.community-room-head-actions{position:static}#exit-community{position:absolute;inset-inline-start:0;top:0}#leave-community{display:none}
+/* Replace legacy pseudo-icons and three-column mobile composer as one layout. */
+#community-chat-form{display:flex;align-items:center;direction:rtl;gap:6px;min-height:56px;padding:6px 10px calc(6px + env(safe-area-inset-bottom))}
+#community-chat-form textarea{flex:1;min-width:0;min-height:38px;height:38px;max-height:90px;resize:none;font-size:15px;padding:8px}
+#community-chat-form button{flex:0 0 40px;width:40px;min-width:40px;height:40px;min-height:40px;padding:8px!important;display:grid;place-items:center;border:0;box-shadow:none}
+#community-chat-form .primary::after,#exit-community::after{content:none!important}
+#community-composer-create{display:none!important}#community-room #open-create{display:grid!important;flex:0 0 44px;width:44px;min-width:44px;height:44px}
+#community-room #exit-community{width:44px;min-width:44px;height:44px;top:5px}

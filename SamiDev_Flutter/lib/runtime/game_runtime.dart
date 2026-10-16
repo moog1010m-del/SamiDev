@@ -133,11 +133,17 @@ class GameRuntime {
       void closePair([int? code]){final safeCode={1000,1001,1008,1009,1011,4001,4003}.contains(code)?code!:1001;_sockets.remove(upstream);_sockets.remove(downstream);unawaited(upstream.close(safeCode).catchError((_){ }));unawaited(downstream.close(safeCode).catchError((_){ }));}
       downstream.listen((message){
         if(message is! String || utf8.encode(message).length>65536){closePair(1009);return;}
+        if(message.contains('chat_send')){try{final packet=jsonDecode(message) as Map<String,dynamic>;if(packet['type']=='chat_send'&&packet['clientMessageId'] is String)_emit({...packet,'type':'chat_pending'});}catch(_){}}
         upstream.add(message);
       },onDone:()=>closePair(downstream.closeCode),onError:(_)=>closePair(1011));
       upstream.listen((message){
         if(message is! String || message.length>4*1024*1024){closePair(1009);return;}
         downstream.add(message);
+        final prefix=message.substring(0,min(120,message.length));
+        if(RegExp(r'"type"\s*:\s*"move"').hasMatch(prefix))_observeMoveTurn(message);
+        if(RegExp(r'"type"\s*:\s*"authority_(state|alarm)"').hasMatch(prefix)){
+          try{final state=jsonDecode(message) as Map;_emit({'type':'game_turn','turn':state['turn'],'gameOver':state['gameOver']});}catch(_){}
+        }
         // Physics updates bypass JSON parsing in Dart; UI only observes selected event types.
         if(RegExp(r'"type"\s*:\s*"(chat_message|chat_history|created|joined|watching|room_state|begin_match|left_room|invite_created|error)"').hasMatch(message.substring(0,min(120,message.length)))){
           try{_emit(jsonDecode(message) as Map<String,dynamic>);}catch(_){}
@@ -146,6 +152,12 @@ class GameRuntime {
       return true;
     } catch(_){await remote?.close();await local?.close();rethrow;}
     finally{_connecting--;}
+  }
+  // Read only the bounded authority metadata, not the full physics/reveal JSON.
+  static final _moveTurn=RegExp(r'"authority"\s*:\s*\{\s*"turn"\s*:\s*(\[[0-9,\s-]{0,64}\])\s*,\s*"sequence"\s*:\s*\[[0-9,\s-]{0,100}\]\s*,\s*"gameOver"\s*:\s*(true|false)');
+  void _observeMoveTurn(String message){
+    final match=_moveTurn.firstMatch(message);if(match==null)return;
+    try{_emit({'type':'game_turn','turn':jsonDecode(match.group(1)!),'gameOver':match.group(2)=='true'});}catch(_){}
   }
   void _emit(Map<String,dynamic> data){if(!events.isClosed)events.add(data);}
   Future<void> _disconnect(int code) async {

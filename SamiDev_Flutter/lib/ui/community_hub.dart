@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/services.dart';
+import 'chat_stickers.dart';
 import 'package:flutter/material.dart';
 import 'chat_cosmetic.dart';
 import '../runtime/api.dart';
@@ -92,7 +94,7 @@ class CommunityHubState extends State<CommunityHub> {
   }
   Future<void> submitMessage(Map<String,dynamic> message) async {
     final cid=message['communityId'];
-    try{final result=await request('/api/communities/$cid/chat',method:'POST',body:{'text':message['text'],'clientMessageId':message['clientMessageId']});if(!mounted||community?['id']!=cid)return;setState(()=>mergeMessages(rows([result['message']])));}
+    try{final result=await request('/api/communities/$cid/chat',method:'POST',body:{'text':message['text'],'clientMessageId':message['clientMessageId'],if(message['stickerId']!=null)'stickerId':message['stickerId']});if(!mounted||community?['id']!=cid)return;setState(()=>mergeMessages(rows([result['message']])));}
     catch(e){if(mounted&&community?['id']==cid){setState(()=>message['failed']=true);report(e);}}
   }
   Future<void> send() async {
@@ -100,7 +102,14 @@ class CommunityHubState extends State<CommunityHub> {
     if(text.runes.length>280){report(StateError('الحد الأقصى ٢٨٠ حرفًا'));return;}
     final nonce='${DateTime.now().microsecondsSinceEpoch}_${List.generate(12,(_)=>Random.secure().nextInt(256).toRadixString(16).padLeft(2,'0')).join()}';
     final message=<String,dynamic>{'id':'pending_$nonce','clientMessageId':nonce,'communityId':community!['id'],'userId':widget.user!['id'],'username':widget.user!['username'],'displayName':widget.user!['username'],'nameBadgeAsset':widget.user!['nameBadgeAsset'],'chatBubble':widget.user!['chatBubble'],'text':text,'createdAt':DateTime.now().millisecondsSinceEpoch,'pending':true};
-    setState((){input.clear();mergeMessages([message]);});scrollToEnd();unawaited(submitMessage(message));
+    setState((){input.clear();mergeMessages([message]);});scrollToEnd();unawaited(SystemSound.play(SystemSoundType.click));unawaited(submitMessage(message));
+  }
+  Future<void> sendSticker() async {
+    final cid=community?['id'];if(cid==null||widget.user==null)return;
+    final item=await pickChatSticker(context,widget.api);if(item==null||!mounted||community?['id']!=cid)return;
+    final nonce='sticker_${DateTime.now().microsecondsSinceEpoch}_${Random.secure().nextInt(1<<30)}';
+    final message=<String,dynamic>{'id':'pending_$nonce','clientMessageId':nonce,'communityId':cid,'userId':widget.user!['id'],'username':widget.user!['username'],'text':'','stickerId':item['id'],'stickerAsset':item['asset'],'createdAt':DateTime.now().millisecondsSinceEpoch,'pending':true};
+    setState(()=>mergeMessages([message]));scrollToEnd();unawaited(SystemSound.play(SystemSoundType.click));unawaited(submitMessage(message));
   }
   String name(Map user)=>user['displayName']?.toString()??user['name']?.toString()??user['username']?.toString()??'لاعب';
   Widget avatar(Map user,{double radius=23})=>user.isEmpty
@@ -139,7 +148,7 @@ class CommunityHubState extends State<CommunityHub> {
     padding:const EdgeInsets.symmetric(horizontal:18,vertical:16),child:Row(children:[
       PlayerAvatar(api:widget.api,user:user,radius:31,framed:true),const SizedBox(width:13),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
+        Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
         const SizedBox(height:5),ProfileStars(size:18,count:(user['starsCount'] as num?)?.toInt()??0),
         if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
         const SizedBox(height:8),Wrap(spacing:16,runSpacing:6,children:[
@@ -155,9 +164,9 @@ class CommunityHubState extends State<CommunityHub> {
       InkWell(onTap:()=>widget.onProfile(message['userId'].toString()),child:avatar(message,radius:20)),const SizedBox(width:12),
       Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(textDirection:TextDirection.rtl,mainAxisSize:MainAxisSize.min,children:[
         Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:5),
-        StickerArtwork(asset:message['nameBadgeAsset']?.toString()??'/platform/assets/profile/raster/palm-swords.webp',size:18),const SizedBox(width:5),
+        StickerArtwork(asset:message['nameBadgeAsset']?.toString()??'',size:18),const SizedBox(width:5),
         if(date!=null)Text(TimeOfDay.fromDateTime(date).format(context),style:TextStyle(fontSize:10,color:Theme.of(context).colorScheme.onSurfaceVariant)),
-      ]),if(message['pending']==true)TextButton(onPressed:message['failed']==true?(){setState(()=>message['failed']=false);unawaited(submitMessage(message));}:null,child:Text(message['failed']==true?'تعذر الإرسال · إعادة المحاولة':'جارٍ الإرسال',style:const TextStyle(fontSize:10))),const SizedBox(height:5),ChatCosmetic(id:message['chatBubble']?.toString()??'',
+      ]),if(message['pending']==true)TextButton(onPressed:message['failed']==true?(){setState(()=>message['failed']=false);unawaited(submitMessage(message));}:null,child:Text(message['failed']==true?'تعذر الإرسال · إعادة المحاولة':'جارٍ الإرسال',style:const TextStyle(fontSize:10))),const SizedBox(height:5),if(message['stickerId']!=null)StickerArtwork(asset:message['stickerAsset']?.toString()??'',size:100)else ChatCosmetic(id:message['chatBubble']?.toString()??'',
         child:Text(message['text']?.toString()??'',textDirection:TextDirection.rtl,style:const TextStyle(fontSize:15,height:1.4))),])),
     ]))));
   }
@@ -175,6 +184,7 @@ class CommunityHubState extends State<CommunityHub> {
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
         if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
         const SizedBox(width:10),Expanded(child:Text(community?['name']?.toString()??'المساحات',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:17))),
+        if(community!=null)IconButton(onPressed:create,tooltip:'إنشاء طاولة',icon:const Icon(Icons.add,size:24)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
       ])),
       if(community==null)Align(alignment:Alignment.centerRight,child:TextButton.icon(onPressed:widget.onInvite,icon:const Icon(Icons.link),label:const Text('دخول بدعوة'))),
@@ -187,22 +197,22 @@ class CommunityHubState extends State<CommunityHub> {
         tab==2?(members.isEmpty?empty('لا يوجد أعضاء متصلون الآن.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:members.length,itemBuilder:(_,i)=>memberRow(members[i]),separatorBuilder:(_,__)=>const Divider(height:1,indent:16,endIndent:16))):
         messages.isEmpty?empty('قل مرحبًا وابدأ المحادثة.'):ListView.builder(controller:scroll,physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.symmetric(vertical:12),itemCount:messages.length,itemBuilder:(_,i)=>messageRow(messages[i])),
       )),
-      if(community!=null&&tab==0)Padding(padding:const EdgeInsets.fromLTRB(8,8,8,10),child:SizedBox(width:double.infinity,height:46,child:FilledButton(style:FilledButton.styleFrom(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(10))),onPressed:create,child:const Text('إنشاء مباراة جديدة',style:TextStyle(fontWeight:FontWeight.w700))))),
-      if(community!=null&&tab==1)ChatComposer(controller:input,sending:sending,onSend:send,maxLength:280),
+      if(community!=null&&tab==1)ChatComposer(controller:input,sending:sending,onSend:send,onStickers:sendSticker,maxLength:280),
     ]);
   }
 }
 
 class ChatComposer extends StatelessWidget {
-  const ChatComposer({super.key,required this.controller,required this.sending,required this.onSend,this.onToggle,this.expanded=false,this.focusNode,this.maxLength=160});
+  const ChatComposer({super.key,required this.controller,required this.sending,required this.onSend,this.onToggle,this.onStickers,this.expanded=false,this.focusNode,this.maxLength=160});
   final TextEditingController controller;
   final bool sending,expanded;
   final VoidCallback onSend;
-  final VoidCallback? onToggle;
+  final VoidCallback? onToggle,onStickers;
   final FocusNode? focusNode;
   final int maxLength;
   @override Widget build(BuildContext context)=>Material(color:Theme.of(context).colorScheme.surface,child:Container(constraints:const BoxConstraints(minHeight:54),decoration:BoxDecoration(border:Border(top:BorderSide(color:Theme.of(context).dividerColor,width:.5))),child:Row(children:[
     Expanded(child:TextField(controller:controller,focusNode:focusNode,maxLength:maxLength,textInputAction:TextInputAction.send,onSubmitted:(_)=>onSend(),minLines:1,maxLines:3,style:const TextStyle(fontSize:16),decoration:const InputDecoration(counterText:'',hintText:'قل مرحبًا',border:InputBorder.none,contentPadding:EdgeInsets.symmetric(horizontal:16,vertical:12)))),
+    if(onStickers!=null)IconButton(onPressed:onStickers,tooltip:'الملصقات',icon:const Icon(Icons.sticky_note_2_outlined,size:23)),
     if(onToggle!=null)IconButton(onPressed:onToggle,tooltip:expanded?'إخفاء المحادثة':'عرض المحادثة',icon:Icon(expanded?Icons.chat_bubble:Icons.chat_bubble_outline,size:23)),
     IconButton(onPressed:sending?null:onSend,tooltip:'إرسال',icon:const Icon(Icons.send_rounded,size:24)),
   ])));

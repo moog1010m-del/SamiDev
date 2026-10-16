@@ -101,16 +101,16 @@ class CommunityRules:
                     if has_scope: inventory.add('badge_steward')
                     else:
                         inventory.discard('badge_steward')
-                        if equipment.get('name_badge')=='badge_steward': equipment['name_badge']='badge_palm_swords'
-                        if target.get('nameBadge')=='badge_steward': target['nameBadge']='badge_palm_swords'
+                        if equipment.get('name_badge')=='badge_steward': equipment['name_badge']=''
+                        if target.get('nameBadge')=='badge_steward': target['nameBadge']=''
                 elif has_scope:
                     await service.r.sadd(service.k_inventory(target_id),'badge_steward')
                 else:
                     await service.r.srem(service.k_inventory(target_id),'badge_steward')
                     if await service.r.hget(service.k_equipped(target_id),'name_badge')=='badge_steward':
-                        await service.r.hset(service.k_equipped(target_id),'name_badge','badge_palm_swords')
+                        await service.r.hset(service.k_equipped(target_id),'name_badge','')
                     if target.get('nameBadge')=='badge_steward':
-                        await service.r.hset(service.k_user(target_id),'nameBadge','badge_palm_swords')
+                        await service.r.hset(service.k_user(target_id),'nameBadge','')
             # Welcome once per account; reappointment restores the badge without spam.
             if action=='grant_moderator' and not target.get('moderatorGiftGrantedAt'):
                 clock=int(time.time()*1000)

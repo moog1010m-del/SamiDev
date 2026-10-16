@@ -1,6 +1,7 @@
 """One Redis subscription per gateway, bounded subscriber queues, durable snapshots."""
 import asyncio
 import json
+import secrets
 from contextlib import asynccontextmanager
 
 
@@ -11,6 +12,7 @@ class CommunityLive:
         self.connections = {}
         self.task = None
         self.ready = asyncio.Event()
+        self.instance = secrets.token_hex(12)
 
     @property
     def redis(self):
@@ -30,12 +32,11 @@ class CommunityLive:
                 queue.put_nowait(event)
 
     async def publish(self, cid, event):
-        if self.redis is None:
-            self.deliver(cid, event)
-        else:
+        self.deliver(cid, event)
+        if self.redis is not None:
             # Persistence already committed. A publication outage must not make
             # the sender retry a committed message; periodic snapshots repair it.
-            try: await asyncio.wait_for(self.redis.publish(self.channel(cid), json.dumps(event)), 2)
+            try: await asyncio.wait_for(self.redis.publish(self.channel(cid), json.dumps({**event, "_sender":self.instance})), 2)
             except Exception: pass
 
     async def run(self):
@@ -50,7 +51,9 @@ class CommunityLive:
                         try:
                             channel=message['channel'];channel=channel.decode() if isinstance(channel,bytes) else channel
                             event=json.loads(message['data'])
-                            if isinstance(event,dict): self.deliver(channel.rsplit(':',1)[-1],event)
+                            if isinstance(event,dict) and event.get('_sender')!=self.instance:
+                                event.pop('_sender',None)
+                                self.deliver(channel.rsplit(':',1)[-1],event)
                         except (ValueError,TypeError): continue
             except asyncio.CancelledError: raise
             except Exception:

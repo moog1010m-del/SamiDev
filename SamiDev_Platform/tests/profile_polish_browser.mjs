@@ -30,7 +30,7 @@ try{
  },profile.user);
  assert.equal(await page.locator('#star-gallery .sd-rank-star').count(),10);
  for(let tier=0;tier<10;tier++)assert.equal(await page.locator('#star-gallery .sd-rank-star').nth(tier).getAttribute('data-tier'),String(tier));
- const badge=await page.locator('#own-profile-card .profile-sticker').boundingBox();assert(badge.width>=30&&badge.height>=30);
+ assert(!await page.locator('#own-profile-card .profile-sticker').isVisible(),'no default name sticker');
  const flame=await page.locator('#own-profile-card .sd-reputation-flame').boundingBox();assert(flame.width>=30&&flame.height>=34);
  const halo=page.locator('#own-profile-card .sd-flame-halo');assert.equal(await halo.evaluate(el=>getComputedStyle(el).animationName),'sd-flame-breathe');
  await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await halo.evaluate(el=>getComputedStyle(el).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});

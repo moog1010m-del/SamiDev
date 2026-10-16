@@ -134,7 +134,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           Transform.translate(offset:const Offset(0,-32),child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[
             Flexible(child:Text(u['displayName']?.toString()??u['username']?.toString()??'لاعب',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w700))),
             const SizedBox(width:6),ProfileStars(size:18,count:(u['starsCount'] as num?)?.toInt()??0),
-            const SizedBox(width:6),StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'/platform/assets/stickers/samidev-stickers.png#cell-8',size:22),
+            const SizedBox(width:6),StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'',size:22),
           ])),
           if(u['username']!=null)Text('${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[

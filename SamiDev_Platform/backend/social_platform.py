@@ -86,10 +86,9 @@ STORE_CATALOG.update({
     'badge_crystal': {'name': 'زهرة البلور', 'description': 'بتلات بنفسجية تفتح باب الخيال.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-5', 'price': 200, 'availableToAll': False, 'default': False},
     'badge_leopard': {'name': 'فهد الرمال', 'description': 'حضور واثق بعيون زمردية.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-6', 'price': 250, 'availableToAll': False, 'default': False},
     'badge_jellyfish': {'name': 'نبض البحر', 'description': 'ألوان مضيئة وإيقاع لطيف.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-7', 'price': 200, 'availableToAll': False, 'default': False},
-    'badge_palm_swords': {'name': 'بوصلة النخيل', 'description': 'نخلة ترشدك بين البحر والصحراء.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-8', 'price': 0, 'availableToAll': True, 'default': True},
 })
 STORE_CATALOG["profile_star"]["asset"] = "/platform/assets/profile/identity/profile-atlas.png#star"
-STORE_DEFAULT_EQUIPPED = {"carrom_theme":"carrom_classic", "pool_theme":"pool_midnight", "pool_cue":"pool_cue_classic", "crazy8_theme":"crazy8_original", "tablesoccer_theme":"soccer_original", "name_badge":"badge_palm_swords"}
+STORE_DEFAULT_EQUIPPED = {"carrom_theme":"carrom_classic", "pool_theme":"pool_midnight", "pool_cue":"pool_cue_classic", "crazy8_theme":"crazy8_original", "tablesoccer_theme":"soccer_original", "name_badge":""}
 
 
 def effective_store_equipment(equipped: dict[str, str], inventory: list[str]) -> dict[str, str]:
@@ -119,7 +118,6 @@ def normalize_community_id(value: Any) -> str:
 for _id, _item in STORE_CATALOG.items():
     if str(_item.get("asset", "")).startswith("/platform/assets/stickers/samidev-stickers.png#"):
         _item["retired"] = True
-STORE_CATALOG["badge_palm_swords"].update(name="نخلة المجلس", description="شارتك الافتراضية بهوية SamiDev.", asset="/platform/assets/profile/raster/palm-swords.webp", retired=False)
 for _id, _name, _description, _slot, _category, _price in [
     ("badge_shard", "شظية البرق", "بريق فيروزي وحضور حاد بجانب اسمك.", "name_badge", "profile", 150),
     ("badge_ember", "جمرة", "شعلة مرجانية بتصميم منحوت.", "name_badge", "profile", 150),
@@ -282,11 +280,11 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     }
     stars_raw = raw.get("starsCount")
     out["starsCount"] = 5 if stars_raw is None else max(0, min(5, int(stars_raw)))
-    badge = str(raw.get("nameBadge") or "badge_palm_swords")
+    badge = cosmetic_id(raw.get("nameBadge"), "name_badge")
     out["nameBadge"] = badge
     badge_item = STORE_CATALOG.get(badge)
-    out["nameBadgeAsset"] = badge_item.get("asset", "/platform/assets/profile/raster/palm-swords.webp") if badge_item else "/platform/assets/profile/raster/palm-swords.webp"
-    out["nameBadgeName"] = badge_item.get("name", "سيفين ونخلة") if badge_item else "سيفين ونخلة"
+    out["nameBadgeAsset"] = badge_item.get("asset", "") if badge_item else ""
+    out["nameBadgeName"] = badge_item.get("name", "") if badge_item else ""
     out["profileBanner"] = cosmetic_id(raw.get("profileBanner"), "profile_banner")
     out["chatBubble"] = cosmetic_id(raw.get("chatBubble"), "chat_bubble")
     if include_avatar:
@@ -314,6 +312,8 @@ class PlatformService:
     def __init__(self, redis_client: Any | None = None):
         self.firebase = FirebaseIdentity()
         self.community_rules = CommunityRules(self)
+        from room_policy import RoomPolicy
+        self.room_policy=RoomPolicy(self)
         self.mem_firebase = {}
         self.auth_audit_instance = secrets.token_hex(8)
         self.r = redis_client
@@ -423,6 +423,21 @@ class PlatformService:
         return out
 
     async def touch_community(self, uid: str, community_id: str) -> str:
+        cid=normalize_community_id(community_id)
+        active=await self.r.get(self.k_active_community(uid)) if self.r is not None else next((value[0] for value in [self.mem_active_community.get(uid)] if value and value[1]>time.monotonic()),None)
+        if active==cid:return await self._touch_community(uid,cid)
+        async with self.room_policy.transaction():
+            members=await self.community_members(cid,250)
+            settings=await self.room_policy.settings(cid)
+            if uid not in {str(p['id']) for p in members} and len(members)>=settings['maxMembers']:
+                raise PlatformError('COMMUNITY_FULL','المساحة ممتلئة؛ حاول لاحقًا',409)
+            return await self._touch_community(uid,cid)
+
+    async def renew_community_presence(self,uid,cid):
+        active=await self.r.get(self.k_active_community(uid)) if self.r is not None else next((value[0] for value in [self.mem_active_community.get(uid)] if value and value[1]>time.monotonic()),None)
+        if active==cid:await self._touch_community(uid,cid)
+
+    async def _touch_community(self, uid: str, community_id: str) -> str:
         cid = normalize_community_id(community_id)
         await self.community_rules.access(uid,cid)
         await self.touch_presence(uid)
@@ -513,10 +528,21 @@ class PlatformService:
         async with self.lock:
             return [dict(x) for x in self.mem_community_chat.setdefault(cid, [])[-limit:]]
 
-    async def append_community_chat(self, uid: str, community_id: str, text: Any, client_message_id=None) -> dict[str, Any]:
+    async def chat_sticker(self,uid,sticker_id):
+        if sticker_id is None:return {}
+        if not isinstance(sticker_id,str) or not sticker_id or len(sticker_id)>64:
+            raise PlatformError('BAD_STICKER','الملصق غير صالح')
+        item=STORE_CATALOG.get(sticker_id)
+        owned=await self.r.sismember(self.k_inventory(uid),sticker_id) if self.r is not None else sticker_id in self.mem_inventory.get(uid,set())
+        if not item or item.get('slot')!='name_badge' or not owned:
+            raise PlatformError('STICKER_NOT_OWNED','يمكنك إرسال الملصقات المملوكة فقط',403)
+        return {'stickerId':sticker_id,'stickerAsset':item['asset'],'stickerName':item['name']}
+
+    async def append_community_chat(self, uid: str, community_id: str, text: Any, client_message_id=None, sticker_id=None) -> dict[str, Any]:
         cid = normalize_community_id(community_id)
         await self.community_rules.access(uid,cid,chat=True)
-        clean = sanitize_community_chat_text(text)
+        sticker=await self.chat_sticker(uid,sticker_id)
+        clean = "" if sticker and not text else sanitize_community_chat_text(text)
         if client_message_id is not None and (not isinstance(client_message_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{8,64}',client_message_id)):
             raise PlatformError('BAD_MESSAGE_ID','معرّف الرسالة غير صالح')
         user = await self.get_user(uid)
@@ -525,7 +551,7 @@ class PlatformService:
         entry = {
             "id": secrets.token_urlsafe(8), "communityId": cid, "userId": uid,
             "displayName": sanitize_plain_text(user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
-            "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
+            **sticker, "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
             "chatBubble": cosmetic_id(user.get("chatBubble"), "chat_bubble"),
             "nameBadgeAsset": public_user(user)["nameBadgeAsset"],
             "nameBadgeName": public_user(user)["nameBadgeName"],
@@ -542,7 +568,7 @@ class PlatformService:
             if client_message_id:
                 previous=next((row for row in rows if row.get('userId')==uid and row.get('clientMessageId')==client_message_id),None)
                 if previous:
-                    if previous.get('text')!=clean: raise PlatformError('MESSAGE_ID_CONFLICT','معرّف الرسالة مستخدم لنص آخر',409)
+                    if previous.get('text')!=clean or previous.get('stickerId')!=entry.get('stickerId'): raise PlatformError('MESSAGE_ID_CONFLICT','معرّف الرسالة مستخدم لنص آخر',409)
                     return previous
             if self.r is None:
                 rows.append(entry);del rows[:-COMMUNITY_CHAT_MAX]
@@ -608,7 +634,7 @@ class PlatformService:
         encoded = await self.password_work(_hash_password, password)
         uid = secrets.token_urlsafe(12)
         created = now_ms()
-        user = {"id": uid, "username": username, "usernameLower": lower, "displayName": display, "passwordHash": encoded, "role": role if role in {"user", "admin", "moderator"} else "user", "createdAt": str(created), "wins": "0", "reputation": "0", "coins": "0", "banned": "0", "starsCount": "0", "nameBadge": "badge_palm_swords"}
+        user = {"id": uid, "username": username, "usernameLower": lower, "displayName": display, "passwordHash": encoded, "role": role if role in {"user", "admin", "moderator"} else "user", "createdAt": str(created), "wins": "0", "reputation": "0", "coins": "0", "banned": "0", "starsCount": "0", "nameBadge": ""}
         if self.r is not None:
             # Username claim is atomic across all gateway replicas.
             claimed = await self.r.set(self.k_username(lower), uid, nx=True)
@@ -703,7 +729,7 @@ class PlatformService:
             user = dict(id=uid, username=username, usernameLower=username.lower(),
                 displayName=username, passwordHash="",
                 role="admin" if claims["uid"] == self.firebase.admin_uid else "user",
-                createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="badge_palm_swords",
+                createdAt=str(now_ms()), wins="0", reputation="0", coins="0", banned="0", starsCount="0", nameBadge="",
                 firebaseUid=claims["uid"], firebaseProject=self.firebase.project,
                 firebaseEmail=claims["email"], authVersion="1")
             self.mem_users[uid] = user
@@ -851,7 +877,7 @@ class PlatformService:
                 coins_raw = user.get("coins") or 0
         stars_raw = user.get("starsCount")
         stars_count = 5 if stars_raw is None else max(0, min(5, int(stars_raw)))
-        inventory = sorted(set(inventory) | {item_id for item_id, item in STORE_CATALOG.items() if item.get("availableToAll") is True})
+        inventory = sorted((set(inventory) & set(STORE_CATALOG)) | {item_id for item_id, item in STORE_CATALOG.items() if item.get("availableToAll") is True})
         equipped = effective_store_equipment(equipped, inventory)
         catalog = []
         for item_id, item in STORE_CATALOG.items():
@@ -1799,6 +1825,13 @@ class PlatformHttp:
             "rooms": rooms, "ts": now_ms(),
         })
 
+    async def community_policy(self, request):
+        await self._admin(request)
+        cid=normalize_community_id(request.match_info.get('community_id'))
+        policy=self.platform.room_policy
+        settings=await policy.configure(cid,await self._body(request)) if request.method=='PUT' else await policy.settings(cid)
+        return web.json_response({'ok':True,'settings':settings})
+
     async def community_enter(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         cid = normalize_community_id(request.match_info.get("community_id"))
@@ -1827,7 +1860,7 @@ class PlatformHttp:
         await self.platform.community_rules.access(str(user['id']),cid)
         if not await self.platform.allow_rate(f"community-stream:{user['id']}",30,60):
             raise PlatformError('RATE_LIMIT','اتصالات كثيرة؛ حاول لاحقًا',429)
-        response=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'private, no-store','X-Accel-Buffering':'no'})
+        response=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'private, no-store, no-transform','X-Accel-Buffering':'no'})
         async def emit(event):
             payload=('data: '+json.dumps(event,ensure_ascii=False,separators=(',',':'))+'\n\n').encode()
             await asyncio.wait_for(response.write(payload),5)
@@ -1862,7 +1895,7 @@ class PlatformHttp:
         if not await self.platform.allow_rate(f"community-chat-room:{cid}", COMMUNITY_CHAT_ROOM_RATE, COMMUNITY_CHAT_RATE_WINDOW):
             raise PlatformError("ROOM_RATE_LIMIT", "المحادثة نشطة جدًا الآن؛ حاول بعد لحظات", 429)
         body = await self._body(request)
-        entry = await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"), body.get("clientMessageId"))
+        entry = await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"), body.get("clientMessageId"),body.get("stickerId"))
         return web.json_response({"ok": True, "message": entry})
 
     async def lobby_rooms(self, request: web.Request) -> web.Response:

@@ -46,3 +46,8 @@
 .store-item-card .store-banner-art{height:164px;width:100%;object-fit:cover;border-radius:12px;padding:0}
 .store-product-sheet.has-chat-preview .store-product-art{height:180px;padding:12px}
 @media(max-width:600px){.store-chat-sample{height:132px;padding:4px!important}.store-item-card .store-chat-preview{font-size:12px}.store-item-card .store-banner-art{height:132px}.store-product-sheet.has-chat-preview .store-product-art{height:150px;padding:8px}}
+.sd-chat-sticker-art{display:block;width:100px;height:100px}.sd-chat-sticker-art>img,.sd-chat-sticker-art>svg{width:100%;height:100%;object-fit:contain}
+.sd-chat-sticker-picker{border:1px solid #8eaaae55;border-radius:20px;padding:20px;max-width:min(400px,90vw);background:#f6faf9;color:#263e43}.sd-chat-sticker-picker::backdrop{background:#10242b88}.sd-chat-sticker-picker button{padding:8px;border:0;border-radius:10px;cursor:pointer;background:#e5eeee;color:inherit}.sd-chat-sticker-picker .sd-sprite-badge{width:72px;height:72px;margin:6px}
+#sd-chat .sd-sticker-message,.community-chat-message .sd-sticker-message{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+
+html[data-theme="dark"] .sd-chat-sticker-picker{background:#17272e;color:#e6eeee}html[data-theme="dark"] .sd-chat-sticker-picker button{background:#263940}

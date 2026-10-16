@@ -20,6 +20,9 @@ void main(){
    expect(RuntimePolicy.allowApi('GET',path),isFalse);
   }
   expect(RuntimePolicy.allowApi('DELETE','/api/me'),isFalse);
+  expect(RuntimePolicy.allowApi('GET','/api/admin/communities/majlis/policy'),isTrue);
+  expect(RuntimePolicy.allowApi('PUT','/api/admin/communities/majlis/policy'),isTrue);
+  expect(RuntimePolicy.allowApi('POST','/api/admin/communities/majlis/policy'),isFalse);
  });
  test('upstream path cannot choose another origin',(){
   final p=RuntimePolicy('https://games.example.com');

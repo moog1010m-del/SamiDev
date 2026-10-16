@@ -65,8 +65,8 @@
       const time=document.createElement('time');
       const stamp=Number(msg.ts??msg.createdAt);
       if(Number.isFinite(stamp)&&stamp>0){time.dateTime=new Date(stamp).toISOString();time.textContent=new Date(stamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});}
-      meta.append(name,time);body.append(text);
-      window.SamiDevCosmetics?.bubble(body,msg.chatBubble);
+      meta.append(name,time);if(msg.pending){const status=document.createElement('small');status.textContent=msg.failed?'تعذر تأكيد الإرسال':'جارٍ الإرسال';meta.append(status);}body.append(text);if(msg.stickerId&&msg.stickerAsset){text.hidden=true;body.classList.add('sd-sticker-message');const art=document.createElement('span');art.className='sd-chat-sticker-art';window.SamiDevStickerArt.render(art,msg.stickerAsset,msg.stickerName||'ملصق');body.append(art);}
+      window.SamiDevCosmetics?.bubble(body,msg.stickerId?'':msg.chatBubble);
       content.append(meta,body);row.appendChild(content);
 
       const openSenderProfile = (e) => {
@@ -104,6 +104,7 @@
 
   function addMessage(msg) {
     if (!msg || typeof msg !== 'object') return;
+    if(msg.clientMessageId&&!msg.pending){for(let i=messages.length-1;i>=0;i--)if(messages[i].pending&&messages[i].seat===msg.seat&&messages[i].clientMessageId===msg.clientMessageId){seen.delete(String(messages[i].id));messages.splice(i,1);}}
     const id = String(msg.id || '');
     if (id && seen.has(id)) return;
     if (id) seen.add(id);
@@ -114,7 +115,7 @@
       unread += 1;
       updateUnread();
     }
-    render();
+    render();if(msg.pending)setTimeout(()=>{if(messages.includes(msg)){msg.failed=true;render();}},8000);
   }
 
   function setHistory(items) {
@@ -342,7 +343,7 @@
       #sd-chat-input{min-width:0;flex:1;height:42px;box-sizing:border-box;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(5,8,12,.78);color:#fff;padding:0 12px;font:16px system-ui,-apple-system,"Segoe UI",Arial,sans-serif;outline:none;text-align:start;direction:auto;unicode-bidi:plaintext}
       #sd-chat-input::placeholder{color:rgba(255,255,255,.48)}
       #sd-chat-input:focus{border-color:rgba(83,168,255,.78);box-shadow:0 0 0 2px rgba(60,145,230,.13)}
-      #sd-chat-send{width:44px;height:42px;flex:0 0 44px;border:0;border-radius:11px;background:#247bd6;color:#fff;font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;transform:scaleX(-1)}
+      #sd-chat-stickers{background:none;border:0;color:inherit;font:24px system-ui;cursor:pointer}#sd-chat-send{width:44px;height:42px;flex:0 0 44px;border:0;border-radius:11px;background:#247bd6;color:#fff;font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;transform:scaleX(-1)}
       #sd-chat-send:active{transform:scaleX(-1) scale(.94)}
       #sd-chat-error{position:absolute;z-index:3;left:50%;bottom:calc(66px + var(--sd-chat-safe-bottom));transform:translate(-50%,8px);opacity:0;max-width:90vw;padding:7px 10px;border-radius:9px;background:rgba(180,43,54,.96);font-size:12px;transition:.15s;pointer-events:none;white-space:nowrap}
       #sd-chat-error.show{opacity:1;transform:translate(-50%,0)}
@@ -364,7 +365,7 @@
         <div id="sd-chat-error" role="status"></div>
         <form id="sd-chat-form" autocomplete="off">
           <button id="sd-chat-send" type="submit" aria-label="إرسال"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-7 18-4-7-7-4 18-7Z"/><path d="m10 14 11-11"/></svg></button>
-          <input id="sd-chat-input" type="text" inputmode="text" enterkeyhint="send" maxlength="160" placeholder="اكتب رسالة…" autocomplete="off" autocapitalize="sentences" spellcheck="true">
+          <button id="sd-chat-stickers" type="button" aria-label="الملصقات"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14a2 2 0 0 1 2 2v10l-6 6H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm16 12h-4a2 2 0 0 0-2 2v4"/></svg></button><input id="sd-chat-input" type="text" inputmode="text" enterkeyhint="send" maxlength="160" placeholder="اكتب رسالة…" autocomplete="off" autocapitalize="sentences" spellcheck="true">
         </form>
       </div>`;
     document.body.appendChild(root);
@@ -378,6 +379,7 @@
 
     list = root.querySelector('#sd-chat-messages');
     form = root.querySelector('#sd-chat-form');
+    root.querySelector('#sd-chat-stickers').onclick=async()=>{try{const response=await fetch('/api/store',{credentials:'same-origin'});if(!response.ok)throw Error();window.SamiDevCosmetics.pickStickers(await response.json(),item=>net().sendSticker(item.id,item.asset));}catch{showError('تعذر تحميل الملصقات');}};
     input = root.querySelector('#sd-chat-input');
     errorBox = root.querySelector('#sd-chat-error');
     closeBtn = root.querySelector('#sd-chat-close');
@@ -406,6 +408,7 @@
     n?.on?.('chat_message', addMessage);
     n?.on?.('left_room', () => showForRoom(false));
     n?.on?.('error', e => {
+      if(e.clientMessageId){for(const m of messages)if(m.pending&&m.clientMessageId===e.clientMessageId)m.failed=true;render();}
       if (String(e?.code || '').startsWith('CHAT_')) showError(e?.message || 'تعذر إرسال الرسالة');
     });
     if (n?.state?.roomId) { showForRoom(true); setHistory(n.state.chatHistory || []); }

@@ -167,6 +167,7 @@ class MemRoom:
     authority_epoch: int = 0
     authority_revision: int = -1
     profile_result_claimed: bool = False
+    begun_at: int = 0
     finished: bool = False
     spectator_nodes: dict[str, str] = field(default_factory=dict)
     expires_at: float = field(default_factory=lambda: time.monotonic() + ROOM_TTL_SECONDS)
@@ -212,7 +213,7 @@ class MemoryStore:
     def _room_payload(self, room: MemRoom) -> dict[str, Any]:
         return {
             "roomId": room.room_id,
-            "createdAt": room.created_at,
+            "createdAt": room.created_at, "begunAt":room.begun_at,
             "waitingExpiresAt": room.waiting_expires_at,
             "waitingExpired": self._waiting_expired(room),
             "ownerSeat": room.owner_seat,
@@ -310,7 +311,7 @@ class MemoryStore:
                 out.append({
                     "roomId": room.room_id, "communityId": room.community_id, "capacity": room.capacity, "occupied": occupied,
                     "settings": dict(room.settings), "started": bool(room.started), "begun": bool(room.begun),
-                    "createdAt": room.created_at, "hostName": roster[room.owner_seat]["name"] if roster and room.owner_seat<len(roster) else None,
+                    "createdAt": room.created_at, "begunAt":room.begun_at, "hostName": roster[room.owner_seat]["name"] if roster and room.owner_seat<len(roster) else None,
                     "roster": roster,
                 })
             return out
@@ -422,6 +423,7 @@ class MemoryStore:
             p.ready = True
             if room.started and not room.begun and all(x.ready and x.connected for x in room.players.values()) and len(room.players) == room.capacity:
                 room.begun = True
+                room.begun_at = now_ms()
                 return True
             return False
 
@@ -465,13 +467,13 @@ class MemoryStore:
             room.expires_at = time.monotonic() + ROOM_TTL_SECONDS
             return entry
 
-    async def append_chat(self, room_id: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "") -> dict[str, Any]:
+    async def append_chat(self, room_id: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "", sticker: dict | None = None) -> dict[str, Any]:
         async with self.lock:
             room = self.rooms.get(room_id)
             player = room.players.get(seat) if room else None
             if not player or not player.connected or player.conn_id != conn_id or player.connection_epoch != connection_epoch:
                 raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
-            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble}
+            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble, **(sticker or {})}
             room.chat.append(message)
             if len(room.chat) > CHAT_HISTORY_MAX:
                 room.chat = room.chat[-CHAT_HISTORY_MAX:]
@@ -1019,7 +1021,7 @@ class RedisStore:
         return data
 
     async def get_room_state(self, rid: str) -> dict[str, Any]:
-        fields = ('capacity','settings','createdAt','communityId','started','begun','finished','moveCount','waitingExpiresAt','waitingExpired','ownerSeat')
+        fields = ('capacity','settings','createdAt','begunAt','communityId','started','begun','finished','moveCount','waitingExpiresAt','waitingExpired','ownerSeat')
         pipe = self.r.pipeline(transaction=False)
         pipe.hmget(self.kroom(rid), *fields)
         pipe.hgetall(self.kplayers(rid))
@@ -1047,7 +1049,7 @@ class RedisStore:
             "waitingExpired": expired,
             "ownerSeat": int(meta.get("ownerSeat") or 0),
             "roomId": rid,
-            "createdAt": int(meta.get("createdAt") or 0),
+            "createdAt": int(meta.get("createdAt") or 0), "begunAt":int(meta.get("begunAt") or 0),
             "communityId": str(meta.get("communityId") or "majlis"),
             "capacity": capacity,
             "settings": json.loads(meta["settings"]),
@@ -1100,7 +1102,7 @@ class RedisStore:
         redis.call('SADD', KEYS[3], ARGV[1])
         local cap = tonumber(redis.call('HGET', KEYS[1], 'capacity'))
         if redis.call('HGET', KEYS[1], 'started') == '1' and redis.call('HGET', KEYS[1], 'begun') ~= '1' and redis.call('SCARD', KEYS[3]) >= cap then
-          redis.call('HSET', KEYS[1], 'begun', '1'); return 1
+          local t=redis.call('TIME'); redis.call('HSET', KEYS[1], 'begun', '1', 'begunAt', string.format('%.0f',tonumber(t[1])*1000+math.floor(tonumber(t[2])/1000))); return 1
         end
         return 0
         """
@@ -1157,8 +1159,8 @@ class RedisStore:
         await self._touch(rid)
         return {"seat": seat, "packet": packet, "moveIndex": code}
 
-    async def append_chat(self, rid: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "") -> dict[str, Any]:
-        message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble}
+    async def append_chat(self, rid: str, seat: int, conn_id: str, connection_epoch: int, text: str, *, chat_bubble: str = "", sticker: dict | None = None) -> dict[str, Any]:
+        message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble, **(sticker or {})}
         script = """
         if redis.call('EXISTS', KEYS[1]) == 0 then return -10 end
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end

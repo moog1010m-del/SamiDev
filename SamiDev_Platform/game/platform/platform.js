@@ -105,7 +105,7 @@
     const lobbyWins=$('#lobby-profile-wins');if(lobbyWins)lobbyWins.textContent=formatProfileStat(user.wins);
     const lobbyRep=$('#lobby-profile-reputation');if(lobbyRep)lobbyRep.textContent=formatProfileStat(user.reputation);
     const storeBalance=$('#store-balance');if(storeBalance&&user.coins!=null)storeBalance.textContent=formatProfileStat(user.coins);
-    const badgeAsset=user.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
+    const badgeAsset=user.nameBadgeAsset||'';
     const badgeName=user.nameBadgeName||'سيفين ونخلة';
     $$('.profile-name-row .profile-sticker').forEach(el=>{
       window.SamiDevStickerArt.render(el,badgeAsset,badgeName);
@@ -296,6 +296,7 @@
     document.addEventListener('click',e=>{const target=e.target.closest?.('[data-public-profile]');if(target)openCommunityProfile(target.dataset.publicProfile);});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#community-profile-modal')?.classList.contains('open'))closeCommunityProfile();if((e.key==='Enter'||e.key===' ')&&e.target?.matches?.('[data-public-profile]')){e.preventDefault();openCommunityProfile(e.target.dataset.publicProfile);}});
     $('#community-chat-form').onsubmit=sendCommunityChat;
+    $('#community-stickers').onclick=async()=>{try{const data=await api('/api/store');window.SamiDevCosmetics.pickStickers(data,item=>{const cid=state.activeCommunity?.id;if(!cid)return;const message={id:'pending_'+crypto.randomUUID(),clientMessageId:crypto.randomUUID(),communityId:cid,userId:state.user.id,username:state.user.username,displayName:state.user.username,text:'',stickerId:item.id,stickerAsset:item.asset,stickerName:item.name,createdAt:Date.now(),pending:true};mergeCommunityMessages([message]);renderCommunityMessages();window.SamiDevCosmetics.pop();submitChatMessage(message);});}catch(e){toast(e.message,true);}};
     $('#community-chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendCommunityChat(e);}});
     $('#create-game').onchange=()=>selectCreateGame($('#create-game').value);
     $$('[data-create-game]').forEach(button=>button.onclick=()=>selectCreateGame(button.dataset.createGame));
@@ -632,7 +633,7 @@
       const copy=document.createElement('div');copy.className='community-member-copy';
       const title=document.createElement('div');title.className='community-member-title';const strong=document.createElement('strong');strong.textContent=name;
       const emblem=profileSprite('profile-sprite-emblem community-member-emblem');
-      const badgeAsset=u.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
+      const badgeAsset=u.nameBadgeAsset||'';
       window.SamiDevStickerArt.render(emblem,badgeAsset,u.nameBadgeName||'ملصق الاسم');
       title.append(strong,emblem);
       const stars=document.createElement('div');stars.className='community-member-stars';
@@ -657,9 +658,9 @@
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const content=document.createElement('div');content.className='community-chat-content';const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');const sticker=document.createElement('span');sticker.className='community-chat-sticker';window.SamiDevStickerArt?.render(sticker,m.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp',m.nameBadgeName||'ملصق الاسم');meta.append(name,sticker,time);
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');const sticker=document.createElement('span');sticker.className='community-chat-sticker';window.SamiDevStickerArt?.render(sticker,m.nameBadgeAsset||'',m.nameBadgeName||'ملصق الاسم');meta.append(name,sticker,time);
       if(m.pending){const status=document.createElement('span');status.className='chat-delivery-status';status.textContent=m.failed?'تعذر الإرسال':'جارٍ الإرسال';meta.append(status);if(m.failed){const retry=document.createElement('button');retry.type='button';retry.className='ghost';retry.textContent='إعادة المحاولة';retry.onclick=()=>{m.failed=false;renderCommunityMessages();submitChatMessage(m);};meta.append(retry);}}
-      bubble.append(text);window.SamiDevCosmetics?.bubble(bubble,m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
+      bubble.append(text);if(m.stickerId&&m.stickerAsset){text.hidden=true;bubble.classList.add('sd-sticker-message');const art=document.createElement('span');art.className='sd-chat-sticker-art';window.SamiDevStickerArt.render(art,m.stickerAsset,m.stickerName||'ملصق');bubble.append(art);}window.SamiDevCosmetics?.bubble(bubble,m.stickerId?'':m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
     }update.finish();
     if(wasNearBottom||!box.dataset.loaded){box.scrollTop=box.scrollHeight;box.dataset.loaded='1';}
   }
@@ -698,7 +699,7 @@
     activePublicProfile=user;window.SamiDevCosmetics?.cover($('#community-profile-modal .profile-cover'),user.profileBanner);
     const name=user.displayName||user.username||'Player';
     $('#community-profile-name').textContent=name;
-    const badgeAsset=user.nameBadgeAsset||'/platform/assets/profile/raster/palm-swords.webp';
+    const badgeAsset=user.nameBadgeAsset||'';
     const badgeName=user.nameBadgeName||'سيفين ونخلة';
     const modalBadge=$('#community-profile-modal .profile-sticker');
     if(modalBadge){window.SamiDevStickerArt.render(modalBadge,badgeAsset,badgeName);modalBadge.setAttribute('aria-label',badgeName);modalBadge.setAttribute('title',badgeName);}
@@ -792,7 +793,7 @@
   async function submitChatMessage(message){
     const cid=message.communityId;
     try{
-      const result=await api(`/api/communities/${encodeURIComponent(cid)}/chat`,{method:'POST',body:JSON.stringify({text:message.text,clientMessageId:message.clientMessageId})});
+      const result=await api(`/api/communities/${encodeURIComponent(cid)}/chat`,{method:'POST',body:JSON.stringify({text:message.text,clientMessageId:message.clientMessageId,...(message.stickerId?{stickerId:message.stickerId}:{})})});
       if(state.activeCommunity?.id===cid){mergeCommunityMessages([result.message]);renderCommunityMessages();}
     }catch(error){if(state.activeCommunity?.id===cid){message.failed=true;renderCommunityMessages();}toast(error.message||'تعذر إرسال الرسالة',true);}
   }
@@ -802,7 +803,7 @@
     if(Array.from(text).length>280)return toast('الرسالة طويلة جدًا',true);
     const nonce=crypto.randomUUID(),message={id:'pending_'+nonce,clientMessageId:nonce,communityId:c.id,userId:state.user.id,username:state.user.username,displayName:state.user.username,text,createdAt:Date.now(),chatBubble:state.user.chatBubble,nameBadgeAsset:state.user.nameBadgeAsset,nameBadgeName:state.user.nameBadgeName,pending:true};
     input.value='';mergeCommunityMessages([message]);renderCommunityMessages();$('#community-chat-messages').scrollTop=$('#community-chat-messages').scrollHeight;
-    submitChatMessage(message);input.focus();
+    window.SamiDevCosmetics?.pop();submitChatMessage(message);input.focus();
   }
   async function loadRooms(manual=false){return state.activeCommunity?loadCommunityState(manual):loadCommunities(manual);}
   function roomKind(r){if(r.settings?.gameId==='crazy8')return Number(r.settings.seats)===4?'2v2':`${Number(r.capacity)||4}P`;return Number(r.capacity)===4?'2v2':'1v1';}
@@ -892,6 +893,9 @@
       const [s,u,r,spaces]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports'),api('/api/communities')]);
       const communityOptions=(spaces.communities||[]).map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
       const communityNames=new Map((spaces.communities||[]).map(c=>[c.id,c.name]));
+      const policyForm=$('#room-policy-form'),select=$('#room-policy-community');
+      if(!select.options.length){select.innerHTML=communityOptions;select.onchange=async()=>{delete policyForm.dataset.loadedCommunity;policyForm.querySelector('button[type=submit]').disabled=true;try{const cid=select.value;const d=await api('/api/admin/communities/'+cid+'/policy');if(select.value!==cid)return;for(const [key,value]of Object.entries(d.settings))policyForm.elements.namedItem(key).value=value;policyForm.dataset.loadedCommunity=cid;policyForm.querySelector('button[type=submit]').disabled=false;}catch(e){toast(e.message,true);}};
+      policyForm.onsubmit=async event=>{event.preventDefault();if(policyForm.dataset.loadedCommunity!==select.value)return;const settings=Object.fromEntries(['maxMembers','maxTables','shortMatchSeconds','cooldownSeconds'].map(key=>[key,Number(policyForm.elements.namedItem(key).value)]));try{await api('/api/admin/communities/'+select.value+'/policy',{method:'PUT',body:JSON.stringify(settings)});$('#room-policy-status').textContent='تم حفظ القوانين';}catch(e){toast(e.message,true);}};await select.onchange();}
       const st=s.stats;
       $('#admin-stats').innerHTML=`<div><span>${st.users}</span><small>المستخدمون</small></div><div><span>${st.onlineUsers}</span><small>متصلون</small></div><div><span>${st.waitingRooms}</span><small>غرف انتظار</small></div><div><span>${st.runningRooms}</span><small>مباريات جارية</small></div>`;
       $('#admin-users').innerHTML=u.users.map(x=>`<tr><td><strong>${escapeHtml(x.displayName)}</strong><br><small>${escapeHtml(x.username)}</small></td><td>${x.online?'متصل':'غير متصل'}</td><td><select class="role-select" data-id="${x.id}" ${state.user.role!=='admin'||x.id===state.user.id?'disabled':''}><option value="user" ${x.role==='user'?'selected':''}>عضو</option>${x.role==='moderator'?'<option value="moderator" selected disabled>رتبة قديمة — عيّن المساحة أدناه</option>':''}<option value="admin" ${x.role==='admin'?'selected':''}>مدير المنصة</option></select>${x.id!==state.user.id?`<div class="admin-community-controls" data-user-id="${escapeHtml(x.id)}"><small>إشرافه: ${escapeHtml((x.moderatedCommunities||[]).map(cid=>communityNames.get(cid)||cid).join('، ')||'لا توجد مساحات')}</small><select aria-label="مساحة الإشراف">${communityOptions}</select><button class="small-btn scoped-moderation" data-action="grant_moderator">تعيين مشرف مساحة</button><button class="small-btn scoped-moderation" data-action="revoke_moderator">سحب إشراف المساحة</button></div>`:''}</td><td>${x.banned?'محظور':'—'}</td><td><button class="${x.banned?'small-btn':'danger-btn'} ban-user" data-id="${x.id}" data-ban="${x.banned?'0':'1'}" ${x.id===state.user.id?'disabled':''}>${x.banned?'فك الحظر':'حظر'}</button></td></tr>`).join('');

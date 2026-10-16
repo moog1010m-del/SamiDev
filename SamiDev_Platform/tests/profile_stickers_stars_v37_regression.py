@@ -15,24 +15,17 @@ from social_platform import PlatformService, PlatformError, public_user, STORE_C
 
 
 def test_catalog_spec():
-    assert "badge_palm_swords" in STORE_CATALOG
-    assert "badge_crown" in STORE_CATALOG
-    assert "badge_fire" in STORE_CATALOG
+    assert "badge_palm_swords" not in STORE_CATALOG
+    assert "badge_shard" in STORE_CATALOG
+    assert "badge_ember" in STORE_CATALOG
     assert "profile_star" in STORE_CATALOG
 
-    # Invariants
-    palm = STORE_CATALOG["badge_palm_swords"]
-    assert palm["slot"] == "name_badge"
-    assert palm["category"] == "profile"
-    assert palm["default"] is True
-    assert palm["availableToAll"] is True
-
-    crown = STORE_CATALOG["badge_crown"]
+    crown = STORE_CATALOG["badge_shard"]
     assert crown["slot"] == "name_badge"
     assert crown["category"] == "profile"
-    assert crown["price"] == 100
+    assert crown["price"] == 150
 
-    fire = STORE_CATALOG["badge_fire"]
+    fire = STORE_CATALOG["badge_ember"]
     assert fire["slot"] == "name_badge"
     assert fire["category"] == "profile"
     assert fire["price"] == 150
@@ -43,7 +36,7 @@ def test_catalog_spec():
     assert star["price"] == 50
     assert star["maxQuantity"] == 5
 
-    assert STORE_DEFAULT_EQUIPPED.get("name_badge") == "badge_palm_swords"
+    assert STORE_DEFAULT_EQUIPPED.get("name_badge") == ""
 
 
 async def test_service_flow():
@@ -53,14 +46,14 @@ async def test_service_flow():
     legacy_user = {"id": "legacy_99", "username": "oldtimer", "displayName": "عضو قديم", "wins": "5"}
     pub_legacy = public_user(legacy_user)
     assert pub_legacy["starsCount"] == 5, "Legacy user without starsCount must have 5 stars"
-    assert pub_legacy["nameBadge"] == "badge_palm_swords"
+    assert pub_legacy["nameBadge"] == ""
 
     # 2. New user
     new_user = await svc.create_user("new_tester", "SamiDevPass12345!", "عضو جديد")
     uid = str(new_user["id"])
     pub_new = public_user(new_user)
     assert pub_new["starsCount"] == 0, "New user starts with 0 stars"
-    assert pub_new["nameBadge"] == "badge_palm_swords"
+    assert pub_new["nameBadge"] == ""
 
     # 3. Snapshot with 0 coins
     snap = await svc.store_snapshot(uid)
@@ -92,26 +85,30 @@ async def test_service_flow():
         assert e.code == "STORE_STAR_MAX"
 
     # 7. Buy and equip crown badge
-    await svc.buy_store_item(uid, "badge_crown")
-    eq1 = await svc.equip_store_item(uid, "badge_crown")
-    assert eq1["name_badge"] == "badge_crown"
+    await svc.buy_store_item(uid, "badge_shard")
+    eq1 = await svc.equip_store_item(uid, "badge_shard")
+    assert eq1["name_badge"] == "badge_shard"
     user_updated = await svc.get_user(uid)
-    assert public_user(user_updated)["nameBadge"] == "badge_crown"
+    assert public_user(user_updated)["nameBadge"] == "badge_shard"
 
     # 8. Buy and equip fire badge (replaces crown)
-    await svc.buy_store_item(uid, "badge_fire")
-    eq2 = await svc.equip_store_item(uid, "badge_fire")
-    assert eq2["name_badge"] == "badge_fire"
+    await svc.buy_store_item(uid, "badge_ember")
+    eq2 = await svc.equip_store_item(uid, "badge_ember")
+    assert eq2["name_badge"] == "badge_ember"
     user_updated = await svc.get_user(uid)
-    assert public_user(user_updated)["nameBadge"] == "badge_fire"
+    assert public_user(user_updated)["nameBadge"] == "badge_ember"
 
     # 9. Equipped badges count must always be 1
     equipped_badges = [v for k, v in eq2.items() if k == "name_badge"]
     assert len(equipped_badges) == 1
 
-    # 10. Switch back to palm swords
-    eq3 = await svc.equip_store_item(uid, "badge_palm_swords")
-    assert eq3["name_badge"] == "badge_palm_swords"
+    # Removed free art cannot be restored through an old ID.
+    try:
+        await svc.equip_store_item(uid, "badge_palm_swords")
+        raise AssertionError("Removed free badge was equipped")
+    except PlatformError as error:
+        assert error.code == "STORE_ITEM_NOT_FOUND"
+    assert public_user(await svc.get_user(uid))["nameBadge"] == "badge_ember"
 
 
 def test_ui_contract():

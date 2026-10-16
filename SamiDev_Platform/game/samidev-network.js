@@ -95,6 +95,7 @@
   function handleMessage(msg) {
     lastServerMessageAt = Date.now();
     if (['created','joined','watching'].includes(msg.type)) {
+      state.chatCorrelation=msg.chatCorrelation===true;state.chatStickers=msg.chatStickers===true;
       state.gameId = msg.settings?.gameId || 'carrom';
       if (state.gameId !== window.SamiDevGames.current().id) {
         state.roomId=msg.roomId; state.token=msg.token; state.communityId=msg.communityId;
@@ -212,6 +213,7 @@
         emit('match_reward', msg);
         break;
       case 'chat_message':
+        if(msg.clientMessageId)state.chatHistory=state.chatHistory.filter(old=>!(old.pending&&old.seat===msg.seat&&old.clientMessageId===msg.clientMessageId));
         state.chatHistory.push(msg);
         if (state.chatHistory.length > 30) state.chatHistory.splice(0, state.chatHistory.length - 30);
         emit('chat_message', msg);
@@ -439,8 +441,15 @@
     const value = String(text || '').trim();
     if (!value) return false;
     const max = Number(window.__SAMIDEV_CLIENT_CONFIG?.chatMaxChars || 160);
-    return send({type:'chat_send', text:value.slice(0, max)});
+    return sendChatPacket({text:value.slice(0,max)});
   }
+
+  function sendChatPacket(fields){
+    const nonce=globalThis.crypto?.randomUUID?.()||('chat_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2));const sent=send({type:'chat_send',...fields,...(state.chatCorrelation?{clientMessageId:nonce}:{})});
+    if(sent&&state.chatCorrelation){const pending={id:'pending_'+nonce,clientMessageId:nonce,seat:state.seat,text:'',...fields,stickerAsset:fields.previewAsset,pending:true,ts:Date.now()};emit('chat_message',pending);}
+    if(sent)window.SamiDevCosmetics?.pop();return sent;
+  }
+  function sendSticker(id,asset){if(state.spectator||!state.chatStickers||typeof id!=='string')return false;return sendChatPacket({stickerId:id,previewAsset:asset});}
 
   function requestChatHistory() {
     return send({type:'chat_history'});
@@ -500,7 +509,7 @@
     sendSnapshot,
     requestResync,
     ping,
-    sendChat,
+    sendChat,sendSticker,
     requestChatHistory,
     createInvite,
     leaveRoom,

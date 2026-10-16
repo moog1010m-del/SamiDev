@@ -10,6 +10,7 @@ import signal
 import time
 import unicodedata
 from collections import defaultdict, deque
+from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -123,6 +124,7 @@ class SamiDevRealtime:
         else:
             self.platform = PlatformService(getattr(self.store, "r", None))
         self.platform_http = PlatformHttp(self.platform, self.store, trust_proxy=TRUST_PROXY, trust_forwarded_https=TRUST_FORWARDED_HTTPS)
+        self.room_policy=self.platform.room_policy
         self.quick_play = QuickPlay(self.store)
         self.gamehost = GameHostClient()
         self.metrics = Metrics()
@@ -456,7 +458,7 @@ class SamiDevRealtime:
             if not await self.store.accept_authority_event(rid, shard, epoch, revision):
                 return
             if bool(event.get("gameOver")):
-                await self.store.mark_finished(rid)
+                await self.room_policy.finish(self.store,rid)
             authority_sequence = event.get("sequence")
             if isinstance(authority_sequence, list):
                 await self.store.sync_sequence(rid, authority_sequence)
@@ -581,7 +583,7 @@ class SamiDevRealtime:
             await self.store.publish_node(old_node, {"control": "close_connection", "connId": old_conn})
 
     def public_join_data(self, data: dict[str, Any]) -> dict[str, Any]:
-        return {k: v for k, v in data.items() if k not in {"replacedNodeId", "replacedConnId"}}
+        return {**{k: v for k, v in data.items() if k not in {"replacedNodeId", "replacedConnId"}},"chatCorrelation":True,"chatStickers":True}
 
     async def enforce_action_rate(self, c: Conn, action: str, limit: int) -> None:
         if not await self.store.allow_rate(f"{action}:{c.peer}", limit, 60):
@@ -746,6 +748,18 @@ class SamiDevRealtime:
                 except StoreError:
                     pass
 
+    @asynccontextmanager
+    async def room_change(self,c,msg,*,departing=False):
+        if not c.account_id:
+            yield True
+            return
+        async with self.room_policy.transaction():
+            before=await self.store.get_room_state(c.room_id) if departing and (msg['type']=='leave_room' or msg.get('action')=='close') else None
+            allow_create=await self.room_policy.admit(self.store,c.account_id,c.community_id,msg['type'],msg) if not departing else True
+            yield allow_create
+            if before and not before.get('finished'):
+                await self.room_policy.departed(before,c.account_id)
+
     async def handle(self, c: Conn, msg: dict[str, Any]) -> None:
         kind = msg.get("type")
         if c.account_id and kind in {'quick_play','create_room','join_room','watch_room','join_invite'}:
@@ -769,7 +783,8 @@ class SamiDevRealtime:
             target=msg.get('targetSeat',-1)
             if type(target) is not int or not -1<=target<=3:raise StoreError('BAD_SEAT','المقعد غير صالح')
             rid=c.room_id
-            result=await self.store.manage_waiting_table(rid,c.seat,c.conn_id,c.connection_epoch,str(msg.get('action') or ''),target)
+            async with self.room_change(c,msg,departing=True):
+                result=await self.store.manage_waiting_table(rid,c.seat,c.conn_id,c.connection_epoch,str(msg.get('action') or ''),target)
             payload={'type':'left_room',**{k:v for k,v in result.items() if k!='targetNodeId'},
                 'message':'أُغلقت الطاولة' if result['reason']=='TABLE_CLOSED' else 'أخرجك منشئ الطاولة قبل بدء اللعب'}
             await self.fanout(rid,payload)
@@ -782,8 +797,9 @@ class SamiDevRealtime:
             if set(msg) - {"type", "preset", "name"}:
                 raise StoreError("INVALID_QUICK_FIELDS", "إعدادات البحث غير صالحة")
             try:
-                data, created = await self.quick_play.match(str(msg.get("preset") or ""),
-                    self.effective_name(c, msg), NODE_ID, c.conn_id, c.account_id, c.community_id)
+                async with self.room_change(c,msg) as allow_create:
+                    data, created = await self.quick_play.match(str(msg.get("preset") or ""),
+                        self.effective_name(c, msg), NODE_ID, c.conn_id, c.account_id, c.community_id,allow_create=allow_create)
             except TimeoutError:
                 raise StoreError("MATCHMAKING_BUSY", "تأخر البحث، حاول مجددًا")
             self.attach(c, data)
@@ -802,7 +818,8 @@ class SamiDevRealtime:
             if "gameId" in msg:
                 raw_settings["gameId"] = msg["gameId"]
             settings = sanitize_settings(raw_settings)
-            data = await self.store.create_room(self.effective_name(c, msg), settings, NODE_ID, c.conn_id, c.account_id, c.community_id)
+            async with self.room_change(c,msg):
+                data = await self.store.create_room(self.effective_name(c, msg), settings, NODE_ID, c.conn_id, c.account_id, c.community_id)
             self.attach(c, data)
             await self.send(c, {"type": "created", **self.public_join_data(data)})
             await self.send_chat_history(c)
@@ -813,7 +830,8 @@ class SamiDevRealtime:
             if c.room_id is not None:
                 raise StoreError("ALREADY_IN_ROOM", "الاتصال موجود بالفعل في غرفة")
             await self.enforce_action_rate(c, "join", JOIN_RATE_PER_MINUTE)
-            data = await self.store.join_invite(str(msg.get("inviteToken") or ""), self.effective_name(c, msg), NODE_ID, c.conn_id, c.account_id)
+            async with self.room_change(c,msg):
+                data = await self.store.join_invite(str(msg.get("inviteToken") or ""), self.effective_name(c, msg), NODE_ID, c.conn_id, c.account_id)
             self.attach(c, data)
             await self.send(c, {"type": "joined", **self.public_join_data(data), "viaInvite": True})
             await self.send_chat_history(c)
@@ -830,7 +848,8 @@ class SamiDevRealtime:
                 raise StoreError("ALREADY_IN_ROOM", "الاتصال موجود بالفعل في غرفة")
             await self.enforce_action_rate(c, "join", JOIN_RATE_PER_MINUTE)
             raw_token = msg.get("token")
-            data = await self.store.join_room(str(msg.get("roomId") or ""), self.effective_name(c, msg), raw_token if raw_token else None, NODE_ID, c.conn_id, c.account_id)
+            async with self.room_change(c,msg):
+                data = await self.store.join_room(str(msg.get("roomId") or ""), self.effective_name(c, msg), raw_token if raw_token else None, NODE_ID, c.conn_id, c.account_id)
             self.attach(c, data)
             # If a match is already authoritative, update GameHost's seat generation
             # before acknowledging the reconnect. Old sockets are rejected after this point.
@@ -905,6 +924,8 @@ class SamiDevRealtime:
                     except GameHostError:
                         reply['syncUnavailable'] = True
             await self.send(c, reply)
+            if c.account_id and await self.store.allow_rate(f'community-presence:{c.account_id}',1,15):
+                await self.platform.renew_community_presence(c.account_id,c.community_id)
             return
 
         if c.spectator:
@@ -942,10 +963,14 @@ class SamiDevRealtime:
             if not await self.store.allow_rate(f"chat:{rate_identity}:{c.room_id}", CHAT_RATE_MESSAGES, CHAT_RATE_WINDOW):
                 self.metrics.rate_limited += 1
                 raise StoreError("CHAT_RATE_LIMIT", "أرسلت رسائل كثيرة بسرعة؛ حاول بعد قليل")
-            text = self.sanitize_chat_text(msg.get("text"))
+            nonce=msg.get('clientMessageId')
+            if nonce is not None and (not isinstance(nonce,str) or not re.fullmatch(r'[A-Za-z0-9_-]{8,64}',nonce)):raise StoreError('BAD_MESSAGE_ID','معرّف الرسالة غير صالح')
+            sticker=await self.platform.chat_sticker(c.account_id,msg.get("stickerId"))
+            if nonce:sticker={**sticker,'clientMessageId':nonce}
+            text = "" if sticker.get("stickerId") and not msg.get("text") else self.sanitize_chat_text(msg.get("text"))
             user = await self.platform.get_user(c.account_id) if c.account_id else None
             bubble = cosmetic_id((user or {}).get("chatBubble"), "chat_bubble")
-            entry = await self.store.append_chat(c.room_id, c.seat, c.conn_id, c.connection_epoch, text, chat_bubble=bubble)
+            entry = await self.store.append_chat(c.room_id, c.seat, c.conn_id, c.connection_epoch, text, chat_bubble=bubble, sticker=sticker)
             self.metrics.chat_messages += 1
             await self.fanout(c.room_id, {"type": "chat_message", **entry})
             return
@@ -963,7 +988,8 @@ class SamiDevRealtime:
         if kind == "leave_room":
             rid = c.room_id
             seat = int(c.seat)
-            result = await self.store.leave_room(rid, seat, c.conn_id, c.connection_epoch)
+            async with self.room_change(c,msg,departing=True):
+                result = await self.store.leave_room(rid, seat, c.conn_id, c.connection_epoch)
             self.room_local[rid].discard(c.conn_id)
             c.room_id = None
             c.seat = None
@@ -1079,7 +1105,7 @@ class SamiDevRealtime:
             # A normal player move can end the match without producing a separate SSE
             # authority event. Results/rewards are idempotent per account and match.
             if bool(authority.get("gameOver")):
-                await self.store.mark_finished(c.room_id)
+                await self.room_policy.finish(self.store,c.room_id)
 
             self.metrics.moves += 1
             self.observe('commit_move', commit_began)
@@ -1187,7 +1213,7 @@ class SamiDevRealtime:
                     try:
                         await self.handle(c, msg)
                     except (StoreError, PlatformError) as e:
-                        await self.error(c, e.code, e.message)
+                        await self.error(c, e.code, e.message,**({'clientMessageId':msg['clientMessageId']} if msg.get('type')=='chat_send' and isinstance(msg.get('clientMessageId'),str) and len(msg['clientMessageId'])<=64 else {}))
                     except Exception as e:
                         print("[SamiDev] handler error", type(e).__name__, e)
                         await self.error(c, "SERVER_ERROR", "خطأ داخلي في السيرفر")
@@ -1380,6 +1406,8 @@ def make_app() -> web.Application:
     app.router.add_post("/api/users/{user_id}/report", api.report_user)
     app.router.add_get("/api/admin/users", api.admin_users)
     app.router.add_get("/api/admin/stats", api.admin_stats)
+    app.router.add_get("/api/admin/communities/{community_id}/policy", api.community_policy)
+    app.router.add_put("/api/admin/communities/{community_id}/policy", api.community_policy)
     app.router.add_get("/api/admin/reports", api.admin_reports)
     app.router.add_post("/api/admin/users/{user_id}/ban", api.admin_ban)
     app.router.add_post("/api/admin/users/{user_id}/role", api.admin_role)

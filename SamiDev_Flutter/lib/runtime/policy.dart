@@ -31,7 +31,8 @@ class RuntimePolicy {
     if (method == 'PATCH' && path == '/api/profile') return true;
     const id = r'[A-Za-z0-9_-]{1,64}';
     return switch (method) {
-      'GET' => RegExp('^/api/(avatar|public-profile|communities)/$id\$').hasMatch(path)||RegExp('^/api/communities/$id/events\$').hasMatch(path),
+      'PUT' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path),
+      'GET' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path)||RegExp('^/api/(avatar|public-profile|communities)/$id\$').hasMatch(path)||RegExp('^/api/communities/$id/events\$').hasMatch(path),
       'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat|moderation)|users/$id/(reputation|report)|admin/users/$id/(ban|role))\$').hasMatch(path),
       'DELETE' => RegExp('^/api/(friends|account/devices)/$id\$').hasMatch(path),
       _ => false,

@@ -11,6 +11,7 @@ class StickerArtwork extends StatelessWidget {
     return match==null?null:int.parse(match.group(1)!);
   }
   @override Widget build(BuildContext context){
+    if(asset.isEmpty||asset=='/platform/assets/profile/raster/palm-swords.webp')return const SizedBox.shrink();
     final index=cell(asset);
     if(index==null){
       if(!RegExp(r'^/(images|games|platform/assets|room-sprites)/[A-Za-z0-9_./-]+$').hasMatch(asset)||asset.contains('..'))return SizedBox(width:size,height:size);

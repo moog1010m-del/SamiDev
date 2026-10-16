@@ -24,5 +24,17 @@
     element.style.setProperty('background-position','center','important');
     element.dataset.sdCover=selected?id:'banner_default';
   }
-  window.SamiDevCosmetics={bubble,cover};
+  let audio;
+  function pop(){
+    try{if(window.__SAMIDEV_MOBILE_APP||localStorage.getItem('samidev_chat_sound')==='0')return;audio??=new (window.AudioContext||window.webkitAudioContext)();audio.resume().catch(()=>{});const oscillator=audio.createOscillator(),gain=audio.createGain(),t=audio.currentTime;oscillator.type='sine';oscillator.frequency.setValueAtTime(640,t);oscillator.frequency.exponentialRampToValueAtTime(300,t+.065);gain.gain.setValueAtTime(.035,t);gain.gain.exponentialRampToValueAtTime(.001,t+.075);oscillator.connect(gain);gain.connect(audio.destination);oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();};oscillator.start(t);oscillator.stop(t+.08);}catch{}
+  }
+  function pickStickers(data,onSelect){
+    const items=(data.catalog||[]).filter(item=>item.slot==='name_badge'&&item.owned);
+    const dialog=document.createElement('dialog');dialog.className='sd-chat-sticker-picker';const heading=document.createElement('h3');heading.textContent='ملصقاتي';dialog.append(heading);
+    const close=document.createElement('button');close.type='button';close.textContent='إغلاق';close.onclick=()=>dialog.close();dialog.append(close);
+    if(!items.length){const empty=document.createElement('p');empty.textContent='الملصقات التي تملكها من المتجر تظهر هنا.';dialog.append(empty);}
+    for(const item of items){const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',item.name);window.SamiDevStickerArt.render(button,item.asset,item.name);button.onclick=()=>{dialog.close();onSelect(item);};dialog.append(button);}
+    dialog.addEventListener('close',()=>dialog.remove(),{once:true});document.body.append(dialog);dialog.showModal();
+  }
+  window.SamiDevCosmetics={bubble,cover,pop,pickStickers};
 })();

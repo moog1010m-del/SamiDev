@@ -33,7 +33,7 @@ class AccountLifecycle:
                 user = dict(id=uid, username=name, usernameLower=name.lower(), displayName=name,
                             passwordHash='', role='user', guest='1', authVersion='1',
                             createdAt=str(now_ms()), wins='0', reputation='0', coins='0',
-                            banned='0', starsCount='0', nameBadge='badge_palm_swords')
+                            banned='0', starsCount='0', nameBadge='')
                 if s.r is None:
                     s.mem_users[uid] = user
                     s.mem_usernames[name.lower()] = uid

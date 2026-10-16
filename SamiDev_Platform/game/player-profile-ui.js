@@ -119,7 +119,8 @@
   }
 
   function badgeMarkup(user) {
-    const asset = user?.nameBadgeAsset || '/platform/assets/profile/raster/palm-swords.webp';
+    const asset = user?.nameBadgeAsset || '';
+    if(!asset || asset==='/platform/assets/profile/raster/palm-swords.webp')return '';
     const name = user?.nameBadgeName || 'سيفين ونخلة';
     return `<span class="sdpp-emblem-wrap">${window.SamiDevStickerArt.markup(asset,"sdpp-emblem",name)}</span>`;
   }

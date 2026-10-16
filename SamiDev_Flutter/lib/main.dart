@@ -16,6 +16,9 @@ import 'runtime/retained_table.dart';
 import 'ui/player_profile.dart';
 import 'ui/community_hub.dart';
 import 'ui/game_viewport.dart';
+import 'ui/chat_cosmetic.dart';
+import 'ui/chat_stickers.dart';
+import 'ui/sticker_art.dart';
 import 'ui/games_hub.dart';
 import 'ui/auth_screen.dart';
 import 'ui/account_settings.dart';
@@ -60,6 +63,9 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   final List<Map<String,dynamic>> messages=[];
   String? error;
   String room='';
+  String? notifiedMatch;
+  bool? notifiedMineTurn;
+  final chatPendingTimers=<String,Timer>{};
   bool loading=true,inGame=false,showChat=false,sending=false,authenticated=false;
   String? webPage;String role='user';int selectedTab=0;
   Map<String,dynamic>? gamesProfile;
@@ -171,6 +177,10 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     final packet={'type':'manage_table','action':operation,'targetSeat':target??-1};
     try{final sent=await gameController!.runJavaScriptReturningResult('window.SamiDevNetwork?.send(${jsonEncode(packet)})??false');if(sent==false||sent=='false')notify('انقطع الاتصال؛ أعد المحاولة بعد عودته');}catch(_){if(mounted)notify('تعذر إرسال الإجراء؛ حاول مجددًا');}
   }
+  void notifyGame(String message){
+    if(!mounted||gameController==null)return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(message),duration:const Duration(seconds:5),action:!inGame?SnackBarAction(label:'العودة للمباراة',onPressed:resumeGame):null));
+  }
   void parkGame(){
     if(!mounted||gameController==null)return;
     chatFocus.unfocus();
@@ -189,6 +199,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     final old=gameController;
     if(old==null)return;
     chatFocus.unfocus();
+    for(final timer in chatPendingTimers.values){timer.cancel();}chatPendingTimers.clear();
     if(mounted)setState((){gameController=null;gameCurrent=null;inGame=false;room='';messages.clear();table.clear();showChat=false;webPage=_returnToGames?'games':null;selectedTab=_returnToGames?2:0;});
     // Dispose the old JavaScript context too, so its automatic reconnect cannot
     // recreate a socket after logout/explicit exit. Parking never calls this.
@@ -199,6 +210,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   void notify(String message){if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(message)));}
   void onEvent(Map<String,dynamic> event){
     if(!mounted)return;
+    final firstBegin=event['type']=='begin_match'&&notifiedMatch!=event['roomId'];
+    if(firstBegin)notifiedMatch=event['roomId']?.toString();
     if({'created','joined','watching','room_state','begin_match'}.contains(event['type'])&&gameController!=null){
       final newcomers=table.apply(event);
       setState(()=>room=table.roomId);
@@ -210,12 +223,16 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         unawaited(HapticFeedback.lightImpact());
       }
     }
+    if(firstBegin&&gameController!=null&&!_background){notifyGame('بدأت المباراة');unawaited(HapticFeedback.lightImpact());}
     switch(event['type']){
+      case 'game_turn':if(gameController!=null){final mine=event['gameOver']!=true&&(event['turn'] as List? ?? []).contains(table.seat);if(mine&&notifiedMineTurn!=true&&!_background&&(!inGame||showChat)){notifyGame('دورك الآن في المباراة');unawaited(HapticFeedback.lightImpact());}notifiedMineTurn=mine;}
+
       case 'chat_history':if(gameController!=null){setState((){messages.clear();messages.addAll((event['messages'] as List? ?? []).whereType<Map>().map((x)=>Map<String,dynamic>.from(x)).take(80));});scrollChat();}
-      case 'chat_message':if(gameController!=null){setState((){messages.add(event);if(messages.length>80)messages.removeAt(0);});scrollChat();}
+      case 'chat_pending':if(gameController!=null){final nonce=event['clientMessageId'];if(!messages.any((m)=>m['clientMessageId']==nonce)){final pending=<String,dynamic>{...event,'id':'pending_$nonce','seat':table.seat,'pending':true,'chatBubble':gamesProfile?['chatBubble'],'stickerAsset':event['previewAsset']};setState(()=>messages.add(pending));scrollChat();chatPendingTimers[nonce]?.cancel();chatPendingTimers[nonce]=Timer(const Duration(seconds:8),(){chatPendingTimers.remove(nonce);if(mounted&&messages.contains(pending)){setState(()=>pending['failed']=true);}});}}
+      case 'chat_message':if(gameController!=null){chatPendingTimers.remove(event['clientMessageId'])?.cancel();setState((){messages.removeWhere((m)=>m['pending']==true&&m['seat']==event['seat']&&m['clientMessageId']==event['clientMessageId']);messages.add(event);if(messages.length>80)messages.removeAt(0);});scrollChat();}
       case 'invite_created':final token=event['inviteToken'];if(token is String&&RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token)){unawaited(copyText(runtime!.api.policy.backend.replace(path:'/platform/',queryParameters:{'invite':token}).toString()));}
       case 'left_room':if({'ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(event['reason'])){unawaited(discardGame());notify(event['message']?.toString()??'أُغلقت الطاولة');}
-      case 'error':notify(event['message']?.toString()??'تعذر تنفيذ العملية');
+      case 'error':if(event['clientMessageId']!=null){setState((){for(final m in messages){if(m['pending']==true&&m['clientMessageId']==event['clientMessageId'])m['failed']=true;}});}notify(event['message']?.toString()??'تعذر تنفيذ العملية');
       case 'auth_expired':final hadSession=authenticated||gameController!=null;unawaited(discardGame());setState((){authenticated=false;gamesProfile=null;webPage=null;selectedTab=0;});unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.setNativeActive(true);'));if(hadSession){notify('انتهت الجلسة. يمكنك الدخول إلى حسابك من الإعدادات.');}unawaited(start());
     }
   }
@@ -225,10 +242,15 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     final uri=Uri.tryParse(text);if(uri!=null&&runtime!.owns(uri))text=runtime!.api.policy.backend.replace(path:uri.path,query:uri.query).toString();
     await Clipboard.setData(ClipboardData(text:text));notify('تم النسخ');
   }
+  Future<void> sendGameSticker() async {
+    final r=runtime,c=gameController;if(r==null||c==null)return;
+    final item=await pickChatSticker(context,r.api);if(item==null||!mounted||gameController!=c)return;
+    try{final sent=await c.runJavaScriptReturningResult('window.SamiDevNetwork?.sendSticker(${jsonEncode(item['id'])},${jsonEncode(item['asset'])})??false');if(sent==true||sent=='true'){unawaited(SystemSound.play(SystemSoundType.click));}else{notify('تعذر إرسال الملصق؛ تحقق من الاتصال');}}catch(_){notify('تعذر إرسال الملصق');}
+  }
   Future<void> sendChat() async {
     final text=input.text.trim();if(text.isEmpty||text.length>160||sending)return;
     setState(()=>sending=true);
-    try {final sent=await gameController!.runJavaScriptReturningResult('Boolean(window.SamiDevNetwork?.sendChat(${jsonEncode(text)}))');if(sent==true||sent=='true'){input.clear();}else{notify('لم تُرسل الرسالة. تحقق من الاتصال.');}}
+    try {final sent=await gameController!.runJavaScriptReturningResult('Boolean(window.SamiDevNetwork?.sendChat(${jsonEncode(text)}))');if(sent==true||sent=='true'){input.clear();unawaited(SystemSound.play(SystemSoundType.click));}else{notify('لم تُرسل الرسالة. تحقق من الاتصال.');}}
     catch(_){notify('تعذر إرسال الرسالة');}finally{if(mounted)setState(()=>sending=false);}
   }
   Future<void> syncTheme() async {
@@ -292,7 +314,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     try{
       final cid=uri.queryParameters['community'];if({'majlis','square','diwan','elite'}.contains(cid))r.community=cid!;
       final c=await makeController(r,game:true);if(!mounted||runtime!=r)return;
-      setState((){gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';messages.clear();table.clear();});
+      setState((){gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';notifiedMatch=null;notifiedMineTurn=null;messages.clear();table.clear();});
       await configurePlatform();
       // The gateway supplies a one-time ticket; no session or ticket enters a URL.
       await c.loadRequest(uri);
@@ -326,12 +348,12 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       unawaited(gameController?.reload());if(!nativeHome&&!inGame)unawaited(controller?.reload());
     }
   }
-  @override void dispose(){WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
+  @override void dispose(){for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
   Widget chatHistory(){
     final colors=Theme.of(context).colorScheme;
     return ConstrainedBox(constraints:BoxConstraints(maxHeight:min(230,MediaQuery.sizeOf(context).height*.28)),child:Material(color:colors.surface.withValues(alpha:.97),elevation:6,child:messages.isEmpty?
       const Padding(padding:EdgeInsets.all(18),child:Text('لا توجد رسائل بعد. قل مرحبًا.')):
-      ListView.builder(controller:chatScroll,shrinkWrap:true,padding:const EdgeInsets.all(14),itemCount:messages.length,itemBuilder:(context,i){final m=messages[i];return Padding(padding:const EdgeInsets.only(bottom:10),child:Text.rich(TextSpan(children:[TextSpan(text:'${m['name']??m['displayName']??'لاعب'}  ',style:TextStyle(fontWeight:FontWeight.w700,color:colors.primary)),TextSpan(text:m['text']?.toString()??'')]),style:const TextStyle(fontSize:15,height:1.4)));})));
+      ListView.builder(controller:chatScroll,shrinkWrap:true,padding:const EdgeInsets.all(14),itemCount:messages.length,itemBuilder:(context,i){final m=messages[i];return Padding(padding:const EdgeInsets.only(bottom:10),child:Align(alignment:m['seat']==table.seat?Alignment.centerRight:Alignment.centerLeft,child:Column(crossAxisAlignment:m['seat']==table.seat?CrossAxisAlignment.end:CrossAxisAlignment.start,children:[Text(table.roster.where((p)=>p['seat']==m['seat']).map((p)=>p['name']?.toString()??'لاعب').firstOrNull??'لاعب',style:TextStyle(fontSize:11,color:colors.primary)),if(m['pending']==true)Text(m['failed']==true?'تعذر تأكيد الإرسال':'جارٍ الإرسال',style:const TextStyle(fontSize:10)),const SizedBox(height:4),if(m['stickerId']!=null)StickerArtwork(asset:m['stickerAsset']?.toString()??'',size:100)else ChatCosmetic(id:m['chatBubble']?.toString()??'',child:Text(m['text']?.toString()??'',style:const TextStyle(fontSize:15,height:1.4)))])));})));
   }
   Widget gameSurface()=>GameViewport(active:inGame,dim:chatFocus.hasFocus&&MediaQuery.viewInsetsOf(context).bottom>0,
     overlay:showChat?chatHistory():null,child:WebViewWidget(key:const ValueKey('game-view'),controller:gameController!));
@@ -363,7 +385,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
           if(authenticated)Offstage(key:const ValueKey('native-games'),offstage:!nativeGames,child:GamesHub(key:gamesKey,user:gamesProfile,onGame:openGame,onSelectionChanged:(){if(mounted)setState((){});})),
           if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,user:gamesProfile,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
         ])),
-        if(inGame)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
+        if(inGame)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onStickers:sendGameSticker,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
       ])),
     ));
   }

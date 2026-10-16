@@ -40,7 +40,7 @@ class PostgresPlatformService(PlatformService):
         user = dict(id=uid, username=username, usernameLower=lower, displayName=display,
                     passwordHash=encoded, role=role if role in {'user', 'admin', 'moderator'} else 'user',
                     createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
-                    starsCount='0', nameBadge='badge_palm_swords')
+                    starsCount='0', nameBadge='')
         username_key = self.k_username(lower)
         # Account enumeration uses SQL, avoiding one growing, globally locked
         # users-set document on every registration.
@@ -88,7 +88,7 @@ class PostgresPlatformService(PlatformService):
                     displayName=normalized, passwordHash='',
                     role='admin' if claims['uid'] == self.firebase.admin_uid else 'user',
                     createdAt=str(now_ms()), wins='0', reputation='0', coins='0', banned='0',
-                    starsCount='0', nameBadge='badge_palm_swords', firebaseUid=claims['uid'],
+                    starsCount='0', nameBadge='', firebaseUid=claims['uid'],
                     firebaseProject=self.firebase.project, firebaseEmail=claims['email'], authVersion='1')
                 await self.r.set(self.k_username(normalized.lower()), uid)
                 await self.r.hset(self.k_user(uid), mapping=user)
