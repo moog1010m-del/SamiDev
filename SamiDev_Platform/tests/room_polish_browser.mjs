@@ -25,6 +25,13 @@ try{
  await member.locator('.sd-chat-sticker-picker .sd-sprite-badge').click();
  await admin.locator('.community-chat-message .sd-chat-sticker-art').waitFor();
  await member.locator('#community-chat-input').fill('رسالة مباشرة');await member.locator('#community-chat-form button[type=submit]').click();await admin.locator('.community-chat-message').filter({hasText:'رسالة مباشرة'}).waitFor();
+ // Simulate a connected proxy that stops delivering SSE bytes after snapshot.
+ await admin.addInitScript(()=>{const Native=window.EventSource;window.EventSource=class{constructor(url){this.readyState=1;this.inner=new Native(url);this.inner.onmessage=event=>{if(!this.initial){this.initial=true;this.onmessage?.(event);}};}close(){this.readyState=2;this.inner.close();}};});
+ await admin.reload();await admin.locator('#community-room').waitFor();
+ await admin.locator('.community-chat-message').filter({hasText:'رسالة مباشرة'}).waitFor();
+ await member.locator('#community-chat-input').fill('رسالة أثناء صمت البث');await member.locator('#community-chat-form button[type=submit]').click();
+ await admin.locator('.community-chat-message').filter({hasText:'رسالة أثناء صمت البث'}).waitFor({timeout:25000});
+ assert.equal(await admin.locator('.community-chat-message').filter({hasText:'رسالة أثناء صمت البث'}).count(),1,'silent OPEN stream recovers without refresh or duplicates');
  await member.screenshot({path:out+'/community-desktop.png',fullPage:true});
  for(const width of [320,390]){await member.setViewportSize({width,height:844});await member.locator('#community-tab-chat').click();assert(await member.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));const boxes=await member.locator('#community-chat-input,#community-stickers,#community-chat-form button[type=submit]').evaluateAll(elements=>elements.map(el=>el.getBoundingClientRect().y));assert(Math.max(...boxes)-Math.min(...boxes)<4,'composer controls share one row');}
  await member.screenshot({path:out+'/community-phone.png',fullPage:true});

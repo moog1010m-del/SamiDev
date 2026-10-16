@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "6581606dd015730a009f3fb1ca7feed407208e5980bcad37cfc2d87058c1e08f"
+      "sha256": "3a9561d3232445ba8f4376c116559f659d0b5cc4006ebd7cc3577137ddb9b247"
     },
     "browser-runtime.js": {
       "size": 76678,
@@ -2397,7 +2397,7 @@
     },
     "platform/build.json": {
       "size": 3219,
-      "sha256": "d2c351215d4d6cd5e90133b404b35888317ce645855126bc84fca3be16bf76fb"
+      "sha256": "68b14b78df098738b35cfe2a0e04904513f94a2e8d196e283e6e279395ef841d"
     },
     "platform/desktop-layout.css": {
       "size": 3344,
@@ -2409,15 +2409,15 @@
     },
     "platform/index.html": {
       "size": 47631,
-      "sha256": "bd11291e79f770ae3e56506419ce91ddb926d550bef0ce3201d3f85f90955b04"
+      "sha256": "d8a6e7ffaae33320a9471b333e7a6b8ba89306355470c340d65a08b4e80249ab"
     },
     "platform/platform.css": {
       "size": 113143,
       "sha256": "d3e5604f4dd3edd2ae90071ffdc8e0758fbb5d6c54c516a367b24f7ffdfefe08"
     },
     "platform/platform.js": {
-      "size": 87582,
-      "sha256": "ac4a3d3c8d29473c53af46bbabb2d02e1facdfefc61dff692fd1592c741505b8"
+      "size": 87748,
+      "sha256": "4980f3e4de3f064b3e28661667d10eb4409140332ed673c65f0c31cb26e0eaa6"
     },
     "platform/profile-identity.css": {
       "size": 12769,

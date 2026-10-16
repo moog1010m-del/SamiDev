@@ -580,7 +580,10 @@
   async function loadCommunityState(manual=false){
     const active=state.activeCommunity;if(!active)return loadCommunities(manual);
     try{
-      const d=await api(`/api/communities/${encodeURIComponent(active.id)}${communityStream?.readyState===1?'?chat=0':''}`);
+      // An OPEN EventSource does not guarantee delivery through a proxy.
+      // Keep the existing periodic history fetch as a recovery path; merging
+      // by message ID prevents duplicates with live events.
+      const d=await api(`/api/communities/${encodeURIComponent(active.id)}`);
       if(state.activeCommunity?.id!==active.id)return;
       state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);
       renderCommunityState();renderRooms();
