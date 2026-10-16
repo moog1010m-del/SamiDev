@@ -61,7 +61,7 @@ class PostgresPlatformService(PlatformService):
         for _ in range(3):
             mapped = await self.r.get(identity_key)
             uid = mapped or secrets.token_urlsafe(12)
-            normalized = normalize_username(username) if not mapped and username else None
+            normalized = normalize_username(username or ('Player_' + secrets.token_hex(5))) if not mapped else None
             keys = [identity_key, self.k_user(uid)]
             if normalized: keys.append(self.k_username(normalized.lower()))
             async with self.r.transaction(keys):
@@ -78,9 +78,11 @@ class PostgresPlatformService(PlatformService):
                         user['role'] = 'admin'
                         await self.r.hset(self.k_user(uid), mapping={'role': 'admin'})
                     return user
-                if not normalized:
-                    raise PlatformError('PROFILE_SETUP_REQUIRED', 'اختر اسم مستخدم لإكمال حسابك.', 409)
+                if normalized is None:
+                    continue  # Identity was removed while acquiring the locks.
                 if await self.r.get(self.k_username(normalized.lower())):
+                    if not username:
+                        continue
                     raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
                 user = dict(id=uid, username=normalized, usernameLower=normalized.lower(),
                     displayName=normalized, passwordHash='',

@@ -18,7 +18,8 @@ try{
     if(!await page.locator('#platform-settings').isVisible()){
       await page.locator('.bottom-nav [data-page=profile]').click();await page.locator('#profile-settings-btn').click();
     }
-    await page.locator(`[data-settings-tab=${tab}]`).click();
+    if(await page.locator('#settings-back').isVisible())await page.locator('#settings-back').click();
+    if(tab!=='menu')await page.locator(`[data-settings-tab=${tab}]`).click();
   };
   let reset=0,wrongIdentity=true;
   await main.route(/^https:\/\/identitytoolkit\.googleapis\.com\//,async route=>{
@@ -30,6 +31,7 @@ try{
     else {assert.equal(body.password,'Actual-password-123456');result={idToken:wrongIdentity?'token-b':'token-a',refreshToken:'memory-only'};}
     await route.fulfill({contentType:'application/json',body:JSON.stringify(result)});
   });
+  await open(main,'menu');await main.screenshot({path:'/tmp/samidev-settings-menu-mobile.png',fullPage:true});
   await open(main,'account');await main.locator('#account-summary').getByText('token-a@example.test',{exact:true}).waitFor();
   assert(!await main.locator('#settings-auth-slot').isVisible());assert(!await main.locator('#account-settings-btn').isVisible());
   assert.equal(await main.locator('[data-settings-panel=account] input:visible').count(),0);
@@ -37,6 +39,9 @@ try{
   assert.equal(reset,1);await main.screenshot({path:'/tmp/samidev-account-mobile.png',fullPage:true});
   for(const width of [320,390,1440]){
     await main.setViewportSize({width,height:844});assert(await main.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+    const box=await main.locator('.settings-window').boundingBox();assert(box.x>=0 && box.x+box.width<=width+1);
+    if(width<600)assert.equal(Math.round(box.width),width);
+    if(width===1440)await main.screenshot({path:'/tmp/samidev-account-desktop.png',fullPage:true});
   }
   await main.setViewportSize({width:390,height:844});
   await open(googleOnly,'account');await googleOnly.locator('#account-summary').getByText('token-b@example.test',{exact:true}).waitFor();
@@ -47,10 +52,25 @@ try{
   const remoteRow=main.locator('.account-device').filter({hasText:'Windows'});
   const otherDevice=(await googleOnly.evaluate(()=>fetch('/api/account/devices').then(r=>r.json()))).devices[0].id;
   const denied=await main.evaluate(async id=>{const r=await fetch('/api/account/devices/'+id,{method:'DELETE'});return r.status;},otherDevice);assert.equal(denied,404);
-  main.once('dialog',d=>d.accept());await remoteRow.getByRole('button').click();
+  await remoteRow.getByRole('button').click();
+  await main.locator('#settings-device-dialog').getByText('Windows',{exact:true}).waitFor();
+  await main.screenshot({path:'/tmp/samidev-device-details-mobile.png',fullPage:true});
+  await main.locator('#settings-device-close').click();
+  assert.equal(await remote.evaluate(()=>fetch('/api/me').then(r=>r.status)),200);
+  await remoteRow.getByRole('button').click();await main.locator('#settings-device-signout').click();
   await main.waitForFunction(()=>document.querySelectorAll('.account-device').length===1);
   assert.equal(await remote.evaluate(()=>fetch('/api/me').then(r=>r.status)),401);
   assert.equal(await googleOnly.evaluate(()=>fetch('/api/me').then(r=>r.status)),200);
+  await open(main,'general');await main.locator('#settings-theme').click();
+  assert.equal(await main.locator('html').getAttribute('data-theme'),'dark');
+  await open(main,'menu');await main.screenshot({path:'/tmp/samidev-settings-menu-dark.png',fullPage:true});
+  await open(main,'devices');await main.locator('.account-device').first().waitFor();
+  await main.locator('.account-device').first().getByRole('button').click();
+  await main.setViewportSize({width:320,height:460});
+  const sheet=await main.locator('#settings-device-dialog').boundingBox();assert(sheet.x>=0&&sheet.x+sheet.width<=321&&sheet.y>=0&&sheet.y+sheet.height<=461);
+  await main.screenshot({path:'/tmp/samidev-device-details-dark.png',fullPage:true});
+  await main.locator('#settings-device-close').click();await main.setViewportSize({width:390,height:844});
+  await open(main,'general');await main.locator('#settings-theme').click();
   await open(main,'account');await main.locator('#account-summary').getByText('token-a@example.test',{exact:true}).waitFor();
   await main.locator('#account-delete').click();await main.locator('#delete-password').fill('Actual-password-123456');await main.locator('#delete-confirm').click();
   await main.locator('#delete-account-error').getByText('أكد الدخول إلى نفس الحساب مجددًا قبل الحذف',{exact:true}).waitFor();

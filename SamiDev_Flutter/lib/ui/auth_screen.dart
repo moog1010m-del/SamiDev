@@ -21,16 +21,10 @@ class _AuthScreenState extends State<AuthScreen> {
   final _username = TextEditingController(),
       _password = TextEditingController();
   final _email = TextEditingController();
-  bool _register = false,
-      _busy = false,
-      _obscured = true,
-      _pending = false,
-      _setup = false;
+  bool _register = false, _busy = false, _obscured = true, _pending = false;
   String? _error;
   bool get firebase => widget.auth.usesFirebase;
-  bool get finishing =>
-      firebase && (_pending || _setup) && widget.auth.hasPendingIdentity;
-  bool get profileFields => _register || _setup;
+  bool get finishing => firebase && _pending && widget.auth.hasPendingIdentity;
   @override
   void dispose() {
     for (final c in [_username, _password, _email]) {
@@ -47,7 +41,6 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _register = register;
       _pending = false;
-      _setup = false;
       _error = null;
       _obscured = true;
       _password.clear();
@@ -56,28 +49,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _google() async {
     if (_busy) return;
-    if (widget.auth.linkGuest) {
-      final accepted = await showDialog<bool>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: const Text('المتابعة باستخدام Google'),
-          content: const Text(
-            'حساب Google الجديد يحفظ تقدم الضيف. الحساب المرتبط مسبقًا يفتح تقدمه دون دمج تقدم الضيف.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(c, false),
-              child: const Text('إلغاء'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(c, true),
-              child: const Text('متابعة'),
-            ),
-          ],
-        ),
-      );
-      if (accepted != true || !mounted) return;
-    }
     setState(() {
       _busy = true;
       _error = null;
@@ -91,10 +62,6 @@ class _AuthScreenState extends State<AuthScreen> {
           _error = e is AuthFailure
               ? e.message
               : 'تعذر الدخول باستخدام Google.';
-          if (e is AuthFailure && e.code == 'PROFILE_SETUP_REQUIRED') {
-            _setup = true;
-            _register = false;
-          }
         });
       }
     } finally {
@@ -104,28 +71,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _submit() async {
     if (_busy || !(_form.currentState?.validate() ?? false)) return;
-    if (!_register && !finishing && widget.auth.linkGuest) {
-      final accepted = await showDialog<bool>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: const Text('الدخول لحساب موجود'),
-          content: const Text(
-            'سيتم فتح حساب البريد بدون دمج تقدم الضيف. اختر إنشاء حساب جديد لربط بريد جديد بنفس تقدمك.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(c, false),
-              child: const Text('إلغاء'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(c, true),
-              child: const Text('دخول'),
-            ),
-          ],
-        ),
-      );
-      if (accepted != true || !mounted) return;
-    }
     FocusScope.of(context).unfocus();
     setState(() {
       _busy = true;
@@ -134,11 +79,11 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       final user = finishing
           ? await widget.auth.finishPending(
-              username: firebase && !profileFields ? '' : _username.text,
+              username: firebase ? '' : _username.text,
             )
           : await widget.auth.submit(
               register: _register,
-              username: firebase && !profileFields ? '' : _username.text,
+              username: firebase ? '' : _username.text,
               password: _password.text,
               email: _email.text,
             );
@@ -156,10 +101,6 @@ class _AuthScreenState extends State<AuthScreen> {
             _pending = true;
             _password.clear();
           }
-          if (e is AuthFailure && e.code == 'PROFILE_SETUP_REQUIRED') {
-            _setup = true;
-            _password.clear();
-          }
           if (e is AuthFailure &&
               [
                 'INVALID_ID_TOKEN',
@@ -168,7 +109,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ].contains(e.code)) {
             widget.auth.clearPending();
             _pending = false;
-            _setup = false;
             _register = false;
           }
         });
@@ -236,229 +176,230 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return AutofillGroup(
-      child: SingleChildScrollView(
-        key: const ValueKey('native-auth-scroll'),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 440),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 16),
-                Center(
-                  child: Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      color: colors.primaryContainer,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Icon(
-                      Icons.sports_esports_rounded,
-                      color: colors.primary,
-                      size: 38,
+    return PopScope(
+      canPop: !_busy,
+      child: AutofillGroup(
+        child: SingleChildScrollView(
+          key: const ValueKey('native-auth-scroll'),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  Center(
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        color: colors.primaryContainer,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Icon(
+                        Icons.sports_esports_rounded,
+                        color: colors.primary,
+                        size: 38,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'SamiDev',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'لعبتك وجمعتك في مكان واحد',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: colors.onSurfaceVariant),
-                ),
-                const SizedBox(height: 28),
-                SegmentedButton<bool>(
-                  showSelectedIcon: false,
-                  segments: const [
-                    ButtonSegment(value: false, label: Text('تسجيل الدخول')),
-                    ButtonSegment(value: true, label: Text('حساب جديد')),
-                  ],
-                  selected: {_register},
-                  onSelectionChanged: _busy ? null : (v) => _switch(v.single),
-                ),
-                const SizedBox(height: 24),
-                Form(
-                  key: _form,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (firebase && !finishing) ...[
-                        OutlinedButton.icon(
-                          key: const ValueKey('auth-google'),
-                          onPressed: _busy ? null : _google,
-                          icon: const Text(
-                            'G',
-                            style: TextStyle(
-                              color: Color(0xff4285f4),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                  const SizedBox(height: 18),
+                  const Text(
+                    'SamiDev',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'لعبتك وجمعتك في مكان واحد',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: colors.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 28),
+                  SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(value: false, label: Text('تسجيل الدخول')),
+                      ButtonSegment(value: true, label: Text('حساب جديد')),
+                    ],
+                    selected: {_register},
+                    onSelectionChanged: _busy ? null : (v) => _switch(v.single),
+                  ),
+                  const SizedBox(height: 24),
+                  Form(
+                    key: _form,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (firebase && !finishing) ...[
+                          OutlinedButton.icon(
+                            key: const ValueKey('auth-google'),
+                            onPressed: _busy ? null : _google,
+                            icon: const Text(
+                              'G',
+                              style: TextStyle(
+                                color: Color(0xff4285f4),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            label: const Text('المتابعة باستخدام Google'),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                           ),
-                          label: const Text('المتابعة باستخدام Google'),
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            key: const ValueKey('auth-email'),
+                            controller: _email,
+                            enabled: !_busy && !finishing,
+                            keyboardType: TextInputType.emailAddress,
+                            textDirection: TextDirection.ltr,
+                            autocorrect: false,
+                            autofillHints: const [AutofillHints.email],
+                            textInputAction: TextInputAction.next,
+                            decoration: field(
+                              'البريد الإلكتروني',
+                              Icons.alternate_email,
                             ),
+                            validator: (v) =>
+                                RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
+                                    .hasMatch((v ?? '').trim())
+                                ? null
+                                : 'أدخل بريدًا إلكترونيًا صالحًا',
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          key: const ValueKey('auth-email'),
-                          controller: _email,
-                          enabled: !_busy && !finishing,
-                          keyboardType: TextInputType.emailAddress,
-                          textDirection: TextDirection.ltr,
-                          autocorrect: false,
-                          autofillHints: const [AutofillHints.email],
-                          textInputAction: TextInputAction.next,
-                          decoration: field(
-                            'البريد الإلكتروني',
-                            Icons.alternate_email,
-                          ),
-                          validator: (v) =>
-                              RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
-                                  .hasMatch((v ?? '').trim())
-                              ? null
-                              : 'أدخل بريدًا إلكترونيًا صالحًا',
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                      if (!firebase || profileFields) ...[
-                        usernameField(),
-                        const SizedBox(height: 16),
-                      ],
-                      if (!finishing) ...[
-                        TextFormField(
-                          key: const ValueKey('auth-password'),
-                          controller: _password,
-                          enabled: !_busy,
-                          obscureText: _obscured,
-                          textDirection: TextDirection.ltr,
-                          autocorrect: false,
-                          enableSuggestions: false,
-                          autofillHints: [
-                            _register
-                                ? AutofillHints.newPassword
-                                : AutofillHints.password,
-                          ],
-                          textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (_) {
-                            _submit();
-                          },
-                          decoration:
-                              field(
-                                firebase
-                                    ? 'كلمة مرور حساب SamiDev'
-                                    : 'كلمة المرور',
-                                Icons.lock_outline,
-                              ).copyWith(
-                                helperText: _register
-                                    ? '١٥ حرفًا على الأقل، وحتى ١٢٨ حرفًا'
-                                    : null,
-                                suffixIcon: IconButton(
-                                  onPressed: _busy
-                                      ? null
-                                      : () => setState(
-                                          () => _obscured = !_obscured,
-                                        ),
-                                  tooltip: _obscured
-                                      ? 'إظهار كلمة المرور'
-                                      : 'إخفاء كلمة المرور',
-                                  icon: Icon(
-                                    _obscured
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
+                          const SizedBox(height: 16),
+                        ],
+                        if (!firebase) ...[
+                          usernameField(),
+                          const SizedBox(height: 16),
+                        ],
+                        if (!finishing) ...[
+                          TextFormField(
+                            key: const ValueKey('auth-password'),
+                            controller: _password,
+                            enabled: !_busy,
+                            obscureText: _obscured,
+                            textDirection: TextDirection.ltr,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            autofillHints: [
+                              _register
+                                  ? AutofillHints.newPassword
+                                  : AutofillHints.password,
+                            ],
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) {
+                              _submit();
+                            },
+                            decoration:
+                                field(
+                                  firebase
+                                      ? 'كلمة مرور حساب SamiDev'
+                                      : 'كلمة المرور',
+                                  Icons.lock_outline,
+                                ).copyWith(
+                                  helperText: _register
+                                      ? '١٥ حرفًا على الأقل، وحتى ١٢٨ حرفًا'
+                                      : null,
+                                  suffixIcon: IconButton(
+                                    onPressed: _busy
+                                        ? null
+                                        : () => setState(
+                                            () => _obscured = !_obscured,
+                                          ),
+                                    tooltip: _obscured
+                                        ? 'إظهار كلمة المرور'
+                                        : 'إخفاء كلمة المرور',
+                                    icon: Icon(
+                                      _obscured
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          validator: (v) {
-                            final n = (v ?? '').runes.length;
-                            if (n == 0) return 'أدخل كلمة المرور';
-                            if (n > 128) return 'الحد الأقصى ١٢٨ حرفًا';
-                            if (_register && n < 15) {
-                              return 'كلمة المرور يجب ألا تقل عن ١٥ حرفًا';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                      if (_pending)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Text(
-                            'افتح رسالة التوثيق في بريدك، ثم ارجع هنا واضغط تحققت من بريدي.',
+                            validator: (v) {
+                              final n = (v ?? '').runes.length;
+                              if (n == 0) return 'أدخل كلمة المرور';
+                              if (n > 128) return 'الحد الأقصى ١٢٨ حرفًا';
+                              if (_register && n < 15) {
+                                return 'كلمة المرور يجب ألا تقل عن ١٥ حرفًا';
+                              }
+                              return null;
+                            },
                           ),
-                        ),
-                      if (_error != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 18),
-                          child: Semantics(
-                            liveRegion: true,
+                        ],
+                        if (_pending)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 16),
                             child: Text(
-                              _error!,
-                              key: const ValueKey('auth-error'),
-                              style: TextStyle(
-                                color: colors.error,
-                                height: 1.6,
+                              'افتح رسالة التوثيق في بريدك، ثم ارجع هنا واضغط تحققت من بريدي.',
+                            ),
+                          ),
+                        if (_error != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: Semantics(
+                              liveRegion: true,
+                              child: Text(
+                                _error!,
+                                key: const ValueKey('auth-error'),
+                                style: TextStyle(
+                                  color: colors.error,
+                                  height: 1.6,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      const SizedBox(height: 24),
-                      FilledButton(
-                        key: const ValueKey('auth-submit'),
-                        onPressed: _busy ? null : _submit,
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                        const SizedBox(height: 24),
+                        FilledButton(
+                          key: const ValueKey('auth-submit'),
+                          onPressed: _busy ? null : _submit,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size.fromHeight(52),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
-                        ),
-                        child: _busy
-                            ? SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: colors.onPrimary,
+                          child: _busy
+                              ? SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: colors.onPrimary,
+                                  ),
+                                )
+                              : Text(
+                                  _pending
+                                      ? 'تحققت من بريدي'
+                                      : _register
+                                      ? 'إنشاء الحساب'
+                                      : 'دخول',
                                 ),
-                              )
-                            : Text(
-                                _pending
-                                    ? 'تحققت من بريدي'
-                                    : _setup
-                                    ? 'إكمال الحساب'
-                                    : _register
-                                    ? 'إنشاء الحساب'
-                                    : 'دخول',
-                              ),
-                      ),
-                      if (firebase) ...[
-                        if (_pending)
-                          TextButton(
-                            onPressed: _busy ? null : () => _mail(),
-                            child: const Text('إعادة إرسال رسالة التوثيق'),
-                          ),
-                        TextButton(
-                          onPressed: _busy ? null : () => _mail(reset: true),
-                          child: const Text('نسيت كلمة المرور؟'),
                         ),
+                        if (firebase) ...[
+                          if (_pending)
+                            TextButton(
+                              onPressed: _busy ? null : () => _mail(),
+                              child: const Text('إعادة إرسال رسالة التوثيق'),
+                            ),
+                          TextButton(
+                            onPressed: _busy ? null : () => _mail(reset: true),
+                            child: const Text('نسيت كلمة المرور؟'),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),

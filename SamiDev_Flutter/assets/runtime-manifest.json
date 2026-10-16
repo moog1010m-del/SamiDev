@@ -13,7 +13,7 @@
     },
     "attestation.json": {
       "size": 36234,
-      "sha256": "49526459cb786d4af24fe12f9f35a788a0f67768b6088a715091606c3840242a"
+      "sha256": "f02c4c4df65fb2f988551e938da32d6e44fda35ac3012165c563968611275704"
     },
     "browser-runtime.js": {
       "size": 75658,
@@ -1468,8 +1468,8 @@
       "sha256": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687"
     },
     "platform/account-settings.js": {
-      "size": 7412,
-      "sha256": "02b8339526324df5958d6195a3f8f84fa901f497a5ae5179c2391209fea4f199"
+      "size": 11637,
+      "sha256": "5a2a657d36c5bc42825e9e2bf0d0246bdbaf8462a0e3f66ee998cfd06e90e649"
     },
     "platform/assets/cosmetics/badge_ember.webp": {
       "size": 183518,
@@ -1570,6 +1570,10 @@
     "platform/assets/profile/saudi-emblem.svg": {
       "size": 894,
       "sha256": "594aa89d08eb5ce8be25f7958f86a5d5409fc52c787b51117c04de514053679e"
+    },
+    "platform/assets/profile/settings-devices.svg": {
+      "size": 1347,
+      "sha256": "e90e1f2dee0c41f2feef2f70c8235b1b0cc7fc41876dc692358a7e090c4067e4"
     },
     "platform/assets/profile/settings.svg": {
       "size": 1888,
@@ -2392,24 +2396,24 @@
       "sha256": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085"
     },
     "platform/build.json": {
-      "size": 3019,
-      "sha256": "bd119a82075504194c9463137728d4979daec87360cbb54ecfac3f4cee6e71aa"
+      "size": 3116,
+      "sha256": "8ce5557eaa1dc540ed61fac9500e8ff4b2445b59e35adab2b91e987f1c5a6051"
     },
     "platform/firebase-auth.js": {
-      "size": 10839,
-      "sha256": "4d860d35360e8c43ae556cf72f1f1b3d1116fa59f75453288e0684a86b8d65a7"
+      "size": 9378,
+      "sha256": "01122f0e705ae41c5a78c9d0c56bbb7f7ed03878c0b60cf87879fea003a94374"
     },
     "platform/index.html": {
-      "size": 39779,
-      "sha256": "5115562a6d0c87324cd1aa7c56e34ce89a79ed74986892423e654392c4202719"
+      "size": 42879,
+      "sha256": "8ee71e16bb74f2e2a92d80dd73ff42bab8174ff2742dba4fd29ab7c33ada25ce"
     },
     "platform/platform.css": {
       "size": 111042,
       "sha256": "0c2eb01bdd0845f28eb529860f1590bb5503bc725792edc5f4db8db692012752"
     },
     "platform/platform.js": {
-      "size": 83940,
-      "sha256": "f1eaa130781259af3d2b59c50cdf5a338f1066e8b5ae77f83a7626a8dedf08b0"
+      "size": 84780,
+      "sha256": "c8e78a282f714a4bbb6a3c26ca0293a3401290f2c851b1e8c024be5cb12ed4f1"
     },
     "platform/profile-identity.css": {
       "size": 11211,
@@ -2418,6 +2422,10 @@
     "platform/ranks.html": {
       "size": 8381,
       "sha256": "afad05aaf7fe132081f4661adad2d5b3b42ef2b58ae8a849f340977691a1ff9a"
+    },
+    "platform/settings.css": {
+      "size": 11645,
+      "sha256": "272603f78cf1b56e163c5f12e423042f250f9be105b28f96784b442911e65189"
     },
     "platform/store.css": {
       "size": 6542,

@@ -37,9 +37,9 @@ try {
   await form.locator('[data-mode]').click();
   await form.locator('[name=email]').fill('browser@example.test');
   assert.equal(await form.locator('[name=linkLegacy], [data-old]').count(),0);
-  await form.locator('[name=username]').fill('browser_player');
+  assert.equal(await form.locator('[name=username]').count(),0);
   await form.locator('[name=password]').fill('New-password-123456');
-  assert.equal(await form.locator('input:visible').count(),3);
+  assert.equal(await form.locator('input:visible').count(),2);
   assert.equal(await form.locator('[name=displayName]').count(),0);
   await form.locator('[data-submit]').click();
   await form.locator('[data-resend]').waitFor({state:'visible'});
@@ -51,20 +51,27 @@ try {
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await form.locator('[data-submit]').click();
   await page.locator('#app').waitFor({state:'visible'});
-  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='browser_player');
+  await page.waitForFunction(async()=>(await fetch('/api/me').then(r=>r.json())).user?.isGuest===false);
   const me=await page.evaluate(()=>fetch('/api/me').then(r=>r.json()));
-  assert.equal(me.user.username,'browser_player');assert.equal(me.user.displayName,'browser_player');
+  assert.equal(me.user.username,guest.user.username);assert.equal(me.user.displayName,guest.user.username);assert.equal(me.user.freeRenameAvailable,true);
   assert.equal(me.user.id,guest.user.id);assert.equal(me.user.isGuest,false);
   assert(!await page.locator('#side-name').textContent().then(x=>x.includes('@')));
   let store=await page.evaluate(()=>fetch('/api/store').then(r=>r.json()));
   assert(store.inventory.includes('badge_ember'));assert.equal(store.coins,500);
+  if(await page.locator('#settings-close').isVisible())await page.locator('#settings-close').click();
+  await page.reload();await page.locator('#app').waitFor();
+  const restored=await page.evaluate(()=>fetch('/api/me').then(r=>r.json()));assert.equal(restored.user.id,guest.user.id);assert.equal(restored.user.isGuest,false);assert.equal(restored.user.freeRenameAvailable,true);
   await page.locator('.bottom-nav [data-page=profile]').click();
-  await page.locator('#profile-edit-toggle').click();await page.locator('#profile-display-input').fill('Renamed_user');
-  page.once('dialog',dialog=>dialog.accept());await page.locator('#profile-save-name').click();
+  await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
+  await page.locator('#settings-rename').click();await page.locator('#settings-rename-input').fill('Renamed_user');
+  await page.locator('#settings-rename-cancel').click();
+  assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.freeRenameAvailable,true);
+  await page.locator('#settings-rename').click();await page.locator('#settings-rename-input').fill('Renamed_user');
+  await page.locator('#settings-rename-save').click();
   await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='Renamed_user');
   const rename=await page.evaluate(()=>fetch('/api/me').then(r=>r.json()));
   assert.equal(rename.user.displayName,'Renamed_user');assert.equal(rename.user.freeRenameAvailable,false);
-  await page.locator('#profile-editor-close').click();
+  await page.locator('#settings-close').click();
   const denied=await page.evaluate(()=>fetch('/api/profile',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({displayName:'Bypass_user'})}).then(r=>r.json()));
   assert.equal(denied.error,'RENAME_ITEM_REQUIRED');
   await page.locator('.bottom-nav [data-page=store]').click();
@@ -82,6 +89,7 @@ try {
   await page.locator('.topbar-nav [data-page=profile]').click();
   await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
   await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor({state:'visible'});
+  await form.locator('[name=email]').fill('browser@example.test');
   await form.locator('[data-reset]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));
   assert(google.some(x=>x.data.requestType==='PASSWORD_RESET'));
@@ -93,21 +101,18 @@ try {
   await page.screenshot({path:out+'/email-login-mobile.png',fullPage:true});
   await form.locator('[data-mode]').click();
   await page.screenshot({path:out+'/email-register-mobile.png',fullPage:true});
-  // A verified Firebase account without a local profile must choose a username.
+  // A verified identity with no profile links the current guest immediately.
+  const emailGuest=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
   newIdentity=true;
   await form.locator('[data-mode]').click();
   await form.locator('[name=email]').fill('new@example.test');
   await form.locator('[name=password]').fill('New-password-123456');
-  page.once('dialog',dialog=>dialog.accept());
   await form.locator('[data-submit]').click();
-  await form.locator('[data-submit]').filter({hasText:'إكمال الحساب'}).waitFor();
-  await form.locator('[name=username]').fill('new_browser');
-  await form.locator('[data-submit]').click();
-  await page.locator('#app').waitFor({state:'visible'});
-  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='new_browser');
-  assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.username,'new_browser');
+  await page.waitForFunction(async()=>(await fetch('/api/me').then(r=>r.json())).user?.isGuest===false);
+  const emailLinked=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
+  assert.equal(emailLinked.id,emailGuest.id);assert.equal(emailLinked.username,emailGuest.username);assert.equal(emailLinked.freeRenameAvailable,true);
   assert(await page.evaluate(()=>import('/platform/vendor/google-auth.js').then(m=>typeof m.authenticateGoogle==='function')));
-  // The popup boundary is mocked; server exchange, session, profile setup and
+  // The popup boundary is mocked; server exchange, session, automatic linking and
   // guest preservation use the real HTTP implementation and production CSP.
   await page.route('**/platform/vendor/google-auth.js',route=>route.fulfill({contentType:'application/javascript',body:`export async function authenticateGoogle(){if(window.googleCancel)throw {code:'auth/popup-closed-by-user'};return {idToken:window.googleFixtureToken,refreshToken:'fixture-refresh'};}`}));
   await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
@@ -115,24 +120,20 @@ try {
   await page.evaluate(()=>fetch('/fixture/seed',{method:'POST'}));
   await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor();
   await page.evaluate(()=>{window.googleFixtureToken='fixture-google-new';window.googleCancel=true;});
-  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
+  await form.locator('[data-google]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('أُغلقت'));
   assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.id,googleGuest.id);
   await page.evaluate(()=>window.googleCancel=false);
-  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
-  await form.locator('[data-submit]').filter({hasText:'إكمال الحساب'}).waitFor();
-  assert(!await form.locator('[name=email]').isVisible());assert(!await form.locator('[name=password]').isVisible());
-  // Refresh must continue the Google identity instead of reverting to email.
-  await page.route('https://securetoken.googleapis.com/**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({id_token:'fixture-google-new',refresh_token:'fixture-refresh'})}));
-  await form.locator('[name=username]').fill('google_player');await form.locator('[data-submit]').click();
-  await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='google_player');
+  await form.locator('[data-google]').click();
+  await page.waitForFunction(async()=>(await fetch('/api/me').then(r=>r.json())).user?.isGuest===false);
   const linked=(await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user;
-  assert.equal(linked.id,googleGuest.id);assert.equal(linked.isGuest,false);
+  assert.equal(linked.id,googleGuest.id);assert.equal(linked.isGuest,false);assert.equal(linked.username,googleGuest.username);assert.equal(linked.freeRenameAvailable,true);
+  if(await page.locator('#settings-close').isVisible())await page.locator('#settings-close').click();await page.reload();await page.locator('#app').waitFor();assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.id,googleGuest.id);
   const kept=await page.evaluate(()=>fetch('/api/store').then(r=>r.json()));assert.equal(kept.coins,500);assert(kept.inventory.includes('badge_ember'));
   await page.context().clearCookies();await page.reload();await page.locator('#app').waitFor();
   await page.evaluate(()=>{document.querySelector('#profile-settings-btn').click();document.querySelector('[data-settings-tab=account]').click();document.querySelector('#account-settings-btn').click();});await form.waitFor();
   await page.evaluate(()=>window.googleFixtureToken='fixture-verified');
-  page.once('dialog',dialog=>dialog.accept());await form.locator('[data-google]').click();
+  await form.locator('[data-google]').click();
   await page.waitForFunction(()=>document.querySelector('#side-name').textContent==='Final_user');
   // Default-off configuration keeps the original login and issues no Google calls.
   await page.context().clearCookies();const googleBefore=google.length;
@@ -145,5 +146,5 @@ try {
   await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('تعذر تحميل'));
   assert(await page.locator('#login-form button').isDisabled(),'configuration outage must not silently enable local login');
   assert.deepEqual(errors,[]);
-  console.log('FIREBASE_WEB_PASS: signup, verify, logout, reset, fixed Google destinations');
+  console.log('FIREBASE_WEB_PASS: signup without username, preserved guest/free rename, close/reload, optional rename, saved Google identity switch, reset');
 }finally{await browser.close();}

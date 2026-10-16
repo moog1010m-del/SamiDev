@@ -126,7 +126,7 @@ class NativeAuth {
   Future<Map<String, dynamic>> signInGoogle() async {
     clearPending();
     await googleIdentity();
-    _linkPending = false;
+    _linkPending = linkGuest;
     return await finishPending();
   }
 
@@ -189,9 +189,6 @@ class NativeAuth {
       if (!api.signedIn) throw const AuthFailure('لم تُحفظ جلسة الدخول.');
       api.firebase!.clear();
       return user;
-    } on AuthFailure catch (e) {
-      if (linkGuest && e.code == 'PROFILE_SETUP_REQUIRED') _linkPending = true;
-      rethrow;
     } on FirebaseClientFailure catch (e) {
       throw AuthFailure(e.message, code: e.code);
     }
@@ -240,7 +237,7 @@ class NativeAuth {
             code: 'EMAIL_NOT_VERIFIED',
           );
         }
-        _linkPending = false;
+        _linkPending = linkGuest;
         await api.firebase!.signIn(email, password);
         return await finishPending(
           username: username,

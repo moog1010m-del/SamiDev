@@ -45,6 +45,7 @@ async def main():
     AccountSecurityHttp(api).install(app.router)
     app.router.add_get('/api/auth/config',api.auth_config)
     app.router.add_get('/api/me',api.me)
+    app.router.add_patch('/api/profile',api.profile_update)
     app.router.add_post('/api/auth/guest',api.guest)
     app.router.add_post('/api/auth/logout',api.logout)
     async def unused(request):return web.json_response({'ok':True,'friends':[],'requests':[],'communities':[],'rooms':[]})

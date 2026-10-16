@@ -223,14 +223,18 @@
     $('#create-modal .modal-card').scrollTop=0;
   }
   let settingsReturnFocus=null;
-  function openSettings(tab='general'){
+  function openSettings(tab='menu'){
     if(window.SamiDevMobile){window.SamiDevMobile.postMessage(JSON.stringify({type:'open_settings'}));return;}
-    settingsReturnFocus=document.activeElement;
-    $('#platform-settings').classList.remove('hidden');document.body.classList.add('settings-open');
+    if($('#platform-settings').classList.contains('hidden'))settingsReturnFocus=document.activeElement;
+    else if(tab!==$('#platform-settings').dataset.section&&window.SamiDevFirebaseAuth?.cancel?.()===false)return;
+    if(!['menu','account','devices','general','notifications','privacy'].includes(tab))tab='menu';
+    $('#platform-settings').classList.remove('hidden');$('#platform-settings').dataset.section=tab;document.body.classList.add('settings-open');
+    $('#platform-settings-title').textContent=({menu:'الإعدادات',account:'الحساب',devices:'الأجهزة',general:'المظهر',notifications:'الإشعارات',privacy:'الخصوصية'})[tab];
+    $('#settings-back').classList.toggle('hidden',tab==='menu');
     $$('[data-settings-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.settingsPanel!==tab));
     $$('[data-settings-tab]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.settingsTab===tab)));
     window.SamiDevAccountSettings.show(tab);
-    $('#settings-close').focus();if(tab==='notifications')loadCommunities();
+    (tab==='menu'?$('#settings-close'):$('#settings-back')).focus();if(tab==='notifications')loadCommunities();
   }
   function closeSettings(force=false){
     if(!force&&window.SamiDevFirebaseAuth?.cancel?.()===false)return;
@@ -245,17 +249,18 @@
     $('#settings-auth-slot').append($('#auth-screen .auth-card'));
     $('#profile-settings-btn').onclick=()=>openSettings();
     $('#settings-close').onclick=()=>closeSettings();
+    $('#settings-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()!==false)openSettings('menu');};
     $('#platform-settings').onclick=event=>{if(event.target===$('#platform-settings'))closeSettings();};
     $$('[data-settings-tab]').forEach(button=>button.onclick=()=>openSettings(button.dataset.settingsTab));
     $('#settings-theme').onclick=toggleTheme;
     $('#settings-profile').onclick=()=>{closeSettings();navigate('profile');openProfileEditor();};
     try{$('#settings-chat-alerts').checked=localStorage.getItem('samidev_chat_alerts')!=='0';}catch(_){}
     $('#settings-chat-alerts').onchange=event=>{try{localStorage.setItem('samidev_chat_alerts',event.target.checked?'1':'0');}catch(_){}};
-    document.addEventListener('keydown',event=>{if($('#platform-settings').classList.contains('hidden')||$('#delete-account-dialog').open)return;if(event.key==='Escape')closeSettings();if(event.key==='Tab'){const controls=Array.from($('#platform-settings').querySelectorAll('button,input,a')).filter(el=>el.offsetParent!==null&&!el.disabled);const first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});
+    document.addEventListener('keydown',event=>{if($('#platform-settings').classList.contains('hidden')||$('#delete-account-dialog').open||$('#settings-device-dialog').open||$('#settings-rename-dialog').open)return;if(event.key==='Escape')closeSettings();if(event.key==='Tab'){const controls=Array.from($('#platform-settings').querySelectorAll('button,input,a')).filter(el=>el.offsetParent!==null&&!el.disabled);const first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});
     $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#login-form').classList.toggle('hidden',b.dataset.auth!=='login');$('#register-form').classList.toggle('hidden',b.dataset.auth!=='register');});
     $('#login-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#register-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/register',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
-    window.SamiDevAccountSettings.init({api,currentUser:()=>state.user,signedOut:async()=>{window.SamiDevFirebaseAuth?.clear();state.user=null;closeSettings(true);await resumeGuest();}});
+    window.SamiDevAccountSettings.init({api,currentUser:()=>state.user,onUserChanged:user=>setUser(user),signedOut:async()=>{window.SamiDevFirebaseAuth?.clear();state.user=null;closeSettings(true);await resumeGuest();}});
     $('#auth-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()===false)return;if(state.user)showApp();};
     $('#logout-btn').onclick=async()=>{if(state.user?.isGuest&&!confirm('الخروج ينشئ ضيفًا جديدًا. اربط البريد أولًا إذا أردت استرداد تقدمك. هل تريد المتابعة؟'))return;try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));

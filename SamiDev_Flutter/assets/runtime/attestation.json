@@ -261,10 +261,10 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "62d806504ddc652eaf3d5c54629294e135801344f1b03bd9ea6ddaf38790f931",
     "platform/assets/stickers/samidev-stickers.png": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085",
-    "platform/build.json": "8b76cf6ce8bbe823fa780dfeb6206ca06a8f708d4bc86aa73bae15053d1dadb3",
-    "platform/index.html": "5115562a6d0c87324cd1aa7c56e34ce89a79ed74986892423e654392c4202719",
+    "platform/build.json": "829da9aa70d6f416a538da65153e858387f596330af19fe36673f4c520327709",
+    "platform/index.html": "e0253bc4453b1adfe2d91d8da73935e06797f27ee933f035ec289d0f70a70be2",
     "platform/platform.css": "0c2eb01bdd0845f28eb529860f1590bb5503bc725792edc5f4db8db692012752",
-    "platform/platform.js": "f1eaa130781259af3d2b59c50cdf5a338f1066e8b5ae77f83a7626a8dedf08b0",
+    "platform/platform.js": "c8e78a282f714a4bbb6a3c26ca0293a3401290f2c851b1e8c024be5cb12ed4f1",
     "platform/profile-identity.css": "92aaa6d158ba4236e1851e04cca4bf16430f4fc534f34da7cf72a1d3bd3ebbd3",
     "platform/ranks.html": "afad05aaf7fe132081f4661adad2d5b3b42ef2b58ae8a849f340977691a1ff9a",
     "platform/store.css": "366d3a7ac41d0f42e76a2f4cc96aeb382f9d451c0e0d59938c556241aafa53ce",
@@ -335,6 +335,6 @@
     "sticker-art.js": "84531b52db8077a8dfbf9986c66f01a787ed570d9c5ec18a73ba354f855679a8",
     "waiting-room.js": "dbe6654edf54b4921bf5bb9809581066773c472e993b9b39a95f9b763a9613bc",
     "web-bridge.js": "ba531a0c9e4926343401124a4fe0b622ff7a15ac21b014e0837c57247431c06e",
-    "platform/firebase-auth.js": "4d860d35360e8c43ae556cf72f1f1b3d1116fa59f75453288e0684a86b8d65a7"
+    "platform/firebase-auth.js": "01122f0e705ae41c5a78c9d0c56bbb7f7ed03878c0b60cf87879fea003a94374"
   }
 }

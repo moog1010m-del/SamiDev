@@ -84,9 +84,17 @@ class FakeFirebaseAuth extends FakeAuth {
     String displayName = '',
   }) async {
     finishes++;
-    expect(username, 'native_player');
+    expect(username, '');
     identity = false;
     return {'id': 'native-player'};
+  }
+}
+
+class PendingGoogleAuth extends FakeFirebaseAuth {
+  @override
+  Future<Map<String, dynamic>> signInGoogle() {
+    calls++;
+    return (pending = Completer<Map<String, dynamic>>()).future;
   }
 }
 
@@ -97,6 +105,61 @@ class SignedOutRuntime extends GameRuntime {
 }
 
 void main() {
+  testWidgets(
+    'Google completes without a username step and blocks back during the exchange',
+    (tester) async {
+      final auth = PendingGoogleAuth();
+      addTearDown(auth.api.close);
+      Map<String, dynamic>? saved;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                child: const Text('الإعدادات'),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (c) => Scaffold(
+                      appBar: AppBar(title: const Text('ربط الحساب')),
+                      body: AuthScreen(
+                        auth: auth,
+                        onAuthenticated: (user) async {
+                          saved = user;
+                          Navigator.pop(c);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('الإعدادات'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('auth-username')), findsNothing);
+      await tester.tap(find.text('المتابعة باستخدام Google'));
+      await tester.pump();
+      expect(auth.calls, 1);
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      expect(find.byType(AuthScreen), findsOneWidget);
+      auth.pending!.complete({
+        'id': 'saved-player',
+        'username': 'Guest_kept',
+        'freeRenameAvailable': true,
+      });
+      await tester.pumpAndSettle();
+      expect(saved?['username'], 'Guest_kept');
+      expect(saved?['freeRenameAvailable'], true);
+      expect(find.byType(AuthScreen), findsNothing);
+      expect(find.text('الإعدادات'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets(
     'native Firebase verification keeps the form usable after a mail failure',
     (tester) async {
@@ -127,16 +190,13 @@ void main() {
         find.byKey(const ValueKey('auth-email')),
         'player@example.test',
       );
-      await tester.enterText(
-        find.byKey(const ValueKey('auth-username')),
-        'native_player',
-      );
+      expect(find.byKey(const ValueKey('auth-username')), findsNothing);
       await tester.enterText(
         find.byKey(const ValueKey('auth-password')),
         'Native-password-123',
       );
-      expect(find.byKey(const ValueKey('auth-display-name')),findsNothing);
-      expect(find.byKey(const ValueKey('auth-confirm-password')),findsNothing);
+      expect(find.byKey(const ValueKey('auth-display-name')), findsNothing);
+      expect(find.byKey(const ValueKey('auth-confirm-password')), findsNothing);
       final submit = find.byKey(const ValueKey('auth-submit'));
       await tester.ensureVisible(submit);
       await tester.tap(submit);
@@ -174,7 +234,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.byType(AuthScreen), findsNothing);
-      expect(find.text('إعادة المحاولة'),findsOneWidget);
+      expect(find.text('إعادة المحاولة'), findsOneWidget);
       expect(find.byType(WebViewWidget), findsNothing);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
@@ -223,9 +283,15 @@ void main() {
         await tester.tap(submit);
         await tester.pumpAndSettle();
         expect(auth.calls, 0);
-        expect(find.text('كلمة المرور يجب ألا تقل عن ١٥ حرفًا'), findsOneWidget);
-        expect(find.byKey(const ValueKey('auth-display-name')),findsNothing);
-        expect(find.byKey(const ValueKey('auth-confirm-password')),findsNothing);
+        expect(
+          find.text('كلمة المرور يجب ألا تقل عن ١٥ حرفًا'),
+          findsOneWidget,
+        );
+        expect(find.byKey(const ValueKey('auth-display-name')), findsNothing);
+        expect(
+          find.byKey(const ValueKey('auth-confirm-password')),
+          findsNothing,
+        );
         await tester.enterText(
           find.byKey(const ValueKey('auth-password')),
           'Native-password-123',

@@ -690,7 +690,12 @@ class PlatformService:
                     user["role"] = "admin"
                 return user
             if not username:
-                raise PlatformError("PROFILE_SETUP_REQUIRED", "اختر اسم مستخدم لإكمال حسابك.", 409)
+                for _ in range(4):
+                    username = 'Player_' + secrets.token_hex(5)
+                    if username.lower() not in self.mem_usernames:
+                        break
+                else:
+                    raise PlatformError('AUTH_BUSY', 'حاول مجددًا', 503)
             username = normalize_username(username)
             if username.lower() in self.mem_usernames:
                 raise PlatformError("USERNAME_TAKEN", "اسم المستخدم مستخدم بالفعل", 409)
@@ -1593,10 +1598,28 @@ class PlatformHttp:
                  'identityHash': identity_hash, 'linkGuest': body.get('linkGuest') is True}
         try:
             if body.get('linkGuest') is True:
-                guest = await self._optional_user(request)
-                if not guest:
-                    raise PlatformError('GUEST_SESSION_EXPIRED', 'انتهت جلسة الضيف. أعد الدخول إلى ضيفك إن أمكن، أو ابدأ حسابًا مستقلًا باختيارك.', 409)
-                user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
+                identity_key = self.platform.k_firebase(claims['uid'])
+                async def identity_exists():
+                    return (await self.platform.r.get(identity_key) if self.platform.r is not None
+                            else self.platform.mem_firebase.get((self.platform.firebase.project, claims['uid'])))
+                if await identity_exists():
+                    # Only the verified UID selects a saved account, never a name.
+                    user = await self.platform.firebase_account(claims)
+                else:
+                    guest = await self._optional_user(request)
+                    if not guest:
+                        # A simultaneous exchange may have just upgraded this
+                        # guest and invalidated its old session on another gateway.
+                        if not await identity_exists():
+                            raise PlatformError('GUEST_SESSION_EXPIRED', 'انتهت جلسة الضيف. أعد الدخول إلى ضيفك إن أمكن، أو ابدأ حسابًا مستقلًا باختيارك.', 409)
+                        user = await self.platform.firebase_account(claims)
+                    else:
+                        try:
+                            user = await self.platform.accounts.link(str(guest['id']), claims, body.get('username') or '')
+                        except PlatformError as error:
+                            if error.code not in {'ACCOUNT_ALREADY_LINKED', 'NOT_A_GUEST'} or not await identity_exists():
+                                raise
+                            user = await self.platform.firebase_account(claims)
             else:
                 user = await self.platform.firebase_account(claims, username=body.get("username"))
             # Verify identity again at the session boundary. A name or a corrupt

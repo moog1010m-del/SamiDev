@@ -145,7 +145,9 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_new_verified_profile_and_repeated_exchange(self):
         response, data = await self.exchange()
-        self.assertEqual(data['error'], 'PROFILE_SETUP_REQUIRED')
+        self.assertEqual(response.status, 200)
+        self.assertRegex(data['user']['username'], r'^Player_[a-f0-9]{10}$')
+        self.assertTrue(data['user']['freeRenameAvailable'])
         response, data = await self.exchange(username='new_player', role='admin', coins=999999)
         self.assertEqual(response.status, 200)
         uid = data['user']['id']
@@ -158,6 +160,36 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(second['user']['id'], uid)
         self.assertEqual(len(self.service.mem_users), 2)
         self.assertEqual((await self.service.get_user(uid))['passwordHash'], '')
+
+    async def test_automatic_guest_link_keeps_name_progress_and_free_rename_after_restore(self):
+        guest=await self.service.accounts.guest();guest['coins']='321'
+        token=await self.service.create_session(guest['id'])
+        self.client.session.cookie_jar.update_cookies({'samidev_session':token})
+        response,data=await self.exchange(linkGuest=True)
+        self.assertEqual(response.status,200)
+        self.assertEqual(data['user']['id'],guest['id'])
+        self.assertEqual(data['user']['username'],guest['username'])
+        self.assertEqual(int((await self.service.get_user(guest['id']))['coins']),321)
+        self.assertTrue(data['user']['freeRenameAvailable'])
+        for _ in range(2):
+            restored=await (await self.client.get('/api/me')).json()
+            self.assertEqual(restored['user']['id'],guest['id'])
+            self.assertFalse(restored['user']['isGuest'])
+        renamed=await self.service.accounts.rename(guest['id'],'Chosen_later')
+        self.assertEqual(renamed['freeRenameUsed'],'1')
+
+    async def test_existing_identity_switches_from_guest_without_merging_or_resetting_rename(self):
+        saved=await self.service.firebase_account(claims(),username='Saved_player')
+        saved['coins']='456';saved['freeRenameUsed']='1'
+        guest=await self.service.accounts.guest();guest['coins']='999'
+        token=await self.service.create_session(guest['id'])
+        self.client.session.cookie_jar.update_cookies({'samidev_session':token})
+        response,data=await self.exchange(linkGuest=True,username='old_player')
+        self.assertEqual(response.status,200)
+        self.assertEqual(data['user']['id'],saved['id'])
+        self.assertEqual(int((await self.service.get_user(saved['id']))['coins']),456)
+        self.assertFalse(data['user']['freeRenameAvailable'])
+        self.assertEqual(guest['guest'],'1');self.assertNotIn('firebaseUid',guest)
 
     async def test_account_linking_is_rejected_without_mutating_old_test_data(self):
         before = dict(self.old)
@@ -343,6 +375,46 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
         restored = await a.firebase_account(claims())
         self.assertEqual((restored['id'], restored['coins'], restored['role']), (uid, '850', 'admin'))
         self.assertIn('badge_shard', (await a.store_snapshot(uid))['inventory'])
+
+    async def test_automatic_guest_exchange_is_idempotent_across_gateways(self):
+        from aiohttp import DummyCookieJar
+        a,b=self.services
+        guest=await a.accounts.guest()
+        await a.r.hset(a.k_user(guest['id']),mapping={'coins':'987'})
+        token=await a.create_session(guest['id'])
+        clients=[]
+        @web.middleware
+        async def errors(request,handler):
+            try:return await handler(request)
+            except PlatformError as e:return web.json_response({'error':e.code},status=e.status)
+        try:
+            for service in self.services:
+                app=web.Application(middlewares=[errors])
+                app.router.add_post('/api/auth/firebase',PlatformHttp(service,None).firebase_exchange)
+                client=TestClient(TestServer(app),cookie_jar=DummyCookieJar())
+                await client.start_server();clients.append(client)
+            async def exchange(i):
+                response=await clients[i%2].post('/api/auth/firebase',json={'idToken':'x'*120,'linkGuest':True},headers={'Cookie':'samidev_session='+token})
+                data=await response.json()
+                self.assertEqual(response.status,200,data)
+                self.assertTrue(data['user']['freeRenameAvailable'])
+                self.assertEqual(data['user']['username'],guest['username'])
+                return data['user']['id']
+            ids=await asyncio.gather(*(exchange(i) for i in range(12)))
+            self.assertEqual(set(ids),{guest['id']})
+            self.assertEqual((await b.get_user(guest['id']))['coins'],'987')
+        finally:
+            for client in clients:await client.close()
+
+    async def test_automatic_names_are_unique_and_identity_creation_is_atomic_across_gateways(self):
+        a,b=self.services
+        profiles=await asyncio.gather(*(self.services[i%2].firebase_account(claims('auto-'+str(i))) for i in range(12)))
+        self.assertEqual(len({p['usernameLower'] for p in profiles}),12)
+        self.assertTrue(all(p['username'].startswith('Player_') for p in profiles))
+        repeated=await asyncio.gather(*(self.services[i%2].firebase_account(claims('same-auto')) for i in range(12)))
+        self.assertEqual(len({p['id'] for p in repeated}),1)
+        self.assertEqual(len({p['username'] for p in repeated}),1)
+        self.assertTrue(public_user(repeated[0])['freeRenameAvailable'])
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

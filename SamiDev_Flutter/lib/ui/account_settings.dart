@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../runtime/api.dart';
 import '../runtime/native_auth.dart';
 import 'auth_screen.dart';
+import 'settings_components.dart';
 
 class AccountSettings extends StatefulWidget {
   const AccountSettings({
@@ -31,6 +32,7 @@ class _AccountSettingsState extends State<AccountSettings> {
   bool busy = false;
   String? error;
   String section = '';
+  List<Map<String, dynamic>> notices = [];
   Map<String, dynamic>? security;
   bool loading = false;
   @override
@@ -39,7 +41,7 @@ class _AccountSettingsState extends State<AccountSettings> {
     super.dispose();
   }
 
-  Future<void> rename() async {
+  Future<void> rename({bool confirmed = false}) async {
     if (busy) return;
     if (!RegExp(r'^[A-Za-z0-9_]{3,20}$').hasMatch(name.text.trim())) {
       setState(
@@ -47,27 +49,29 @@ class _AccountSettingsState extends State<AccountSettings> {
       );
       return;
     }
-    final approved = await showDialog<bool>(
-      context: context,
-      builder: (c) => AlertDialog(
-        title: const Text('تغيير اسم المستخدم'),
-        content: Text(
-          user['freeRenameAvailable'] == true
-              ? 'هذا التغيير مجاني.'
-              : 'ستُستهلك بطاقة تغيير اسم واحدة عند النجاح.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(c, false),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(c, true),
-            child: const Text('تأكيد'),
-          ),
-        ],
-      ),
-    );
+    final approved = confirmed
+        ? true
+        : await showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: const Text('تغيير اسم المستخدم'),
+              content: Text(
+                user['freeRenameAvailable'] == true
+                    ? 'هذا التغيير مجاني.'
+                    : 'ستُستهلك بطاقة تغيير اسم واحدة عند النجاح.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(c, false),
+                  child: const Text('إلغاء'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(c, true),
+                  child: const Text('تأكيد'),
+                ),
+              ],
+            ),
+          );
     if (approved != true || !mounted) return;
     setState(() {
       busy = true;
@@ -149,43 +153,23 @@ class _AccountSettingsState extends State<AccountSettings> {
   }
 
   Future<void> notifications() async {
+    setState(() {
+      section = 'الإشعارات';
+      loading = true;
+      error = null;
+    });
     try {
       final response = await widget.api.request('GET', '/api/communities');
       if (response.status != 200) throw StateError('تعذر تحميل الإشعارات');
       final rows = (response.json['notifications'] as List? ?? [])
           .whereType<Map>()
+          .map((v) => Map<String, dynamic>.from(v))
           .toList();
-      if (!mounted) return;
-      await showDialog<void>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: const Text('الإشعارات'),
-          content: SizedBox(
-            width: 400,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (rows.isEmpty) const Text('لا توجد إشعارات حاليًا'),
-                  for (final n in rows)
-                    ListTile(
-                      title: Text(n['sender']?.toString() ?? 'سيتم'),
-                      subtitle: Text(n['text']?.toString() ?? ''),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(c),
-              child: const Text('إغلاق'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) setState(() => notices = rows);
     } catch (_) {
-      if (mounted) setState(() => error = 'تعذر تحميل الإشعارات');
+      if (mounted) setState(() => error = 'تعذر تحميل الإشعارات. حاول مجددًا.');
+    } finally {
+      if (mounted) setState(() => loading = false);
     }
   }
 
@@ -218,6 +202,7 @@ class _AccountSettingsState extends State<AccountSettings> {
       ),
     );
     auth.clearPending();
+    if (mounted) await openAccount();
   }
 
   Future<Map<String, dynamic>> request(
@@ -364,98 +349,177 @@ class _AccountSettingsState extends State<AccountSettings> {
     }
   }
 
-  Widget entry(IconData icon, String title, VoidCallback action) => ListTile(
-    leading: Icon(icon),
-    title: Text(title),
-    trailing: const Icon(Icons.chevron_left),
-    onTap: busy ? null : action,
-  );
+  Future<void> editUsername() async {
+    name.text = user['username']?.toString() ?? '';
+    String? validation;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (c) => StatefulBuilder(
+        builder: (c, update) => AlertDialog(
+          title: const Text('تغيير اسم المستخدم'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                user['freeRenameAvailable'] == true
+                    ? 'هذا التغيير مجاني.'
+                    : 'ستُستهلك بطاقة تغيير اسم واحدة عند الحفظ.',
+              ),
+              const SizedBox(height: 18),
+              TextField(
+                controller: name,
+                autofocus: true,
+                textDirection: TextDirection.ltr,
+                autofillHints: const [AutofillHints.username],
+                maxLength: 20,
+                decoration: InputDecoration(
+                  labelText: 'الاسم الجديد',
+                  helperText: 'بدون @',
+                  errorText: validation,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(c, false),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if (!RegExp(r'^[A-Za-z0-9_]{3,20}$')
+                    .hasMatch(name.text.trim())) {
+                  update(
+                    () => validation =
+                        'استخدم ٣–٢٠ حرفًا إنجليزيًا أو رقمًا أو _ بدون @',
+                  );
+                  return;
+                }
+                Navigator.pop(c, true);
+              },
+              child: const Text('حفظ الاسم'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (accepted == true && mounted) await rename(confirmed: true);
+  }
+
+  Widget entry(IconData icon, String title, VoidCallback action) =>
+      settingsEntry(
+        context,
+        icon: icon,
+        title: title,
+        onTap: busy ? null : action,
+      );
   List<Widget> accountItems() {
     final guest = user['isGuest'] == true,
         providers = security?['providers'] as List? ?? [];
     return [
-      Text(
-        guest
-            ? 'تلعب كضيف. اربط حسابك لحفظ تقدمك والوصول إليه من جهاز آخر.'
-            : 'إدارة حسابك وأمان الدخول.',
-      ),
-      if (guest)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: FilledButton(
-            onPressed: busy ? null : account,
-            child: const Text('ربط الحساب أو تسجيل الدخول'),
-          ),
+      Container(
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          color: settingsSurface(context),
+          borderRadius: BorderRadius.circular(14),
         ),
+        child: Column(
+          children: [
+            SettingsAvatar(user: user),
+            const SizedBox(height: 12),
+            Text(
+              user['username']?.toString() ?? '',
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              guest
+                  ? 'احفظ تقدمك لتجده على أي جهاز'
+                  : security?['email']?.toString() ?? '',
+              textDirection: guest ? TextDirection.rtl : TextDirection.ltr,
+              style: TextStyle(fontSize: 13, color: settingsMuted(context)),
+            ),
+            if (guest) ...[
+              const SizedBox(height: 18),
+              FilledButton(
+                onPressed: busy ? null : account,
+                child: const Text('ربط الحساب أو تسجيل الدخول'),
+              ),
+            ],
+            if (!guest && providers.isNotEmpty) ...[
+              const SizedBox(height: 18),
+              Divider(color: settingsMuted(context).withValues(alpha: .12)),
+              const SizedBox(height: 8),
+              Text(
+                'طريقة الدخول: ${providers.map((p) => {'google.com': 'Google', 'password': 'البريد وكلمة المرور', 'apple.com': 'Apple'}[p] ?? p).join('، ')}',
+                style: TextStyle(fontSize: 12, color: settingsMuted(context)),
+              ),
+            ],
+          ],
+        ),
+      ),
       if (loading)
         const Padding(
           padding: EdgeInsets.all(16),
           child: Center(child: CircularProgressIndicator()),
-        ),
-      if (!guest && security != null)
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user['username']?.toString() ?? '',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  security!['email']?.toString() ?? '',
-                  textDirection: TextDirection.ltr,
-                ),
-                Text(
-                  'طريقة الدخول: ${providers.map((p) => {'google.com': 'Google', 'password': 'البريد وكلمة المرور', 'apple.com': 'Apple'}[p] ?? p).join('، ')}',
-                ),
-                if (providers.contains('google.com') &&
-                    !providers.contains('password'))
-                  const Text('تُدار كلمة مرور Google من حسابك لدى Google.'),
-                if (providers.contains('password'))
-                  TextButton(
-                    onPressed: busy ? null : passwordReset,
-                    child: const Text('تغيير كلمة المرور عبر البريد'),
-                  ),
-              ],
-            ),
-          ),
         ),
       if (!guest && !loading && security == null)
         TextButton(
           onPressed: openAccount,
           child: const Text('إعادة تحميل بيانات الحساب'),
         ),
-      const SizedBox(height: 24),
-      TextField(
-        controller: name,
-        enabled: !busy,
-        textDirection: TextDirection.ltr,
-        decoration: const InputDecoration(labelText: 'اسم المستخدم بدون @'),
-      ),
-      const SizedBox(height: 12),
-      Text(
-        user['freeRenameAvailable'] == true
-            ? 'تغيير مجاني مرة واحدة.'
-            : 'بطاقات تغيير الاسم: ${user['renameCredits'] ?? 0} · تتوفر في المتجر.',
-      ),
-      TextButton(
-        onPressed: busy ? null : rename,
-        child: const Text('حفظ اسم المستخدم'),
-      ),
-      const Divider(),
-      TextButton(
-        onPressed: busy ? null : logout,
-        child: const Text('تسجيل الخروج والعودة كضيف'),
-      ),
-      TextButton(
-        onPressed: busy || (!guest && security == null) ? null : deleteAccount,
+      const SizedBox(height: 22),
+      settingsGroup(context, [
+        settingsEntry(
+          context,
+          icon: Icons.alternate_email,
+          title: 'اسم المستخدم',
+          subtitle: user['username']?.toString() ?? '',
+          onTap: busy ? null : editUsername,
+        ),
+        if (providers.contains('password'))
+          settingsEntry(
+            context,
+            icon: Icons.lock_outline,
+            title: 'تغيير كلمة المرور عبر البريد',
+            onTap: busy ? null : passwordReset,
+          ),
+      ]),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(4, 10, 4, 22),
         child: Text(
-          'حذف الحساب نهائيًا',
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
+          user['freeRenameAvailable'] == true
+              ? 'تغيير مجاني مرة واحدة. اختر اسمك عندما تكون مستعدًا.'
+              : 'بطاقات تغيير الاسم: ${user['renameCredits'] ?? 0} · تتوفر في المتجر.',
+          style: TextStyle(fontSize: 12, color: settingsMuted(context)),
         ),
       ),
+      if (providers.contains('google.com') && !providers.contains('password'))
+        Padding(
+          padding: const EdgeInsets.only(bottom: 18),
+          child: Text(
+            'تُدار كلمة مرور Google من حسابك لدى Google.',
+            style: TextStyle(fontSize: 12, color: settingsMuted(context)),
+          ),
+        ),
+      settingsGroup(context, [
+        settingsEntry(
+          context,
+          icon: Icons.logout,
+          title: 'تسجيل الخروج والعودة كضيف',
+          onTap: busy ? null : logout,
+          color: const Color(0xffed4d58),
+          trailing: const SizedBox.shrink(),
+        ),
+        settingsEntry(
+          context,
+          icon: Icons.delete_outline,
+          title: 'حذف الحساب نهائيًا',
+          onTap: busy || (!guest && security == null) ? null : deleteAccount,
+          color: const Color(0xffb4777e),
+          trailing: const SizedBox.shrink(),
+        ),
+      ]),
     ];
   }
 
@@ -465,88 +529,161 @@ class _AccountSettingsState extends State<AccountSettings> {
     onPopInvokedWithResult: (didPop, result) {
       if (!didPop && !busy && mounted) setState(() => section = '');
     },
-    child: Scaffold(
-      appBar: AppBar(
-        title: Text(section.isEmpty ? 'الإعدادات' : section),
-        leading: section.isEmpty
-            ? null
-            : BackButton(
-                onPressed: busy ? null : () => setState(() => section = ''),
-              ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
+    child: SettingsFrame(
+      title: section.isEmpty ? 'الإعدادات' : section,
+      onBack: section.isEmpty
+          ? null
+          : () {
+              if (!busy) setState(() => section = '');
+            },
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
         children: [
           if (section.isEmpty) ...[
-            Card(
-              child: Column(
-                children: [
-                  entry(Icons.person_outline, 'الحساب', openAccount),
-                  entry(
-                    Icons.devices,
-                    'الأجهزة',
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (_) => AccountDevices(
-                          api: widget.api,
-                          onSignedOut: signedOut,
-                        ),
+            settingsGroup(context, [
+              entry(Icons.person_outline, 'الحساب', openAccount),
+              entry(
+                Icons.devices_outlined,
+                'الأجهزة',
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => AccountDevices(
+                      api: widget.api,
+                      user: user,
+                      onSignedOut: signedOut,
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+            const SizedBox(height: 22),
+            settingsGroup(context, [
+              if (widget.onTheme != null)
+                entry(Icons.palette_outlined, 'المظهر', widget.onTheme!),
+              entry(Icons.notifications_none, 'الإشعارات', notifications),
+              entry(
+                Icons.lock_outline,
+                'الخصوصية',
+                () => setState(() => section = 'الخصوصية'),
+              ),
+            ]),
+            if (widget.onAdmin != null &&
+                {'admin', 'moderator'}.contains(user['role'])) ...[
+              const SizedBox(height: 22),
+              settingsGroup(context, [
+                entry(Icons.admin_panel_settings_outlined, 'الإدارة', () {
+                  Navigator.pop(context);
+                  widget.onAdmin!();
+                }),
+              ]),
+            ],
+            const SizedBox(height: 36),
+            Text(
+              'SamiDev',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                letterSpacing: 1.4,
+                color: settingsMuted(context),
+              ),
+            ),
+          ] else if (section == 'الحساب')
+            ...accountItems()
+          else if (section == 'الإشعارات') ...[
+            if (loading)
+              const Center(child: CircularProgressIndicator())
+            else if (notices.isEmpty)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: settingsSurface(context),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.notifications_none,
+                      size: 42,
+                      color: settingsMuted(context),
+                    ),
+                    const SizedBox(height: 14),
+                    const Text('لا توجد إشعارات حاليًا'),
+                    const SizedBox(height: 6),
+                    Text(
+                      'ستجد هنا جديد حسابك ورسائل المنصة.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: settingsMuted(context),
                       ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              settingsGroup(context, [
+                for (final notice in notices)
+                  ListTile(
+                    leading: const Icon(Icons.notifications_none),
+                    title: Text(notice['sender']?.toString() ?? 'سيتم'),
+                    subtitle: Text(notice['text']?.toString() ?? ''),
+                  ),
+              ]),
+          ] else ...[
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: settingsSurface(context),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'بيانات الحساب والخصوصية',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'نستخدم بريد حسابك للتحقق من هويتك واستعادة الدخول. يظهر اسم المستخدم والصورة والمقتنيات العامة للاعبين، ولا يظهر بريدك في ملفك العام.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.8,
+                      color: settingsMuted(context),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'تسجل قائمة الأجهزة نوع الجهاز وآخر نشاط، والدولة التقريبية عند توفرها. لا نطلب الوصول إلى موقع GPS.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.8,
+                      color: settingsMuted(context),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'يمكنك إنهاء جلسات أجهزتك من قسم الأجهزة، أو حذف حسابك وبياناته من قسم الحساب.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.8,
+                      color: settingsMuted(context),
                     ),
                   ),
                 ],
               ),
             ),
-            Card(
-              child: Column(
-                children: [
-                  if (widget.onTheme != null)
-                    entry(Icons.palette_outlined, 'المظهر', widget.onTheme!),
-                  entry(Icons.notifications_none, 'الإشعارات', notifications),
-                  entry(
-                    Icons.lock_outline,
-                    'الخصوصية',
-                    () => setState(() => section = 'الخصوصية'),
-                  ),
-                ],
+            const SizedBox(height: 18),
+            settingsGroup(context, [
+              entry(
+                Icons.manage_accounts_outlined,
+                'إدارة الحساب وحذفه',
+                openAccount,
               ),
-            ),
-            if (widget.onAdmin != null &&
-                {'admin', 'moderator'}.contains(user['role']))
-              Card(
-                child: entry(
-                  Icons.admin_panel_settings_outlined,
-                  'الإدارة',
-                  () {
-                    Navigator.pop(context);
-                    widget.onAdmin!();
-                  },
-                ),
-              ),
-          ] else if (section == 'الحساب')
-            ...accountItems()
-          else ...[
-            const Text(
-              'بيانات الحساب والخصوصية',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'نستخدم بريد حسابك للتحقق من هويتك واستعادة الدخول. يظهر اسم المستخدم والصورة والمقتنيات العامة للاعبين، ولا يظهر بريدك في ملفك العام.',
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'تسجل قائمة الأجهزة نوع الجهاز وآخر نشاط، والدولة التقريبية عند توفرها. لا نطلب الوصول إلى موقع GPS.',
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'يمكنك إنهاء جلسات أجهزتك من قسم الأجهزة، أو حذف حسابك وبياناته من قسم الحساب.',
-            ),
-            TextButton(
-              onPressed: openAccount,
-              child: const Text('إدارة الحساب وحذفه'),
-            ),
+            ]),
           ],
           if (error != null)
             Padding(
@@ -556,7 +693,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
-          if (busy) const LinearProgressIndicator(),
+          if (busy)
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: LinearProgressIndicator(),
+            ),
         ],
       ),
     ),
@@ -568,9 +709,11 @@ class AccountDevices extends StatefulWidget {
     super.key,
     required this.api,
     required this.onSignedOut,
+    this.user = const {},
   });
   final PlatformApi api;
   final Future<void> Function() onSignedOut;
+  final Map<String, dynamic> user;
   @override
   State<AccountDevices> createState() => _AccountDevicesState();
 }
@@ -620,28 +763,33 @@ class _AccountDevicesState extends State<AccountDevices> {
     }
   }
 
-  Future<void> revoke([Map<String, dynamic>? device]) async {
-    final approved = await showDialog<bool>(
-      context: context,
-      builder: (c) => AlertDialog(
-        title: const Text('تسجيل الخروج'),
-        content: Text(
-          device == null
-              ? 'تسجيل الخروج من جميع الأجهزة، بما فيها هذا الجهاز؟'
-              : 'تسجيل الخروج من ${device['device']}؟',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(c, false),
-            child: const Text('إلغاء'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(c, true),
-            child: const Text('تأكيد'),
-          ),
-        ],
-      ),
-    );
+  Future<void> revoke([
+    Map<String, dynamic>? device,
+    bool confirmed = false,
+  ]) async {
+    final approved = confirmed
+        ? true
+        : await showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: const Text('تسجيل الخروج'),
+              content: Text(
+                device == null
+                    ? 'تسجيل الخروج من جميع الأجهزة، بما فيها هذا الجهاز؟'
+                    : 'تسجيل الخروج من ${device['device']}؟',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(c, false),
+                  child: const Text('إلغاء'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(c, true),
+                  child: const Text('تأكيد'),
+                ),
+              ],
+            ),
+          );
     if (approved != true || !mounted) return;
     setState(() => busy = true);
     try {
@@ -671,57 +819,195 @@ class _AccountDevicesState extends State<AccountDevices> {
             .split('.')
             .first
       : 'غير متاح للجلسات القديمة';
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('الأجهزة'),
-      actions: [
-        IconButton(
-          onPressed: busy || loading ? null : load,
-          icon: const Icon(Icons.refresh),
-          tooltip: 'تحديث الأجهزة',
-        ),
-      ],
-    ),
-    body: ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        const Icon(Icons.devices, size: 64),
-        const SizedBox(height: 12),
-        const Text(
-          'أجهزتك المتصلة',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Text(
-            'كل تسجيل دخول جلسة مستقلة. نوع الجهاز تقريبي، والموقع عند توفره مستنتج من الشبكة وقد يتأثر باستخدام VPN.',
-          ),
-        ),
-        if (loading) const Center(child: CircularProgressIndicator()),
-        for (final device in devices)
-          Card(
-            child: ListTile(
-              isThreeLine: true,
-              leading: Icon(
-                device['client'] == 'تطبيق SamiDev'
-                    ? Icons.phone_android
-                    : Icons.computer,
-              ),
-              title: Text(
-                '${device['device']}${device['current'] == true ? ' · هذا الجهاز' : ''}',
-              ),
-              subtitle: Text(
-                '${device['client']}\nآخر نشاط: ${stamp(device['lastSeenAt'])}\nالموقع التقريبي: ${device['country'] == '' ? 'غير متاح' : device['country']}',
-              ),
-              trailing: IconButton(
-                onPressed: busy ? null : () => revoke(device),
-                icon: const Icon(Icons.logout),
-                tooltip: 'تسجيل الخروج',
+  Future<void> details(Map<String, dynamic> device) async {
+    final approved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: false,
+      backgroundColor: settingsSurface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (c) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(22, 14, 22, 22),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      tooltip: 'إغلاق التفاصيل',
+                      onPressed: () => Navigator.pop(c, false),
+                      icon: Icon(Icons.close, color: settingsMuted(c)),
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 31,
+                    backgroundColor: settingsDeviceColor(device),
+                    child: Icon(
+                      settingsDeviceIcon(device),
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    device['device']?.toString() ?? '',
+                    style: const TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  if (device['current'] == true)
+                    Text(
+                      'هذا الجهاز',
+                      style: TextStyle(fontSize: 12, color: settingsMuted(c)),
+                    ),
+                  const SizedBox(height: 22),
+                  for (final row in [
+                    ('طريقة الاتصال', device['client']?.toString() ?? ''),
+                    ('آخر نشاط', stamp(device['lastSeenAt'])),
+                    (
+                      'الموقع التقريبي',
+                      (device['country'] ?? '') == ''
+                          ? 'غير متاح'
+                          : device['country'].toString(),
+                    ),
+                  ])
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: settingsMuted(c).withValues(alpha: .13),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            row.$1,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: settingsMuted(c),
+                            ),
+                          ),
+                          const SizedBox(width: 18),
+                          Expanded(
+                            child: Text(
+                              row.$2,
+                              textAlign: TextAlign.end,
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 18),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () => Navigator.pop(c, true),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xffff414c),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size.fromHeight(48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                      ),
+                      child: const Text('تسجيل الخروج'),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+    if (approved == true && mounted) await revoke(device, true);
+  }
+
+  @override
+  Widget build(BuildContext context) => SettingsFrame(
+    title: 'الأجهزة',
+    actions: [
+      IconButton(
+        onPressed: busy || loading ? null : load,
+        icon: const Icon(Icons.refresh, size: 22),
+        tooltip: 'تحديث الأجهزة',
+      ),
+    ],
+    child: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
+      children: [
+        Center(child: SettingsDevicesIllustration(user: widget.user)),
+        const SizedBox(height: 12),
+        const Text(
+          'حساب واحد، أينما كنت',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 24),
+          child: Text(
+            'أجهزتك المتصلة بحساب SamiDev.\nاختر جهازًا لعرض تفاصيله أو تسجيل خروجه.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              height: 1.8,
+              color: settingsMuted(context),
+            ),
+          ),
+        ),
+        if (loading) const Center(child: CircularProgressIndicator()),
+        if (devices.isNotEmpty)
+          settingsGroup(context, [
+            for (final device in devices)
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                minTileHeight: 76,
+                horizontalTitleGap: 14,
+                leading: CircleAvatar(
+                  radius: 23,
+                  backgroundColor: settingsDeviceColor(device),
+                  child: Icon(
+                    settingsDeviceIcon(device),
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+                title: Text(
+                  '${device['device']}${device['current'] == true ? ' · هذا الجهاز' : ''}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: Text(
+                  device['client']?.toString() ?? '',
+                  style: TextStyle(fontSize: 12, color: settingsMuted(context)),
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  color: settingsMuted(context),
+                  size: 22,
+                ),
+                onTap: busy ? null : () => details(device),
+              ),
+          ]),
         if (!loading && devices.isEmpty && error == null)
           const Text('لا توجد جلسات نشطة.'),
         if (error != null)
@@ -729,12 +1015,23 @@ class _AccountDevicesState extends State<AccountDevices> {
             error!,
             style: TextStyle(color: Theme.of(context).colorScheme.error),
           ),
-        const SizedBox(height: 20),
-        TextButton.icon(
-          onPressed: busy || loading ? null : () => revoke(),
-          icon: const Icon(Icons.logout),
-          label: const Text('تسجيل الخروج من جميع الأجهزة'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 12, 4, 22),
+          child: Text(
+            'الموقع تقريبي وقد يتأثر باستخدام VPN.',
+            style: TextStyle(fontSize: 12, color: settingsMuted(context)),
+          ),
         ),
+        settingsGroup(context, [
+          settingsEntry(
+            context,
+            icon: Icons.logout,
+            title: 'تسجيل الخروج من جميع الأجهزة',
+            onTap: busy || loading ? null : () => revoke(),
+            color: const Color(0xffed4d58),
+            trailing: const SizedBox.shrink(),
+          ),
+        ]),
         if (busy) const LinearProgressIndicator(),
       ],
     ),
