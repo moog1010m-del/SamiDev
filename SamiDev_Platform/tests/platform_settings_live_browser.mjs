@@ -16,7 +16,7 @@ try{
   await page.locator('.topbar-nav [data-page=profile]').click();
   const profile=await page.evaluate(dimensions);assert.equal(home.name,profile.name);assert.equal(home.details,profile.details);assert(profile.width>home.width);assert(!profile.nameClipped);
   await page.locator('.topbar-nav [data-page=lobby]').click();
-  await page.locator('#platform-settings-btn').click();await page.locator('[data-settings-tab=notifications]').click();
+  await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=notifications]').click();
   await page.locator('#system-notifications').waitFor({state:'visible'});await page.locator('[data-settings-tab=account]').click();
   assert(await page.locator('#account-settings-btn').isVisible());await page.keyboard.press('Escape');
   assert(!await page.locator('#platform-settings').isVisible());
@@ -50,10 +50,13 @@ try{
  const failed=sender.locator('.community-chat-message').filter({hasText:retryText});await failed.getByRole('button',{name:'إعادة المحاولة',exact:true}).waitFor();
  await sender.unroute('**/api/communities/diwan/chat');await failed.getByRole('button',{name:'إعادة المحاولة',exact:true}).click();
  await receiver.locator('.community-chat-message').filter({hasText:retryText}).waitFor({timeout:4000});
- await sender.setViewportSize({width:390,height:844});await sender.locator('#room-settings-btn').click();
- assert(await sender.locator('#platform-settings').isVisible());assert(await sender.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
- await sender.locator('#settings-close').click();
- await sender.locator('#community-tab-chat').click();
+ await sender.setViewportSize({width:390,height:844});await receiver.setViewportSize({width:390,height:844});
+ assert.equal(await sender.locator('#room-settings-btn').count(),0);
+ assert(await sender.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await sender.locator('#community-tab-chat').click();await receiver.locator('#community-tab-chat').click();
+ const position=async row=>row.evaluate(el=>{const box=el.parentElement.getBoundingClientRect(),r=el.getBoundingClientRect();return {left:r.left-box.left,right:box.right-r.right};});
+ const ownPosition=await position(own),otherPosition=await position(other);
+ assert(ownPosition.right<ownPosition.left,'own message on right');assert(otherPosition.left<otherPosition.right,'other message on left');
  for(const height of [844,520]){
   await sender.setViewportSize({width:390,height});
   const layout=await sender.evaluate(()=>{const r=s=>document.querySelector(s).getBoundingClientRect();return {bottom:r('#community-chat-form').bottom,height:r('#community-chat-messages').height,scroll:document.documentElement.scrollHeight};});
@@ -64,8 +67,15 @@ try{
  await sender.screenshot({path:'/tmp/samidev-phone-room.png'});
  const out='/tmp/samidev-settings-live';fs.mkdirSync(out,{recursive:true});
  await sender.evaluate(()=>sessionStorage.removeItem('samidev_return_community'));
- await sender.goto(base+'/platform/');await sender.locator('#home-profile #own-profile-card').waitFor({state:'visible'});
+ await sender.goto(base+'/platform/');await sender.locator('.bottom-nav [data-page=profile]').waitFor();
+ assert(!await sender.locator('#home-profile').isVisible());assert.equal(await sender.locator('.mobile-header').count(),0);
+ await sender.locator('.bottom-nav [data-page=profile]').click();await sender.locator('#profile-settings-btn').click();assert(await sender.locator('#platform-settings').isVisible());await sender.locator('#settings-close').click();
+ await sender.locator('.bottom-nav [data-page=lobby]').click();
  await sender.setViewportSize({width:1440,height:1000});await sender.screenshot({path:out+'/home.png',fullPage:true});
- await sender.locator('#platform-settings-btn').click();await sender.screenshot({path:out+'/settings.png',fullPage:true});
+ await sender.locator('#profile-settings-btn').click();await sender.screenshot({path:out+'/settings.png',fullPage:true});
+ await sender.locator('#settings-close').click();
+ await sender.evaluate(()=>{window.nativeMessages=[];window.SamiDevMobile={postMessage:value=>window.nativeMessages.push(JSON.parse(value))};});
+ await sender.locator('#profile-settings-btn').click();
+ assert.equal(await sender.evaluate(()=>window.nativeMessages.at(-1).type),'open_settings');assert(!await sender.locator('#platform-settings').isVisible());
  assert.deepEqual(errors,[]);console.log('PLATFORM_SETTINGS_LIVE_BROWSER_PASS');
 }finally{await browser.close();}

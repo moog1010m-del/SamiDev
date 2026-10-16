@@ -130,6 +130,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
           if(table.roster.any((p)=>p['accountId']==id))openProfile(id);
         }
         if(!game&&data['type']=='platform_ready'&&authenticated&&r.api.signedIn){unawaited(configurePlatform());}
+        if(!game&&data['type']=='open_settings'&&authenticated){unawaited(openAccountSettings());}
         if(!game&&data['type']=='native_home'){setState((){webPage=null;selectedTab=0;});unawaited(configurePlatform());}
       }catch(_){}
     });
@@ -251,11 +252,6 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       if(!inGame&&webPage!=null)await controller!.runJavaScript('window.SamiDevMobilePlatform?.navigate(${jsonEncode(webPage)});');
     }catch(_){}
   }
-  Future<void> logout() async {
-    final yes=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(title:const Text('تسجيل الخروج؟'),actions:[TextButton(onPressed:()=>Navigator.pop(context,false),child:const Text('إلغاء')),FilledButton(onPressed:()=>Navigator.pop(context,true),child:const Text('خروج'))]));
-    if(yes!=true)return;
-    try{final reply=await runtime!.api.request('POST','/api/auth/logout',body:utf8.encode('{}'));if(reply.status!=200&&reply.status!=401)throw StateError('logout');await runtime!.suspend();runtime!.resume();onEvent({'type':'auth_expired'});}catch(_){notify('تعذر تسجيل الخروج. حاول مجددًا.');}
-  }
   Future<void> openPage(String page) async {
     if(!mounted||runtime==null)return;
     setState(()=>webPage=page);chatFocus.unfocus();
@@ -264,7 +260,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   }
   Future<void> openAccountSettings() async {
     if(runtime==null||gamesProfile==null)return;
-    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>AccountSettings(api:runtime!.api,onTheme:chooseTheme,user:gamesProfile!,onChanged:(user)async{await completeAuthentication(runtime!,user);})));
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>AccountSettings(api:runtime!.api,onAdmin:{'admin','moderator'}.contains(role)?()=>openPage('admin'):null,onTheme:chooseTheme,user:gamesProfile!,onChanged:(user)async{await completeAuthentication(runtime!,user);})));
   }
   void openProfile(String id){
     if(_profileOpen||runtime==null||!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
@@ -342,9 +338,6 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   @override Widget build(BuildContext context){
     final ready=!loading&&error==null&&runtime!=null;
     return PopScope(canPop:!inGame&&webPage==null&&hubKey.currentState?.community==null,onPopInvokedWithResult:(didPop,result){if(!didPop)unawaited(back());},child:Scaffold(
-      appBar:authenticated&&!inGame&&!nativeHome?AppBar(toolbarHeight:52,leading:IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right)),
-        title:Text({'friends':'الأصدقاء','store':'المتجر','profile':'الملف الشخصي','admin':'الإدارة'}[webPage]??'SamiDev',style:const TextStyle(fontSize:17)),
-        actions:[if(webPage=='profile')IconButton(onPressed:logout,tooltip:'تسجيل الخروج',icon:const Icon(Icons.logout)),IconButton(onPressed:chooseTheme,tooltip:'المظهر',icon:const Icon(Icons.contrast)),if({'admin','moderator'}.contains(role)&&webPage=='profile')IconButton(onPressed:()=>openPage('admin'),tooltip:'الإدارة',icon:const Icon(Icons.admin_panel_settings_outlined))]):null,
       bottomNavigationBar:authenticated&&!inGame&&ready&&(nativeGames||hubKey.currentState?.community==null)?NavigationBar(selectedIndex:selectedTab,onDestinationSelected:(index){setState(()=>selectedTab=index);if(index==0){setState(()=>webPage=null);unawaited(configurePlatform());}else if(index==2){setState(()=>webPage='games');unawaited(refreshGamesProfile());unawaited(configurePlatform());}else{unawaited(openPage(['lobby','friends','games','store','profile'][index]));}},destinations:const [
         NavigationDestination(icon:Icon(Icons.public_outlined),selectedIcon:Icon(Icons.public),label:'المساحات'),
         NavigationDestination(icon:Icon(Icons.people_outline),selectedIcon:Icon(Icons.people),label:'الأصدقاء'),
@@ -352,7 +345,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         NavigationDestination(icon:Icon(Icons.storefront_outlined),label:'المتجر'),
         NavigationDestination(icon:Icon(Icons.person_outline),selectedIcon:Icon(Icons.person),label:'البروفايل'),
       ]):null,
-      body:SafeArea(top:!(authenticated&&!inGame&&!nativeHome),bottom:true,child:error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.cloud_off,size:48),const SizedBox(height:16),Text(error!,textAlign:TextAlign.center),const SizedBox(height:20),FilledButton(onPressed:start,child:const Text('إعادة المحاولة'))]))):!ready?const Center(child:CircularProgressIndicator()):!authenticated?AuthScreen(key:ValueKey(runtime),auth:NativeAuth(runtime!.api),onAuthenticated:(user)=>completeAuthentication(runtime!,user)):Column(children:[
+      body:SafeArea(bottom:true,child:error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.cloud_off,size:48),const SizedBox(height:16),Text(error!,textAlign:TextAlign.center),const SizedBox(height:20),FilledButton(onPressed:start,child:const Text('إعادة المحاولة'))]))):!ready?const Center(child:CircularProgressIndicator()):!authenticated?AuthScreen(key:ValueKey(runtime),auth:NativeAuth(runtime!.api),onAuthenticated:(user)=>completeAuthentication(runtime!,user)):Column(children:[
         if((inGame?gameProgress:progress)<100&&(inGame||!nativeHome))LinearProgressIndicator(value:(inGame?gameProgress:progress)/100,minHeight:2),
         if(inGame&&!table.begun&&!table.finished&&table.seat>=0&&table.ownerSeat==table.seat)Align(
           alignment:Alignment.centerRight,child:PopupMenuButton<int>(tooltip:'إدارة الطاولة قبل اللعب',

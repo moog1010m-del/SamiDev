@@ -150,7 +150,8 @@ class CommunityHubState extends State<CommunityHub> {
     ])));
   Widget messageRow(Map<String,dynamic> message){
     final ts=(message['createdAt'] as num?)?.toInt(),date=ts==null?null:DateTime.fromMillisecondsSinceEpoch(ts).toLocal();
-    return Directionality(textDirection:message['userId']==widget.user?['id']?TextDirection.rtl:TextDirection.ltr,child:Padding(padding:const EdgeInsets.fromLTRB(14,8,18,8),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
+    final mine=message['userId']!=null && message['userId'].toString()==widget.user?['id']?.toString();
+    return Directionality(textDirection:mine?TextDirection.rtl:TextDirection.ltr,child:Padding(padding:const EdgeInsets.fromLTRB(14,8,18,8),child:Align(alignment:mine?Alignment.centerRight:Alignment.centerLeft,child:Row(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
       InkWell(onTap:()=>widget.onProfile(message['userId'].toString()),child:avatar(message,radius:20)),const SizedBox(width:12),
       Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(textDirection:TextDirection.rtl,mainAxisSize:MainAxisSize.min,children:[
         Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:5),
@@ -158,7 +159,7 @@ class CommunityHubState extends State<CommunityHub> {
         if(date!=null)Text(TimeOfDay.fromDateTime(date).format(context),style:TextStyle(fontSize:10,color:Theme.of(context).colorScheme.onSurfaceVariant)),
       ]),if(message['pending']==true)TextButton(onPressed:message['failed']==true?(){setState(()=>message['failed']=false);unawaited(submitMessage(message));}:null,child:Text(message['failed']==true?'تعذر الإرسال · إعادة المحاولة':'جارٍ الإرسال',style:const TextStyle(fontSize:10))),const SizedBox(height:5),ChatCosmetic(id:message['chatBubble']?.toString()??'',
         child:Text(message['text']?.toString()??'',textDirection:TextDirection.rtl,style:const TextStyle(fontSize:15,height:1.4))),])),
-    ])));
+    ]))));
   }
   Widget empty(String text)=>ListView(physics:const AlwaysScrollableScrollPhysics(),children:[Padding(padding:const EdgeInsets.symmetric(horizontal:30,vertical:50),child:Text(text,textAlign:TextAlign.center,style:TextStyle(color:Theme.of(context).colorScheme.onSurfaceVariant)))]);
   Future<void> create() async {
@@ -170,14 +171,13 @@ class CommunityHubState extends State<CommunityHub> {
   @override Widget build(BuildContext context){
     final colors=Theme.of(context).colorScheme;
     return Column(children:[
-      SizedBox(height:58,child:Row(children:[
+      if(community!=null)SizedBox(height:58,child:Row(children:[
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
         if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
         const SizedBox(width:10),Expanded(child:Text(community?['name']?.toString()??'المساحات',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:17))),
-        if(widget.onAccount!=null)IconButton(tooltip:'إعدادات المنصة',onPressed:widget.onAccount,icon:const Icon(Icons.settings_outlined)),
-        IconButton(tooltip:'المظهر',onPressed:widget.onTheme,icon:Icon(Theme.of(context).brightness==Brightness.dark?Icons.light_mode_outlined:Icons.dark_mode_outlined)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
       ])),
+      if(community==null)Align(alignment:Alignment.centerRight,child:TextButton.icon(onPressed:widget.onInvite,icon:const Icon(Icons.link),label:const Text('دخول بدعوة'))),
       if(community!=null&&canModerate)const Padding(padding:EdgeInsets.symmetric(horizontal:16,vertical:6),child:Text('أنت مشرف هذه المساحة · افتح ملف عضو للكتم أو الحظر أو الإخراج.',style:TextStyle(fontSize:12))),
       if(community!=null)Row(children:List.generate(3,(i)=>Expanded(child:InkWell(onTap:()=>setState((){tab=i;if(i==1){scrollToEnd();}else{FocusScope.of(context).unfocus();}}),child:Container(height:49,alignment:Alignment.center,decoration:BoxDecoration(border:Border(bottom:BorderSide(color:tab==i?colors.primary:colors.outlineVariant,width:tab==i?3:.5))),child:Text(['الألعاب (${rooms.length})','الدردشة','متصل (${members.length})'][i],style:TextStyle(color:tab==i?colors.primary:colors.onSurfaceVariant,fontWeight:tab==i?FontWeight.w700:FontWeight.normal,fontSize:14))))))),
       if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:refresh,child:const Text('إعادة المحاولة'))]),

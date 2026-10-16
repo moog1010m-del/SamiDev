@@ -27,8 +27,9 @@ try {
   await page.reload();await page.locator('#app').waitFor({state:'visible'});
   assert.equal((await page.evaluate(()=>fetch('/api/me').then(r=>r.json()))).user.id,guest.user.id);
   await page.evaluate(()=>fetch('/fixture/seed',{method:'POST'}));
-  assert(await page.locator('#home-profile #own-profile-card').isVisible());
-  await page.locator('#mobile-settings-btn').click();
+  assert(!await page.locator('#home-profile').isVisible());
+  await page.locator('.bottom-nav [data-page=profile]').click();
+  await page.locator('#profile-settings-btn').click();
   await page.locator('[data-settings-tab=account]').click();
   await page.locator('#account-settings-btn').click();
   const form=page.locator('#firebase-auth-form');await form.waitFor({state:'visible'});
@@ -78,7 +79,8 @@ try {
   assert(cookie.httpOnly);
   assert(!await page.evaluate(()=>JSON.stringify({...localStorage,...sessionStorage}).includes('fixture-')));
   await page.setViewportSize({width:1280,height:900});
-  await page.locator('#platform-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
+  await page.locator('.topbar-nav [data-page=profile]').click();
+  await page.locator('#profile-settings-btn').click();await page.locator('[data-settings-tab=account]').click();
   await page.locator('#logout-btn').click();await page.waitForFunction(()=>document.querySelector('#side-name').textContent.startsWith('Guest_'));await page.evaluate(()=>document.querySelector('#account-settings-btn').click());await form.waitFor({state:'visible'});
   await form.locator('[data-reset]').click();
   await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('إذا كان البريد'));

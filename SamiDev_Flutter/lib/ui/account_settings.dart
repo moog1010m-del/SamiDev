@@ -5,8 +5,8 @@ import '../runtime/native_auth.dart';
 import 'auth_screen.dart';
 
 class AccountSettings extends StatefulWidget {
-  const AccountSettings({super.key,required this.api,required this.user,required this.onChanged,this.onTheme});
-  final VoidCallback? onTheme;
+  const AccountSettings({super.key,required this.api,required this.user,required this.onChanged,this.onTheme,this.onAdmin});
+  final VoidCallback? onTheme,onAdmin;
   final PlatformApi api;
   final Map<String,dynamic> user;
   final Future<void> Function(Map<String,dynamic>) onChanged;
@@ -63,6 +63,7 @@ class _AccountSettingsState extends State<AccountSettings> {
     const Text('المظهر',style:TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
     if(widget.onTheme!=null)TextButton(onPressed:widget.onTheme,child:const Text('تبديل المظهر الفاتح والداكن')),
     TextButton(onPressed:notifications,child:const Text('الإشعارات')),
+    if(widget.onAdmin!=null)TextButton(onPressed:(){Navigator.pop(context);widget.onAdmin!();},child:const Text('الإدارة')),
     const Divider(),const Text('الحساب',style:TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
     Text(user['isGuest']==true?'تلعب كضيف. اربط بريدًا جديدًا لحفظ تقدمك والوصول إليه من جهاز آخر.':'حسابك مرتبط. يمكنك الدخول إلى حساب آخر من هنا.'),
     const SizedBox(height:16),FilledButton(onPressed:busy?null:account,child:const Text('ربط الحساب أو تسجيل الدخول')),

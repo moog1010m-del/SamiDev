@@ -224,6 +224,7 @@
   }
   let settingsReturnFocus=null;
   function openSettings(tab='general'){
+    if(window.SamiDevMobile){window.SamiDevMobile.postMessage(JSON.stringify({type:'open_settings'}));return;}
     settingsReturnFocus=document.activeElement;
     $('#platform-settings').classList.remove('hidden');document.body.classList.add('settings-open');
     $$('[data-settings-panel]').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.settingsPanel!==tab));
@@ -242,7 +243,7 @@
   function bind(){
     document.body.append($('#profile-editor'),$('#profile-editor-backdrop'));
     $('#settings-auth-slot').append($('#auth-screen .auth-card'));
-    $('#platform-settings-btn').onclick=()=>openSettings();$('#mobile-settings-btn').onclick=()=>openSettings();$('#room-settings-btn').onclick=()=>openSettings();
+    $('#profile-settings-btn').onclick=()=>openSettings();
     $('#settings-close').onclick=()=>closeSettings();
     $('#platform-settings').onclick=event=>{if(event.target===$('#platform-settings'))closeSettings();};
     $$('[data-settings-tab]').forEach(button=>button.onclick=()=>openSettings(button.dataset.settingsTab));
@@ -271,7 +272,6 @@
     $('#refresh-communities').onclick=()=>loadCommunities(true);
     $('#community-composer-create').onclick=()=>$('#open-create').click();
     $('#refresh-rooms').onclick=()=>loadCommunityState(true);
-    $('#mobile-menu').onclick=()=>navigate('lobby');
     $('#leave-community').onclick=leaveCommunity;
     const exitCommunity=$('#exit-community');if(exitCommunity)exitCommunity.onclick=leaveCommunity;
     $('#community-profile-close').onclick=()=>{$('#community-profile-modal').classList.contains('sd-profile-expanded')?setPublicProfileFull(false):closeCommunityProfile();};

@@ -30,7 +30,13 @@ void main(){
   api.stream.add({'type':'message','message':message});await tester.pumpAndSettle();
   expect(find.text('فوري'),findsOneWidget);expect(find.text('جارٍ الإرسال'),findsNothing);
   api.reply.complete(ApiResponse(200,'application/json',Uint8List.fromList(utf8.encode(jsonEncode({'ok':true,'message':message})))));
-  await tester.pumpAndSettle();expect(find.text('فوري'),findsOneWidget);expect(tester.takeException(),isNull);
+  await tester.pumpAndSettle();expect(find.text('فوري'),findsOneWidget);
+  api.stream.add({'type':'message','message':{'id':'other-message','userId':'other-player','username':'Other','text':'رسالة الآخر','createdAt':DateTime.now().millisecondsSinceEpoch}});
+  await tester.pumpAndSettle();
+  expect(tester.getCenter(find.text('فوري')).dx,greaterThan(tester.view.physicalSize.width/tester.view.devicePixelRatio/2));
+  expect(tester.getCenter(find.text('رسالة الآخر')).dx,lessThan(tester.view.physicalSize.width/tester.view.devicePixelRatio/2));
+  expect(find.byTooltip('إعدادات المنصة'),findsNothing);
+  expect(tester.takeException(),isNull);
   await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();
  });
 }
