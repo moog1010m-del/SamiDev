@@ -15,6 +15,52 @@ jobs:
           python-version: '3.12'
       - name: Validate game bootstrap URLs across build platforms
         run: python SamiDev_Platform/tests/game_bootstrap_build.py
+  community-chat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: chat_ci
+          POSTGRES_PASSWORD: local-ci-only
+          POSTGRES_DB: chat_ci
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U chat_ci" --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install server and pinned browser test dependencies
+        run: |
+          python -m pip install -r SamiDev_Platform/backend/requirements.txt
+          npm install --prefix "$RUNNER_TEMP/chat-browser" playwright@1.58.2
+          "$RUNNER_TEMP/chat-browser/node_modules/.bin/playwright" install --with-deps chromium
+          echo "SAMIDEV_PLAYWRIGHT_MODULE=$RUNNER_TEMP/chat-browser/node_modules/playwright-core/index.mjs" >> "$GITHUB_ENV"
+          node -e 'console.log("SAMIDEV_CHROMIUM="+require(process.env.RUNNER_TEMP+"/chat-browser/node_modules/playwright-core").chromium.executablePath())' >> "$GITHUB_ENV"
+      - name: Check authority and peer delivery without SSE or polling
+        working-directory: SamiDev_Platform
+        env:
+          SAMIDEV_TEST_DATABASE_URL: postgresql://chat_ci:local-ci-only@127.0.0.1:5432/chat_ci
+          SAMIDEV_TEST_REDIS_URL: redis://127.0.0.1:6379/15
+          SAMIDEV_CHAT_DIAGNOSTIC_DIR: ${{ runner.temp }}/chat-results
+        run: |
+          python tests/community_socket_regression.py
+          python tests/postgres_community_latency.py
+          node tests/network_liveness_regression.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: community-chat-results
+          path: ${{ runner.temp }}/chat-results
   android:
     runs-on: ubuntu-latest
     steps:

@@ -1890,13 +1890,19 @@ class PlatformHttp:
     async def community_chat(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         cid = normalize_community_id(request.match_info.get("community_id"))
+        entry = await self.community_chat_entry(user, cid, await self._body(request))
+        return web.json_response({"ok": True, "message": entry})
+
+    async def community_socket(self, request: web.Request) -> web.StreamResponse:
+        from community_socket import serve
+        return await serve(self, request)
+
+    async def community_chat_entry(self, user, cid, body):
         if not await self.platform.allow_rate(f"community-chat:{user['id']}:{cid}", COMMUNITY_CHAT_USER_RATE, COMMUNITY_CHAT_RATE_WINDOW):
             raise PlatformError("RATE_LIMIT", "أرسلت رسائل كثيرة بسرعة؛ حاول بعد قليل", 429)
         if not await self.platform.allow_rate(f"community-chat-room:{cid}", COMMUNITY_CHAT_ROOM_RATE, COMMUNITY_CHAT_RATE_WINDOW):
             raise PlatformError("ROOM_RATE_LIMIT", "المحادثة نشطة جدًا الآن؛ حاول بعد لحظات", 429)
-        body = await self._body(request)
-        entry = await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"), body.get("clientMessageId"),body.get("stickerId"))
-        return web.json_response({"ok": True, "message": entry})
+        return await self.platform.append_community_chat(str(user["id"]), cid, body.get("text"), body.get("clientMessageId"),body.get("stickerId"))
 
     async def lobby_rooms(self, request: web.Request) -> web.Response:
         await self._user(request)

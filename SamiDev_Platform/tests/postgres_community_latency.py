@@ -7,6 +7,9 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
+import socket
+import subprocess
 import sys
 import tempfile
 from urllib.parse import urlsplit
@@ -90,6 +93,8 @@ async def main():
     out = Path(os.environ.get('SAMIDEV_CHAT_DIAGNOSTIC_DIR', '/tmp/samidev-chat-diagnostic'))
     out.mkdir(parents=True, exist_ok=True)
     services, runners, redis_clients, stores = [], [], [], []
+    proxy_name = None
+    proxy_files = tempfile.TemporaryDirectory()
     try:
         bases = []
         for _ in range(2):
@@ -111,6 +116,43 @@ async def main():
             runner = web.AppRunner(application); runners.append(runner); await runner.setup()
             site = web.TCPSite(runner, '127.0.0.1', 0); await site.start()
             bases.append(f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}')
+        if os.getenv('SAMIDEV_CHAT_TEST_NGINX') == '1':
+            with socket.socket() as reservation:
+                reservation.bind(('127.0.0.1', 0))
+                proxy_port = reservation.getsockname()[1]
+            config = (ROOT/'deploy/nginx/nginx.conf').read_text()
+            config = config.replace('listen 80;', f'listen 127.0.0.1:{proxy_port};')
+            for index, base in enumerate(bases, 1):
+                config = config.replace(f'gateway{index}:8088', base.removeprefix('http://'))
+            config = config.replace('        server gateway3:8088 max_fails=3 fail_timeout=5s;\n', '')
+            path = Path(proxy_files.name)/'nginx.conf'
+            path.write_text(config)
+            # Patch tools can leave cloud-workspace files owner-readable only.
+            # Serve a public-assets copy with normal deployment read permissions;
+            # do not change the checkout's permissions to accommodate the fixture.
+            public = Path(proxy_files.name)/'public'
+            shutil.copytree(ROOT/'game', public, copy_function=shutil.copyfile)
+            public.chmod(0o755)
+            for entry in public.rglob('*'):
+                entry.chmod(0o755 if entry.is_dir() else 0o644)
+            proxy_name = 'samidev-chat-proxy-' + secrets.token_hex(6)
+            subprocess.run(['docker', 'run', '--pull', 'never', '-d', '--name', proxy_name,
+                '--network', 'host', '--read-only', '--tmpfs', '/var/cache/nginx', '--tmpfs', '/var/run',
+                '-v', str(path)+':/etc/nginx/nginx.conf:ro', '-v', str(public)+':/usr/share/nginx/html:ro',
+                'nginx:1.27-alpine'], check=True, stdout=subprocess.DEVNULL)
+            from aiohttp import ClientSession
+            async with ClientSession() as probe:
+                for attempt in range(60):
+                    try:
+                        async with probe.get(f'http://127.0.0.1:{proxy_port}/api/build') as response:
+                            if response.status == 200:
+                                break
+                    except OSError:
+                        pass
+                    await asyncio.sleep(.1)
+                else:
+                    raise AssertionError('test nginx failed to reach the gateways')
+            bases = [f'http://127.0.0.1:{proxy_port}'] * 2
         checks = await asyncio.wait_for(admission_checks(services, stores), 30)
         marks = {}
         for service in services:
@@ -124,9 +166,10 @@ async def main():
                 start = asyncio.get_running_loop().time(); await publish(cid, event)
                 marks.setdefault(event.get('message',{}).get('clientMessageId'),{})['publishMs'] = round((asyncio.get_running_loop().time()-start)*1000, 3)
             service.append_community_chat = timed; service.live.publish = timed_publish
-        async def scenario(control):
+        async def scenario(mode):
+            control, sse_only, lose_ack = mode == 'polling', mode == 'sse', mode == 'lost-ack'
             rooms = {}
-            for room in (['majlis'] if control else ['majlis','square','diwan','elite']):
+            for room in (['majlis','square','diwan','elite'] if mode == 'live' else ['majlis']):
                 pair = []
                 for i, service in enumerate(services):
                     user = await service.accounts.guest(); token = await service.create_session(user['id'])
@@ -134,19 +177,27 @@ async def main():
                 rooms[room] = pair
             with tempfile.TemporaryDirectory() as directory:
                 config = Path(directory)/'sessions.json'
-                config.write_text(json.dumps(dict(rooms=rooms, samplesPerDirection=4 if control else 8,
-                                                  legacy=control, disableLive=control)))
+                config.write_text(json.dumps(dict(rooms=rooms, samplesPerDirection=8 if mode == 'live' else 1 if lose_ack else 4,
+                                                  legacy=control, disableLive=control, sseOnly=sse_only, loseAck=lose_ack)))
                 config.chmod(0o600)
-                report = out/('polling.json' if control else 'live.json')
+                report = out/(mode+'.json')
                 process = await asyncio.create_subprocess_exec('node', str(ROOT/'tests/community_latency_browser.mjs'),
                     env=dict(os.environ, SAMIDEV_CHAT_BENCH_CONFIG=str(config), SAMIDEV_CHAT_BENCH_REPORT=str(report)))
                 assert await process.wait() == 0, 'browser timing failed; see '+str(report)
-        await scenario(False)
-        await scenario(True)
+                if proxy_name:
+                    result = json.loads(report.read_text())
+                    nodes = {row['diagnostic']['gateway']['node'] for row in result['observations']}
+                    assert len(nodes) == 2, 'proxy test must exercise both gateway processes'
+                    print('NGINX_COMMUNITY_WEBSOCKET_PASS: 64 peer deliveries across both gateways; SSE and polling blocked')
+        for mode in (['live'] if proxy_name else ['live', 'sse', 'lost-ack', 'polling']):
+            await scenario(mode)
         (out/'server.json').write_text(json.dumps(marks, indent=2))
         (out/'admission.json').write_text(json.dumps(checks, indent=2))
         print('POSTGRES_COMMUNITY_LATENCY_PASS: '+str(out))
     finally:
+        if proxy_name:
+            subprocess.run(['docker', 'rm', '-f', proxy_name], check=True, stdout=subprocess.DEVNULL)
+        proxy_files.cleanup()
         for runner in runners: await runner.cleanup()
         for service in services:
             if service.r.pool:

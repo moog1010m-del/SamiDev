@@ -1329,9 +1329,10 @@ def _origin_allowed(origin: str | None) -> bool:
 
 @web.middleware
 async def platform_origin_middleware(request: web.Request, handler):
-    if PRODUCTION_MODE and (request.path.startswith("/api/") or request.path == "/ws") and not SERVICE.platform_http._secure(request):
+    community_socket = request.path.startswith('/ws/community/')
+    if PRODUCTION_MODE and (request.path.startswith("/api/") or request.path == "/ws" or community_socket) and not SERVICE.platform_http._secure(request):
         return web.json_response({"ok":False,"error":"HTTPS_REQUIRED"},status=426)
-    if request.path.startswith("/api/") and request.method.upper() in {"POST", "PUT", "PATCH", "DELETE"}:
+    if community_socket or (request.path.startswith("/api/") and request.method.upper() in {"POST", "PUT", "PATCH", "DELETE"}):
         origin = request.headers.get("Origin")
         fetch_site = (request.headers.get("Sec-Fetch-Site") or "").lower()
         if fetch_site == "cross-site" or not _origin_allowed(origin):
@@ -1394,6 +1395,7 @@ def make_app() -> web.Application:
     app.router.add_post("/api/communities/{community_id}/enter", api.community_enter)
     app.router.add_post("/api/communities/{community_id}/leave", api.community_leave)
     app.router.add_get("/api/communities/{community_id}/events", api.community_events)
+    app.router.add_get("/ws/community/{community_id}", api.community_socket)
     app.router.add_post("/api/communities/{community_id}/chat", api.community_chat)
     app.router.add_post("/api/communities/{community_id}/moderation", api.community_moderate)
     app.router.add_get("/api/lobby/rooms", api.lobby_rooms)

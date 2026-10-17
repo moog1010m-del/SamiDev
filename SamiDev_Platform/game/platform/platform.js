@@ -581,12 +581,11 @@
     if(window.SamiDevGameHost?.active)return;
     const active=state.activeCommunity;if(!active)return loadCommunities(manual);
     try{
-      // An OPEN EventSource does not guarantee delivery through a proxy.
-      // Keep the existing periodic history fetch as a recovery path; merging
-      // by message ID prevents duplicates with live events.
+      // History remains a recovery path, never the primary live delivery.
+      // Message IDs reconcile recovery with socket events and acknowledgements.
       const d=await api(`/api/communities/${encodeURIComponent(active.id)}`);
       if(state.activeCommunity?.id!==active.id)return;
-      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);
+      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);window.SamiDevCommunityLive?.history(d.messages||[]);
       renderCommunityState();renderRooms();
       if(manual)toast('تم تحديث المساحة');
     }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
@@ -772,8 +771,8 @@
     catch(err){toast(err.message||'تعذر إرسال البلاغ',true);}finally{btn.disabled=false;}
   }
 
-  let communityStream=null,communityStreamId=null;
-  function stopCommunityLive(){communityStream?.close();communityStream=null;communityStreamId=null;}
+  let communityStreamId=null;
+  function stopCommunityLive(){window.SamiDevCommunityLive?.close();communityStreamId=null;}
   function mergeCommunityMessages(rows){
     const messages=new Map(state.communityMessages.map(row=>[row.id,row]));
     for(const row of rows){
@@ -783,21 +782,28 @@
     state.communityMessages=Array.from(messages.values()).sort((a,b)=>Number(a.createdAt)-Number(b.createdAt)).slice(-200);
   }
   function startCommunityLive(cid){
-    if(window.SamiDevMobile||state.page!=='lobby'||(communityStreamId===cid&&communityStream?.readyState!==2))return;
-    stopCommunityLive();if(!window.EventSource)return;
-    communityStreamId=cid;communityStream=new EventSource('/api/communities/'+encodeURIComponent(cid)+'/events');
-    communityStream.onmessage=event=>{
+    if(window.SamiDevMobile||state.page!=='lobby'||communityStreamId===cid)return;
+    stopCommunityLive();if(!window.SamiDevCommunityLive)return;
+    communityStreamId=cid;window.SamiDevCommunityLive.open({cid,userId:state.user.id,onEvent:data=>{
       if(state.activeCommunity?.id!==cid)return;
-      try{const data=JSON.parse(event.data);if(data.type==='access_denied'){stopCommunityLive();loadCommunityState();return;}
+      if(data.type==='access_denied'){stopCommunityLive();loadCommunityState();return;}
         const rows=data.type==='message'?[data.message]:data.messages||[];mergeCommunityMessages(rows);renderCommunityMessages();
         if(data.type==='message'&&data.message.userId!==state.user?.id&&$('#settings-chat-alerts').checked&&(document.hidden||$('#platform-settings').classList.contains('hidden')===false))toast('رسالة جديدة من '+data.message.username);
-      }catch(_){}
-    };
+    }});
   }
   async function submitChatMessage(message){
     const cid=message.communityId;
     try{
-      const result=await api(`/api/communities/${encodeURIComponent(cid)}/chat`,{method:'POST',body:JSON.stringify({text:message.text,clientMessageId:message.clientMessageId,...(message.stickerId?{stickerId:message.stickerId}:{})})});
+      let result;
+      try{
+        if(!window.SamiDevCommunityLive)throw Object.assign(new Error('قناة المحادثة غير متصلة'),{retryViaHttp:true});
+        result={message:await window.SamiDevCommunityLive.send(message)};
+      }
+      catch(error){
+        if(!error.retryViaHttp||state.activeCommunity?.id!==cid)throw error;
+        // The same nonce reconciles a committed message if its socket ack was lost.
+        result=await api(`/api/communities/${encodeURIComponent(cid)}/chat`,{method:'POST',body:JSON.stringify({text:message.text,clientMessageId:message.clientMessageId,...(message.stickerId?{stickerId:message.stickerId}:{})})});
+      }
       if(state.activeCommunity?.id===cid){mergeCommunityMessages([result.message]);renderCommunityMessages();}
     }catch(error){if(state.activeCommunity?.id===cid){message.failed=true;renderCommunityMessages();}toast(error.message||'تعذر إرسال الرسالة',true);}
   }

@@ -1,7 +1,9 @@
 """One Redis subscription per gateway, bounded subscriber queues, durable snapshots."""
 import asyncio
 import json
+import logging
 import secrets
+import time
 from contextlib import asynccontextmanager
 
 
@@ -13,6 +15,17 @@ class CommunityLive:
         self.task = None
         self.ready = asyncio.Event()
         self.instance = secrets.token_hex(12)
+        self.publish_failures = 0
+        self.last_warning = float('-inf')
+
+    def warn(self, operation, error):
+        if time.monotonic() - self.last_warning >= 30:
+            self.last_warning = time.monotonic()
+            logging.getLogger(__name__).warning('Community live %s failed: %s', operation, type(error).__name__)
+
+    def status(self):
+        return {'node': self.instance[:8], 'crossGatewayReady': self.ready.is_set() if self.redis is not None else None,
+                'publicationFailures': self.publish_failures}
 
     @property
     def redis(self):
@@ -37,7 +50,9 @@ class CommunityLive:
             # Persistence already committed. A publication outage must not make
             # the sender retry a committed message; periodic snapshots repair it.
             try: await asyncio.wait_for(self.redis.publish(self.channel(cid), json.dumps({**event, "_sender":self.instance})), 2)
-            except Exception: pass
+            except Exception as error:
+                self.publish_failures += 1
+                self.warn('publication', error)
 
     async def run(self):
         from social_platform import PREFIX
@@ -56,8 +71,9 @@ class CommunityLive:
                                 self.deliver(channel.rsplit(':',1)[-1],event)
                         except (ValueError,TypeError): continue
             except asyncio.CancelledError: raise
-            except Exception:
+            except Exception as error:
                 self.ready.clear()
+                self.warn('subscription', error)
                 await asyncio.sleep(1)
 
     @asynccontextmanager
