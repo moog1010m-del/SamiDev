@@ -62,6 +62,7 @@ class PostgresSocialStore:
         self.transient = transient
         self.max_connections = max_connections
         self.pool = None
+        self._admission_pool = None
         self._transaction = ContextVar('samidev_social_transaction', default=None)
         self._sweeper = None
 
@@ -77,8 +78,20 @@ class PostgresSocialStore:
                 async with conn.transaction():
                     await conn.execute("SELECT pg_advisory_xact_lock(hashtextextended('samidev:schema', 0))")
                     await conn.execute(SCHEMA)
+            # Admission spans Redis room/presence operations and independently
+            # locked social documents. Keep its mutex outside the document
+            # transaction context. A separate single-connection pool prevents
+            # waiting admissions from exhausting the document pool.
+            self._admission_pool = await asyncpg.create_pool(
+                self.url, min_size=0, max_size=1, timeout=15, command_timeout=30,
+                server_settings={'application_name': 'samidev-admission',
+                                 'lock_timeout': '10000'},
+            )
             self._sweeper = asyncio.create_task(self._expire())
         except BaseException:
+            if self._admission_pool:
+                await self._admission_pool.close()
+                self._admission_pool = None
             await self.pool.close()
             self.pool = None
             raise
@@ -87,9 +100,21 @@ class PostgresSocialStore:
         if self._sweeper:
             self._sweeper.cancel()
             await asyncio.gather(self._sweeper, return_exceptions=True)
+        if self._admission_pool:
+            await self._admission_pool.close()
+            self._admission_pool = None
         if self.pool:
             await self.pool.close()
             self.pool = None
+
+    @asynccontextmanager
+    async def admission_lock(self, key):
+        if self._transaction.get() is not None:
+            raise RuntimeError('Acquire admission lock before social document transactions')
+        async with self._admission_pool.acquire() as conn:
+            async with conn.transaction():
+                await conn.execute('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', str(key))
+                yield
 
     async def ping(self):
         async with self.pool.acquire() as conn:

@@ -23,7 +23,7 @@ class RoomPolicy:
         if store is None:
             async with self.lock: yield
         elif hasattr(store,'pool'):
-            async with store.transaction([self.key('admission')]): yield
+            async with store.admission_lock(self.key('admission')): yield
         else:
             # Legacy Redis deployments; lock covers only bounded admission work.
             async with store.lock(self.key('admission'),timeout=60,blocking_timeout=3): yield
