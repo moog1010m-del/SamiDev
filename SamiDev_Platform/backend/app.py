@@ -1353,7 +1353,9 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
     response.headers["Referrer-Policy"] = "no-referrer"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(), payment=()"
     if request.path.startswith("/api/"):
-        response.headers["Cache-Control"] = "private, no-store"
+        # Keep SSE untransformed through proxies; generic API headers must not
+        # erase the stream endpoint's no-transform directive.
+        response.headers["Cache-Control"] = "private, no-store" + (", no-transform" if response.content_type == "text/event-stream" else "")
         response.headers["Vary"] = "Cookie, Origin"
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"

@@ -17,14 +17,24 @@ try{
  await admin.waitForFunction(()=>document.querySelector('[name=maxTables]').value!=='');
  await admin.locator('[name=maxTables]').fill('12');await admin.locator('#room-policy-form button[type=submit]').click();await admin.locator('#room-policy-status').filter({hasText:'تم حفظ'}).waitFor();
  assert.equal((await (await admin.request.get(base+'/api/admin/communities/majlis/policy')).json()).settings.maxTables,12);
- for(const page of pages){await page.goto(base+'/platform/?community=majlis');await page.locator('#community-room').waitFor();}
+ for(const page of pages){
+  const streamResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/communities/majlis/events');
+  await page.goto(base+'/platform/?community=majlis');await page.locator('#community-room').waitFor();
+  const response=await streamResponse;
+  assert.equal(response.status(),200);
+  assert.match(response.headers()['cache-control']||'',/no-transform/,'SSE must preserve the no-transform directive');
+ }
  assert.equal(await member.locator('#open-create svg').count(),1);assert.equal(await member.locator('#exit-community svg').count(),1);assert.equal(await member.locator('#community-chat-form button[type=submit] svg').count(),1);
  assert.equal(await member.locator('#own-profile-card .profile-sticker:not([hidden])').count(),0);
  await member.locator('#community-stickers').click();await member.locator('.sd-chat-sticker-picker').waitFor();
  assert.equal(await member.locator('.sd-chat-sticker-picker .sd-sprite-badge').count(),1,'only purchased name stickers, not purchased chat frames');
  await member.locator('.sd-chat-sticker-picker .sd-sprite-badge').click();
  await admin.locator('.community-chat-message .sd-chat-sticker-art').waitFor();
- await member.locator('#community-chat-input').fill('رسالة مباشرة');await member.locator('#community-chat-form button[type=submit]').click();await admin.locator('.community-chat-message').filter({hasText:'رسالة مباشرة'}).waitFor();
+ // Disable history requests: this assertion must pass via SSE, never polling.
+ await admin.route('**/api/communities/majlis',route=>route.abort());
+ await member.locator('#community-chat-input').fill('رسالة مباشرة');await member.locator('#community-chat-form button[type=submit]').click();
+ await admin.locator('.community-chat-message').filter({hasText:'رسالة مباشرة'}).waitFor({timeout:1500});
+ await admin.unroute('**/api/communities/majlis');
  // Simulate a connected proxy that stops delivering SSE bytes after snapshot.
  await admin.addInitScript(()=>{const Native=window.EventSource;window.EventSource=class{constructor(url){this.readyState=1;this.inner=new Native(url);this.inner.onmessage=event=>{if(!this.initial){this.initial=true;this.onmessage?.(event);}};}close(){this.readyState=2;this.inner.close();}};});
  await admin.reload();await admin.locator('#community-room').waitFor();
@@ -52,5 +62,5 @@ try{
  await admin.locator('.sd-chat-sticker-art').waitFor();
  await admin.screenshot({path:out+'/game-chat.png',fullPage:true});
  assert.deepEqual(errors,[]);
- console.log('ROOM_POLISH_BROWSER_PASS: admin policy persisted; line controls; removed badge; owned-sticker picker + SSE delivery; two real pool clients; immediate pending and single authoritative confirmation; equipped frame and sticker rendering');
+ console.log('ROOM_POLISH_BROWSER_PASS: admin policy persisted; line controls; removed badge; owned-sticker picker + SSE delivery; live text within 1500ms with history requests blocked; silent-stream recovery; two real pool clients; immediate pending and single authoritative confirmation; equipped frame and sticker rendering');
 }finally{await browser.close();}
