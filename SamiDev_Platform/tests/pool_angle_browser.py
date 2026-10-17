@@ -14,6 +14,10 @@ from aiohttp import web, ClientSession
 
 
 async def main():
+    from room_policy import DEFAULTS
+    # This suite starts two short test matches back-to-back; cooldown policy
+    # has its own dedicated tests and is disabled only in this isolated fixture.
+    await app.SERVICE.platform.room_policy.configure('majlis', {**DEFAULTS, 'cooldownSeconds':0})
     host = subprocess.Popen(['node', str(ROOT/'gamehost/server.js')], cwd=ROOT,
         env=dict(os.environ, SAMIDEV_GAMEHOST_HOST='127.0.0.1',
                  SAMIDEV_GAMEHOST_PORT=str(GH_PORT)), stdout=subprocess.DEVNULL)
@@ -30,7 +34,14 @@ async def main():
                 await asyncio.sleep(.05)
             else:
                 raise RuntimeError('Test GameHost did not become healthy')
-        runner = web.AppRunner(app.make_app())
+        application = app.make_app()
+        @web.middleware
+        async def shared_game_host(request, handler):
+            if request.path == '/games/pool/index.html' and request.method in {'GET','HEAD'}:
+                return web.FileResponse(ROOT/'game/game-host.html')
+            return await handler(request)
+        application.middlewares.append(shared_game_host)
+        runner = web.AppRunner(application)
         await runner.setup()
         site = web.TCPSite(runner, '127.0.0.1', 0)
         await site.start()

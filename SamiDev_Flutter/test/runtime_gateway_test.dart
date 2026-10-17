@@ -37,8 +37,26 @@ void main(){
    expect(runtime.allowsNavigation(Uri.parse('https://attacker.invalid')),isFalse);
   }finally{client.close(force:true);await runtime.close();await backend.close(force:true);}
  });
+ test('all games share one verified host asset',()async{
+  final hashes={for(final id in ['carrom','crazy8','pool','tablesoccer'])id:'testhash-$id'};
+  final host=utf8.encode('<!doctype html><html><body><script src="/game-bootstrap.js"></script></body></html>');
+  final web=utf8.encode('<html><body>Platform</body></html>');
+  final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode({'engines':hashes,'files':{'game-host.html':{'size':host.length,'sha256':sha256.convert(host).toString()},'platform/index.html':{'size':web.length,'sha256':sha256.convert(web).toString()}}})),'assets/runtime/game-host.html':host,'assets/runtime/platform/index.html':web}));
+  final backend=await HttpServer.bind(InternetAddress.loopbackIPv4,0);
+  backend.listen((request)async{request.response.write(jsonEncode({'games':[for(final e in hashes.entries){'id':e.key,'mainJsSha256':e.value}]}));await request.response.close();});
+  final runtime=GameRuntime(PlatformApi(RuntimePolicy('http://127.0.0.1:${backend.port}',allowLocalDevelopment:true),MemoryVault()),assets:assets);
+  final client=HttpClient();
+  try{
+   await runtime.start();final boot=await client.getUrl(runtime.launch);boot.followRedirects=false;final response=await boot.close();final cookie=response.cookies.single;await response.drain<void>();
+   for(final path in ['/index.html','/games/carrom/index.html','/games/pool/index.html','/games/crazy8/index.html','/games/tablesoccer/index.html']){
+    final request=await client.getUrl(runtime.origin.replace(path:path));request.cookies.add(cookie);final page=await request.close();expect(page.statusCode,200);final text=await page.transform(utf8.decoder).join();expect(text,contains('/game-bootstrap.js'));expect(text,isNot(contains('__dictEn')));
+   }
+  }finally{client.close(force:true);await runtime.close();await backend.close(force:true);}
+ });
  test('modified asset bytes fail closed',()async{
-  final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode({'files':{'main.js':{'size':3,'sha256':'wrong'}}})),'assets/runtime/main.js':[1,2,3]}));
-  await assets.load();await expectLater(assets.read('main.js'),throwsStateError);
+  for(final key in ['main.js','game-host.html']){
+   final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode({'files':{key:{'size':3,'sha256':'wrong'}}})),'assets/runtime/$key':[1,2,3]}));
+   await assets.load();await expectLater(assets.read(key),throwsStateError);
+  }
  });
 }

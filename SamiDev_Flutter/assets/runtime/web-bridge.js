@@ -12,7 +12,7 @@
   function inviteLink(inviteToken) {
     const token = String(inviteToken || '').trim();
     if (!/^[A-Za-z0-9_-]{20,64}$/.test(token)) throw new Error('رمز الدعوة غير صالح');
-    const url = new URL('/platform/', location.origin);
+    const url = new URL('/platform/', window.__SAMIDEV_APP_ORIGIN||location.origin);
     url.searchParams.set('invite', token);
     url.searchParams.set('game',window.SamiDevGames.current().id);
     return url.toString();

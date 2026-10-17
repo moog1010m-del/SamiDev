@@ -25,6 +25,7 @@
     activePointers: new Map(), localHost: {hotseat:true, moves:[], alarms:new Map(), currentSeat:0, lastTurnKey:'', started:false},
     network: {online:false, waiting:false, roomId:null, roster:[], cosmetics:{}, seat:null, spectator:false, snapshotBusy:false, queuedSnapshot:null, finished:false, deferredMoves:[], authorityRevision:-1, authorityEpoch:null, pendingAuthority:null, authorityCheckTimer:null},
     surface: {w:0, h:0, menuY:0, initialized:false},
+    disposed:false,
     performance: {mobile:mobileDevice, pixelRatio:1, frames:0, coalescedMoves:0},
   };
   window.__samidevGameState = state;
@@ -44,12 +45,13 @@
 
   const norm = (uri) => {
     if (typeof uri !== 'string') throw new TypeError('Invalid game asset path');
+    if(window.__SAMIDEV_ASSET_ROOT&&uri.startsWith(window.__SAMIDEV_ASSET_ROOT))return uri;
     uri = uri.replace(/^~\//, '');
     uri = uri.replace(/^(?:carrom|tablesoccer|crazy8|pool)\//, '');
     if (/^[\s]|[\x00-\x1f\x7f\\]|^[a-z][a-z0-9+.-]*:|^\/\//i.test(uri)) {
       throw new Error('External game assets are not allowed');
     }
-    return uri;
+    return window.__SAMIDEV_ASSET_ROOT&&!uri.startsWith('/')?new URL(uri,window.__SAMIDEV_ASSET_ROOT).href:uri;
   };
 
   function syncText(uri) {
@@ -168,7 +170,7 @@
     const refreshId = ++profileAvatarRefresh;
     const seats = Number(state.network.capacity) || Number(state.gameLogic?.seats) || roster.length;
     const bySeat = new Map(roster.filter(Boolean).map(p => [Number(p.seat), p]));
-    const info = await Promise.all(Array.from({length:seats}, (_, seat) => profileAvatarTexture(bySeat.get(seat)?.accountId)));
+    const info = await Promise.all(Array.from({length:seats}, (_, seat) => bySeat.get(seat)?.accountId?profileAvatarTexture(bySeat.get(seat).accountId):null));
     if (refreshId !== profileAvatarRefresh || typeof state.avatarsReady !== 'function') return;
     try { state.avatarsReady(info); state.frameRequested = true; }
     catch (e) { console.warn('[SamiDev Avatar] native avatar update failed', e); }
@@ -1125,7 +1127,20 @@
     });
   }
 
-  async function prepareAssetsAndLogic(){
+  let assetPreparation=null;
+  function prepareAssetsAndLogic(){
+    // Waiting and match startup share this page's native renderer/resources.
+    // Reuse the same attempt instead of decoding/rebuilding every atlas again
+    // when the final player joins. Failed attempts remain retryable.
+    if(!assetPreparation){
+      const attempt=loadAssetsAndLogic();
+      assetPreparation=attempt;
+      attempt.catch(()=>{if(assetPreparation===attempt)assetPreparation=null;});
+    }
+    return assetPreparation;
+  }
+
+  async function loadAssetsAndLogic(){
     state.dict = window.__dictEn || {};
     status.style.display='block';
     status.textContent='تحميل الأصول...';
@@ -1137,12 +1152,12 @@
     const textPreload = (async()=>{
       if(typeof fetch!=='function') return;
       try {
-        const response=await fetch('__assets.json', {credentials:'same-origin'});
+        const response=await fetch(norm('__assets.json'), {credentials:'same-origin'});
         if(!response.ok) return;
         const index=await response.json();
         const paths=Object.keys(index).map(norm).filter(path=>/\.(json|atlas|txt|glsl)$/.test(path));
         window.__textAssets=window.__textAssets||{};
-        window.__textAssets["__assets.json"]=JSON.stringify(index);
+        window.__textAssets[norm("__assets.json")]=JSON.stringify(index);
         let next=0;
         await Promise.all(Array.from({length:Math.min(6,paths.length)},async()=>{
           while(next<paths.length){const path=paths[next++];
@@ -1197,11 +1212,21 @@
       img.src=refreshedAsset && !safeSource.startsWith('data:') ? safeSource+(safeSource.includes('?')?'&':'?')+'v=36' : safeSource;
     }))]);
     status.textContent='تشغيل اللعبة...';
+    if(state.disposed)throw Error('تم إغلاق اللعبة');
     if (!state.gameLogic) {
-      await new Promise((resolve,reject)=>{ const s=document.createElement('script'); const hash=window.__SAMIDEV_CLIENT_CONFIG?.games?.[currentGame.id]?.mainJsSha256 || window.__SAMIDEV_CLIENT_CONFIG?.mainJsSha256; s.src='main.js'+(hash?`?v=${encodeURIComponent(hash.slice(0,16))}`:''); s.onload=resolve; s.onerror=()=>reject(new Error('تعذر تحميل main.js')); document.body.appendChild(s); });
+      await new Promise((resolve,reject)=>{ const s=document.createElement('script'); const hash=window.__SAMIDEV_CLIENT_CONFIG?.games?.[currentGame.id]?.mainJsSha256 || window.__SAMIDEV_CLIENT_CONFIG?.mainJsSha256; s.src=norm('main.js')+(hash?`?v=${encodeURIComponent(hash.slice(0,16))}`:''); s.onload=resolve; s.onerror=()=>reject(new Error('تعذر تحميل main.js')); document.body.appendChild(s); });
     }
     if(!state.gameLogic) throw new Error('لم تسجل اللعبة GameLogic');
     return state.gameLogic;
+  }
+
+  function configureNativeWaitingSlots(logic,waiting){
+    const scenes=[logic.sceneMgr,logic.sceneManager,logic.scene,logic.view];
+    for(const scene of scenes){const avatars=scene?.avatars;
+      if(typeof avatars?.constructor?.configLobby==='function'){
+        avatars.constructor.configLobby({lobby:waiting,enabled:false});avatars.refresh?.();
+      }
+    }
   }
 
   let renderLoopStarted=false;
@@ -1222,6 +1247,7 @@
     // waiting. This is the very same native scene used when the match starts.
     state.surfaceCreated?.();
     await ensureInitialSurface();
+    configureNativeWaitingSlots(logic,true);
     refreshNativeAvatars();
     ensureRenderLoop();
     window.SamiDevWaitingRoom?.sceneReady();
@@ -1301,6 +1327,7 @@
       const nativeSettings=cloneMove(settings); delete nativeSettings.gameId;
       if(waitingScene && JSON.stringify(waitingScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
       const seats=waitingScene?waitingScene.seats:logic.initialize(nativeSettings,localSeat);
+      configureNativeWaitingSlots(logic,false);
       state.network.waiting=false;
       if(isCrazy8 && waitingScene)state.unoWaitingNeedsLayout=true;
       if(!waitingScene)installLocalHost(logic, online);
@@ -1350,6 +1377,7 @@
       window.SamiDevWaitingRoom?.ready();
       ensureRenderLoop();
     } catch(e) {
+      if(state.disposed)return;
       console.error(e);
       status.style.display='block';
       status.textContent='تعذر تشغيل اللعبة:\n'+String(e?.stack||e);
@@ -1358,8 +1386,20 @@
     }
   };
 
+  window.SamiDevGameRuntime={dispose(){
+    if(state.disposed)return;state.disposed=true;
+    const net=window.SamiDevNetwork;if(net){net.state.intentionalClose=true;net.state.ws?.close(1000,'game view closed');}
+    for(const id of Array.from(timers.keys()))clearHostTimer(id);
+    for(const alarm of state.localHost.alarms.values())clearTimeout(alarm);state.localHost.alarms.clear();
+    if(state.network.authorityCheckTimer)clearTimeout(state.network.authorityCheckTimer);
+    window.audio.suspend();window.audio.stopMusic();for(const audio of audios.values()){audio.pause();audio.removeAttribute('src');audio.load();}audios.clear();
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    state.images.clear();
+  }};
+
   let renderFailureRetries=0, lastFrameTime=-Infinity;
   function loop(timestamp){
+    if(state.disposed)return;
     const now=Number.isFinite(timestamp)?timestamp:performance.now();
     // 120 Hz phones must not execute twice as many complete native rendering passes.
     // Native animations and physics continue to use their own elapsed-time clock.
@@ -1398,6 +1438,7 @@
   }
   canvas.addEventListener('webglcontextlost',ev=>{
     ev.preventDefault();
+    if(state.disposed)return;
     status.style.display='block';
     status.textContent='تعذر الرسم مؤقتًا — استعادة WebGL...';
     window.__webglContextLost=true;
@@ -1405,6 +1446,7 @@
   canvas.addEventListener('webglcontextrestored',()=>{
     // main.js owns GPU resources and has no context-restoration lifecycle. A clean reload is
     // safer than rendering with stale texture/buffer handles after WebGL has been recreated.
-    try{ location.reload(); }catch(_){}
+    if(state.disposed)return;
+    try{if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.reconnect()?.catch(error=>console.warn('[SamiDev] renderer restore',error));else location.reload();}catch(_){}
   });
 })();

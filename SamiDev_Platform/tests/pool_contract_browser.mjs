@@ -6,6 +6,8 @@ const pages=[],errors=[],results=[];
 try{
  for(let i=0;i<2;i++){
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,extraHTTPHeaders:{Origin:base,'X-Forwarded-Proto':'https','X-Real-IP':`10.92.0.${i+1}`}});
+  // The HTTP fixture maps the native entry alias to the verified shared host.
+  await context.addInitScript(()=>{window.SamiDevMobile={postMessage(){}};});
   assert.equal((await context.request.post(base+'/api/auth/register',{data:{username:'contract_'+Date.now().toString(36)+'_'+i,password:'Test-password-123'}})).status(),200);
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));pages.push(page);
  }
@@ -16,7 +18,8 @@ try{
   await a.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType='+mode);
   await a.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});const rid=await a.evaluate(()=>SamiDevNetwork.state.roomId);
   await b.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+rid);
-  for(const page of pages){await page.waitForFunction(()=>SamiDevNetwork.state.begun&&!window.__samidevGameState.network.snapshotBusy&&window.__gameLogic?.started,{},{timeout:30000});await page.evaluate(()=>{window.contractResyncs=0;SamiDevNetwork.on('resync_state',()=>window.contractResyncs++);});}
+  for(const page of pages){await page.waitForFunction(()=>window.SamiDevNetwork?.state.begun&&!window.__samidevGameState.network.snapshotBusy&&window.__gameLogic?.started,{},{timeout:30000});await page.evaluate(()=>{window.contractResyncs=0;SamiDevNetwork.on('resync_state',()=>window.contractResyncs++);});}
+  for(const page of pages){assert(await page.evaluate(()=>!!window.SamiDevGameBootstrap&&window.__SAMIDEV_QUERY===undefined),'native host keeps URL-based lifecycle');assert.equal(new URL(page.url()).searchParams.get('room'),rid);}
   for(let i=0;i<8;i++){
    for(const page of pages)await page.waitForFunction(()=>!SamiDevNetwork.state.resyncInFlight&&!window.__samidevGameState.network.snapshotBusy&&!window.__gameLogic.animator.isAnimatingWorld()&&!window.__gameLogic.preshooting&&!window.__gameLogic.paused,{},{timeout:30000});
    const turn=await a.evaluate(()=>window.__gameLogic.turn[0]);
@@ -54,7 +57,7 @@ try{
    if(i===5&&!state[0].gameOver){
     reconnectResyncs+=await b.evaluate(()=>window.contractResyncs);
     await b.reload();
-    await b.waitForFunction(()=>SamiDevNetwork.state.begun&&window.__gameLogic?.started&&!SamiDevNetwork.state.resyncInFlight&&!window.__samidevGameState.network.snapshotBusy,{},{timeout:30000});
+    await b.waitForFunction(()=>window.SamiDevNetwork?.state.begun&&window.__gameLogic?.started&&!SamiDevNetwork.state.resyncInFlight&&!window.__samidevGameState.network.snapshotBusy,{},{timeout:30000});
     assert.equal(await b.evaluate(()=>SamiDevNetwork.state.roomId),rid,'reconnect retains room');
     await b.evaluate(()=>{window.contractResyncs=0;SamiDevNetwork.on('resync_state',()=>window.contractResyncs++);});
    }
@@ -64,7 +67,14 @@ try{
   resyncs[1]+=reconnectResyncs;
   assert(resyncs.reduce((a,b)=>a+b,0)<=(mode===7?7:5),'no forced full snapshot per shot');
   results.push({mode,resyncs,driftRecoveries});
+  // Close the authoritative match before reusing these accounts. Leaving the
+  // transport alone correctly keeps their active-match admission reservation.
+  if(!await a.evaluate(()=>SamiDevGameUI.isGameOver()))assert((await a.evaluate(()=>SamiDevGameUI.resignMatch(5000))).ok);
   for(const page of pages)await page.evaluate(()=>SamiDevNetwork.leaveRoom({closeSocket:true}));
  }
  assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,results}));
+}catch(error){
+ console.error('PAGE_ERRORS',errors);
+ for(const page of pages)try{console.error('PAGE_STATE',await page.evaluate(()=>({url:location.href,text:document.body?.innerText.slice(0,600),bootstrap:!!window.SamiDevGameBootstrap,game:window.__SAMIDEV_GAME_ID,logic:!!window.__gameLogic})));}catch(_){}
+ throw error;
 }finally{await browser.close();}

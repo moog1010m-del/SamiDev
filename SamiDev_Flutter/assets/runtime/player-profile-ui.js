@@ -63,7 +63,7 @@
     clearTimeout(returnTimer);clearTimeout(maxReturnTimer);
     try{await net()?.leaveRoom?.({closeSocket:true});}catch(_){}
     try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.setItem('samidev_return_community',cid);}catch(_){}
-    location.replace(communityReturnUrl());
+    if(window.__SAMIDEV_APP_HOST)await window.__SAMIDEV_APP_HOST.returnToPlatform();else location.replace(communityReturnUrl());
   }
   function scheduleCommunityReturn(delay=900) {
     if(!currentCommunityId()||returningToCommunity)return;

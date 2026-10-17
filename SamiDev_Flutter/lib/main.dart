@@ -131,6 +131,10 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       try{final data=jsonDecode(message.message) as Map;
         if(data['type']=='copy'&&data['text'] is String){unawaited(copyText(data['text'] as String));}
         if(game&&data['type']=='room_background'){parkGame();}
+        if(game&&data['type']=='game_runtime_ready'){
+          final suspend=_background||!inGame?' window.audio?.suspend?.();':'';
+          unawaited(c.runJavaScript("document.querySelector('.sd-inventory-trigger')?.setAttribute('hidden','');$suspend").catchError((_){ }));
+        }
         if(game&&data['type']=='open_player_profile'&&data['userId'] is String){
           final id=data['userId'] as String;
           if(table.roster.any((p)=>p['accountId']==id))openProfile(id);
@@ -203,7 +207,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     if(mounted)setState((){gameController=null;gameCurrent=null;inGame=false;room='';messages.clear();table.clear();showChat=false;webPage=_returnToGames?'games':null;selectedTab=_returnToGames?2:0;});
     // Dispose the old JavaScript context too, so its automatic reconnect cannot
     // recreate a socket after logout/explicit exit. Parking never calls this.
-    try{await old.runJavaScript("window.audio?.suspend?.(); if(window.SamiDevNetwork){window.SamiDevNetwork.state.intentionalClose=true;window.SamiDevNetwork.state.ws?.close(1000,'view closed');}");await old.loadHtmlString('<!doctype html><html><body></body></html>');}catch(_){}
+    try{await old.runJavaScript("window.SamiDevGameRuntime?.dispose?.(); window.audio?.suspend?.(); if(window.SamiDevNetwork){window.SamiDevNetwork.state.intentionalClose=true;window.SamiDevNetwork.state.ws?.close(1000,'view closed');}");await old.loadHtmlString('<!doctype html><html><body></body></html>');}catch(_){}
     await configurePlatform();
     if(_returnToGames&&authenticated)unawaited(refreshGamesProfile());
   }

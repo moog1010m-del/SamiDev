@@ -184,7 +184,7 @@
   menu.title='الرجوع للقائمة الرئيسية';
   menu.onclick=()=>{
     if(qs.get('online')==='1' && window.SamiDevRoomUI?.openExit){ window.SamiDevRoomUI.openExit(); return; }
-    location.href='/platform/';
+    if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.returnToPlatform();else location.href='/platform/';
   };
   document.body.appendChild(menu);
   window.__startSamiDevGame();

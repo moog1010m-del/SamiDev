@@ -92,15 +92,11 @@ class GameRuntime {
         request.response.headers.set('Content-Type','application/javascript; charset=utf-8');
         request.response.write('window.__SAMIDEV_CLIENT_CONFIG=${jsonEncode({'platformEnabled':true,'requireGameAuth':true,'production':true,'chatMaxChars':160,'games':_catalog,'mainJsSha256':assets.manifest['engines']['carrom']})};');return;
       }
-      final key=path=='/platform/'?'platform/index.html':path.substring(1);
+      final key=RuntimePolicy.isGame(path)?'game-host.html':path=='/platform/'?'platform/index.html':path.substring(1);
       if(path.contains('..')||path.contains('\\')||!assets.contains(key)){request.response.statusCode=404;return;}
       var bytes=await assets.read(key);
       if(path.startsWith('/platform')&&key.endsWith('.html')){bytes=Uint8List.fromList(utf8.encode(utf8.decode(bytes).replaceFirst('<html','<html data-sd-native')));}
 
-      if(RuntimePolicy.isGame(path)){
-        // Native portrait chat uses the same authoritative WS stream.
-        bytes=Uint8List.fromList(utf8.encode(utf8.decode(bytes).replaceAll('<script src="/chat-ui.js"></script>','')));
-      }
       request.response.headers.set('Content-Type',_mime(key));
       request.response.headers.set('Accept-Ranges','bytes');
       final range=request.headers.value('Range');var start=0,end=bytes.length-1;

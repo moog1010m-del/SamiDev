@@ -9,7 +9,7 @@
     const style=el('style','');style.textContent=`
       body.sd-waiting #status,body.sd-waiting #mode-menu-button{display:none!important}
       #sd-waiting{position:fixed;inset:0;z-index:20;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:64px 12px 18px;gap:12px;box-sizing:border-box;background:#0a1d25;color:#edf5ee;font:14px system-ui;direction:rtl;touch-action:none}
-      #sd-waiting[hidden]{display:none!important}#sd-waiting.scene-ready{background:transparent}
+      #sd-waiting[hidden]{display:none!important}#sd-waiting.scene-ready{display:block;background:transparent;pointer-events:none;padding:0}#sd-waiting.scene-ready .sd-waiting-stage{display:none}#sd-waiting.scene-ready .sd-waiting-bottom{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap}#sd-table-controls{pointer-events:auto}#sd-waiting.scene-ready .sd-waiting-label{flex:0 1 auto}#sd-waiting.scene-ready>.sd-waiting-top,#sd-waiting.scene-ready .sd-waiting-own{display:none}
       .sd-waiting-top,.sd-waiting-own{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;min-width:0}.sd-waiting-stage{display:grid;place-items:center;pointer-events:none;min-height:0}.sd-waiting-loading{padding:16px 22px;border-radius:14px;background:#071b22e8;color:#e9d5a0;font-size:13px}.scene-ready .sd-waiting-loading{display:none}
       .sd-waiting-player{box-sizing:border-box;display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:8px;min-width:0;max-width:min(44vw,240px);padding:6px 10px;border:1px solid #b9a16c88;border-radius:15px;background:#081b23e8;box-shadow:0 4px 18px #0005;color:inherit;font:600 13px system-ui;cursor:pointer;text-align:right}
       .sd-waiting-player img{width:40px;height:40px;object-fit:cover;border-radius:50%}.sd-waiting-identity{min-width:0;display:grid;gap:3px}.sd-waiting-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;unicode-bidi:plaintext}.sd-waiting-status{font-size:10px;color:#aacabe;font-weight:400}.sd-waiting-player[data-connected="false"]{opacity:.7}
@@ -34,7 +34,8 @@
   function update(message){
     if(complete)return;show();const state=window.SamiDevNetwork.state;
     const roster=(message?.roster||state.roster||[]).filter(p=>p&&p.name);
-    opponents.replaceChildren(...roster.filter(p=>p.seat!==state.seat).map(playerNode));own.replaceChildren(...roster.filter(p=>p.seat===state.seat).map(playerNode));
+    // The native scene owns the occupied/empty avatar slots; no second profile view.
+    opponents.hidden=true;own.hidden=true;
     label.textContent=message?.started?'جارٍ تجهيز المباراة…':'بانتظار انضمام الخصم…';
     const controls=document.getElementById('sd-table-controls');controls.replaceChildren();
     if(!window.SamiDevMobile?.postMessage&&!state.begun&&state.ownerSeat===state.seat){

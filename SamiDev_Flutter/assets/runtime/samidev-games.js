@@ -6,7 +6,7 @@
     tablesoccer: {id:'tablesoccer', name:'كرة الطاولة', title:'SamiDev Table Soccer', entry:'/games/tablesoccer/index.html', root:'/games/tablesoccer/'},
     crazy8: {id:'crazy8', name:'أونو', title:'SamiDev Uno', entry:'/games/crazy8/index.html', root:'/games/crazy8/'}
   };
-  const current = () => Object.values(games).find(g => g.id!=='carrom' && location.pathname.startsWith(g.root)) || games.carrom;
+  const current = () => games[window.__SAMIDEV_GAME_ID] || Object.values(games).find(g => g.id!=='carrom' && location.pathname.startsWith(g.root)) || games.carrom;
   const get = id => games[id] || games.carrom;
   const settings = (q, id=current().id) => {
     if (id==='pool') {const requested=Number(q.get('gameType')),mode=Number.isInteger(requested)&&requested>=0&&requested<=7?requested:0;return {gameId:'pool',gameType:mode,players:[0,1,2,0,1,2,3,0][mode],live:1,break:Number(q.get('break'))===1?1:0,trickShots:0};}

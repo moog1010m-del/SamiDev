@@ -192,7 +192,7 @@
     try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
     resetWebUrl();
     platform()?.haptic?.('success');
-    location.href = platformReturnUrl();
+    if(window.__SAMIDEV_APP_HOST)await window.__SAMIDEV_APP_HOST.returnToPlatform();else location.href = platformReturnUrl();
   }
 
   function returnToCommunity() {

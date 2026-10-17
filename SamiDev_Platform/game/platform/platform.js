@@ -524,7 +524,7 @@
     clearInterval(state.poll);
     loadCommunities();
     state.poll=setInterval(()=>{
-      if(state.page==='lobby'){
+      if(state.page==='lobby'&&!window.SamiDevGameHost?.active){
         if(state.activeCommunity)loadCommunityState(); else loadCommunities();
       }
       api('/api/heartbeat',{method:'POST',body:'{}'}).catch(()=>{});
@@ -578,6 +578,7 @@
     stopCommunityLive();syncCommunityLocation('');loadCommunities();
   }
   async function loadCommunityState(manual=false){
+    if(window.SamiDevGameHost?.active)return;
     const active=state.activeCommunity;if(!active)return loadCommunities(manual);
     try{
       // An OPEN EventSource does not guarantee delivery through a proxy.
@@ -859,20 +860,36 @@
     $$('.watch-room',box).forEach(b=>b.onclick=()=>watchRoom(b.dataset.room));
   }
 
+  let activeMatchUrl=null;
+  window.addEventListener('popstate',()=>{if(window.SamiDevGameHost?.active&&activeMatchUrl){history.pushState({sdMatch:true},'',activeMatchUrl);window.SamiDevGameHost.active.frame.contentWindow.SamiDevRoomUI?.openExit();}});
+  async function openGame(id,params){
+    if(window.SamiDevMobile){location.href=window.SamiDevGames.get(id).entry+'?'+params;return;}
+    stopCommunityLive();
+    let returnCommunity=params.get('community')||state.activeCommunity?.id||null;
+    await window.SamiDevGameHost.open(id,params,{onReturn:async()=>{
+      activeMatchUrl=null;const url=new URL(location.href);url.searchParams.delete('match');url.searchParams.delete('game');url.searchParams.delete('watch');url.searchParams.delete('launch');url.searchParams.delete('invite');history.replaceState(null,'',url);
+      $('#create-modal').classList.add('hidden');if(returnCommunity)await enterCommunity(returnCommunity,{syncUrl:false});else await loadRooms();
+    },onAssignment:message=>{
+      if(message.communityId)returnCommunity=message.communityId;
+      const url=new URL(location.href);url.searchParams.delete('invite');url.searchParams.delete('ticket');url.searchParams.delete('token');url.searchParams.set('match',message.roomId);url.searchParams.set('game',message.settings?.gameId||id);if(message.spectator)url.searchParams.set('watch','1');else url.searchParams.delete('watch');if(message.communityId)url.searchParams.set('community',message.communityId);if(!activeMatchUrl&&!new URL(location.href).searchParams.has('match'))history.pushState({sdMatch:true},'',url);else history.replaceState({sdMatch:true},'',url);activeMatchUrl=url.href;
+    }});
+    $('#create-modal').classList.add('hidden');
+  }
+
   async function handlePendingInvite(){
     const q=new URLSearchParams(location.search); const invite=q.get('invite');
-    if(!invite) return;
+    if(!invite){const room=q.get('match');if(room&&/^[A-Z0-9]{4,12}$/.test(room)&&!window.SamiDevMobile){try{const cid=q.get('community')||'majlis',t=await ticket(cid);await openGame(q.get('game')||'carrom',new URLSearchParams({online:'1',action:q.get('watch')==='1'?'watch':'join',room,community:cid,ticket:t}));}catch(error){toast(error.message,true);}}return;}
     if(!/^[A-Za-z0-9_-]{20,64}$/.test(invite)){ history.replaceState(null,'','/platform/'); return; }
     try{
       const t=await ticket();
       const game=new URLSearchParams({online:'1',action:'invite',invite,ticket:t});
-      location.href=window.SamiDevGames.get(q.get('game')).entry+'?'+game;
+      await openGame(q.get('game')||'carrom',game);
     }catch(err){ toast(err.message,true); }
   }
   async function ticket(communityId=null){const body=communityId?{communityId}:{};const d=await api('/api/game-ticket',{method:'POST',body:JSON.stringify(body)});return d.ticket;}
-  async function joinRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'join',room,ticket:t});if(cid)q.set('community',cid);location.href=window.SamiDevGames.get(state.rooms.find(r=>r.roomId===room)?.settings?.gameId).entry+'?'+q;}catch(err){toast(err.message,true);}}
-  async function watchRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);location.href=window.SamiDevGames.get(state.rooms.find(r=>r.roomId===room)?.settings?.gameId).entry+'?'+q;}catch(err){toast(err.message,true);}}
-  async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}location.href=window.SamiDevGames.get(gid).entry+'?'+q;}catch(err){toast(err.message,true);}}
+  async function joinRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'join',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){toast(err.message,true);}}
+  async function watchRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){toast(err.message,true);}}
+  async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}await openGame(gid,q);}catch(err){toast(err.message,true);}}
   async function loadFriends(){try{const d=await api('/api/friends');state.friends=d.friends||[];state.requests=d.requests||[];renderFriends();}catch(err){if(err.status===401)showAuth();}}
   function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}
   function renderFriends(){

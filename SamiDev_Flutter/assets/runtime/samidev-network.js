@@ -58,7 +58,7 @@
 
   function socketUrl(ticketOverride) {
     // Always use this origin's gateway. Never send a game ticket to an override.
-    const u = new URL('/ws', location.href);
+    const u = new URL('/ws', (typeof document==='object'&&document.baseURI)||location.href);
     u.protocol = u.protocol === 'https:' ? 'wss:' : 'ws:';
     const q = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
     const ticket = ticketOverride ?? q.get('ticket');
@@ -103,7 +103,7 @@
         updateUrlCredentials(); state.intentionalClose=true; state.ws?.close();
         const q=new URLSearchParams({online:'1',action:state.spectator?'watch':'join',room:msg.roomId});
         if(msg.communityId)q.set('community',msg.communityId);
-        location.replace(window.SamiDevGames.get(state.gameId).entry+'?'+q);
+        if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.openGame(state.gameId,q);else location.replace(window.SamiDevGames.get(state.gameId).entry+'?'+q);
         return;
       }
     }
@@ -124,6 +124,7 @@
         state.begun = !!msg.begun;
         updateUrlCredentials();
         emit('assignment', msg);
+        window.__SAMIDEV_APP_HOST?.assigned(msg);
         break;
       case 'watching':
         state.spectator = true;
@@ -140,6 +141,7 @@
         state.begun = true;
         updateUrlCredentials();
         emit('assignment', msg);
+        window.__SAMIDEV_APP_HOST?.assigned(msg);
         break;
       case 'invite_created':
         emit('invite_created', msg);
@@ -233,7 +235,7 @@
         try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
         emit('left_room', msg);
         if(['ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(msg.reason)&&!document.documentElement.hasAttribute('data-sd-native')){
-          const cid=state.communityId||'majlis';location.assign('/platform/?community='+encodeURIComponent(cid)+'&notice='+encodeURIComponent(msg.reason));
+          const cid=state.communityId||'majlis';if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.returnToPlatform();else location.assign('/platform/?community='+encodeURIComponent(cid)+'&notice='+encodeURIComponent(msg.reason));
         }
         break;
       case 'error':
@@ -268,7 +270,7 @@
   async function freshBrowserTicket(communityId) {
     // Flutter supplies its ticket through the native gateway; the web can renew
     // the single-use ticket with its secure session cookie after a failed attempt.
-    if (window.__SAMIDEV_QUERY !== undefined) return undefined;
+    if (window.__SAMIDEV_QUERY !== undefined && !window.__SAMIDEV_APP_HOST) return undefined;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
     try {
@@ -354,7 +356,7 @@
         state.reconnecting = true;
         const delay = 600 + Math.floor(Math.random() * 900);
         setTimeout(() => {
-          try { location.reload(); } catch (_) {}
+          try { if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.reconnect()?.catch(error=>console.warn('[SamiDev] reconnect',error));else location.reload(); } catch (_) {}
         }, delay);
       }
     });
