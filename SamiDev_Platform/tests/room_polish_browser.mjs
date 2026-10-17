@@ -47,7 +47,7 @@ try{
  await member.screenshot({path:out+'/community-phone.png',fullPage:true});
  // Hold an actual outbound packet, rather than mocking the server acceptance.
  await member.routeWebSocket('**/ws*',socket=>{upstream=socket.connectToServer();socket.onMessage(raw=>{const data=JSON.parse(String(raw));if(data.type==='chat_send'&&data.text==='اختبار التأكيد'){held=raw;return;}upstream.send(raw);});upstream.onMessage(raw=>socket.send(raw));});
- await member.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis');await member.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});const rid=await member.evaluate(()=>SamiDevNetwork.state.roomId);
+ await member.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis');await member.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});const rid=await member.evaluate(()=>SamiDevNetwork.state.roomId);
  await admin.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+rid);
  for(const page of pages)await page.waitForFunction(()=>SamiDevNetwork.state.begun&&window.__gameLogic?.started&&!__samidevGameState.network.waiting,{},{timeout:30000});
  assert(await member.evaluate(()=>SamiDevNetwork.sendChat('اختبار التأكيد')));

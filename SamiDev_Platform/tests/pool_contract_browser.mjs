@@ -16,7 +16,7 @@ try{
   const driftRecoveries=[];
   const [a,b]=pages;
   await a.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType='+mode);
-  await a.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});const rid=await a.evaluate(()=>SamiDevNetwork.state.roomId);
+  await a.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});const rid=await a.evaluate(()=>SamiDevNetwork.state.roomId);
   await b.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+rid);
   for(const page of pages){await page.waitForFunction(()=>window.SamiDevNetwork?.state.begun&&!window.__samidevGameState.network.snapshotBusy&&window.__gameLogic?.started,{},{timeout:30000});await page.evaluate(()=>{window.contractResyncs=0;SamiDevNetwork.on('resync_state',()=>window.contractResyncs++);});}
   for(const page of pages){assert(await page.evaluate(()=>!!window.SamiDevGameBootstrap&&window.__SAMIDEV_QUERY===undefined),'native host keeps URL-based lifecycle');assert.equal(new URL(page.url()).searchParams.get('room'),rid);}

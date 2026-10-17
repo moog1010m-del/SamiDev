@@ -59,6 +59,18 @@
       </div>
       <div class="sd-room-roster">${roster}</div>`;
     $('#sd-copy-room')?.addEventListener('click', copyRoomCode);
+    // Table management belongs in the existing information menu, not over the game.
+    if(!window.SamiDevMobile?.postMessage&&!st.begun&&!st.spectator&&Number.isInteger(st.seat)&&st.ownerSeat===st.seat){
+      const actions=document.createElement('div');actions.className='sd-actions';
+      const add=(text,action,targetSeat=-1)=>{
+        const button=document.createElement('button');button.type='button';button.textContent=text;button.dataset.tableAction=action;
+        button.onclick=()=>{if(confirm(action==='close'?'إغلاق الطاولة وإعادة اللاعبين إلى المساحة؟':text+' قبل بدء اللعب؟')&&!net()?.send({type:'manage_table',action,targetSeat}))notify('انقطع الاتصال؛ أعد المحاولة بعد عودته');};
+        actions.append(button);
+      };
+      add('إغلاق الطاولة','close');
+      for(const player of (st.roster||[]).filter(p=>p&&p.seat!==st.seat&&p.name))add('إخراج '+player.name,'kick',player.seat);
+      content.append(actions);
+    }
   }
 
   async function copyRoomCode() {

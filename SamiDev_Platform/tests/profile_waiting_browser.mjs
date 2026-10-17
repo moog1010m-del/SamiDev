@@ -83,10 +83,10 @@ try{
     host.on('pageerror',e=>errors.push(game+': '+e.message));opponent.on('pageerror',e=>errors.push(game+': '+e.message));
     host.on('websocket',socket=>socket.on('framesent',event=>{try{sent.push(JSON.parse(event.payload));}catch{}}));
     await host.goto(`${base}/${entry}?online=1&action=create&community=majlis&players=0&seats=0&live=1`);
-    await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+    await host.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
     await host.waitForFunction(()=>window.__samidevGameState?.performance?.frames>0);
-    const waiting=await host.evaluate(()=>({error:window.__previewError,waiting:window.__samidevGameState.network.waiting,started:window.__gameLogic.started,room:window.SamiDevNetwork.state.roomId,ready:window.SamiDevNetwork.state.roster.some(x=>x?.ready),logic:!!window.__gameLogic,renderer:document.querySelector('#sd-waiting').dataset.renderer}));
-    assert(!waiting.error);assert(waiting.waiting&&!waiting.started&&!waiting.ready&&waiting.logic);assert.equal(waiting.renderer,'native');
+    const waiting=await host.evaluate(()=>({error:window.__previewError,waiting:window.__samidevGameState.network.waiting,started:window.__gameLogic.started,room:window.SamiDevNetwork.state.roomId,ready:window.SamiDevNetwork.state.roster.some(x=>x?.ready),logic:!!window.__gameLogic,surfaceReady:window.__samidevGameState.surface.initialized}));
+    assert(!waiting.error);assert(waiting.waiting&&!waiting.started&&!waiting.ready&&waiting.logic);assert(waiting.surfaceReady);assert.equal(await host.locator('#sd-waiting').count(),0);
     assert(!sent.some(x=>['move','runtime_ready'].includes(x.type)),game+' must stay server gated');
     assert.equal(await host.locator('.sd-waiting-board,.sd-waiting-mirror').count(),0);
     assert(await host.evaluate(()=>!!window.SamiDevProfileDetails));

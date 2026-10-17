@@ -16,7 +16,7 @@ try {
  }
  const host=pages[0],peer=pages[1];const intermediatePositions=[];
  await host.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&players=0&live=1');
- await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+ await host.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
  const room=await host.evaluate(()=>window.SamiDevNetwork.state.roomId);
  await peer.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+room);
  for(const page of pages)await page.waitForFunction(()=>window.SamiDevNetwork.state.begun&&window.__gameLogic.started&&!window.__samidevGameState.network.snapshotBusy,{},{timeout:30000});

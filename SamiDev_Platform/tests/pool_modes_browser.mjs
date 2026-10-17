@@ -16,9 +16,9 @@ try{
  await host.locator('#quick-create-pool').click();await host.locator('#create-pool-mode').waitFor({state:'visible'});
  assert.equal(await host.locator('#create-pool-mode option').count(),8);await host.locator('#create-pool-mode').selectOption('7');
  await host.screenshot({path:out+'/pool-modes-picker.png'});await host.locator('#create-go').click();
- await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+ await host.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
  for(const mode of [7,6]){
-  if(mode===6){await host.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType=6');await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});}
+  if(mode===6){await host.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType=6');await host.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});}
   const room=await host.evaluate(()=>window.SamiDevNetwork.state.roomId),capacity=mode===6?3:2;
   assert.equal(await host.evaluate(()=>window.SamiDevNetwork.state.settings.gameType),mode);
   for(let i=1;i<capacity;i++)await pages[i].goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+room);

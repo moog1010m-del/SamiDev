@@ -51,7 +51,7 @@ try {
  game=await context.newPage();game.on('pageerror',e=>errors.push(e.message));let socket;
  await game.routeWebSocket('**/ws*',ws=>{socket=ws;const upstream=ws.connectToServer();upstream.onMessage(m=>ws.send(m));ws.onMessage(m=>upstream.send(m));});
  await game.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&players=0&live=1');
- await game.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+ await game.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
  const fixture={type:'match_reward',id:'controlled-notice',amount:50,rewardedMatches:2,remainingMatches:3};
  socket.send(JSON.stringify(fixture));await game.locator('#sd-match-reward').waitFor();
  assert((await game.locator('#sd-match-reward').innerText()).includes('2/5'));

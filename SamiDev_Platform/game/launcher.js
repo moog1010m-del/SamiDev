@@ -178,6 +178,7 @@
     return;
   }
 
+  if(qs.get('online')!=='1'||!window.SamiDevRoomUI){
   const menu=document.createElement('button');
   menu.id='mode-menu-button';
   menu.textContent=qs.get('online')==='1'?'EXIT':'MODES';
@@ -187,5 +188,6 @@
     if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.returnToPlatform();else location.href='/platform/';
   };
   document.body.appendChild(menu);
+  }
   window.__startSamiDevGame();
 })();

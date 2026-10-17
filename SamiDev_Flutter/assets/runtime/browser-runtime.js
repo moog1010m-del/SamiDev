@@ -1231,7 +1231,7 @@
 
   let renderLoopStarted=false;
   function ensureRenderLoop(){if(!renderLoopStarted){renderLoopStarted=true;requestAnimationFrame(loop);}}
-  async function prepareWaitingScene(message){
+  async function prepareRoomScene(message){
     const logic=await prepareAssetsAndLogic();
     const network=window.SamiDevNetwork.state;
     state.network.roomId=network.roomId;
@@ -1250,7 +1250,8 @@
     configureNativeWaitingSlots(logic,true);
     refreshNativeAvatars();
     ensureRenderLoop();
-    window.SamiDevWaitingRoom?.sceneReady();
+    status.textContent='';
+    status.style.display='none';
     return {logic,seats,settings:nativeSettings};
   }
 
@@ -1262,18 +1263,17 @@
       let startData=null;
       let settings;
       let localSeat=0;
-      let waitingScenePromise=null,waitingScene=null;
+      let roomScenePromise=null,roomScene=null;
 
       if(online){
         state.network.online=true;
         state.localHost.hotseat=false;
         if(!window.SamiDevNetwork) throw new Error('SamiDev Network غير متوفر');
         state.network.waiting=true;
-        window.SamiDevWaitingRoom?.show();
         const preview=message=>{
-          if(!waitingScenePromise){
-            waitingScenePromise=prepareWaitingScene(message);
-            waitingScenePromise.catch(error=>window.SamiDevWaitingRoom?.fail(error.message));
+          if(!roomScenePromise){
+            roomScenePromise=prepareRoomScene(message);
+            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);});
           }else{
             state.network.roster=message.roster||state.network.roster;
             applyCosmetics(message);refreshNativeAvatars();state.frameRequested=true;
@@ -1282,8 +1282,8 @@
         const offAssignment=window.SamiDevNetwork.on('assignment',preview);
         const offRoom=window.SamiDevNetwork.on('room_state',preview);
         try{
-          startData=await window.SamiDevNetwork.connectFromLocation(text=>{ if(window.SamiDevWaitingRoom){window.SamiDevWaitingRoom.progress(text);}else{status.style.display='block';status.textContent=text;} });
-          if(waitingScenePromise)waitingScene=await waitingScenePromise;
+          startData=await window.SamiDevNetwork.connectFromLocation(text=>{if(!state.surface.initialized&&!window.__previewError){status.style.display='block';status.textContent=text;}});
+          if(roomScenePromise)roomScene=await roomScenePromise;
         }finally{offAssignment?.();offRoom?.();}
         settings=startData.settings;
         localSeat=Number(startData.seat);
@@ -1325,16 +1325,16 @@
         };
       }
       const nativeSettings=cloneMove(settings); delete nativeSettings.gameId;
-      if(waitingScene && JSON.stringify(waitingScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
-      const seats=waitingScene?waitingScene.seats:logic.initialize(nativeSettings,localSeat);
+      if(roomScene && JSON.stringify(roomScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
+      const seats=roomScene?roomScene.seats:logic.initialize(nativeSettings,localSeat);
       configureNativeWaitingSlots(logic,false);
       state.network.waiting=false;
-      if(isCrazy8 && waitingScene)state.unoWaitingNeedsLayout=true;
-      if(!waitingScene)installLocalHost(logic, online);
+      if(isCrazy8 && roomScene)state.unoWaitingNeedsLayout=true;
+      if(!roomScene)installLocalHost(logic, online);
       logic._initialSync=true;
       try { if(!isPool) for(let seat=0;seat<seats;seat++) logic.enter?.(seat); } catch(e){console.warn('enter',e);}
 
-      if(!waitingScene)state.surfaceCreated?.();
+      if(!roomScene)state.surfaceCreated?.();
       await ensureInitialSurface();
       if(isPool && !online) for(let seat=0;seat<seats;seat++) logic.enter?.(seat);
       if(!state.network.spectator) installInputBridge();
@@ -1374,7 +1374,6 @@
       status.textContent='';
       status.style.display='none';
       state.localHost.started=true;
-      window.SamiDevWaitingRoom?.ready();
       ensureRenderLoop();
     } catch(e) {
       if(state.disposed)return;
@@ -1382,7 +1381,6 @@
       status.style.display='block';
       status.textContent='تعذر تشغيل اللعبة:\n'+String(e?.stack||e);
       window.__previewError=String(e?.stack||e);
-      window.SamiDevWaitingRoom?.fail(e?.message||'تعذر تشغيل اللعبة');
     }
   };
 

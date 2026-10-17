@@ -29,7 +29,7 @@ try{
   const [owner,guest]=pages;
   const entry=game==='carrom'?'/index.html':`/games/${game}/index.html`;
   await owner.goto(`${base}${entry}?online=1&action=create&community=majlis&seats=0`);
-  await owner.waitForSelector('#sd-waiting.scene-ready',{timeout:45000});
+  await owner.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:45000});
   const room=await owner.evaluate(()=>SamiDevNetwork.state.roomId);
   await owner.evaluate(()=>__joinPerf.joinAt=performance.now());
   await guest.goto(`${base}${entry}?online=1&action=join&community=majlis&room=${room}`);

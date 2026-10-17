@@ -44,7 +44,7 @@ try {
   }
   const [a,b]=pages;
   await a.goto(base+'/games/pool/index.html?online=1&action=create&community=majlis&gameType=7');
-  await a.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+  await a.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
   const rid=await a.evaluate(()=>SamiDevNetwork.state.roomId);
   await b.goto(base+'/games/pool/index.html?online=1&action=join&community=majlis&room='+rid);
   for(const p of pages){await settled(p);await p.evaluate(()=>{SamiDevNetwork.on('resync_state',()=>recoverySnapshots++);SamiDevNetwork.on('authority_alarm',()=>recoveryAlarms++);});}

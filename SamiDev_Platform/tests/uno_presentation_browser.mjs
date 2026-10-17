@@ -16,7 +16,7 @@ try {
  }
  const host=pages[0];
  await host.goto(base+'/games/crazy8/index.html?online=1&action=create&community=majlis&seats=2&special=0&live=1');
- await host.waitForSelector('#sd-waiting.scene-ready',{timeout:30000});
+ await host.waitForFunction(()=>window.__samidevGameState?.network.waiting&&window.__samidevGameState.performance.frames>0,{},{timeout:30000});
  assert((await host.title()).includes('Uno'));
  const waiting=await host.evaluate(()=>({room:window.SamiDevNetwork.state.roomId,started:window.__samidevGameState.localHost.started,texture:window.__samidevGameState.images.get('images/table-background.webp').src}));
  assert(!waiting.started);assert(waiting.texture.includes('samidev-uno-felt.png'));
