@@ -27,20 +27,17 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
   win.alert=()=>{};win.document.body.innerHTML='<canvas id="game"></canvas><div id="status">Loading</div>';
   win.document.getElementById('game').getBoundingClientRect=()=>({left:0,top:0,width:390,height:740});
   win.fetch=async route=>({ok:true,json:async()=>String(route).includes('public-profile')?
-    {ok:true,user:{id:other.accountId,displayName:other.name,username:'guest',wins:17,reputation:6,accountAgeDays:22,relation:'none',reputationDailyRemaining:4}}:
+    {ok:true,user:{id:other.accountId,displayName:other.name,username:'guest',wins:17,starsCount:5,reputation:6,accountAgeDays:22,relation:'none',reputationDailyRemaining:4}}:
     {ok:true,equipped:{carrom_theme:'carrom_cat'}}});
-  for(const name of ['samidev-games.js','samidev-network.js','waiting-room.js','room-menu.js','profile-details.js','player-profile-ui.js'])win.eval(read(name));
+  for(const name of ['samidev-games.js','samidev-network.js','room-menu.js','profile-details.js','player-profile-ui.js'])win.eval(read(name));
   win.document.dispatchEvent(new win.Event('DOMContentLoaded'));
   try{
     let started=false;
-    const start=win.SamiDevNetwork.connectFromLocation(text=>win.SamiDevWaitingRoom.progress(text)).then(data=>{started=true;return data;});
+    const start=win.SamiDevNetwork.connectFromLocation().then(data=>{started=true;return data;});
     await flush();
-    const doc=win.document,waiting=doc.getElementById('sd-waiting');assert(waiting);
-    assert.equal(started,false);assert.equal(doc.querySelectorAll('.sd-waiting-player').length,1);
-    assert.equal(doc.querySelectorAll('.sd-waiting-top .sd-waiting-player').length,0);
-    assert.equal(doc.querySelector('.sd-waiting-own .sd-waiting-name').textContent,me.name);
+    const doc=win.document;assert.equal(doc.getElementById('sd-waiting'),null);
+    assert.equal(started,false);assert.equal(doc.querySelectorAll('.sd-waiting-player').length,0);
     assert.equal(doc.querySelectorAll('.sd-waiting-board,.sd-waiting-mirror').length,0,'Waiting must not fabricate a substitute table');
-    win.SamiDevWaitingRoom.sceneReady();assert.equal(waiting.dataset.renderer,'native');
     // Returning is a native navigation message, never leave_room / resignation.
     doc.getElementById('sd-room-back-button').click();
     assert.equal(bridge.at(-1).type,'room_background');assert.equal(socket.readyState,Socket.OPEN);
@@ -48,11 +45,6 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
     assert(!doc.getElementById('sd-exit-modal').classList.contains('open'));
     room.roster=[me,other];room.started=true;
     socket.receive({...room,type:'room_state'});
-    assert.equal(doc.querySelectorAll('.sd-waiting-player').length,2);
-    const opponent=doc.querySelector('.sd-waiting-top .sd-waiting-player');
-    assert.equal(opponent.querySelector('.sd-waiting-name').textContent,other.name);
-    assert.equal(opponent.querySelector('.sd-waiting-name').children.length,0);
-    opponent.click();assert.equal(bridge.at(-1).type,'open_player_profile');assert.equal(bridge.at(-1).userId,other.accountId);
     // Web fallback profile really becomes visible; ID specificity used to hide it.
     win.SamiDevPlayerProfileUI.openSeat(1);await flush();
     const layer=doc.getElementById('sdpp-layer');
@@ -60,15 +52,15 @@ for(const [game,entry] of Object.entries({pool:'games/pool/index.html',carrom:'i
     assert.equal(doc.querySelectorAll('.sdpp-stars .sdpp-icon-star').length,5);
     assert(doc.getElementById('sdpp-card').textContent.includes('17'));
     doc.querySelector('.sdpp-close').click();assert.equal(win.getComputedStyle(layer).display,'none');
-    // Server start releases initialization, but preview stays until runtime is ready.
+    // Server start releases initialization; no separate waiting UI is created.
     socket.receive({...room,type:'start',snapshot:null,history:[]});await start;
-    assert.equal(started,true);assert.equal(waiting.isConnected,true);
+    assert.equal(started,true);assert.equal(doc.getElementById('sd-waiting'),null);
     assert(!sent.some(m=>m.type==='runtime_ready'));
-    win.SamiDevWaitingRoom.ready();assert.equal(doc.getElementById('sd-waiting'),null);assert(!doc.body.classList.contains('sd-waiting'));
+    assert(!doc.body.classList.contains('sd-waiting'));
     // Explicit exit remains under the ellipsis and actually frees the seat.
     doc.getElementById('sd-room-menu-button').click();doc.getElementById('sd-exit').click();
     assert(doc.getElementById('sd-exit-modal').classList.contains('open'));
     await win.SamiDevRoomUI.exitMatch();assert(sent.some(m=>m.type==='leave_room'));assert.equal(socket.readyState,Socket.CLOSED);
   }finally{if(socket?.readyState===1){win.SamiDevNetwork.state.intentionalClose=true;socket.close();}await win.happyDOM.close();}
 }
-console.log('PASS: all four waiting tables; real roster only; safe names; back preserves socket; native profile bridge; visible web card; server-gated start; explicit leave');
+console.log('PASS: four game navigation contracts; no waiting overlay; back preserves socket; visible web profile; server-gated start; explicit leave');
