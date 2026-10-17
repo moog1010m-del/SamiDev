@@ -16,10 +16,12 @@ def extract(text,key):
 def build():
  result={}
  for gid,entry in {'carrom':'index.html','pool':'games/pool/index.html','crazy8':'games/crazy8/index.html','tablesoccer':'games/tablesoccer/index.html'}.items():
-  text=(ROOT/entry).read_text();r=Resources();r.feed(text)
-  result[gid]={'root':'/'+str(Path(entry).parent).replace('.','').strip('/')+'/' if '/' in entry else '/',
+  text=(ROOT/entry).read_text(encoding='utf-8');r=Resources();r.feed(text)
+  # These are public URL paths, including when the bundle is built on Windows.
+  # Native path separators fail the browser bootstrap's strict root check.
+  result[gid]={'root':'/'+Path(entry).parent.as_posix()+'/' if '/' in entry else '/',
    'dictionary':extract(text,'__dictEn'),'images':extract(text,'__assetImages'), 'styles':r.styles,'scripts':r.scripts}
   if not isinstance(result[gid]['dictionary'],dict) or not isinstance(result[gid]['images'],list):raise RuntimeError('Missing game bootstrap data: '+gid)
- (ROOT/'runtime-games.json').write_text(json.dumps(result,ensure_ascii=False,separators=(',',':'))+'\n')
+ (ROOT/'runtime-games.json').write_bytes((json.dumps(result,ensure_ascii=False,separators=(',',':'))+'\n').encode('utf-8'))
  return result
 if __name__=='__main__':build()
