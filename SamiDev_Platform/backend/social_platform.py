@@ -1325,7 +1325,7 @@ class PlatformService:
         out["showcaseItems"] = [
             {"id": item_id, "name": item["name"], "description": item.get("description", ""), "slot": item.get("slot", ""), "asset": item.get("asset", ""), "gameId": item.get("gameId", ""), "quantity": 1, "category": item.get("category", ""), "availability": collectible_availability(item_id, item)}
             for item_id, item in STORE_CATALOG.items()
-            if item_id in owned
+            if item_id in owned and not item.get("availableToAll") and not item.get("default")
         ]
         stars = max(0, min(5, int(target.get('starsCount') or 0)))
         if stars:
@@ -1334,7 +1334,7 @@ class PlatformService:
         out['ownedItemCount'] = sum(x['quantity'] for x in out['showcaseItems'])
         # Collection completion counts distinct cosmetics, not repeat purchases.
         collectible = {item_id for item_id, item in STORE_CATALOG.items()
-                       if not item.get('consumable') and (not item.get('retired') or item_id in owned)}
+                       if not item.get('consumable') and not item.get('availableToAll') and not item.get('default') and (not item.get('retired') or item_id in owned)}
         collected = {x['id'] for x in out['showcaseItems']} & collectible
         out['collectionOwnedCount'] = len(collected)
         out['collectionTotalCount'] = len(collectible)

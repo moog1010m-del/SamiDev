@@ -12,10 +12,12 @@ try {
  const me=await (await page.request.get(base+'/api/me')).json();
  // Visual fixtures represent an owned exclusive and event item, never a real grant or purchase.
  const items=[
-  {id:'badge_steward',name:'بوصلة المجلس',slot:'name_badge',asset:'/platform/assets/stickers/badge_steward-v2.png',quantity:1,description:'عنصر مخصص لمشرفي المساحات.',availability:{kind:'moderator',purchasable:false,label:'خاص بمشرفي المساحات؛ لا يُباع في المتجر.'}},
+  {id:'badge_steward',name:'بوصلة المجلس',slot:'name_badge',asset:'/platform/assets/stickers/badge_steward-v3.png',quantity:1,description:'عنصر مخصص لمشرفي المساحات.',availability:{kind:'moderator',purchasable:false,label:'خاص بمشرفي المساحات؛ لا يُباع في المتجر.'}},
   {...store.catalog.find(item=>item.id==='badge_shard'),quantity:1},
-  {id:'event-fixture',name:'تذكار الفعالية',slot:'name_badge',asset:'/platform/assets/stickers/badge_moonstone-v2.png',quantity:1,description:'تذكار فعالية تجريبية لاختبار العرض فقط. '.repeat(18),availability:{kind:'event',purchasable:false,label:'مكافأة فعالية: لقاء اللاعبين. غير متاح حاليًا للشراء.'}},
+  {id:'event-fixture',name:'تذكار الفعالية',slot:'name_badge',asset:'/platform/assets/stickers/badge_moonstone-v3.png',quantity:1,description:'تذكار فعالية تجريبية لاختبار العرض فقط. '.repeat(18),availability:{kind:'event',purchasable:false,label:'مكافأة فعالية: لقاء اللاعبين. غير متاح حاليًا للشراء.'}},
  ];
+ // Keep the synthetic showcase stable when the application refreshes the public profile.
+ await page.route('**/api/public-profile/*',route=>route.fulfill({json:{ok:true,user:{...me.user,showcaseItems:items,collectionOwnedCount:3,collectionTotalCount:3}}}));
  for(const viewport of [{width:1546,height:1114},{width:390,height:844},{width:390,height:480}]){
   await page.setViewportSize(viewport);
   if(viewport.width<821)await page.locator('.bottom-nav [data-page=profile]').click();
@@ -26,7 +28,7 @@ try {
    document.querySelector('#home-profile').style.transform='translateZ(0)';
   },{user:me.user,items});
   for(const theme of ['light','dark']){
-   await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);
+   await page.evaluate(t=>{document.documentElement.dataset.theme=t;window.__previewRender();},theme);
    await page.locator('#own-profile-details .sd-owned-card').first().click();
    const dialog=page.locator('dialog.sd-item-detail');await dialog.waitFor();
    assert(await dialog.evaluate(el=>el.matches(':modal')&&el.parentElement===document.body));
@@ -39,13 +41,15 @@ try {
    assert(await dialog.evaluate(el=>el===window.__samePreview));
    const after=await dialog.boundingBox();assert.deepEqual(after,before,'profile refresh must not move or recreate the dialog');
    assert(Math.abs(after.x+after.width/2-viewport.width/2)<=1);
-   assert(after.y>=0&&after.y+after.height<=viewport.height);
+   assert(after.y>=0&&after.y+after.height<=viewport.height);assert(after.height<=560,'preview must remain a compact card');
    const art=await dialog.locator('.sd-item-art').boundingBox(),title=await dialog.locator('h4').boundingBox(),foot=await dialog.locator('footer').boundingBox();
+   const image=await dialog.locator('.sd-item-art>img').boundingBox();assert(image.height<=170&&image.y>=art.y&&image.y+image.height<=art.y+art.height,'actual high-resolution image must stay inside art region');
    assert(art.y+art.height<=title.y,'art may not overlap title');assert(title.y+title.height<=foot.y);
    await dialog.locator('.sd-item-use').click();assert.equal(await dialog.locator('.sd-item-use').innerText(),'مفعّل الآن');
    await page.screenshot({path:`${out}/exclusive-${viewport.width}-${viewport.height}-${theme}.png`});
    await page.keyboard.press('Escape');await page.locator('dialog.sd-item-detail').waitFor({state:'detached'});
   }
+  await page.evaluate(()=>window.__previewRender());
   await page.locator('#own-profile-details .sd-owned-card').nth(2).click();
   const dialog=page.locator('dialog.sd-item-detail');
   assert.match(await dialog.innerText(),/مكافأة فعالية/);

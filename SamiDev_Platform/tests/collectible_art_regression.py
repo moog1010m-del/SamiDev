@@ -25,6 +25,10 @@ async def main():
  service=PlatformService()
  user=await service.create_user('art_collector','Test-password-123')
  uid=user['id'];service.mem_users[uid]['coins']='1000'
+ service.mem_inventory.setdefault(uid,set()).update({'pool_midnight','pool_cue_classic','profile_banner_default'})
+ initial=await service.public_profile(uid,uid)
+ assert not initial['showcaseItems'] and initial['collectionOwnedCount']==0
+ assert initial['collectionTotalCount']==sum(not item.get('consumable') and not item.get('availableToAll') and not item.get('default') and not item.get('retired') for item in STORE_CATALOG.values())
  await service.grant_store_item(uid,'badge_fox')
  before=await service.store_snapshot(uid)
  await service.equip_store_item(uid,'badge_fox')

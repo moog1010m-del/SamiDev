@@ -17,7 +17,7 @@
       <div class="sd-item-body"><div class="sd-item-art">${window.SamiDevStickerArt.markup(asset(item.asset),'',item.name||'')}</div>
       ${identity?`<div class="sd-item-name-preview">${window.SamiDevStickerArt.markup(asset(item.asset),'',item.name||'')}<strong>${esc(user.username||user.displayName||'لاعب')}</strong></div>`:''}
       <h4>${esc(item.name)}</h4><p class="sd-item-description">${esc(item.description||'')}</p></div>
-      <footer><span class="sd-item-quantity">العدد: ${count(item.quantity||1)}</span>
+      <footer><span class="sd-item-quantity">×${number(item.quantity||1)}</span>
       ${notice?`<p class="sd-item-availability" data-kind="${esc(availability.kind||'')}">${esc(notice)}</p>`:''}
       ${canUse?'<button class="sd-item-use" type="button">استخدام</button>':''}<p class="sd-item-error" role="alert" hidden></p></footer>`;
     document.body.append(dialog);activePreview=dialog;
@@ -57,7 +57,7 @@
 
   function render(root, user, {own = false,onUse=null} = {}) {
     if (!root) return;
-    const items = (Array.isArray(user.showcaseItems) ? user.showcaseItems : []).filter(x => x && x.id && number(x.quantity || 1));
+    const items = (Array.isArray(user.showcaseItems) ? user.showcaseItems : []).filter(x => x && x.id && !x.availableToAll && !x.default && x.availability?.kind!=='default' && number(x.quantity || 1));
     const stats = Array.isArray(user.gameStatistics) ? user.gameStatistics : [];
     const playedGames = games.filter(([id]) => stats.some(s => s.gameId === id && number(s.played) > 0));
     const collected = number(user.collectionOwnedCount ?? new Set(items.map(x=>x.id)).size);
