@@ -1116,7 +1116,7 @@ class PlatformService:
                 return None
         except (ValueError, TypeError, KeyError):
             return None
-        if self.firebase.enabled and not user.get("firebaseUid") and user.get("guest") != "1":
+        if self.firebase.enabled and not user.get("firebaseUid") and user.get("guest") != "1" and user.get("managedBot") != "1":
             return None
         if user.get("firebaseUid"):
             # Bind each new cookie to the verified identity as well as the local
