@@ -180,12 +180,13 @@ class PostgresPlatformService(PlatformService):
                 out.append(public_user(user, relation=relation, online=await self.is_online(uid)))
         return out
 
-    async def list_users(self, limit=200):
+    async def list_users(self, limit=200, *, include_bots=True):
         async with self.r.pool.acquire() as conn:
             rows = await conn.fetch('''SELECT value->>'id' AS id
                 FROM samidev_social_documents WHERE kind='hash' AND key LIKE $1
-                ORDER BY (value->>'createdAt')::bigint DESC LIMIT $2''',
-                self.k_user('') + '%', max(1, min(500, int(limit))))
+                AND ($2 OR COALESCE(value->>'managedBot','0') <> '1')
+                ORDER BY (value->>'createdAt')::bigint DESC LIMIT $3''',
+                self.k_user('') + '%', include_bots, max(1, min(500, int(limit))))
         out = []
         for row in rows:
             user = await self.get_user(row['id'])

@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="/profile-details.css?v=cf54832112138972">
   <link rel="stylesheet" href="/platform/platform.css?v=840ca9ad15ca77ed">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=15879ae93c08ae41">
-<link rel="stylesheet" href="/platform/store.css?v=b79219a4a27e0f9c"><link rel="stylesheet" href="/cosmetic-ui.css?v=b3d75983b026bdd2"><script src="/cosmetic-ui.js?v=a2854338c7e2a537"></script><link rel="stylesheet" href="/platform/desktop-layout.css?v=f71d78338e94f708"><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=31cb90b972fe1d89"></script></head>
+<link rel="stylesheet" href="/platform/store.css?v=b79219a4a27e0f9c"><link rel="stylesheet" href="/cosmetic-ui.css?v=b3d75983b026bdd2"><script src="/cosmetic-ui.js?v=a2854338c7e2a537"></script><link rel="stylesheet" href="/platform/desktop-layout.css?v=f71d78338e94f708"><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=31cb90b972fe1d89"></script><link rel="stylesheet" href="/platform/bot-admin.css?v=0f87fa2ef10067d4"></head>
 <body>
   <div id="toast" class="toast" aria-live="polite"></div>
 
@@ -313,7 +313,7 @@
       </section>
 
       <section id="page-admin" class="page">
-        <div class="page-head"><div><h2>الإدارة</h2><p>المستخدمون وحالة المنصة.</p></div><button id="admin-refresh" class="ghost">تحديث</button></div>
+        <div class="page-head"><div><h2>الإدارة</h2><p>المستخدمون وحالة المنصة.</p></div><div><button id="admin-bots-open" class="ghost" type="button">اللاعبون الآليون</button><button id="admin-refresh" class="ghost">تحديث</button></div></div>
         <div id="admin-stats" class="stats-strip admin-stats"></div>
         <form id="room-policy-form" class="panel room-policy-form"><h3>قوانين المساحات والطاولات</h3><label>المساحة <select id="room-policy-community"></select></label><label>حد الأعضاء <input name="maxMembers" type="number" min="1" max="200" required></label><label>حد الطاولات <input name="maxTables" type="number" min="1" max="200" required></label><label>المباراة القصيرة (ثانية) <input name="shortMatchSeconds" type="number" min="0" max="3600" required></label><label>الانتظار بعد الخروج أو المباراة القصيرة (ثانية) <input name="cooldownSeconds" type="number" min="0" max="3600" required></label><p>لا يمكن للحساب المشاركة في طاولتين. الحدود الجديدة تمنع الدخول الجديد دون طرد الموجودين.</p><button type="submit" class="primary">حفظ القوانين</button><p id="room-policy-status" role="status"></p></form>
         <div class="panel admin-reports-panel">
@@ -416,5 +416,6 @@
   <script src="/platform/game-preload.js?v=9ef797ab811ce927"></script>
   <script src="/samidev-games.js?v=487759056cfa0c5f"></script><script src="/sticker-art.js?v=96bfc5a927cc6711"></script><script src="/profile-details.js?v=6452258e6f78ab77"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/game-entry.js?v=204ee121ae45f531"></script><script src="/platform/game-host.js?v=5811abb81dbc4325"></script><script src="/platform/community-live.js?v=35f58b17490cf2e5"></script><script src="/platform/platform.js?v=c1931ecf7c0f351b"></script>
 <noscript><p>بلازر Plazr منصة بلياردو وكيرم وألعاب أونلاين. اللعب يحتاج JavaScript. <a href="/discover/index.html">تعرّف على الألعاب</a></p></noscript>
+<script src="/platform/bot-admin.js?v=f26a0a4dd386fdd8"></script>
 </body>
 </html>

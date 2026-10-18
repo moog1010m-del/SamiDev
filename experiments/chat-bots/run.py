@@ -7,6 +7,7 @@ import aiohttp
 from core import Coordinator,Memory,Message,load_config
 from gemini import Gemini
 from single_instance import SingleInstance
+from reply_queue import next_reply_message
 BASE=Path(__file__).resolve().parent
 
 def read_scripts(path,config):
@@ -51,7 +52,8 @@ async def live(args,config,memory,scripts):
     loop=asyncio.get_running_loop()
     for sig in (signal.SIGINT,signal.SIGTERM):
         try:loop.add_signal_handler(sig,stop.set)
-        except (NotImplementedError,RuntimeError):pass
+        except (NotImplementedError,RuntimeError):
+            signal.signal(sig,lambda *_:loop.call_soon_threadsafe(stop.set))
     async with AsyncExitStack() as stack:
         clients={}
         for profile in config['profiles']:
@@ -84,7 +86,7 @@ async def live(args,config,memory,scripts):
                 observer=clients[next(iter(active))]
                 state=await observer.request('GET',room+'?chat=0')
                 next_members={u['id'] for u in state['members']} - bot_ids
-                if not next_members and members:engine.revision+=1
+                if members and not next_members:engine.revision+=1
                 if next_members:last_human=time.monotonic()
                 members=next_members
                 memory.purge()
@@ -152,17 +154,17 @@ async def live(args,config,memory,scripts):
         async def work():
             nonlocal last_idle
             while not stop.is_set():
-                try:message=await asyncio.wait_for(pending.get(),1)
-                except TimeoutError:
+                if pending.empty():
                     now=time.monotonic()
                     if members==set() and now-last_human>=config['idle_seconds'] and now-last_idle>=config['idle_seconds']:
                         revision=engine.revision;reply=engine.idle(0)
                         if reply:
                             await publish(reply,revision);last_idle=now
+                    try:await asyncio.wait_for(stop.wait(),.1)
+                    except TimeoutError:pass
                     continue
-                revision=engine.revision
-                await asyncio.sleep(config['reply_delay_seconds'])
-                if revision!=engine.revision or not pending.empty():continue
+                message,revision=await next_reply_message(pending,engine,config['reply_delay_seconds'])
+                if members==set():continue
                 reply=await engine.respond(message)
                 if reply:await publish(reply,revision,message.text)
         tasks=[asyncio.create_task(fn()) for fn in (presence,receive,work)]

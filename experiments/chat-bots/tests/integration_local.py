@@ -53,6 +53,15 @@ async def main():
                 assert replies[0]['text']=='وعليكم السلام، حيّاك الله!'
                 await asyncio.sleep(.5)
                 rows=await service.community_chat_history('majlis');assert len([r for r in rows if r['userId'] in bot_ids])==1
+                # A fresh message during cooldown must wait, rather than disappear.
+                async with client.post(server.make_url('/api/communities/majlis/chat'),json={'text':'كم الساعة','clientMessageId':'human_cooldown_456'}) as response:assert response.status==200
+                for _ in range(40):
+                    rows=await service.community_chat_history('majlis')
+                    replies=[r for r in rows if r['userId'] in bot_ids]
+                    if len(replies)==2:break
+                    await asyncio.sleep(.2)
+                assert len(replies)==2,replies
+                assert 'الساعة الحين' in replies[-1]['text'],replies
                 process.terminate();await asyncio.wait_for(process.wait(),10);assert (process.returncode in (0,1) if os.name=='nt' else process.returncode==0)
                 if os.name=='nt':
                     for b in bot_ids:await service.leave_community(b,'majlis')
