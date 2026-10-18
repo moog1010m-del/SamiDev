@@ -69,6 +69,21 @@ async def main():
   async with client.patch(server.make_url('/api/admin/bots'),json={'room':'elite','enabled':False}) as response:assert response.status==200
   assert not await p.community_members('elite')
   async with ordinary.patch(server.make_url('/api/admin/bots'),json={'enabled':False}) as response:assert response.status==403
+  eligible=next(u for u in (await manager.snapshot())['bots'] if u['enabled'] and not u['banned'] and u['online'])
+  async with ordinary.post(server.make_url('/api/admin/bots/'+eligible['id']+'/play-session'),json={}) as response:assert response.status==403
+  async with client.post(server.make_url('/api/admin/bots/'+member['id']+'/play-session'),json={}) as response:assert response.status==409
+  async with client.post(server.make_url('/api/admin/bots/'+eligible['id']+'/play-session'),json={}) as response:
+   assert response.status==200 and response.headers['Cache-Control']=='no-store';play_token=(await response.json())['session']
+  async with client.post(server.make_url('/api/admin/bots/'+eligible['id']+'/play-session'),json={}) as response:assert response.status==409
+  async with ClientSession(cookies={'samidev_session':play_token}) as bot_client:
+   async with bot_client.post(server.make_url('/api/bot-play/heartbeat'),json={}) as response:assert response.status==200
+   await manager.update(eligible['id'],{'enabled':False})
+   async with bot_client.post(server.make_url('/api/bot-play/heartbeat'),json={}) as response:assert response.status==403
+  await p.delete_session(play_token)
+  async with ordinary.post(server.make_url('/api/admin/bots/play-worker'),json={'online':True,'activeGames':1}) as response:assert response.status==403
+  async with client.post(server.make_url('/api/admin/bots/play-worker'),json={'online':True,'activeGames':1}) as response:assert response.status==200
+  assert (await manager.snapshot())['gameplayReady'] is True
+  async with client.post(server.make_url('/api/admin/bots/play-worker'),json={'online':False,'activeGames':0}) as response:assert response.status==200
   if os.getenv('SAMIDEV_BOT_ADMIN_BROWSER')=='1':
    proc=await asyncio.create_subprocess_exec('node',str(ROOT/'tests/bot_admin_browser.mjs'),env=dict(os.environ,SAMIDEV_TEST_BASE_URL=str(server.make_url('')),SAMIDEV_TEST_ADMIN_SESSION=admin_token))
    assert await proc.wait()==0

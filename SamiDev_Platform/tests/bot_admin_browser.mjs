@@ -14,7 +14,7 @@ try{
   await page.locator('[data-page=admin]:visible').first().click();await page.locator('#admin-bots-open').click();
   const dialog=page.locator('.bot-admin-dialog');await dialog.locator('[data-bot]').first().waitFor();
   assert(await dialog.evaluate(el=>el.matches(':modal')&&el.parentNode===document.body));
-  assert.match(await dialog.innerText(),/غير موصول/);assert(await dialog.locator('[data-bot]').count()>=200);
+  assert.match(await dialog.innerText(),/غير متصل حاليًا/);assert(await dialog.locator('[data-bot]').count()>=200);
   await dialog.locator('[name=filterRoom]').selectOption('majlis');
   const filtered=await dialog.locator('[data-bot]').count();assert(filtered>0&&filtered<200);
   await dialog.locator('[data-bot]').first().click();

@@ -35,12 +35,13 @@ class BotAccounts:
         return rows
     async def snapshot(self):
         from social_platform import COMMUNITIES,STORE_CATALOG,public_user
+        worker=await self.play_bridge.state() if hasattr(self,'play_bridge') else {'online':False,'activeGames':0}
         rows=[]
         for raw in await self.raw():
             user=public_user(raw,online=await self.p.is_online(raw['id']))
-            user.update(name=raw.get('botName',raw.get('username','')),room=raw.get('botRoom','majlis'),enabled=raw.get('botEnabled')=='1',skill=raw.get('botSkill','medium'),avatarUrl=('/api/avatar/'+raw['id']+'?v='+raw.get('botAvatarVersion','0')) if raw.get('avatarData') else '',presenceError=raw.get('botPresenceError',''),gameplayReady=False)
+            user.update(name=raw.get('botName',raw.get('username','')),room=raw.get('botRoom','majlis'),enabled=raw.get('botEnabled')=='1',skill=raw.get('botSkill','medium'),avatarUrl=('/api/avatar/'+raw['id']+'?v='+raw.get('botAvatarVersion','0')) if raw.get('avatarData') else '',presenceError=raw.get('botPresenceError',''),gameplayReady=worker['online'])
             rows.append(user)
-        return dict(ok=True,bots=rows,communities=list(COMMUNITIES.values()),badges=[dict(id=k,name=v['name'],asset=v.get('asset','')) for k,v in STORE_CATALOG.items() if v.get('slot')=='name_badge' and not v.get('retired')],gameplayReady=False)
+        return dict(ok=True,bots=rows,communities=list(COMMUNITIES.values()),badges=[dict(id=k,name=v['name'],asset=v.get('asset','')) for k,v in STORE_CATALOG.items() if v.get('slot')=='name_badge' and not v.get('retired')],gameplayReady=worker['online'],playWorker=worker)
     async def create(self,room,name):
         from social_platform import now_ms
         uid=secrets.token_urlsafe(12);username='Bot_'+secrets.token_hex(6)
@@ -174,6 +175,9 @@ class BotAccounts:
 
 def install(app,api):
     manager=BotAccounts(api.platform)
+    from bot_play_bridge import BotPlayBridge
+    manager.play_bridge=BotPlayBridge(manager,api)
+    manager.play_bridge.install(app)
     async def listing(request):
         await api._admin(request)
         return web.json_response(await manager.snapshot(),headers={'Cache-Control':'no-store'})
