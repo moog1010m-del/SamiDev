@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-5c8465687a55553a",
+  "buildId": "samidev-v30-3e93339256cf2512",
   "games": [
     "carrom",
     "tablesoccer",
@@ -30,10 +30,10 @@
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
     "asset-worker.js": "41e41ee8b890b4ea558c774cc850ea54f97560504f26dac661346d7a818383ca",
-    "platform/index.html": "1437279ac68376bacd0e1d14600690a68fe29d7699e7f71a630568ffd53d78c8",
+    "platform/index.html": "87c59c891092ed2a2805dfd6abb158bbd8ae1747d2048c4b677d95d1ff5205d4",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
-    "platform/bot-admin.js": "f26a0a4dd386fdd82ac6635a93acce0ce8b31bebd785f5d75f1978d6a8a89de4",
+    "platform/bot-admin.js": "bf4553ca952bddc9d0cc018d59254e6e5280c5e8320a1486815b4cc51a89bb8a",
     "platform/bot-admin.css": "0f87fa2ef10067d4956de14a8ffa441d55ff9e06fbe6c28eda78061de7e0af19",
     "platform/game-entry.js": "204ee121ae45f53140574fe7f189f4a818d48e34f73727018c029a8e28704149",
     "platform/game-preload.js": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072",

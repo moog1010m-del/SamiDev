@@ -89,7 +89,7 @@ class AccountLifecycle:
                 return {**user, **fields}
         raise PlatformError('AUTH_BUSY', 'حاول مجددًا', 503)
 
-    async def rename(self, uid, value):
+    async def rename(self, uid, value, *, managed_bot_admin=False):
         from social_platform import normalize_username, PlatformError, now_ms, STORE_LEDGER_MAX
         s, name = self.service, normalize_username(value)
         lower = name.lower()
@@ -104,6 +104,8 @@ class AccountLifecycle:
                     raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
                 if user['usernameLower'] != old:
                     continue
+                if managed_bot_admin and (user.get('managedBot')!='1' or user.get('role')!='user'):
+                    raise PlatformError('BOT_NOT_FOUND','الحساب الآلي غير موجود',404)
                 if user['username'] == name:
                     return user
                 owner = await s.r.get(s.k_username(lower)) if s.r is not None else s.mem_usernames.get(lower)
@@ -111,12 +113,14 @@ class AccountLifecycle:
                     raise PlatformError('USERNAME_TAKEN', 'اسم المستخدم مستخدم بالفعل', 409)
                 free = user.get('freeRenameUsed') != '1'
                 credits = int(user.get('renameCredits') or 0)
-                if not free and credits < 1:
+                if not managed_bot_admin and not free and credits < 1:
                     raise PlatformError('RENAME_ITEM_REQUIRED', 'استخدمت التغيير المجاني. اشتر بطاقة تغيير الاسم من المتجر.', 409)
                 fields = dict(username=name, usernameLower=lower, displayName=name,
                               freeRenameUsed='1', renameCredits=str(credits if free else credits-1))
-                entry = dict(id=secrets.token_urlsafe(10), type='username_change', createdAt=now_ms(),
-                             oldUsername=user['username'], username=name, usedFree=free)
+                if managed_bot_admin:
+                    fields=dict(username=name,usernameLower=lower,displayName=name)
+                entry = dict(id=secrets.token_urlsafe(10), type='bot_username_change' if managed_bot_admin else 'username_change', createdAt=now_ms(),
+                             oldUsername=user['username'], username=name, usedFree=free and not managed_bot_admin)
                 if s.r is None:
                     s.mem_usernames.pop(old, None)
                     s.mem_usernames[lower] = uid

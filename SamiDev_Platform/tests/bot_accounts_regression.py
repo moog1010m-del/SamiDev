@@ -57,14 +57,24 @@ async def main():
   assert all(u['online'] and u['isBot'] and not u['gameplayReady'] for u in state['bots'])
   for cid in ('majlis','square','diwan','elite'):assert len(await p.community_members(cid))==50
   selected=state['bots'][0];uid=selected['id'];oldroom=selected['room'];other='square' if oldroom!='square' else 'majlis'
+  original_username=selected['username']
   raw=await p.get_user(uid);assert not verify_password('anything',raw['passwordHash']) and raw['role']=='user'
   assert 'passwordHash' not in selected
   out=io.BytesIO();Image.new('RGB',(32,32),'blue').save(out,format='PNG');avatar='data:image/png;base64,'+base64.b64encode(out.getvalue()).decode()
-  async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'name':'نواف التجريبي','bio':'أحب البلياردو','avatarData':avatar,'badgeId':'badge_ember','room':other,'enabled':False,'skill':'expert'}) as response:assert response.status==200
-  raw=await p.get_user(uid);assert raw['botName']=='نواف التجريبي' and raw['bio']=='أحب البلياردو' and raw['avatarData']==avatar and raw['nameBadge']=='badge_ember'
+  async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'username':'Nawaf_Test','bio':'أحب البلياردو','avatarData':avatar,'badgeId':'badge_ember','room':other,'enabled':False,'skill':'expert'}) as response:assert response.status==200
+  raw=await p.get_user(uid);assert raw['username']=='Nawaf_Test' and raw['bio']=='أحب البلياردو' and raw['avatarData']==avatar and raw['nameBadge']=='badge_ember'
   assert not await p.is_online(uid)
   assert uid not in {u['id'] for u in await p.community_members(oldroom)}
-  assert public_user(raw)['displayName']=='نواف التجريبي · آلي'
+  assert public_user(raw)['displayName']=='Nawaf_Test' and public_user(raw)['isBot']
+  assert await p.find_user_by_username(original_username) is None
+  assert (await p.find_user_by_username('nawaf_test'))['id']==uid
+  async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'username':member['username'],'bio':'must not save'}) as response:assert response.status==409
+  assert (await p.get_user(uid))['bio']=='أحب البلياردو'
+  async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'name':'اسم منفصل'}) as response:assert response.status==400
+  for new_name in ('Nawaf_Second','Nawaf_Test'):
+   async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'username':new_name}) as response:assert response.status==200
+  assert (await p.get_user(uid)).get('freeRenameUsed') is None
+  assert 'name' not in next(u for u in (await manager.snapshot())['bots'] if u['id']==uid)
   assert 'badge_ember' in p.mem_inventory[uid]
   async with client.patch(server.make_url('/api/admin/bots/'+member['id']),json={'enabled':True}) as response:assert response.status==404
   async with client.patch(server.make_url('/api/admin/bots/'+uid),json={'role':'admin'}) as response:assert response.status==400

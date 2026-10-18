@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 from aiohttp import web
 
 LOG=logging.getLogger('samidev.bot_accounts')
-NAMES='نواف فهد خالد سعد تركي فيصل سلطان عبدالله محمد أحمد راشد ماجد بدر وليد طلال مشعل عبدالعزيز ياسر ريان زياد سلمان سعود بندر ناصر منصور عادل نايف عمار حمد راكان هيثم سامر مهند رامي لؤي إياد أسامة أنس عمر يوسف علي حسن حسين إبراهيم إسماعيل زيد سيف فواز هاني مراد'.split()
 
 class BotAccounts:
     def __init__(self,platform):
@@ -39,13 +38,13 @@ class BotAccounts:
         rows=[]
         for raw in await self.raw():
             user=public_user(raw,online=await self.p.is_online(raw['id']))
-            user.update(name=raw.get('botName',raw.get('username','')),room=raw.get('botRoom','majlis'),enabled=raw.get('botEnabled')=='1',skill=raw.get('botSkill','medium'),avatarUrl=('/api/avatar/'+raw['id']+'?v='+raw.get('botAvatarVersion','0')) if raw.get('avatarData') else '',presenceError=raw.get('botPresenceError',''),gameplayReady=worker['online'])
+            user.update(room=raw.get('botRoom','majlis'),enabled=raw.get('botEnabled')=='1',skill=raw.get('botSkill','medium'),avatarUrl=('/api/avatar/'+raw['id']+'?v='+raw.get('botAvatarVersion','0')) if raw.get('avatarData') else '',presenceError=raw.get('botPresenceError',''),gameplayReady=worker['online'])
             rows.append(user)
         return dict(ok=True,bots=rows,communities=list(COMMUNITIES.values()),badges=[dict(id=k,name=v['name'],asset=v.get('asset','')) for k,v in STORE_CATALOG.items() if v.get('slot')=='name_badge' and not v.get('retired')],gameplayReady=worker['online'],playWorker=worker)
-    async def create(self,room,name):
+    async def create(self,room):
         from social_platform import now_ms
         uid=secrets.token_urlsafe(12);username='Bot_'+secrets.token_hex(6)
-        user=dict(id=uid,username=username,usernameLower=username.lower(),displayName=username,passwordHash='',role='user',createdAt=str(now_ms()),wins='0',reputation='0',coins='0',banned='0',starsCount='0',nameBadge='',managedBot='1',botRoom=room,botEnabled='0',botSkill='medium',bio='حساب لاعب آلي',botName=name)
+        user=dict(id=uid,username=username,usernameLower=username.lower(),displayName=username,passwordHash='',role='user',createdAt=str(now_ms()),wins='0',reputation='0',coins='0',banned='0',starsCount='0',nameBadge='',managedBot='1',botRoom=room,botEnabled='0',botSkill='medium',bio='حساب لاعب آلي')
         keys=[self.index,self.p.k_user(uid),self.p.k_username(username.lower()),self.p.k_users()]
         async with self.transaction(keys):
             if self.p.r is not None:
@@ -82,11 +81,8 @@ class BotAccounts:
             plans={cid:max(0,target-sum(u.get('botRoom')==cid for u in existing)) if target is not None else count for cid in rooms}
             if len(existing)+sum(plans.values())>1000:raise PlatformError('BOT_LIMIT','الحد الأقصى 1000 حساب آلي')
             for cid,amount in plans.items():
-                offset=sum(u.get('botRoom')==cid for u in existing)
-                for number in range(amount):
-                    slot=offset+number
-                    name=NAMES[slot%len(NAMES)]+((' '+str(slot//len(NAMES)+1)) if slot>=len(NAMES) else '')
-                    user=await self.create(cid,name)
+                for _ in range(amount):
+                    user=await self.create(cid)
                     if body.get('enabled'):await self.write(user['id'],{'botEnabled':'1'})
                     created+=1
         # Presence renewal respects room limits; an account may remain offline if full.
@@ -94,11 +90,9 @@ class BotAccounts:
         return dict(ok=True,created=created,total=len(await self.ids()))
     async def update(self,uid,body):
         from social_platform import COMMUNITIES,STORE_CATALOG,PlatformError,normalize_avatar_data,sanitize_plain_text,now_ms
-        allowed={'name','bio','avatarData','badgeId','room','enabled','skill'}
+        allowed={'username','bio','avatarData','badgeId','room','enabled','skill'}
         if not body or set(body)-allowed:raise PlatformError('BAD_BOT_VALUE','حقول غير صالحة')
         updates={}
-        if 'name' in body:
-            updates['botName']=sanitize_plain_text(body['name'],40,empty_code='BAD_BOT_NAME',empty_message='الاسم مطلوب',too_long_code='BAD_BOT_NAME')
         if 'bio' in body:
             if not isinstance(body['bio'],str) or len(body['bio'])>160:raise PlatformError('BAD_BIO','البايو بحد أقصى 160 حرفًا')
             updates['bio']=sanitize_plain_text(body['bio'],160,empty_code='BAD_BIO',empty_message='بايو غير صالح',too_long_code='BAD_BIO') if body['bio'].strip() else ''
@@ -119,6 +113,10 @@ class BotAccounts:
             if badge!='' and (not item or item.get('slot')!='name_badge' or item.get('retired')):raise PlatformError('BAD_BOT_BADGE','الشارة غير متاحة')
             updates['nameBadge']=badge
         async with self.control():
+            user=await self.p.get_user(uid)
+            if not user or user.get('managedBot')!='1':raise PlatformError('BOT_NOT_FOUND','الحساب الآلي غير موجود',404)
+            if 'username' in body:
+                await self.p.accounts.rename(uid,body['username'],managed_bot_admin=True)
             await self.write(uid,updates)
             if badge:
                 await self.p.grant_store_item(uid,badge,reason='bot-admin')

@@ -18,10 +18,10 @@ try{
   await dialog.locator('[name=filterRoom]').selectOption('majlis');
   const filtered=await dialog.locator('[data-bot]').count();assert(filtered>0&&filtered<200);
   await dialog.locator('[data-bot]').first().click();
-  const form=dialog.locator('[data-editor]');await form.locator('[name=name]').fill('لاعب التجربة');
+  const form=dialog.locator('[data-editor]');await form.locator('[name=username]').fill('Preview_Bot');
   await form.locator('[name=bio]').fill('تجربة لوحة الإدارة');await form.locator('[name=enabled]').uncheck();
   await form.locator('[type=submit]').click();await dialog.locator('[data-status]').filter({hasText:'تم حفظ الحساب'}).waitFor();
-  assert.equal(await form.locator('[name=name]').inputValue(),'لاعب التجربة');assert.equal(await form.locator('[name=bio]').inputValue(),'تجربة لوحة الإدارة');
+  assert.equal(await form.locator('[name=username]').inputValue(),'Preview_Bot');assert.equal(await form.locator('[name=bio]').inputValue(),'تجربة لوحة الإدارة');
   for(const theme of ['dark','light']){
    await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);
    const box=await dialog.boundingBox();assert(box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+1&&box.y+box.height<=viewport.height+1);

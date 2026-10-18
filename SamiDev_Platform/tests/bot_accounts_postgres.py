@@ -22,8 +22,8 @@ async def main():
   assert not await services[1].list_users(include_bots=False)
   state=await managers[1].snapshot();assert len(state['bots'])==200 and all(u['online'] for u in state['bots'])
   uid=state['bots'][0]['id']
-  await managers[0].update(uid,{'name':'لاعب محفوظ','bio':'تجربة الحفظ','room':'diwan','enabled':False,'skill':'expert','badgeId':'badge_shard'})
-  other=await services[1].get_user(uid);assert other['botName']=='لاعب محفوظ' and other['botEnabled']=='0' and other['botSkill']=='expert'
+  await managers[0].update(uid,{'username':'Saved_Bot','bio':'تجربة الحفظ','room':'diwan','enabled':False,'skill':'expert','badgeId':'badge_shard'})
+  other=await services[1].get_user(uid);assert other['username']=='Saved_Bot' and other['botEnabled']=='0' and other['botSkill']=='expert'
   assert not await services[1].is_online(uid)
   await asyncio.gather(*(s.close() for s in services));services=[]
   # Deleting only this test namespace from transient Redis must not delete accounts.
@@ -31,7 +31,7 @@ async def main():
   if keys:await transient.delete(*keys)
   restored=PostgresPlatformService(database,transient,max_connections=4);services=[restored];await restored.start()
   manager=BotAccounts(restored);state=await manager.snapshot();assert len(state['bots'])==200
-  row=next(u for u in state['bots'] if u['id']==uid);assert row['name']=='لاعب محفوظ' and not row['enabled'] and row['room']=='diwan' and row['nameBadge']=='badge_shard'
+  row=next(u for u in state['bots'] if u['id']==uid);assert row['username']=='Saved_Bot' and not row['enabled'] and row['room']=='diwan' and row['nameBadge']=='badge_shard'
   await manager.sweep();assert sum(u['online'] for u in (await manager.snapshot())['bots'])==199
   print('BOT_POSTGRES_PASS: 200 durable accounts; concurrent idempotent provisioning; cross-gateway edits; Redis namespace loss; restart persistence; online state renewal')
  finally:
