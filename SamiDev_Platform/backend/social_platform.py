@@ -289,7 +289,8 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     out = {
         "id": str(raw.get("id") or ""),
         "username": str(raw.get("username") or ""),
-        "displayName": str(raw.get("username") or "Player"),
+        "displayName": ((str(raw.get("botName") or raw.get("username") or "Player") + " · آلي") if raw.get("managedBot")=="1" else str(raw.get("username") or "Player")),
+        "isBot": raw.get("managedBot")=="1",
         "bio": str(raw.get("bio") or ""),
         "role": str(raw.get("role") or "user"),
         "isGuest": raw.get("guest") == "1",
@@ -1524,19 +1525,20 @@ class PlatformService:
                     break
         return out
 
-    async def list_users(self, limit: int = 200) -> list[dict[str, Any]]:
+    async def list_users(self, limit: int = 200, *, include_bots: bool = True) -> list[dict[str, Any]]:
         if self.r is not None:
             ids = list(await self.r.smembers(self.k_users()))
         else:
             ids = list(self.mem_users.keys())
         out: list[dict[str, Any]] = []
-        for uid in ids[:limit]:
+        for uid in ids:
             raw = await self.get_user(str(uid))
-            if raw:
+            if raw and (include_bots or raw.get("managedBot") != "1"):
                 item=public_user(raw, online=await self.is_online(str(uid)))
                 assignments=self.community_rules.data(raw,'communityModeratorOf')
                 item['moderatedCommunities']=[cid for cid in COMMUNITIES if assignments.get(cid) is True]
                 out.append(item)
+                if len(out)>=limit:break
         out.sort(key=lambda x: x.get("createdAt", 0), reverse=True)
         return out
 
@@ -2037,7 +2039,7 @@ class PlatformHttp:
 
     async def admin_users(self, request: web.Request) -> web.Response:
         await self._admin(request)
-        return web.json_response({"ok": True, "users": await self.platform.list_users()})
+        return web.json_response({"ok": True, "users": await self.platform.list_users(include_bots=False)})
 
     async def admin_stats(self, request: web.Request) -> web.Response:
         await self._admin(request)

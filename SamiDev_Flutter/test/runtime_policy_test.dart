@@ -24,6 +24,12 @@ void main(){
   expect(RuntimePolicy.allowApi('PUT','/api/admin/communities/majlis/policy'),isTrue);
   expect(RuntimePolicy.allowApi('POST','/api/admin/communities/majlis/policy'),isFalse);
  });
+ test('managed bot admin routes stay narrowly scoped',(){
+  for(final method in ['GET','POST','PATCH']){expect(RuntimePolicy.allowApi(method,'/api/admin/bots'),isTrue);}
+  expect(RuntimePolicy.allowApi('PATCH','/api/admin/bots/bot_id'),isTrue);
+  expect(RuntimePolicy.allowApi('DELETE','/api/admin/bots/bot_id'),isFalse);
+  expect(RuntimePolicy.allowApi('PATCH','/api/admin/bots/bot_id/role'),isFalse);
+ });
  test('upstream path cannot choose another origin',(){
   final p=RuntimePolicy('https://games.example.com');
   expect(()=>p.upstream('//attacker.example'),throwsFormatException);

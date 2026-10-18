@@ -1376,6 +1376,8 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
 def make_app() -> web.Application:
     app = web.Application(client_max_size=MAX_HTTP_BODY, middlewares=[platform_origin_middleware, platform_error_middleware])
     api = SERVICE.platform_http
+    from bot_accounts import install as install_bot_accounts
+    bot_accounts = install_bot_accounts(app, api)
     from account_security import AccountSecurityHttp
     AccountSecurityHttp(api).install(app.router)
     app.router.add_post("/api/auth/guest", api.guest)
@@ -1431,6 +1433,7 @@ def make_app() -> web.Application:
     app.router.add_get("/{path:.*}", SERVICE.static_game)
     app.on_response_prepare.append(security_headers)
     app.on_startup.append(SERVICE.start)
+    app.on_startup.append(bot_accounts.start)
     app.on_startup.append(SERVICE.platform.deletions.start)
     app.on_shutdown.append(SERVICE.platform.deletions.stop)
     app.on_cleanup.append(SERVICE.stop)
