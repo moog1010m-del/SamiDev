@@ -163,6 +163,7 @@ class MemRoom:
     snapshot: dict[str, Any] | None = None
     snapshot_move_count: int = -1
     snapshot_revision: int = -1
+    snapshot_epoch: int = 0
     authority_shard: str | None = None
     authority_epoch: int = 0
     authority_revision: int = -1
@@ -486,18 +487,22 @@ class MemoryStore:
             raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         return list(room.chat[-CHAT_HISTORY_MAX:])
 
-    async def set_snapshot(self, room_id: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+    async def set_snapshot(self, room_id: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0, *, authority_epoch: int | None = None, authority_shard: str | None = None) -> None:
         async with self.lock:
             room = self.rooms.get(room_id)
             if not room or not room.started:
                 return
+            epoch = room.authority_epoch if authority_epoch is None else authority_epoch
+            if epoch != room.authority_epoch or (authority_shard is not None and authority_shard != room.authority_shard):
+                return
             if move_count < room.snapshot_move_count or move_count > room.move_count:
                 return
-            if move_count == room.snapshot_move_count and revision < room.snapshot_revision:
+            if epoch == room.snapshot_epoch and move_count == room.snapshot_move_count and revision < room.snapshot_revision:
                 return
             room.snapshot = state
             room.snapshot_move_count = move_count
             room.snapshot_revision = revision
+            room.snapshot_epoch = epoch
 
     async def resync(self, room_id: str) -> dict[str, Any]:
         room = self.rooms.get(room_id)
@@ -1193,19 +1198,26 @@ class RedisStore:
                 continue
         return out
 
-    async def set_snapshot(self, rid: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0) -> None:
+    async def set_snapshot(self, rid: str, seat: int, state: dict[str, Any], move_count: int, revision: int = 0, *, authority_epoch: int | None = None, authority_shard: str | None = None) -> None:
         script = """
+        if redis.call('EXISTS', KEYS[1]) == 0 or redis.call('HGET', KEYS[1], 'started') ~= '1' then return 0 end
+        local liveEpoch = tonumber(redis.call('HGET', KEYS[1], 'authorityEpoch') or '0')
+        local incomingEpoch = liveEpoch
+        if ARGV[4] ~= '' then incomingEpoch = tonumber(ARGV[4]) end
+        if incomingEpoch ~= liveEpoch then return 0 end
+        if ARGV[5] ~= '' and redis.call('HGET', KEYS[1], 'authorityShard') ~= ARGV[5] then return 0 end
+        local currentEpoch = tonumber(redis.call('HGET', KEYS[1], 'snapshotEpoch') or '0')
         local current = tonumber(redis.call('HGET', KEYS[1], 'snapshotMoveCount') or '-1')
         local currentRevision = tonumber(redis.call('HGET', KEYS[1], 'snapshotRevision') or '-1')
         local total = tonumber(redis.call('HGET', KEYS[1], 'moveCount') or '0')
         local incoming = tonumber(ARGV[1])
         local incomingRevision = tonumber(ARGV[3])
         if incoming < current or incoming > total then return 0 end
-        if incoming == current and incomingRevision < currentRevision then return 0 end
-        redis.call('HSET', KEYS[1], 'snapshot', ARGV[2], 'snapshotMoveCount', incoming, 'snapshotRevision', incomingRevision)
+        if incomingEpoch == currentEpoch and incoming == current and incomingRevision < currentRevision then return 0 end
+        redis.call('HSET', KEYS[1], 'snapshot', ARGV[2], 'snapshotMoveCount', incoming, 'snapshotRevision', incomingRevision, 'snapshotEpoch', incomingEpoch)
         return 1
         """
-        await self.r.eval(script, 1, self.kroom(rid), str(move_count), json.dumps(state, separators=(",", ":")), str(revision))
+        await self.r.eval(script, 1, self.kroom(rid), str(move_count), json.dumps(state, separators=(",", ":")), str(revision), str(authority_epoch) if authority_epoch is not None else '', authority_shard or '')
 
     async def resync(self, rid: str) -> dict[str, Any]:
         state = await self.get_start(rid, 0)

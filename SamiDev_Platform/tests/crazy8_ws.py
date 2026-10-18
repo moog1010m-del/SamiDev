@@ -25,14 +25,23 @@ async def main():
         url=f'http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}'
         async def ws(s):
             w=await s.ws_connect(url+'/ws');sockets.append(w);return w
-        clients=[]
-        for i in range(7):
-            s=client();clients.append(s)
-            async with s.post(url+'/api/auth/register',json={'username':f'crazy8_user_{i}','password':'Test-password-123','displayName':f'Player {i}'}) as r:assert r.status==200,await r.text()
         async with probe.get(url+'/api/games') as r:
             catalog=await r.json();assert {g['id'] for g in catalog['games']}=={'carrom','tablesoccer','crazy8','pool'}
         async with probe.get(url+'/games/crazy8/index.html') as r:assert r.status==200
         for mode,cap in enumerate([2,3,4,6,4]):
+            # Independent matches need fresh players: genuine short-match cooldown
+            # intentionally prevents reusing the prior match's accounts immediately.
+            clients=[]
+            for i in range(7):
+                s=client();clients.append(s)
+                username=f'crazy8_{mode}_user_{i}'
+                if mode==0:
+                    async with s.post(url+'/api/auth/register',json={'username':username,'password':'Test-password-123','displayName':f'Player {i}'}) as r:assert r.status==200,await r.text()
+                else:
+                    # Seed later fixtures without hammering the public sign-up limiter.
+                    user=await app.SERVICE.platform.create_user(username,'Test-password-123')
+                    token=await app.SERVICE.platform.create_session(user['id'])
+                    s.cookie_jar.update_cookies({'samidev_session':token})
             connections=[await ws(s) for s in clients[:cap]]
             await connections[0].send_json({'type':'create_room','settings':{'gameId':'crazy8','seats':mode,'live':0,'special':0}})
             created=await receive(connections[0],'created');assert created['type']=='created',created
@@ -96,6 +105,11 @@ async def main():
             async with probe.delete(GH+'/v1/room/'+rid,headers={'X-SamiDev-Service-Key':'integration-test-key'}) as r:assert r.status==200
             restored=await app.SERVICE._ensure_authority(rid,renew=True)
             assert restored['snapshot']['d']['hands']==original['hands'] and restored['snapshot']['d']['stock']==original['stock']
+            # New authority generations start revision numbering over. A checkpoint
+            # at the same move count must be persisted in that generation as well.
+            await replacement.send_json({'type':'resync'})
+            recovered=await receive(replacement,'resync_state');private(recovered,0)
+            assert recovered['snapshotRevision']==restored['authorityRevision'],recovered
             # Resign all opponents: result is finalized by GameHost.
             for seat in ([1,3] if mode==4 else list(range(1,cap))):await move(seat,{'q':1})
             assert (await real(rid))['gameOver']
