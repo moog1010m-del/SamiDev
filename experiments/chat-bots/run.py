@@ -84,7 +84,7 @@ async def live(args,config,memory,scripts):
                 observer=clients[next(iter(active))]
                 state=await observer.request('GET',room+'?chat=0')
                 next_members={u['id'] for u in state['members']} - bot_ids
-                if next_members!=members:engine.revision+=1
+                if not next_members and members:engine.revision+=1
                 if next_members:last_human=time.monotonic()
                 members=next_members
                 memory.purge()
@@ -113,7 +113,7 @@ async def live(args,config,memory,scripts):
                 if not stop.is_set():
                     try:await asyncio.wait_for(stop.wait(),5)
                     except TimeoutError:pass
-        async def publish(reply,revision):
+        async def publish(reply,revision,trigger_text=''):
             if stop.is_set() or revision!=engine.revision or reply.speaker not in {p['id'] for p in engine.active()}:return
             client=clients[reply.speaker]
             # Final membership read closes most presence races before a recorded line.
@@ -125,7 +125,30 @@ async def live(args,config,memory,scripts):
             result=await client.request('POST',room+'/chat',{'text':reply.text,'clientMessageId':'bot_'+uuid.uuid4().hex})
             memory.add(config['room'],Message(result['message']['id'],client.uid,reply.text))
             engine.sent()
-            print(json.dumps({'event':'sent','speaker':reply.speaker,'reason':reply.reason},ensure_ascii=False),flush=True)
+            log_entry={'event':'sent','speaker':reply.speaker,'reason':reply.reason}
+            if reply.tokens:
+                tokens_info={
+                    'prompt':reply.tokens.get('promptTokenCount',0),
+                    'reply':reply.tokens.get('candidatesTokenCount',0),
+                    'total':reply.tokens.get('totalTokenCount',0)
+                }
+                log_entry['tokens']=tokens_info
+                token_file=BASE/'state'/'token_usage.jsonl'
+                try:
+                    record={
+                        'time':time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'speaker':reply.speaker,
+                        'user_prompt':trigger_text or '',
+                        'bot_reply':reply.text,
+                        'prompt_tokens':tokens_info['prompt'],
+                        'reply_tokens':tokens_info['reply'],
+                        'total_tokens':tokens_info['total']
+                    }
+                    token_file.parent.mkdir(parents=True,exist_ok=True)
+                    with open(token_file,'a',encoding='utf-8') as f:
+                        f.write(json.dumps(record,ensure_ascii=False)+'\n')
+                except Exception:pass
+            print(json.dumps(log_entry,ensure_ascii=False),flush=True)
         async def work():
             nonlocal last_idle
             while not stop.is_set():
@@ -141,7 +164,7 @@ async def live(args,config,memory,scripts):
                 await asyncio.sleep(config['reply_delay_seconds'])
                 if revision!=engine.revision or not pending.empty():continue
                 reply=await engine.respond(message)
-                if reply:await publish(reply,revision)
+                if reply:await publish(reply,revision,message.text)
         tasks=[asyncio.create_task(fn()) for fn in (presence,receive,work)]
         stopper=asyncio.create_task(stop.wait())
         try:

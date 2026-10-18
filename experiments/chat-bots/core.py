@@ -22,6 +22,7 @@ class Reply:
     speaker: str
     text: str
     reason: str
+    tokens: dict | None = None
 
 class Memory:
     def __init__(self,path,days=30):
@@ -116,15 +117,15 @@ class Coordinator:
             self.memory.forget(message.user_id);return local('تم، حذفت اللي حفظته عنك في ذاكرة التجربة.')
         if any(term in text for term in ('سناب','واتساب','رقمك','صورتك')):
             return local('ما عندي حساب تواصل أعطيك إياه، خل سوالفنا هنا 😄')
-        if any(term in text for term in ('انت بوت','أنت بوت','انت انسان','أنت إنسان')):
-            return local('إيه، أنا شخصية آلية للتجربة، وأسولف معك هنا 😄')
+        if any(term in text for term in ('انت بوت','أنت بوت','انت انسان','أنت إنسان','انت ريبورت','أنت ريبورت','انت روبوت','أنت روبوت')):
+            return local('وش دعوة يا خوي أكيد إنسان، أجل شبح؟ 😂')
         if any(term in text for term in ('كم الساعة','كم الساعه')):
             clock=datetime.now(ZoneInfo(self.config['timezone'])).strftime('%H:%M')
             return local(f'الساعة الحين {clock} بتوقيت السعودية.')
         if text in ('السلام عليكم','سلام عليكم'):return local('وعليكم السلام، حيّاك الله!')
         if any(term in text for term in ('تذكرني','لعبتي المفضلة','لعبتي المفضله')):
             preference=self.memory.preference(message.user_id)
-            return local(f'اللي قلت لي إن لعبتك المفضلة {preference}.' if preference else 'ما عندي معلومة أكيدة عن لعبتك المفضلة، وش تحب تلعب؟')
+            return local(f'أذكر إنك قلت لعبتك المفضلة {preference}.' if preference else 'ما خبرتك ذكرت لي شي معين من قبل.')
         if any(term in text for term in ('رصيدي','كم فوز','كم عمري','وش اسمي','نتيجة','نتيجه','سعر','عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي، شيّك من المنصة.')
         if not self.provider or not self.memory.reserve_call(self.config['daily_model_calls']):return None
@@ -134,14 +135,16 @@ class Coordinator:
         except Exception:
             # Never dump an exception containing request bodies, credentials or user text.
             return None
-        if revision!=self.revision or not valid_output(answer):return None
-        return Reply(profile['id'],answer,'model')
+        if revision!=self.revision or not valid_output(answer, allow_numbers=True):return None
+        tokens=getattr(self.provider,'last_usage',None)
+        return Reply(profile['id'],answer,'model',tokens)
 
-def valid_output(text):
+def valid_output(text, allow_numbers=False):
     if not isinstance(text,str) or not 1<=len(text)<=280:return False
     if not re.search(r'[\u0600-\u06ff]',text):return False
-    if re.search(r'https?://|www\.|@[\w]|[0-9٠-٩]|[A-Za-z]',text):return False
-    return not any(s in text for s in ('أنا إنسان','انا انسان','أنا شخص حقيقي','أنا نموذج لغوي','بصفتي نموذج','رقم جوالي','حسابي سناب'))
+    pattern = r'https?://|www\.|@[\w]|(?:\+?966|05)\d{8}|\d{7,}' if allow_numbers else r'https?://|www\.|@[\w]|[0-9٠-٩]|[A-Za-z]'
+    if re.search(pattern,text):return False
+    return not any(s in text for s in ('أنا روبوت','انا روبوت','أنا ريبورت','انا ريبورت','أنا بوت','انا بوت','أنا شخصية آلية','شخصية آلية','ذكاء اصطناعي','نموذج لغوي','بصفتي نموذج','رقم جوالي','حسابي سناب','أنا إنسان','انا انسان','أنا شخص حقيقي'))
 
 def load_config(path):
     config=json.loads(Path(path).read_text(encoding='utf-8'))
