@@ -9,7 +9,7 @@
    if(connection?.saveData||/^(slow-)?2g$/.test(connection?.effectiveType||''))return;
    const send=()=>{
     const worker=registration.active||navigator.serviceWorker.controller;
-    if(document.hidden||document.body.classList.contains('sd-web-game')){worker?.postMessage({type:'pause-warming'});return;}
+    if(document.hidden||(document.body.classList.contains('sd-web-game')||document.body.classList.contains('sd-game-opening'))){worker?.postMessage({type:'pause-warming'});return;}
     let preferred;try{preferred=localStorage.getItem('samidev_last_game');}catch{}
     worker?.postMessage({type:'warm-games',preferred});
    };

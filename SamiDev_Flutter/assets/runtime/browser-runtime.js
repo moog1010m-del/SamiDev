@@ -1,6 +1,9 @@
 (() => {
   'use strict';
 
+  const startup=window.__samidevStartup??={};
+  const startupMark=name=>{if(startup[name]===undefined)startup[name]=Math.round(performance.now());};
+  startupMark('runtime');
   const canvas = document.getElementById('game');
   const status = document.getElementById('status');
   const runtimeQuery = new URLSearchParams(window.__SAMIDEV_QUERY ?? location.search);
@@ -1140,7 +1143,17 @@
     return assetPreparation;
   }
 
-  async function loadAssetsAndLogic(){
+  let resourcePreparation=null;
+  function prepareResources(){
+    if(!resourcePreparation){const attempt=loadResources();resourcePreparation=attempt;attempt.catch(()=>{if(resourcePreparation===attempt)resourcePreparation=null;});}
+    return resourcePreparation;
+  }
+  async function loadResources(){
+    startupMark('assetsStart');
+    // Download main.js alongside textures/text, but execute only once they are ready.
+    const mainHash=window.__SAMIDEV_CLIENT_CONFIG?.games?.[currentGame.id]?.mainJsSha256 || window.__SAMIDEV_CLIENT_CONFIG?.mainJsSha256;
+    const mainSource=norm('main.js')+(mainHash?`?v=${encodeURIComponent(mainHash.slice(0,16))}`:'');
+    const preload=document.createElement('link');preload.rel='preload';preload.as='script';preload.href=mainSource;document.head.append(preload);
     state.dict = window.__dictEn || {};
     status.style.display='block';
     status.textContent='تحميل الأصول...';
@@ -1211,12 +1224,18 @@
       const safeSource = /^data:image\/(?:png|jpeg|webp);base64,[a-z0-9+/=\s]+$/i.test(source) ? source : norm(source);
       img.src=refreshedAsset && !safeSource.startsWith('data:') ? safeSource+(safeSource.includes('?')?'&':'?')+'v=36' : safeSource;
     }))]);
+    startupMark('assetsReady');
+    return mainSource;
+  }
+  async function loadAssetsAndLogic(){
+    const mainSource=await prepareResources();
     status.textContent='تشغيل اللعبة...';
     if(state.disposed)throw Error('تم إغلاق اللعبة');
     if (!state.gameLogic) {
-      await new Promise((resolve,reject)=>{ const s=document.createElement('script'); const hash=window.__SAMIDEV_CLIENT_CONFIG?.games?.[currentGame.id]?.mainJsSha256 || window.__SAMIDEV_CLIENT_CONFIG?.mainJsSha256; s.src=norm('main.js')+(hash?`?v=${encodeURIComponent(hash.slice(0,16))}`:''); s.onload=resolve; s.onerror=()=>reject(new Error('تعذر تحميل main.js')); document.body.appendChild(s); });
+      await new Promise((resolve,reject)=>{ const s=document.createElement('script'); s.src=mainSource; s.onload=resolve; s.onerror=()=>reject(new Error('تعذر تحميل main.js')); document.body.appendChild(s); });
     }
     if(!state.gameLogic) throw new Error('لم تسجل اللعبة GameLogic');
+    startupMark('logicReady');
     return state.gameLogic;
   }
 
@@ -1232,6 +1251,7 @@
   let renderLoopStarted=false;
   function ensureRenderLoop(){if(!renderLoopStarted){renderLoopStarted=true;requestAnimationFrame(loop);}}
   async function prepareRoomScene(message){
+    startupMark('roomAssigned');
     const logic=await prepareAssetsAndLogic();
     const network=window.SamiDevNetwork.state;
     state.network.roomId=network.roomId;
@@ -1265,6 +1285,9 @@
       let localSeat=0;
       let roomScenePromise=null,roomScene=null;
 
+      // Resources and room authorization are independent; initialize the scene only
+      // from the authoritative assignment below. Attach a rejection handler immediately.
+      const preparation=prepareAssetsAndLogic();preparation.catch(()=>{});
       if(online){
         state.network.online=true;
         state.localHost.hotseat=false;
@@ -1273,7 +1296,7 @@
         const preview=message=>{
           if(!roomScenePromise){
             roomScenePromise=prepareRoomScene(message);
-            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);});
+            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);window.__SAMIDEV_APP_HOST?.startupError?.();});
           }else{
             state.network.roster=message.roster||state.network.roster;
             applyCosmetics(message);refreshNativeAvatars();state.frameRequested=true;
@@ -1381,10 +1404,11 @@
       status.style.display='block';
       status.textContent='تعذر تشغيل اللعبة:\n'+String(e?.stack||e);
       window.__previewError=String(e?.stack||e);
+      window.__SAMIDEV_APP_HOST?.startupError?.();
     }
   };
 
-  window.SamiDevGameRuntime={dispose(){
+  window.SamiDevGameRuntime={preloadResources:prepareResources,dispose(){
     if(state.disposed)return;state.disposed=true;
     const net=window.SamiDevNetwork;if(net){net.state.intentionalClose=true;net.state.ws?.close(1000,'game view closed');}
     for(const id of Array.from(timers.keys()))clearHostTimer(id);
@@ -1411,6 +1435,7 @@
         try {
           state.drawFrame();
           state.performance.frames++;
+          if(state.performance.frames===1){startupMark('firstFrame');window.__SAMIDEV_APP_HOST?.surfaceReady?.();}
           renderFailureRetries=0;
         } catch (e) {
           // A transient first-frame failure used to consume the only render request, leaving

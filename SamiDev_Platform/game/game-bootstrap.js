@@ -23,7 +23,7 @@
    for(const href of data.styles){const url=new URL(href,root);if(url.origin!==origin)throw Error('مصدر ملفات غير مسموح');const link=document.createElement('link');link.rel='stylesheet';link.href=url.href;document.head.append(link);}
    // Fetch independent scripts together while preserving their execution order.
    for(const src of data.scripts){const url=new URL(src,root);if(url.origin!==origin)throw Error('مصدر ملفات غير مسموح');if(window.SamiDevMobile&&url.pathname==='/chat-ui.js')continue;const link=document.createElement('link');link.rel='preload';link.as='script';link.href=url.href;document.head.append(link);}
-   for(const src of data.scripts){const url=new URL(src,root);if(window.SamiDevMobile&&url.pathname==='/chat-ui.js')continue;if(url.origin!==origin)throw Error('مصدر ملفات غير مسموح');await script(url.href);}
+   for(const src of data.scripts){const url=new URL(src,root);if(window.SamiDevMobile&&url.pathname==='/chat-ui.js')continue;if(url.origin!==origin)throw Error('مصدر ملفات غير مسموح');await script(url.href);if(url.pathname==='/browser-runtime.js')window.SamiDevGameRuntime?.preloadResources().catch(()=>{});}
    // WebView page-finished can precede the asynchronous bootstrap. Let the
    // native host reapply its visibility/audio state once the bridge exists.
    window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_runtime_ready'}));

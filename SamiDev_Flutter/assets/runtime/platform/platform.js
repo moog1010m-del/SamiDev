@@ -452,11 +452,11 @@
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
     modal.innerHTML=`<section class="store-product-sheet${item.slot==='chat_bubble'?' has-chat-preview':''}" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
       <header><span>رصيدك <b>${formatProfileStat(coins)}</b> <span class="coin-mark small">C</span></span><button type="button" data-product-close aria-label="إغلاق">×</button></header>
-      <div class="store-product-art">${cosmeticProductArt(item)}</div>
+      <div class="store-product-body"><div class="store-product-art">${cosmeticProductArt(item)}</div>
       ${preview?`<div class="store-name-preview">${preview}<strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong></div>`:''}
       <h3 id="store-product-title">${escapeHtml(item.name)}</h3><p class="store-product-description">${escapeHtml(item.description||'')}</p>
       ${isStar?`<small class="store-star-count">تملك ${stars} من 5 نجوم. ${stars<5?'هذه العملية تضيف نجمة واحدة.':''}</small>`:''}
-      <p class="store-product-error" role="alert" hidden></p>
+      </div><p class="store-product-error" role="alert" hidden></p>
       ${confirming?`<div class="store-purchase-confirm"><h4>تأكيد الشراء</h4><p>شراء ${escapeHtml(item.name)} مقابل <b>${formatProfileStat(price)} كوينز</b>؟</p><small>رصيدك بعد الشراء: ${formatProfileStat(coins-price)} كوينز</small><div><button type="button" class="ghost" data-product-back>رجوع</button><button type="button" class="primary" data-product-confirm>تأكيد الشراء</button></div></div>`:
       `<footer><strong>${price?formatProfileStat(price)+' كوينز':'مجاني'}</strong><button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'تفعيل الملصق أو التصميم':'شراء'}</button></footer>`}
     </section>`;
