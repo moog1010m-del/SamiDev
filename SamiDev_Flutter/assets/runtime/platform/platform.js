@@ -296,8 +296,9 @@
     document.addEventListener('click',e=>{const target=e.target.closest?.('[data-public-profile]');if(target)openCommunityProfile(target.dataset.publicProfile);});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#community-profile-modal')?.classList.contains('open'))closeCommunityProfile();if((e.key==='Enter'||e.key===' ')&&e.target?.matches?.('[data-public-profile]')){e.preventDefault();openCommunityProfile(e.target.dataset.publicProfile);}});
     $('#community-chat-form').onsubmit=sendCommunityChat;
-    $('#community-stickers').onclick=async()=>{try{const data=await api('/api/store');window.SamiDevCosmetics.pickStickers(data,item=>{const cid=state.activeCommunity?.id;if(!cid)return;const message={id:'pending_'+crypto.randomUUID(),clientMessageId:crypto.randomUUID(),communityId:cid,userId:state.user.id,username:state.user.username,displayName:state.user.username,text:'',stickerId:item.id,stickerAsset:item.asset,stickerName:item.name,createdAt:Date.now(),pending:true};mergeCommunityMessages([message]);renderCommunityMessages();window.SamiDevCosmetics.pop();submitChatMessage(message);});}catch(e){toast(e.message,true);}};
-    $('#community-chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendCommunityChat(e);}});
+    $('#community-stickers').onclick=async()=>{try{const data=await api('/api/store');window.SamiDevCosmetics.pickStickers(data,item=>{const cid=state.activeCommunity?.id;if(!cid)return;const message={id:'pending_'+crypto.randomUUID(),clientMessageId:crypto.randomUUID(),communityId:cid,userId:state.user.id,username:state.user.username,displayName:state.user.username,text:'',stickerId:item.id,stickerAsset:item.asset,stickerName:item.name,createdAt:Date.now(),pending:true};mergeCommunityMessages([message]);renderCommunityMessages();window.SamiDevCosmetics.pop();submitChatMessage(message);},{anchor:$('#community-stickers'),host:$('#community-panel-chat')});}catch(e){toast(e.message,true);}};
+    $('#community-chat-input').addEventListener('input',resizeCommunityComposer);
+    $('#community-chat-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();sendCommunityChat(e);}});
     $('#create-game').onchange=()=>selectCreateGame($('#create-game').value);
     $$('[data-create-game]').forEach(button=>button.onclick=()=>selectCreateGame(button.dataset.createGame));
     $$('[data-quick-game]').forEach(button=>button.onclick=()=>openCreateGame(button.dataset.quickGame));
@@ -371,7 +372,7 @@
   function cosmeticProductArt(item,className=''){
     if(item.consumable)return `<div class="store-name-preview">↻ <strong>تغيير الاسم</strong></div>`;
     if(item.slot==='chat_bubble')return `<div class="store-chat-sample ${escapeHtml(className)}"><div class="store-chat-preview-meta"><strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong><small>الآن</small></div><div class="store-chat-preview" data-chat-cosmetic="${escapeHtml(item.id)}"><span>مرحبًا</span></div></div>`;
-    if(item.slot==='profile_banner'&&!item.asset)return '<img class="store-item-visual store-banner-art" src="/platform/assets/profile/identity/samidev-night-cover.png" alt="الغلاف الافتراضي">';
+    if(item.slot==='profile_banner'&&!item.asset)return '<span class="store-item-visual store-banner-art" role="img" aria-label="الغلاف الافتراضي الأسود" style="display:block;background:#000"></span>';
     return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
   }
   function applyCosmeticPreviews(root){root.querySelectorAll('[data-chat-cosmetic]').forEach(el=>window.SamiDevCosmetics?.bubble(el,el.dataset.chatCosmetic));}
@@ -567,6 +568,7 @@
     }catch(err){toast(err.message||'تعذر دخول المساحة',true);throw err;}
   }
   async function leaveCommunity(){
+    window.SamiDevCosmetics?.closeStickerPicker();
     closeCommunityProfile();
     const cid=state.activeCommunity?.id||null;
     if(cid){
@@ -807,13 +809,18 @@
       if(state.activeCommunity?.id===cid){mergeCommunityMessages([result.message]);renderCommunityMessages();}
     }catch(error){if(state.activeCommunity?.id===cid){message.failed=true;renderCommunityMessages();}toast(error.message||'تعذر إرسال الرسالة',true);}
   }
+  function resizeCommunityComposer(){
+    const input=$('#community-chat-input');if(!input)return;
+    input.style.height='auto';input.style.height=Math.min(112,Math.max(40,input.scrollHeight))+'px';
+    input.style.overflowY=input.scrollHeight>112?'auto':'hidden';
+  }
   function sendCommunityChat(event){
     event?.preventDefault?.();const c=state.activeCommunity,input=$('#community-chat-input');if(!c||!input)return;
     const text=input.value.trim();if(!text)return;
     if(Array.from(text).length>280)return toast('الرسالة طويلة جدًا',true);
     const nonce=crypto.randomUUID(),message={id:'pending_'+nonce,clientMessageId:nonce,communityId:c.id,userId:state.user.id,username:state.user.username,displayName:state.user.username,text,createdAt:Date.now(),chatBubble:state.user.chatBubble,nameBadgeAsset:state.user.nameBadgeAsset,nameBadgeName:state.user.nameBadgeName,pending:true};
-    input.value='';mergeCommunityMessages([message]);renderCommunityMessages();$('#community-chat-messages').scrollTop=$('#community-chat-messages').scrollHeight;
-    window.SamiDevCosmetics?.pop();submitChatMessage(message);input.focus();
+    input.value='';resizeCommunityComposer();mergeCommunityMessages([message]);renderCommunityMessages();$('#community-chat-messages').scrollTop=$('#community-chat-messages').scrollHeight;
+    window.SamiDevCosmetics?.pop();submitChatMessage(message);input.focus({preventScroll:true});
   }
   async function loadRooms(manual=false){return state.activeCommunity?loadCommunityState(manual):loadCommunities(manual);}
   function roomKind(r){if(r.settings?.gameId==='crazy8')return Number(r.settings.seats)===4?'2v2':`${Number(r.capacity)||4}P`;return Number(r.capacity)===4?'2v2':'1v1';}

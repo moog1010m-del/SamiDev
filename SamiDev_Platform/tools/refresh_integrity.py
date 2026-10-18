@@ -12,6 +12,8 @@ for key,main in engines.items():
  base=(GAME/main).parent;index=base/'__assets.json'
  if index.exists():
   items=json.loads(index.read_text());items={name:digest(base/name.removeprefix(key+'/'),'sha1') for name in items};save(index,items)
+from build_asset_cache import build as build_asset_cache
+build_asset_cache()
 build=GAME/'platform/build.json';data=json.loads(build.read_text());data['release']='V30';data['files']={key:digest(GAME/key) for key in data['files']};data['buildId']='samidev-v30-'+hashlib.sha256(json.dumps(data['files'],sort_keys=True).encode()).hexdigest()[:16];save(build,data)
 for key,main in engines.items():
  base=(GAME/main).parent;file=base/'attestation.json';data=json.loads(file.read_text());data['signed']=False;data['files']={key:digest(base/key) for key in data['files']};save(file,data)

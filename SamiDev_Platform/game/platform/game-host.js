@@ -12,6 +12,7 @@
   if(!['carrom','pool','crazy8','tablesoccer'].includes(id))throw Error('لعبة غير معروفة');
   if(opening||active)throw Error('أغلق المباراة الحالية أولًا');
   opening=true;
+  try{localStorage.setItem("samidev_last_game",id);}catch{}
   const frame=document.createElement('iframe');frame.id='sd-game-host';frame.title=window.SamiDevGames.get(id).name;frame.allow='autoplay; fullscreen';
   frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:20000;background:#171717';
   frame.src='about:blank';
@@ -19,7 +20,7 @@
   active={frame,id,onReturn,onAssignment};
   try{
    const child=frame.contentWindow,doc=frame.contentDocument;
-   doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body></body></html>');doc.close();
+   doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"></head><body></body></html>');doc.close();
    child.__SAMIDEV_EMBEDDED_GAME=true;child.__SAMIDEV_APP_ORIGIN=origin;
    child.__SAMIDEV_APP_HOST={returnToPlatform:close,assigned:message=>onAssignment?.(message),
     reconnect:()=>{if(active?.frame===frame)return reconnect();},

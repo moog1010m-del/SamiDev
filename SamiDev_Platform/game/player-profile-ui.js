@@ -338,7 +338,7 @@
       #sdpp-card{background:#121719;width:min(470px,100%);border-color:#303a3f}
       #sdpp-card.sd-profile-expanded{width:min(540px,100%)}
       #sdpp-card [hidden]{display:none!important}
-      #sdpp-card .sdpp-cover{height:145px;background:url('/platform/assets/profile/identity/samidev-night-cover.png') center 46%/cover}
+      #sdpp-card .sdpp-cover{height:145px;background:#000}
       #sdpp-card .sdpp-cover:after,#sdpp-card .sdpp-cover-mark,#sdpp-card .sdpp-divider{display:none}
       #sdpp-card .sdpp-avatar{width:118px;height:118px;margin-top:-59px;box-shadow:0 0 0 4px #121719;border-color:#deba6c}
       #sdpp-card .sdpp-name-row{margin-top:18px;flex-wrap:wrap;gap:6px}

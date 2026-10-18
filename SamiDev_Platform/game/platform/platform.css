@@ -753,7 +753,7 @@ html[data-sd-native] .lobby-profile{display:none!important}
 #community-chat-messages .community-chat-content{direction:ltr}
 /* Small line controls keep the room header and composer clear. */
 .community-header-actions #exit-community,.community-exit-btn,#open-create{width:38px;min-width:38px;height:38px;padding:8px!important;border-radius:12px;display:inline-grid;place-items:center}
-.community-exit-btn{color:var(--muted,#657c86)!important;background:transparent!important;border-color:transparent!important}
+
 .community-exit-btn svg,#open-create svg,.chat-send-icon svg,#community-stickers svg{width:22px;height:22px;display:block}
 .chat-send-icon{width:42px;min-width:42px;padding:9px!important;border-radius:50%!important;align-self:center}
 #community-stickers{padding:7px;align-self:center}.room-policy-form{padding:20px;display:flex;flex-wrap:wrap;gap:14px;margin:18px 0}.room-policy-form h3,.room-policy-form p{width:100%;margin:0}.room-policy-form label{display:grid;gap:7px;flex:1 1 180px}.room-policy-form input,.room-policy-form select{width:100%;padding:10px;border:1px solid #93a9ad66;border-radius:9px;font:inherit}.room-policy-form p{font-size:12px}
@@ -765,3 +765,16 @@ html[data-sd-native] .lobby-profile{display:none!important}
 #community-chat-form .primary::after,#exit-community::after{content:none!important}
 #community-composer-create{display:none!important}#community-room #open-create{display:grid!important;flex:0 0 44px;width:44px;min-width:44px;height:44px}
 #community-room #exit-community{width:44px;min-width:44px;height:44px;top:5px}
+
+/* Room actions and a stable, four-line mobile composer. */
+#community-room .community-room-head{padding-inline-start:0}
+#community-room .community-room-head-actions{position:static;display:flex;align-items:center;gap:8px}
+#community-room #exit-community{position:static;inset:auto;flex:0 0 44px;width:44px;min-width:44px;height:44px;border-radius:12px;background:#df49491a;border:1px solid #df494944;color:#e76565}
+#community-room #exit-community:hover{background:#df49492e}
+#community-chat-form{align-items:flex-end}
+#community-chat-form textarea{font-size:16px;line-height:24px;box-sizing:border-box;min-height:40px;height:40px;max-height:112px;padding:8px 10px;resize:none;overflow-y:hidden;scrollbar-width:none}
+#community-chat-form textarea::-webkit-scrollbar{display:none;width:0;height:0}
+#community-panel-chat.sd-selecting-stickers .community-chat-messages{display:none!important}
+#community-panel-chat .sd-sticker-panel-mobile{position:static;width:100%;max-height:none;min-height:0;flex:1;margin:0;box-shadow:none;border:0;border-radius:0;overflow:auto}
+
+#community-chat-form button{align-self:flex-end}

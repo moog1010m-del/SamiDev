@@ -2,7 +2,7 @@
 .profile-showcase{--identity-surface:#121719;--identity-panel:#1e272b;--identity-line:#303a3f;--identity-ink:#f1f3ef;--identity-muted:#99a5a9;background:var(--identity-surface)!important;color:var(--identity-ink);border:1px solid var(--identity-line);border-radius:18px;box-shadow:0 20px 70px #0004;min-height:0!important;overflow:hidden}
 .profile-workspace{display:block;width:100%;max-width:540px;margin:auto}.profile-workspace>.profile-showcase{width:100%;max-width:none}
 .profile-showcase .profile-card-bar{background:var(--identity-surface)!important;border-bottom:0;color:var(--identity-ink);height:52px}
-.profile-showcase .profile-cover{height:150px;background-image:url('/platform/assets/profile/identity/samidev-night-cover.png')!important;background-size:cover!important;background-position:50% 46%!important;background-repeat:no-repeat!important}
+.profile-showcase .profile-cover{height:150px;background-image:none!important;background-color:#000;background-size:cover!important;background-position:50% 46%!important;background-repeat:no-repeat!important}
 .profile-showcase .profile-cover::before,.profile-showcase .profile-cover::after,.profile-cover-emblem,.profile-cover-glow{display:none!important}
 .profile-showcase .profile-showcase-body{margin-top:-58px;padding:0 18px 20px;align-items:center}
 .profile-showcase .profile-showcase-body::after{display:none}

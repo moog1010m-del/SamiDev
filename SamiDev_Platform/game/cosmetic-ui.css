@@ -51,3 +51,11 @@
 #sd-chat .sd-sticker-message,.community-chat-message .sd-sticker-message{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
 
 html[data-theme="dark"] .sd-chat-sticker-picker{background:#17272e;color:#e6eeee}html[data-theme="dark"] .sd-chat-sticker-picker button{background:#263940}
+
+.sd-chat-sticker-picker{position:fixed;z-index:1200;box-sizing:border-box;width:320px;max-width:calc(100vw - 16px);max-height:min(360px,60dvh);overflow:auto;padding:12px;border:1px solid #8eaaae55;border-radius:16px;box-shadow:0 8px 28px #0003;background:#f6faf9;color:#263e43}
+.sd-chat-sticker-picker header{display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px;font-weight:600}
+.sd-chat-sticker-picker header button{font-size:24px;width:32px;height:32px;padding:0;border:0;background:transparent;color:inherit}
+.sd-sticker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.sd-sticker-grid button{min-width:0;min-height:84px;border:0;background:transparent;display:grid;place-items:center;padding:4px}
+.sd-sticker-grid p{grid-column:1/-1}
+html[data-theme="dark"] .sd-chat-sticker-picker{background:#121c21;color:#e3ecef}
