@@ -41,6 +41,16 @@ class _AccountSettingsState extends State<AccountSettings> {
     super.dispose();
   }
 
+  Future<void> editBio() async {
+    final field=TextEditingController(text:user['bio']?.toString()??'');
+    final value=await showDialog<String>(context:context,builder:(context)=>AlertDialog(title:const Text('نبذة عني'),content:TextField(controller:field,maxLength:160,minLines:2,maxLines:4,decoration:const InputDecoration(hintText:'اكتب نبذة قصيرة عنك')),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('إلغاء')),FilledButton(onPressed:()=>Navigator.pop(context,field.text),child:const Text('حفظ'))]));
+    if(value==null||!mounted)return;
+    setState(()=>busy=true);
+    try{final response=await widget.api.request('PATCH','/api/profile',body:utf8.encode(jsonEncode({'bio':value})));
+      if(response.status!=200)throw StateError(response.json['message']?.toString()??'تعذر حفظ النبذة');
+      final updated=Map<String,dynamic>.from(response.json['user']);await widget.onChanged(updated);if(mounted)setState(()=>user=updated);
+    }catch(_){if(mounted)setState(()=>error='تعذر حفظ النبذة. حاول مجددًا.');}finally{if(mounted)setState(()=>busy=false);}
+  }
   Future<void> rename({bool confirmed = false}) async {
     if (busy) return;
     if (!RegExp(r'^[A-Za-z0-9_]{3,20}$').hasMatch(name.text.trim())) {
@@ -477,6 +487,7 @@ class _AccountSettingsState extends State<AccountSettings> {
           subtitle: user['username']?.toString() ?? '',
           onTap: busy ? null : editUsername,
         ),
+        settingsEntry(context,icon:Icons.notes_outlined,title:'نبذة عني',subtitle:user['bio']?.toString()??'',onTap:busy?null:editBio),
         if (providers.contains('password'))
           settingsEntry(
             context,

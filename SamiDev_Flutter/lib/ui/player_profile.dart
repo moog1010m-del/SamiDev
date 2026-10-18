@@ -132,11 +132,11 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
             width:double.infinity,height:145,fit:BoxFit.cover)),
           Transform.translate(offset:const Offset(0,-52),child:PlayerAvatar(api:widget.api,user:u,radius:58,framed:true)),
           Transform.translate(offset:const Offset(0,-32),child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[
+            StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'',size:22),const SizedBox(width:3),
             Flexible(child:Text(u['displayName']?.toString()??u['username']?.toString()??'لاعب',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w700))),
             const SizedBox(width:6),ProfileStars(size:18,count:(u['starsCount'] as num?)?.toInt()??0),
-            const SizedBox(width:6),StickerArtwork(asset:u['nameBadgeAsset']?.toString()??'',size:22),
           ])),
-          if(u['username']!=null)Text('${u['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:colors.onSurfaceVariant)),
+          if((u['bio']?.toString()??'').isNotEmpty)Padding(padding:const EdgeInsets.symmetric(horizontal:18),child:Text(u['bio'].toString(),textAlign:TextAlign.center,style:TextStyle(fontSize:13,height:1.7,color:colors.onSurfaceVariant))),
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[
             stat('لاعب منذ','${u['accountAgeDays']??0} يوم',const ProfileDecoration('calendar',size:18)),
             stat('الفوز','${u['wins']??0}',const ProfileDecoration('trophy')),

@@ -145,7 +145,7 @@
       <div class="sdpp-profile-body">
         <div class="sdpp-avatar">${img}</div>
         <div class="sdpp-name-row"><strong>${esc(user.displayName||player?.name||'لاعب')}</strong><div class="sdpp-stars" aria-label="${user.starsCount ?? 0} نجوم">${starsMarkup(user.starsCount ?? 0)}</div>${badgeMarkup(user)}</div>
-        <div class="sdpp-handle">${esc(user.username ? user.username : "")}</div>
+        <div class="sdpp-handle">${esc(user.bio || "")}</div>
         <div class="sdpp-stats">
           <div><small>لاعب منذ</small><b>${esc(daysText(user.accountAgeDays))}</b></div>
           <div><small>الفوز</small><b>${esc(numberText(user.wins))}</b></div>
@@ -341,7 +341,7 @@
       #sdpp-card .sdpp-cover{height:145px;background:#000}
       #sdpp-card .sdpp-cover:after,#sdpp-card .sdpp-cover-mark,#sdpp-card .sdpp-divider{display:none}
       #sdpp-card .sdpp-avatar{width:118px;height:118px;margin-top:-59px;box-shadow:0 0 0 4px #121719;border-color:#deba6c}
-      #sdpp-card .sdpp-name-row{margin-top:18px;flex-wrap:wrap;gap:6px}
+      #sdpp-card .sdpp-name-row{margin-top:18px;flex-wrap:wrap;gap:3px}#sdpp-card .sdpp-emblem-wrap{order:-1}#sdpp-card .sdpp-handle{white-space:pre-line;overflow-wrap:anywhere}
       #sdpp-card .sdpp-name-row strong{max-width:170px;font-size:21px}
       #sdpp-card .sdpp-stars{margin:0;gap:0}
       #sdpp-card .sdpp-handle{margin-top:14px;color:#99a5a9;font-size:12px}

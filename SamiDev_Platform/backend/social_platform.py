@@ -268,6 +268,7 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
         "id": str(raw.get("id") or ""),
         "username": str(raw.get("username") or ""),
         "displayName": str(raw.get("username") or "Player"),
+        "bio": str(raw.get("bio") or ""),
         "role": str(raw.get("role") or "user"),
         "isGuest": raw.get("guest") == "1",
         "freeRenameAvailable": raw.get("freeRenameUsed") != "1",
@@ -737,11 +738,15 @@ class PlatformService:
             self.mem_firebase[key] = uid
             return user
 
-    async def update_profile(self, uid: str, *, display_name: Any = None, avatar_data: Any = None, update_avatar: bool = False) -> dict[str, Any]:
+    async def update_profile(self, uid: str, *, display_name: Any = None, avatar_data: Any = None, update_avatar: bool = False, bio: Any = None, update_bio: bool = False) -> dict[str, Any]:
         user = await self.get_user(uid)
         if not user:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         updates: dict[str, str] = {}
+        if update_bio:
+            if not isinstance(bio, str) or len(bio) > 160:
+                raise PlatformError("INVALID_BIO", "النبذة نص بحد أقصى ١٦٠ حرفًا", 400)
+            updates["bio"] = ''.join(c for c in bio if c == '\n' or (ord(c) >= 32 and ord(c) != 127 and not '\u202a' <= c <= '\u202e' and not '\u2066' <= c <= '\u2069')).strip()
         if update_avatar:
             updates["avatarData"] = normalize_avatar_data(avatar_data)
         if display_name is not None:
@@ -1791,6 +1796,7 @@ class PlatformHttp:
             display_name=body.get("username", body.get("displayName")) if "username" in body or "displayName" in body else None,
             avatar_data=body.get("avatarData"),
             update_avatar="avatarData" in body,
+            bio=body.get("bio"), update_bio="bio" in body,
         )
         return web.json_response({"ok": True, "user": public_user(updated, include_avatar=True)})
 

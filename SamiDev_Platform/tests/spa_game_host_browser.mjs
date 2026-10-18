@@ -28,6 +28,8 @@ try{
   await a.locator('#sd-room-info-modal .sd-close').click();
   if(process.env.SAMIDEV_SPA_MOBILE==='1')await guest.locator('#community-tab-games').click();
   await guest.locator(`.join-room[data-room="${room}"]`).waitFor({timeout:12000});await guest.locator(`.join-room[data-room="${room}"]`).click();
+  await guest.locator('[data-entry-cancel]').click();assert.equal(await guest.locator('#sd-game-host').count(),0,'cancel never opens a game');
+  await guest.locator(`.join-room[data-room="${room}"]`).click();await guest.locator('[data-entry-confirm]').click();
   for(const page of pages){const f=page.frames().find(f=>f.parentFrame());await f.waitForFunction(()=>SamiDevNetwork.state.begun&&__samidevGameState.localHost.started&&!__samidevGameState.network.snapshotBusy,{},{timeout:45000});assert.equal(await page.evaluate(()=>__appKept),'preserved');assert(new URL(page.url()).pathname==='/platform/');}
   assert(await a.locator('body').evaluate(()=>__keptLogic===__gameLogic&&__keptCanvas===document.getElementById('game')),'same waiting renderer and logic survive opponent joining');
   assert(!navigations.some(url=>/\/games\/|\/index\.html/.test(url)),'no per-game HTML document requested');
@@ -41,7 +43,7 @@ try{
    await watcher.frameLocator('#sd-game-host').locator('#sd-room-menu-button').click();await watcher.frameLocator('#sd-game-host').locator('#sd-info').click();
    watcher.once('dialog',dialog=>dialog.accept());await watcher.frameLocator('#sd-game-host').locator('[data-table-action="close"]').click();
    await watcher.locator('#sd-game-host').waitFor({state:'detached',timeout:15000});
-   await watcher.locator(`.watch-room[data-room="${room}"]`).click();
+   await watcher.locator(`.watch-room[data-room="${room}"]`).click();await watcher.locator('[data-entry-confirm]').click();
    const watching=()=>watcher.waitForFunction(()=>{const w=document.querySelector('#sd-game-host')?.contentWindow;return w?.SamiDevNetwork?.state.begun&&w.SamiDevNetwork.state.spectator&&w.__samidevGameState?.localHost.started;},{},{timeout:45000});
    await watching();assert.equal(new URL(watcher.url()).searchParams.get('watch'),'1');
    await watcher.reload();await watching();

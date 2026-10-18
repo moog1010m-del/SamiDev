@@ -57,7 +57,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   final table=RetainedTable();
   Uri? gameCurrent;
   int gameProgress=0;
-  bool _openingGame=false,_profileOpen=false,_returnToGames=false;
+  bool _openingGame=false,_profileOpen=false,_returnToGames=false,_awaitingGameSurface=false;
+  Completer<bool>? _gameSurfaceReady;
   StreamSubscription<Map<String,dynamic>>? subscription;
   final input=TextEditingController(),chatScroll=ScrollController();
   final List<Map<String,dynamic>> messages=[];
@@ -71,8 +72,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   Map<String,dynamic>? gamesProfile;
   final hubKey=GlobalKey<CommunityHubState>(),gamesKey=GlobalKey<GamesHubState>(),chatFocus=FocusNode();
   bool _lastDark=true;
-  bool get nativeGames=>authenticated&&!inGame&&webPage=='games';
-  bool get nativeHome=>authenticated&&!inGame&&(webPage==null||nativeGames);
+  bool get nativeGames=>authenticated&&(!inGame||_awaitingGameSurface)&&webPage=='games';
+  bool get nativeHome=>authenticated&&(!inGame||_awaitingGameSurface)&&(webPage==null||nativeGames);
   int progress=0;
   Uri? current;
   bool _starting=false, _background=false;
@@ -130,6 +131,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       if(!live()||page()==null||!r.owns(page()!)||message.message.length>5000)return;
       try{final data=jsonDecode(message.message) as Map;
         if(data['type']=='copy'&&data['text'] is String){unawaited(copyText(data['text'] as String));}
+        if(game&&data['type']=='game_surface_ready'&&_gameSurfaceReady?.isCompleted==false){setState(()=>_awaitingGameSurface=false);_gameSurfaceReady!.complete(true);}
+        if(game&&data['type']=='game_surface_error'&&_gameSurfaceReady?.isCompleted==false){_gameSurfaceReady!.complete(false);}
         if(game&&data['type']=='room_background'){parkGame();}
         if(game&&data['type']=='game_runtime_ready'){
           final suspend=_background||!inGame?' window.audio?.suspend?.();':'';
@@ -201,6 +204,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   }
   Future<void> discardGame() async {
     final old=gameController;
+    if(_gameSurfaceReady?.isCompleted==false)_gameSurfaceReady!.complete(false);
+    _awaitingGameSurface=false;
     if(old==null)return;
     chatFocus.unfocus();
     for(final timer in chatPendingTimers.values){timer.cancel();}chatPendingTimers.clear();
@@ -306,6 +311,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     if(!{'majlis','square','diwan','elite'}.contains(query['community']))return;
     if(gameController==null)_returnToGames=nativeGames;
     await openGameUri(r.origin.replace(path:entries[game],queryParameters:query));
+    if(gameController==null)throw StateError('تعذر تجهيز الطاولة');
   }
   Future<void> openGameUri(Uri uri) async {
     final r=runtime;if(r==null||!r.allowsNavigation(uri)||!RuntimePolicy.isGame(uri.path)||_openingGame)return;
@@ -318,12 +324,14 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     try{
       final cid=uri.queryParameters['community'];if({'majlis','square','diwan','elite'}.contains(cid))r.community=cid!;
       final c=await makeController(r,game:true);if(!mounted||runtime!=r)return;
-      setState((){gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';notifiedMatch=null;notifiedMineTurn=null;messages.clear();table.clear();});
+      final surface=Completer<bool>();_gameSurfaceReady=surface;
+      setState((){_awaitingGameSurface=true;gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';notifiedMatch=null;notifiedMineTurn=null;messages.clear();table.clear();});
       await configurePlatform();
       // The gateway supplies a one-time ticket; no session or ticket enters a URL.
       await c.loadRequest(uri);
+      if(!await surface.future.timeout(const Duration(seconds:45)))throw StateError('تعذر تجهيز الطاولة');
     }catch(_){await discardGame();notify('تعذر فتح الطاولة. حاول مجددًا.');}
-    finally{_openingGame=false;}
+    finally{_openingGame=false;if(mounted)setState(()=>_awaitingGameSurface=false);}
   }
   Future<void> back() async {
     if(inGame){parkGame();return;}
@@ -387,9 +395,9 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
           if(controller!=null)Offstage(key:const ValueKey('platform-surface'),offstage:nativeHome||inGame,child:WebViewWidget(controller:controller!)),
           if(gameController!=null)Offstage(key:const ValueKey('retained-game'),offstage:!inGame,child:gameSurface()),
           if(authenticated)Offstage(key:const ValueKey('native-games'),offstage:!nativeGames,child:GamesHub(key:gamesKey,user:gamesProfile,onGame:openGame,onSelectionChanged:(){if(mounted)setState((){});})),
-          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:CommunityHub(key:hubKey,user:gamesProfile,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'}))),
+          if(authenticated)Offstage(key:const ValueKey('native-community'),offstage:!nativeHome||nativeGames,child:ColoredBox(color:Theme.of(context).scaffoldBackgroundColor,child:CommunityHub(key:hubKey,user:gamesProfile,api:runtime!.api,active:nativeHome&&!nativeGames&&!_background,initialCommunity:current?.queryParameters['community'],onGame:openGame,onProfile:openProfile,onTheme:chooseTheme,onAccount:openAccountSettings,onInvite:openInvite,onNavigationChanged:(){if(mounted)setState((){});},onUnauthorized:()=>onEvent({'type':'auth_expired'})))),
         ])),
-        if(inGame)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onStickers:sendGameSticker,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
+        if(inGame&&!_awaitingGameSurface)ChatComposer(controller:input,focusNode:chatFocus,sending:sending,onSend:sendChat,onStickers:sendGameSticker,onToggle:(){setState(()=>showChat=!showChat);if(showChat)scrollChat();},expanded:showChat),
       ])),
     ));
   }

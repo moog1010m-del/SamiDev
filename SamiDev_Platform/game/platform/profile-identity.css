@@ -66,3 +66,6 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 .profile-showcase .profile-sprite-camera,.profile-editor-camera .profile-sprite-camera{background:none!important;background-color:currentColor!important;mask:url('/platform/assets/profile/camera.svg?v=2') center/contain no-repeat;-webkit-mask:url('/platform/assets/profile/camera.svg?v=2') center/contain no-repeat;width:22px!important;height:22px!important}
 .profile-showcase .profile-sprite-reputation.sd-reputation-slot{background:none!important}
 .profile-showcase .profile-name-row .profile-sticker{width:32px!important;height:32px!important;min-width:32px;flex:0 0 32px!important}
+
+.profile-showcase .profile-name-row{gap:3px}
+.profile-showcase .profile-name-row .profile-sticker{order:-1;margin:0!important}

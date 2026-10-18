@@ -125,6 +125,20 @@ class CommunityHubState extends State<CommunityHub> {
     final n=(settings['special'] as num?)?.toInt()??0;
     return '$live، $capacity لاعبين${settings['gameId']=='crazy8'?', ${special[n.clamp(0,5).toInt()]}':''}';
   }
+  Future<void> confirmTable(Map<String,dynamic> room,String game,bool join) async {
+    if(navigating)return;navigating=true;
+    var loading=false;String? failure;
+    try{await showDialog<void>(context:context,barrierDismissible:false,barrierColor:const Color(0x22000000),builder:(dialogContext)=>StatefulBuilder(builder:(context,update)=>PopScope(canPop:!loading,child:AlertDialog(
+      shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
+      title:Row(children:[mark(game),const SizedBox(width:14),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('الطاولة ${room['roomId']}',style:Theme.of(context).textTheme.labelSmall),Text(games[game]??game,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w700))]))]),
+      content:loading?const Column(mainAxisSize:MainAxisSize.min,children:[SizedBox(height:8),SizedBox(width:30,height:30,child:CircularProgressIndicator(strokeWidth:3)),SizedBox(height:18),Text('نجهّز طاولتك…'),SizedBox(height:8),Text('بتدخل تلقائيًا عند جاهزيتها',style:TextStyle(fontSize:12))]):Text(failure??details(room['settings'] as Map? ?? {},(room['capacity'] as num?)?.toInt()??2)),
+      actions:loading?[]:[TextButton(onPressed:()=>Navigator.pop(dialogContext),child:Text(failure==null?'إلغاء':'رجوع')),if(failure==null)FilledButton(onPressed:()async{
+        if(loading)return;update(()=>loading=true);
+        try{await widget.onGame(game,{'online':'1','action':join?'join':'watch','room':room['roomId'].toString(),'community':community!['id'].toString()});if(dialogContext.mounted)Navigator.pop(dialogContext);}
+        catch(_){if(dialogContext.mounted)update((){loading=false;failure='تعذر فتح الطاولة. ارجع وحاول مجددًا.';});}
+      },child:Text(join?'انضم':'مشاهدة'))],
+    ))));}finally{navigating=false;}
+  }
   Widget roomRow(Map<String,dynamic> room){
     final settings=room['settings'] is Map?room['settings'] as Map:<String,dynamic>{};
     final game=settings['gameId']?.toString()??'carrom';
@@ -139,7 +153,7 @@ class CommunityHubState extends State<CommunityHub> {
       ])),const SizedBox(width:8),Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
         Text(room['roomId']?.toString()??'',style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant)),const SizedBox(height:24),
         SizedBox(height:30,child:FilledButton(style:FilledButton.styleFrom(backgroundColor:open?const Color(0xff83b932):null,foregroundColor:Colors.white,padding:const EdgeInsets.symmetric(horizontal:18)),
-          onPressed:open||watch?()=>widget.onGame(game,{'online':'1','action':open?'join':'watch','room':room['roomId'].toString(),'community':community!['id'].toString()}):null,
+          onPressed:open||watch?()=>confirmTable(room,game,open):null,
           child:Text(open?'انضم':watch?'مشاهدة':'تجهيز',style:const TextStyle(fontSize:12)))),
       ]),
     ]));
@@ -148,7 +162,7 @@ class CommunityHubState extends State<CommunityHub> {
     padding:const EdgeInsets.symmetric(horizontal:18,vertical:16),child:Row(children:[
       PlayerAvatar(api:widget.api,user:user,radius:31,framed:true),const SizedBox(width:13),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'',size:24),const SizedBox(width:6),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
+        Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'',size:24),const SizedBox(width:3),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
         const SizedBox(height:5),ProfileStars(size:18,count:(user['starsCount'] as num?)?.toInt()??0),
         if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
         const SizedBox(height:8),Wrap(spacing:16,runSpacing:6,children:[
@@ -163,8 +177,8 @@ class CommunityHubState extends State<CommunityHub> {
     return Directionality(textDirection:mine?TextDirection.rtl:TextDirection.ltr,child:Padding(padding:const EdgeInsets.fromLTRB(14,8,18,8),child:Align(alignment:mine?Alignment.centerRight:Alignment.centerLeft,child:Row(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
       InkWell(onTap:()=>widget.onProfile(message['userId'].toString()),child:avatar(message,radius:20)),const SizedBox(width:12),
       Flexible(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(textDirection:TextDirection.rtl,mainAxisSize:MainAxisSize.min,children:[
+        StickerArtwork(asset:message['nameBadgeAsset']?.toString()??'',size:18),const SizedBox(width:3),
         Flexible(child:Text(name(message),overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600))),const SizedBox(width:5),
-        StickerArtwork(asset:message['nameBadgeAsset']?.toString()??'',size:18),const SizedBox(width:5),
         if(date!=null)Text(TimeOfDay.fromDateTime(date).format(context),style:TextStyle(fontSize:10,color:Theme.of(context).colorScheme.onSurfaceVariant)),
       ]),if(message['pending']==true)TextButton(onPressed:message['failed']==true?(){setState(()=>message['failed']=false);unawaited(submitMessage(message));}:null,child:Text(message['failed']==true?'تعذر الإرسال · إعادة المحاولة':'جارٍ الإرسال',style:const TextStyle(fontSize:10))),const SizedBox(height:5),if(message['stickerId']!=null)StickerArtwork(asset:message['stickerAsset']?.toString()??'',size:100)else ChatCosmetic(id:message['chatBubble']?.toString()??'',
         child:Text(message['text']?.toString()??'',textDirection:TextDirection.rtl,style:const TextStyle(fontSize:15,height:1.4))),])),

@@ -1296,7 +1296,7 @@
         const preview=message=>{
           if(!roomScenePromise){
             roomScenePromise=prepareRoomScene(message);
-            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);window.__SAMIDEV_APP_HOST?.startupError?.();});
+            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);window.__SAMIDEV_APP_HOST?.startupError?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error'}));});
           }else{
             state.network.roster=message.roster||state.network.roster;
             applyCosmetics(message);refreshNativeAvatars();state.frameRequested=true;
@@ -1404,7 +1404,7 @@
       status.style.display='block';
       status.textContent='تعذر تشغيل اللعبة:\n'+String(e?.stack||e);
       window.__previewError=String(e?.stack||e);
-      window.__SAMIDEV_APP_HOST?.startupError?.();
+      window.__SAMIDEV_APP_HOST?.startupError?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error'}));
     }
   };
 
@@ -1435,7 +1435,7 @@
         try {
           state.drawFrame();
           state.performance.frames++;
-          if(state.performance.frames===1){startupMark('firstFrame');window.__SAMIDEV_APP_HOST?.surfaceReady?.();}
+          if(state.performance.frames===1){startupMark('firstFrame');window.__SAMIDEV_APP_HOST?.surfaceReady?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_ready'}));}
           renderFailureRetries=0;
         } catch (e) {
           // A transient first-frame failure used to consume the only render request, leaving

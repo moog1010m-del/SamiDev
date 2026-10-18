@@ -82,13 +82,14 @@
     const name=user.displayName||user.username;
     $('#side-name').textContent=name; $('#side-username').textContent=user.username;
     $('#profile-name').textContent=name;
-    const handle=$('#profile-identity-handle');if(handle)handle.textContent=String(user.username||'player');
+    const handle=$('#profile-identity-handle');if(handle){handle.textContent=String(user.bio||'');handle.hidden=!user.bio;}
     const sinceValue=$('#profile-since-value');if(sinceValue)sinceValue.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const wins=$('#profile-wins');if(wins)wins.textContent=formatProfileStat(user.wins);
     window.SamiDevProfileDetails?.renderReputation($('#profile-reputation')?.previousElementSibling,user.reputation);
     const reputation=$('#profile-reputation');if(reputation)reputation.textContent=formatProfileStat(user.reputation);
     const displayInput=$('#profile-display-input');
     if(displayInput&&document.activeElement!==displayInput)displayInput.value=name;
+    const bioInput=$('#profile-bio-input');if(bioInput&&document.activeElement!==bioInput)bioInput.value=user.bio||'';
     const count=$('#profile-name-count');if(count)count.textContent=String((displayInput?.value||name).length);
     renderAvatar('#avatar-image','#avatar-fallback',name,user.avatarData);
     renderAvatar('#profile-avatar-image','#profile-avatar-fallback',name,user.avatarData);
@@ -99,7 +100,7 @@
     const communityUserName=$('#community-user-name');if(communityUserName)communityUserName.textContent=name;
     const communityUserHandle=$('#community-user-handle');if(communityUserHandle)communityUserHandle.textContent=String(user.username||'player');
     const lobbyName=$('#lobby-profile-name');if(lobbyName)lobbyName.textContent=name;
-    const lobbyHandle=$('#lobby-profile-handle');if(lobbyHandle)lobbyHandle.textContent=String(user.username||'player');
+    const lobbyHandle=$('#lobby-profile-handle');if(lobbyHandle){lobbyHandle.textContent=String(user.bio||'');lobbyHandle.hidden=!user.bio;}
     const lobbyAccount=$('#lobby-profile-account');if(lobbyAccount)lobbyAccount.textContent=String(user.username||'player');
     const lobbySince=$('#lobby-profile-since');if(lobbySince)lobbySince.textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     const lobbyWins=$('#lobby-profile-wins');if(lobbyWins)lobbyWins.textContent=formatProfileStat(user.wins);
@@ -335,6 +336,7 @@
       finally{button.disabled=false;}
     });
     $('#profile-display-input').addEventListener('input',e=>$('#profile-name-count').textContent=String(e.currentTarget.value.length));
+    $('#profile-save-bio').onclick=async event=>{const button=event.currentTarget;button.disabled=true;try{const d=await api('/api/profile',{method:'PATCH',body:JSON.stringify({bio:$('#profile-bio-input').value})});setUser(d.user);toast('تم حفظ النبذة');}catch(e){toast(e.message,true);}finally{button.disabled=false;}};
     $('#profile-save-name').onclick=async()=>{
       const username=$('#profile-display-input').value.trim();
       if(!/^[A-Za-z0-9_]{3,20}$/.test(username))return toast('اسم المستخدم: ٣–٢٠ حرفًا إنجليزيًا أو رقمًا أو _ بدون @',true);
@@ -644,7 +646,7 @@
       const emblem=profileSprite('profile-sprite-emblem community-member-emblem');
       const badgeAsset=u.nameBadgeAsset||'';
       window.SamiDevStickerArt.render(emblem,badgeAsset,u.nameBadgeName||'ملصق الاسم');
-      title.append(strong,emblem);
+      title.append(emblem,strong);
       const stars=document.createElement('div');stars.className='community-member-stars';
       const userStars=Math.max(0,Math.min(5,Number(u.starsCount??0)));
       stars.setAttribute('aria-label',`${userStars} نجوم`);
@@ -667,7 +669,7 @@
       const article=document.createElement('article');article.className='community-chat-message'+(m.userId&&String(m.userId)===String(state.user?.id)?' me':'');article.append(avatarNode({id:m.userId,displayName:m.displayName,username:m.username},'community-chat-avatar',true));
       const content=document.createElement('div');content.className='community-chat-content';const bubble=document.createElement('div');bubble.className='community-chat-bubble';const meta=document.createElement('div');meta.className='community-chat-meta';
       const name=document.createElement('strong');name.className='community-chat-profile-name';name.textContent=String(m.displayName||m.username||'Player');if(m.userId)name.dataset.publicProfile=String(m.userId);
-      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');const sticker=document.createElement('span');sticker.className='community-chat-sticker';window.SamiDevStickerArt?.render(sticker,m.nameBadgeAsset||'',m.nameBadgeName||'ملصق الاسم');meta.append(name,sticker,time);
+      const time=document.createElement('time');time.textContent=chatTime(m.createdAt);const text=document.createElement('p');text.textContent=String(m.text||'');const sticker=document.createElement('span');sticker.className='community-chat-sticker';window.SamiDevStickerArt?.render(sticker,m.nameBadgeAsset||'',m.nameBadgeName||'ملصق الاسم');const identity=document.createElement('span');identity.className='community-chat-identity';identity.append(sticker,name);meta.append(identity,time);
       if(m.pending){const status=document.createElement('span');status.className='chat-delivery-status';status.textContent=m.failed?'تعذر الإرسال':'جارٍ الإرسال';meta.append(status);if(m.failed){const retry=document.createElement('button');retry.type='button';retry.className='ghost';retry.textContent='إعادة المحاولة';retry.onclick=()=>{m.failed=false;renderCommunityMessages();submitChatMessage(m);};meta.append(retry);}}
       bubble.append(text);if(m.stickerId&&m.stickerAsset){text.hidden=true;bubble.classList.add('sd-sticker-message');const art=document.createElement('span');art.className='sd-chat-sticker-art';window.SamiDevStickerArt.render(art,m.stickerAsset,m.stickerName||'ملصق');bubble.append(art);}window.SamiDevCosmetics?.bubble(bubble,m.stickerId?'':m.chatBubble);content.append(meta,bubble);article.append(content);update.add(article);
     }update.finish();
@@ -715,7 +717,7 @@
     const userStars=Math.max(0,Math.min(5,Number(user.starsCount??0)));
     $('#community-profile-modal .profile-stars')?.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
     $$('#community-profile-modal .community-public-profile-star').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
-    $('#community-profile-handle').textContent=String(user.username||'player');
+    $('#community-profile-handle').textContent=String(user.bio||'');$('#community-profile-handle').hidden=!user.bio;
     $('#community-profile-since').textContent=playerSinceValue(user.accountAgeDays,user.createdAt);
     $('#community-profile-wins').textContent=formatProfileStat(user.wins);
     $('#community-profile-reputation').textContent=formatProfileStat(user.reputation);
@@ -904,8 +906,14 @@
     }catch(err){ toast(err.message,true); }
   }
   async function ticket(communityId=null){const body=communityId?{communityId}:{};const d=await api('/api/game-ticket',{method:'POST',body:JSON.stringify(body)});return d.ticket;}
-  async function joinRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'join',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){toast(err.message,true);}}
-  async function watchRoom(room){try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){toast(err.message,true);}}
+  async function joinRoom(room){
+    const row=state.rooms.find(r=>r.roomId===room),game=row?.settings?.gameId||'carrom';
+    if(!await window.PlazrGameEntry.confirm({game,room,watch:false,description:row?window.SamiDevGames.label(row.settings)+' · المقاعد: '+(Number(row.occupied)||0)+' من '+(Number(row.capacity)||2):''}))return;
+    try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'join',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){window.PlazrGameEntry?.fail(err);toast(err.message,true);}}
+  async function watchRoom(room){
+    const row=state.rooms.find(r=>r.roomId===room),game=row?.settings?.gameId||'carrom';
+    if(!await window.PlazrGameEntry.confirm({game,room,watch:true,description:row?window.SamiDevGames.label(row.settings)+' · المقاعد: '+(Number(row.occupied)||0)+' من '+(Number(row.capacity)||2):''}))return;
+    try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){window.PlazrGameEntry?.fail(err);toast(err.message,true);}}
   async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}await openGame(gid,q);}catch(err){toast(err.message,true);}}
   async function loadFriends(){try{const d=await api('/api/friends');state.friends=d.friends||[];state.requests=d.requests||[];renderFriends();}catch(err){if(err.status===401)showAuth();}}
   function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}
