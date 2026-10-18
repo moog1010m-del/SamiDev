@@ -289,7 +289,7 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     out = {
         "id": str(raw.get("id") or ""),
         "username": str(raw.get("username") or ""),
-        "displayName": ((str(raw.get("botName") or raw.get("username") or "Player") + " · آلي") if raw.get("managedBot")=="1" else str(raw.get("username") or "Player")),
+        "displayName": str(raw.get("username") or "Player"),
         "isBot": raw.get("managedBot")=="1",
         "bio": str(raw.get("bio") or ""),
         "role": str(raw.get("role") or "user"),
