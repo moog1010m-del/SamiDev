@@ -44,6 +44,33 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.engine.provider=Slow();m=Message('one','a','وش ودك تلعب؟');self.engine.ingest(m)
         task=asyncio.create_task(self.engine.respond(m));await entered.wait()
         self.engine.ingest(Message('two','b','غيرنا السالفة'));release.set();self.assertIsNone(await task)
+    async def test_shared_context_distinguishes_bots_and_user_objection(self):
+        captured=[]
+        class Capture:
+            async def generate(inner,profile,context,preference):
+                captured.append((profile,context));return 'معك حق، ما أدري عن سبب سكوتهم.'
+        self.engine.provider=Capture()
+        self.engine.identities={'bot-n':{'name':'نواف','kind':'bot','persona_id':'nawaf'}}
+        self.engine.ingest(Message('greeting','human','السلام عليكم وين الشباب ليش الروم طافي'))
+        self.mem.add('majlis',Message('reply','bot-n','وعليكم السلام، الروم منور بس الشباب مروقين على السوالف والعلوم الطيبة.'))
+        objection=Message('objection','human','أي سوالف يا عمي ما نشوف الناس؟')
+        self.engine.ingest(objection)
+        reply=await self.engine.respond(objection)
+        self.assertIsNotNone(reply)
+        rows=captured[0][1]
+        self.assertEqual(rows[0]['speaker'],rows[2]['speaker'])
+        self.assertNotEqual(rows[0]['speaker'],rows[1]['speaker'])
+        self.assertEqual(rows[1]['name'],'نواف')
+        self.assertEqual(rows[1]['kind'],'bot')
+        self.assertEqual(rows[-1]['text'],objection.text)
+    async def test_silence_and_duplicate_bot_reply_are_not_published(self):
+        self.engine.identities={'bot-n':{'name':'نواف','kind':'bot','persona_id':'nawaf'}}
+        self.mem.add('majlis',Message('bot-reply','bot-n','هلا والله'))
+        message=Message('human','human','وش عندكم؟');self.engine.ingest(message)
+        self.provider.text='هلا والله!'
+        self.assertIsNone(await self.engine.respond(message))
+        self.provider.text=''
+        self.assertIsNone(await self.engine.respond(message))
     async def test_provider_failure_and_sensitive_input(self):
         class Broken:
             async def generate(*args):raise RuntimeError('private detail')
