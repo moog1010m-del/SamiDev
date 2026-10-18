@@ -43,6 +43,13 @@ async def main():
   async with client.post(server.make_url('/api/admin/bots'),json={'targetPerRoom':50,'enabled':True}) as response:
    assert response.status==200;result=await response.json();assert result['created']==200
   async with client.post(server.make_url('/api/admin/bots'),json={'targetPerRoom':50,'enabled':True}) as response:assert (await response.json())['created']==0
+  # The operator helper uses the same protected API and verifies actual room counts.
+  helper=ROOT.parent/'experiments/chat-bots/provision_roster.py'
+  process=await asyncio.create_subprocess_exec(sys.executable,str(helper),'--base-url',str(server.make_url('')).rstrip('/'),'--apply',env={**os.environ,'PLAZR_BOT_ADMIN_SESSION':admin_token},stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
+  output,errors=await asyncio.wait_for(process.communicate(),20)
+  assert process.returncode==0,(output,errors)
+  lines=[json.loads(line) for line in output.decode().splitlines()]
+  assert lines[0]['created']==0 and sorted(lines[1]['accountsPerRoom'].values())==[50]*4,lines
   async with client.get(server.make_url('/api/admin/users')) as response:
    assert {u['id'] for u in (await response.json())['users']}=={admin['id'],member['id']}
   state=await manager.snapshot();assert len(state['bots'])==200
