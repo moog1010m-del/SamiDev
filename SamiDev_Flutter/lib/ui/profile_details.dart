@@ -45,23 +45,33 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void showItem(Map item) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('${item['name']}', textAlign: TextAlign.right),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            picture(item['asset'], height: 140),
-            const SizedBox(height: 14),
-            Text('العدد: ${number(item['quantity'] ?? 1)}'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إغلاق'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final colors=Theme.of(context).colorScheme;
+        final availability=item['availability'] as Map? ?? const {};
+        final special=['moderator','event','unavailable'].contains(availability['kind']);
+        return AlertDialog(
+          scrollable: true,
+          title: Row(children: [
+            const Expanded(child: Text('معاينة المقتنى',style: TextStyle(fontSize: 13))),
+            IconButton(tooltip:'إغلاق',onPressed:()=>Navigator.pop(context),icon:const Icon(Icons.close)),
+          ]),
+          content: SizedBox(width: 330,child: Column(mainAxisSize: MainAxisSize.min,children: [
+            SizedBox(height: 170,child: Center(child: picture(item['asset'],height: 150))),
+            if(item['slot']=='name_badge')Container(
+              margin:const EdgeInsets.only(top:10),padding:const EdgeInsets.symmetric(horizontal:14,vertical:8),
+              decoration:BoxDecoration(color:colors.surfaceContainerHighest,borderRadius:BorderRadius.circular(12)),
+              child:Row(mainAxisSize:MainAxisSize.min,children:[
+                StickerArtwork(asset:'${item['asset']}',size:28),const SizedBox(width:3),
+                Flexible(child:Text('${widget.user['username'] ?? widget.user['displayName'] ?? 'لاعب'}',overflow:TextOverflow.ellipsis)),
+              ])),
+            const SizedBox(height:18),Text('${item['name']}',textAlign:TextAlign.center,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w700)),
+            if('${item['description'] ?? ''}'.isNotEmpty)Padding(padding:const EdgeInsets.only(top:8),child:Text('${item['description']}',textAlign:TextAlign.center,style:TextStyle(color:colors.onSurfaceVariant,height:1.7))),
+            const SizedBox(height:18),Align(alignment:AlignmentDirectional.centerStart,child:Text('العدد: ${number(item['quantity'] ?? 1)}')),
+            if('${availability['label'] ?? ''}'.isNotEmpty)Padding(padding:const EdgeInsets.only(top:10),child:Text('${availability['label']}',style:TextStyle(color:special?colors.error:colors.onSurfaceVariant,height:1.7))),
+          ])),
+          actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('إغلاق'))],
+        );
+      },
     );
   }
 

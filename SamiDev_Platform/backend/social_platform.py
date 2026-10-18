@@ -162,6 +162,19 @@ def cosmetic_id(value: Any, slot: str) -> str:
     return item_id if item and item.get("slot") == slot else ""
 
 
+def collectible_availability(item_id: str, item: dict) -> dict:
+    """Public catalog facts only; never infer an event or moderator entitlement."""
+    kind = str(item.get('availabilityKind') or '')
+    if item_id == 'badge_steward':
+        return dict(kind='moderator', purchasable=False, label='خاص بمشرفي المساحات؛ لا يُباع في المتجر.')
+    if kind == 'event':
+        event = str(item.get('eventName') or '').strip()
+        return dict(kind='event', purchasable=not bool(item.get('retired')), label=('مكافأة فعالية: '+event+'.' if event else 'عنصر خاص بفعالية.') + (' غير متاح حاليًا للشراء.' if item.get('retired') else ''))
+    if item.get('retired'):
+        return dict(kind='unavailable', purchasable=False, label='هذا العنصر غير متاح حاليًا للشراء في المتجر.')
+    return dict(kind='default' if item.get('availableToAll') else 'store', purchasable=not bool(item.get('availableToAll')), label='متاح للجميع' if item.get('availableToAll') else 'متاح في المتجر')
+
+
 class PlatformError(Exception):
     def __init__(self, code: str, message: str, status: int = 400):
         super().__init__(message)
@@ -901,6 +914,7 @@ class PlatformService:
             if slot == "profile_stars":
                 catalog.append({
                     **item,
+                    "availability": collectible_availability(item_id, item),
                     "id": item_id,
                     "owned": stars_count >= 5,
                     "equipped": stars_count > 0,
@@ -910,6 +924,7 @@ class PlatformService:
             else:
                 catalog.append({
                     **item,
+                    "availability": collectible_availability(item_id, item),
                     "id": item_id,
                     "owned": item_id in inventory,
                     "equipped": equipped.get(slot) == item_id,
@@ -1308,14 +1323,14 @@ class PlatformService:
         else:
             owned = set(self.mem_inventory.get(target_id, set()))
         out["showcaseItems"] = [
-            {"id": item_id, "name": item["name"], "asset": item.get("asset", ""), "gameId": item.get("gameId", ""), "quantity": 1, "category": item.get("category", "")}
+            {"id": item_id, "name": item["name"], "description": item.get("description", ""), "slot": item.get("slot", ""), "asset": item.get("asset", ""), "gameId": item.get("gameId", ""), "quantity": 1, "category": item.get("category", ""), "availability": collectible_availability(item_id, item)}
             for item_id, item in STORE_CATALOG.items()
             if item_id in owned
         ]
         stars = max(0, min(5, int(target.get('starsCount') or 0)))
         if stars:
             item = STORE_CATALOG['profile_star']
-            out['showcaseItems'].append(dict(id='profile_star', name=item['name'], asset=item['asset'], gameId='', quantity=stars, category='profile'))
+            out['showcaseItems'].append(dict(id='profile_star', name=item['name'], description=item.get('description',''), slot=item['slot'], asset=item['asset'], gameId='', quantity=stars, category='profile', availability=collectible_availability('profile_star',item)))
         out['ownedItemCount'] = sum(x['quantity'] for x in out['showcaseItems'])
         # Collection completion counts distinct cosmetics, not repeat purchases.
         collectible = {item_id for item_id, item in STORE_CATALOG.items()

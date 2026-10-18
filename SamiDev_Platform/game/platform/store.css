@@ -55,3 +55,7 @@ html[data-theme="light"] .store-product-sheet{background:#f9fbfa;color:#243734;b
 .store-product-sheet>.store-purchase-confirm{flex:0 0 auto;margin-top:12px}
 @media(max-width:480px){.store-product-sheet{padding:14px;border-radius:17px}.store-product-art{height:clamp(104px,21dvh,168px)}.store-product-sheet h3{font-size:20px}.store-name-preview strong{max-width:200px}}
 .store-banner-art[role="img"]{background:#000!important}
+.store-product-availability{margin:0;color:#aab9be;font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.store-product-availability:is([data-kind="moderator"],[data-kind="event"],[data-kind="unavailable"]){color:#f19c94}
+html[data-theme="light"] .store-product-availability{color:#657d77}
+html[data-theme="light"] .store-product-availability:is([data-kind="moderator"],[data-kind="event"],[data-kind="unavailable"]){color:#ad493f}

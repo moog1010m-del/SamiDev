@@ -118,7 +118,7 @@
       root.setAttribute('aria-label',`${userStars} نجوم زينة مملوكة`);
       root.querySelectorAll('.profile-sprite').forEach((el,i)=>{el.hidden=i>=userStars;el.classList.remove('dim');});
     });
-    if(Array.isArray(user.showcaseItems))window.SamiDevProfileDetails?.render($('#own-profile-details'),user,{own:true});
+    if(Array.isArray(user.showcaseItems))window.SamiDevProfileDetails?.render($('#own-profile-details'),user,{own:true,onUse:useProfileItem});
     else refreshOwnProfile();
     const admin=user.role==='admin'; $('#admin-nav').classList.toggle('hidden',!admin); $('#admin-bottom').classList.toggle('hidden',!admin);
   }
@@ -451,6 +451,8 @@
     const isStar=item.slot==='profile_stars',stars=Math.max(0,Math.min(5,Number(state.store?.starsCount??state.user?.starsCount??0)));
     const owned=item.consumable?false:isStar?stars>=5:(item.owned||item.availableToAll||item.default);
     const active=!isStar&&state.store?.equipped?.[item.slot]===item.id;
+    const availability=item.availability||{},forSale=availability.purchasable!==false&&!item.retired;
+    if(!owned&&!forSale)confirming=false;
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
     modal.innerHTML=`<section class="store-product-sheet${item.slot==='chat_bubble'?' has-chat-preview':''}" role="dialog" aria-modal="true" aria-labelledby="store-product-title">
       <header><span>رصيدك <b>${formatProfileStat(coins)}</b> <span class="coin-mark small">C</span></span><button type="button" data-product-close aria-label="إغلاق">×</button></header>
@@ -460,7 +462,7 @@
       ${isStar?`<small class="store-star-count">تملك ${stars} من 5 نجوم. ${stars<5?'هذه العملية تضيف نجمة واحدة.':''}</small>`:''}
       </div><p class="store-product-error" role="alert" hidden></p>
       ${confirming?`<div class="store-purchase-confirm"><h4>تأكيد الشراء</h4><p>شراء ${escapeHtml(item.name)} مقابل <b>${formatProfileStat(price)} كوينز</b>؟</p><small>رصيدك بعد الشراء: ${formatProfileStat(coins-price)} كوينز</small><div><button type="button" class="ghost" data-product-back>رجوع</button><button type="button" class="primary" data-product-confirm>تأكيد الشراء</button></div></div>`:
-      `<footer><strong>${price?formatProfileStat(price)+' كوينز':'مجاني'}</strong><button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'تفعيل الملصق أو التصميم':'شراء'}</button></footer>`}
+      `<footer><strong>${owned?'العدد: '+formatProfileStat(isStar?stars:1):forSale?(price?formatProfileStat(price)+' كوينز':'مجاني'):''}</strong>${availability.label?`<p class="store-product-availability" data-kind="${escapeHtml(availability.kind||'')}">${escapeHtml(availability.label)}</p>`:''}${owned||forSale?`<button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'استخدام':'شراء'}</button>`:''}</footer>`}
     </section>`;
     applyCosmeticPreviews(modal);
     $('[data-product-close]',modal).onclick=closeStoreProduct;
@@ -484,6 +486,10 @@
       toast('تم الشراء وإضافة العنصر إلى مقتنياتك');storePurchaseBusy=false;renderStoreProduct(false);
     }catch(err){storePurchaseBusy=false;modal.querySelectorAll('button').forEach(button=>button.disabled=false);const error=$('.store-product-error',modal);error.hidden=false;error.textContent=err.message||'تعذر إتمام الشراء. حاول مجددًا.';}
   }
+  async function useProfileItem(item,button){
+    if(!state.store)await loadStore();
+    return equipStoreItem(item.id,button);
+  }
   async function equipStoreItem(itemId,button){
     try{
       button.disabled=true;
@@ -496,9 +502,9 @@
         if(bItem){state.user.nameBadgeAsset=bItem.asset;state.user.nameBadgeName=bItem.name;}
       }
       if(state.user){state.user.profileBanner=result.equipped?.profile_banner||'';state.user.chatBubble=result.equipped?.chat_bubble||'';setUser(state.user);}
-      toast('تم تفعيل العنصر بنجاح');
+      toast('تم تفعيل العنصر بنجاح');return true;
     }
-    catch(err){button.disabled=false;toast(err.message||'تعذر تجهيز العنصر',true);}
+    catch(err){button.disabled=false;toast(err.message||'تعذر تجهيز العنصر',true);return false;}
   }
   function syncBottomNavigation(){
     const nav=$('.bottom-nav');if(nav)nav.hidden=!!state.activeCommunity;
@@ -730,7 +736,7 @@
     $('#community-profile-report').disabled=self;$('#community-profile-actions').classList.toggle('self',self);
     let extra=$('#sd-public-extra');
     if(!extra){extra=document.createElement('section');extra.id='sd-public-extra';extra.className='sd-public-extra';$('#community-profile-actions').insertAdjacentElement('afterend',extra);}
-    window.SamiDevProfileDetails?.render(extra,user,{own:self});
+    window.SamiDevProfileDetails?.render(extra,user,{own:self,onUse:self?useProfileItem:null});
     renderFeaturedRank($('#community-profile-featured'),user);
     setPublicProfileFull(keepFull);
     $('#community-profile-loading').classList.add('hidden');

@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'backend'))
-from social_platform import STORE_CATALOG,PlatformService,PlatformError
+from social_platform import STORE_CATALOG,PlatformService,PlatformError,collectible_availability
 
 async def main():
  rows=json.loads((ROOT/'game/platform/assets/stickers/collection.json').read_text(encoding='utf-8'))['items']
@@ -16,6 +16,12 @@ async def main():
    assert art.getchannel('A').getextrema()==(0,255)
  assert STORE_CATALOG['badge_steward']['retired'] is True
  assert STORE_CATALOG['badge_steward']['price']==0
+ special=collectible_availability('badge_steward',STORE_CATALOG['badge_steward'])
+ assert special['kind']=='moderator' and special['purchasable'] is False
+ assert 'مشرفي' in special['label']
+ event=collectible_availability('fixture',dict(retired=True,availabilityKind='event',eventName='لقاء اللاعبين'))
+ assert event['kind']=='event' and not event['purchasable'] and 'لقاء اللاعبين' in event['label']
+ assert collectible_availability('fixture',dict(retired=True))['kind']=='unavailable'
  service=PlatformService()
  user=await service.create_user('art_collector','Test-password-123')
  uid=user['id'];service.mem_users[uid]['coins']='1000'
@@ -25,6 +31,8 @@ async def main():
  profile=await service.public_profile(uid,uid)
  assert profile['nameBadge']=='badge_fox'
  assert profile['nameBadgeAsset'].endswith('/badge_fox-v2.png')
+ owned=next(item for item in profile['showcaseItems'] if item['id']=='badge_fox')
+ assert owned['description'] and owned['slot']=='name_badge' and owned['availability']['kind']=='store'
  assert (await service.store_snapshot(uid))['coins']==before['coins']
  await service.buy_store_item(uid,'badge_shell')
  after=await service.store_snapshot(uid)

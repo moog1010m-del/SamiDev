@@ -50,8 +50,8 @@ try{
   assert.equal(await own.locator('.sd-owned-card').count(),3);
   await own.locator('.sd-collection-more').click();assert.equal(await own.locator('.sd-owned-card').count(),4);
   await own.locator('select').selectOption('pool');assert.equal(await own.locator('.sd-owned-card').count(),1);
-  await own.locator('.sd-owned-card').click();assert(await own.locator('.sd-item-detail').isVisible());
-  await page.keyboard.press('Escape');assert(!await own.locator('.sd-item-detail').isVisible());
+  await own.locator('.sd-owned-card').click();assert(await page.locator('.sd-item-detail').isVisible());
+  await page.keyboard.press('Escape');assert(!await page.locator('.sd-item-detail').isVisible());
   await own.locator('select').selectOption('all');await own.locator('.sd-collection-more').click();
   const pool=own.locator('[data-game="pool"]');assert((await pool.innerText()).includes('٢٣'));
   assert.equal(await pool.locator('.sd-rank-star').getAttribute('aria-label'),'المستوى 3');assert.equal(await pool.locator('.sd-rank-star b').innerText(),'3');

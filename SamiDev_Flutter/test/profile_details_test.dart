@@ -11,7 +11,7 @@ void main() {
     final user = <String, dynamic>{
       'relation': 'self', 'legacyWins': 4, 'collectionOwnedCount':4,'collectionTotalCount':20,
       'showcaseItems': [
-        for (var i = 0; i < 4; i++) {'id': 'item_$i', 'name': 'مقتنى $i', 'gameId': i == 3 ? 'pool' : '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-0', 'quantity': i == 0 ? 2 : 1},
+        for (var i = 0; i < 4; i++) {'id': 'item_$i', 'name': 'مقتنى $i', 'description':'وصف المقتنى', 'slot':'name_badge', 'availability':{'kind':'event','purchasable':false,'label':'مكافأة فعالية خاصة؛ غير متاح للشراء.'}, 'gameId': i == 3 ? 'pool' : '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-0', 'quantity': i == 0 ? 2 : 1},
       ],
       'gameStatistics': [
         {'gameId':'carrom','played':0,'wins':0},
@@ -40,6 +40,8 @@ void main() {
     await tester.tap(find.text('مقتنى 3'));
     await tester.pumpAndSettle();
     expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('وصف المقتنى'),findsOneWidget);
+    expect(find.text('مكافأة فعالية خاصة؛ غير متاح للشراء.'),findsOneWidget);
     await tester.tap(find.text('إغلاق'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('عرض التفاصيل'));
