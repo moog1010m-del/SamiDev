@@ -43,7 +43,7 @@ class SamiDevApp extends StatelessWidget {
       navigationBarTheme:NavigationBarThemeData(backgroundColor:colors.surface,height:64,indicatorColor:colors.primary.withValues(alpha:.13)));
   }
   @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,__)=>MaterialApp(
-    debugShowCheckedModeBanner:false,title:'SamiDev',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
+    debugShowCheckedModeBanner:false,title:'Plazr',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
     builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const PlatformScreen()));
 }
 class PlatformScreen extends StatefulWidget {

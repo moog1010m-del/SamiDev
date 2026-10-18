@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "3a2fde80c84fc8d04d09fd1679c09f018b60d3c8880e413c5f3979390e76ec16"
+      "sha256": "30e7dce90e7c08732d4f6877525352c7bc8b06836c268ee0cb0a352fb055a094"
     },
     "browser-runtime.js": {
       "size": 80328,
@@ -1472,8 +1472,8 @@
       "sha256": "fff9a0efd8b9d88a5aed0d6ed37d478673ee8a902d23d857741e217f7bc53758"
     },
     "platform/account-deletion.html": {
-      "size": 2600,
-      "sha256": "8c5e101b6614e70a015253d3e5e45467f2f5bf9b66bddb511d6a8df775609d97"
+      "size": 2592,
+      "sha256": "dd87dff600e31dababb3c7bbf6a65651e566061f5e125799130cb3d700d82f7e"
     },
     "platform/account-deletion.js": {
       "size": 4315,
@@ -1482,6 +1482,38 @@
     "platform/account-settings.js": {
       "size": 11637,
       "sha256": "5a2a657d36c5bc42825e9e2bf0d0246bdbaf8462a0e3f66ee998cfd06e90e649"
+    },
+    "platform/assets/brand/app-icon.svg": {
+      "size": 506,
+      "sha256": "e27575c3c47b43e588720ea31f45dc3d1b209c25eb9117aaeee3c2b7fdc8132f"
+    },
+    "platform/assets/brand/apple-touch-icon.png": {
+      "size": 4460,
+      "sha256": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab"
+    },
+    "platform/assets/brand/lockup-dark.svg": {
+      "size": 2675,
+      "sha256": "141d20313e06c4ae1fae50b195d9a40ee32da89d5968a317a2eb60632ed053b4"
+    },
+    "platform/assets/brand/lockup-light.svg": {
+      "size": 2675,
+      "sha256": "457282c836f61e44472af2da5f728c24bd8329a611bef90e50ebbee4d5380dd9"
+    },
+    "platform/assets/brand/mark-dark.svg": {
+      "size": 446,
+      "sha256": "b668a29b75e1907617af03ab291a716d0b0b445b944a790a9887ab4de428f89c"
+    },
+    "platform/assets/brand/mark-gradient.svg": {
+      "size": 459,
+      "sha256": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c"
+    },
+    "platform/assets/brand/mark-green.svg": {
+      "size": 446,
+      "sha256": "c5bd187a676d1214bee1d65d06e0a36c5f00fbe5e4e69cd3d68280601c644796"
+    },
+    "platform/assets/brand/mark-white.svg": {
+      "size": 446,
+      "sha256": "baf27409c6df7473449e4d17142342a086bf1e844a24d5dd144207fb7e5e173a"
     },
     "platform/assets/cosmetics/badge_ember.webp": {
       "size": 183518,
@@ -2408,8 +2440,8 @@
       "sha256": "c28a3f54adb61ec03553695de539265e1de877b77c3c391e563d2119c0815085"
     },
     "platform/build.json": {
-      "size": 4059,
-      "sha256": "e07a7b45e63667511628d7ae66a27904a16f4aebbd642cfa5203f5468b52f7e6"
+      "size": 4402,
+      "sha256": "6143058577adef660fdb5172de93af2d148790dc43156c62e85ac4923f3d37a7"
     },
     "platform/community-live.js": {
       "size": 6867,
@@ -2420,8 +2452,8 @@
       "sha256": "f71d78338e94f708f0648d5d16ec943c3f4c7ca0823014eff09241f6d47cb2fa"
     },
     "platform/firebase-auth.js": {
-      "size": 10299,
-      "sha256": "86aecd86cd9617f550fb563cc02a7e9b6a4c279e007d73b55310789d06523365"
+      "size": 10297,
+      "sha256": "31cb90b972fe1d899e28c4fa0a674619a68148b707c5187d0e611b9f83bd4ae5"
     },
     "platform/game-host.js": {
       "size": 4573,
@@ -2432,12 +2464,12 @@
       "sha256": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072"
     },
     "platform/index.html": {
-      "size": 47886,
-      "sha256": "8b6d11844f9c7f92ca3adb6abcb88b5aa8ef172008f58abfdecabb0e79a0c1ad"
+      "size": 48201,
+      "sha256": "fb56643a8436934ac4eac9e336c9edeb8d73e2a9bf01426b19d02d411fddbd48"
     },
     "platform/platform.css": {
-      "size": 114134,
-      "sha256": "9b8b7b19d5131dc246b4f3db19e02e0574f9a2187a4cd92403419df7930a863b"
+      "size": 114385,
+      "sha256": "f9000897aedf07556723ae7dc16ff666d0dc29904cf0267666460e9336689097"
     },
     "platform/platform.js": {
       "size": 90643,

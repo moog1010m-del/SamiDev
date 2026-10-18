@@ -58,6 +58,7 @@ flutter:
     - assets/runtime/images/themes/
     - assets/runtime/imported/
     - assets/runtime/platform/
+    - assets/runtime/platform/assets/brand/
     - assets/runtime/platform/assets/cosmetics/
     - assets/runtime/platform/assets/profile/
     - assets/runtime/platform/assets/profile/identity/

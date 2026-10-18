@@ -580,7 +580,7 @@ class _AccountSettingsState extends State<AccountSettings> {
             ],
             const SizedBox(height: 36),
             Text(
-              'SamiDev',
+              'Plazr',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
@@ -958,7 +958,7 @@ class _AccountDevicesState extends State<AccountDevices> {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 24),
           child: Text(
-            'أجهزتك المتصلة بحساب SamiDev.\nاختر جهازًا لعرض تفاصيله أو تسجيل خروجه.',
+            'أجهزتك المتصلة بحساب Plazr.\nاختر جهازًا لعرض تفاصيله أو تسجيل خروجه.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,

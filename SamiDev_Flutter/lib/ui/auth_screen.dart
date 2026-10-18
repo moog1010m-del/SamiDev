@@ -207,16 +207,15 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: colors.primaryContainer,
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      child: Icon(
-                        Icons.sports_esports_rounded,
-                        color: colors.primary,
-                        size: 38,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Image.asset('assets/runtime/platform/assets/brand/apple-touch-icon.png', fit: BoxFit.cover),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
                   const Text(
-                    'SamiDev',
+                    'Plazr',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
                   ),
@@ -311,7 +310,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             decoration:
                                 field(
                                   firebase
-                                      ? 'كلمة مرور حساب SamiDev'
+                                      ? 'كلمة مرور حساب Plazr'
                                       : 'كلمة المرور',
                                   Icons.lock_outline,
                                 ).copyWith(

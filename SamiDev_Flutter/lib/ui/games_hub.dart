@@ -74,7 +74,7 @@ class GamesHubState extends State<GamesHub> {
     final stat=(widget.user?['gameStatistics'] as List? ?? []).whereType<Map>().where((s)=>s['gameId']==game?.id).firstOrNull;
     final visible=supportedGames.where((g)=>filter=='all'||(filter=='cards'?g.id=='crazy8':g.id!='crazy8')).toList();
     return Column(children:[
-      SizedBox(height:58,child:Row(children:[if(game!=null)IconButton(onPressed:back,tooltip:'كل الألعاب',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:18),Expanded(child:Text(game?.name??'الألعاب',style:const TextStyle(fontSize:20,fontWeight:FontWeight.w700))),Padding(padding:const EdgeInsets.symmetric(horizontal:18),child:Text('SamiDev',textDirection:TextDirection.ltr,style:TextStyle(color:colors.primary,fontWeight:FontWeight.w700)))])),
+      SizedBox(height:58,child:Row(children:[if(game!=null)IconButton(onPressed:back,tooltip:'كل الألعاب',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:18),Expanded(child:Text(game?.name??'الألعاب',style:const TextStyle(fontSize:20,fontWeight:FontWeight.w700))),Padding(padding:const EdgeInsets.symmetric(horizontal:18),child:Text('Plazr',textDirection:TextDirection.ltr,style:TextStyle(color:colors.primary,fontWeight:FontWeight.w700)))])),
       Expanded(child:game==null?ListView(padding:const EdgeInsets.fromLTRB(16,4,16,24),children:[
         Text('اختر لعبتك، وسنبحث لك عن منافس.',style:TextStyle(color:colors.onSurfaceVariant,height:1.5)),const SizedBox(height:18),
         Wrap(spacing:8,children:[for(final entry in {'all':'الكل','boards':'الطاولات','cards':'البطاقات'}.entries)ChoiceChip(label:Text(entry.value),selected:filter==entry.key,onSelected:(_)=>setState(()=>filter=entry.key))]),const SizedBox(height:16),

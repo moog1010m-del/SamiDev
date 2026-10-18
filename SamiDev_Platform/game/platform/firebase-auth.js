@@ -18,7 +18,7 @@
     for(const node of card.querySelectorAll('.auth-tabs,.auth-form,.auth-note'))node.classList.add('hidden');
     const form=document.createElement('form');form.className='auth-form';form.id='firebase-auth-form';
     form.innerHTML=`<button class="google-auth-button" data-google type="button"><span class="google-auth-mark" aria-hidden="true">G</span><span>المتابعة باستخدام Google</span></button><div class="auth-divider">أو بالبريد الإلكتروني</div><label>البريد الإلكتروني<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
-      <label data-password>كلمة مرور حساب SamiDev<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+      <label data-password>كلمة مرور حساب Plazr<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
       <label data-confirm-password class="hidden">تأكيد كلمة المرور<input name="confirmPassword" type="password" autocomplete="new-password" maxlength="128"></label>
       <p data-status role="status" aria-live="polite"></p><button class="primary" data-submit type="submit">دخول</button>
       <button class="ghost hidden" data-resend type="button">إعادة إرسال رسالة التوثيق</button>
