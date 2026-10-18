@@ -54,6 +54,14 @@ def audit(root):
         matches = sorted({marker for marker in MARKERS if
             any(marker in value for value in values) or
             any(marker.encode(encoding).lower() in data.lower() for encoding in ('utf-8', 'utf-16le', 'utf-16be'))})
+        # User-requested editorial comparison, never a game/runtime display label.
+        # Only these two pages may name Plato, and only with their independence notice.
+        editorial_notice = {
+            'discover/alternatives.html': 'Plazr مشروع مستقل، غير تابع لبلاتو (Plato) أو قيمزر (Gamezer).',
+            'discover/english.html': 'Plazr is an independent project and is not affiliated with Plato or Gamezer.',
+        }.get(relative)
+        if editorial_notice and editorial_notice.encode('utf-8') in data:
+            matches = [marker for marker in matches if marker not in ('plato', 'بلاتو')]
         if matches:
             findings.append({'file': relative, 'kind': 'retired-name', 'markers': matches})
     return {'ok': not findings, 'filesScanned': count, 'findings': findings}

@@ -12,6 +12,8 @@ ASSETS = ["platform/game-entry.js", "platform/game-preload.js", "platform/deskto
 def build() -> dict:
     from build_legal_pages import build as build_legal_pages
     legal=build_legal_pages()
+    from build_seo_pages import build as build_seo_pages
+    seo_files=build_seo_pages()
     index = GAME / "platform/index.html"
     html = index.read_text(encoding="utf-8")
     for rel in ASSETS:
@@ -39,7 +41,7 @@ def build() -> dict:
     from build_asset_cache import build as build_asset_cache
     build_asset_cache()
     files = {rel: hashlib.sha256((GAME / rel).read_bytes()).hexdigest()
-             for rel in ["platform/legal.css", "platform/legal-content.json", *["platform/"+p["id"]+".html" for p in legal["pages"]], "platform/assets/brand/app-icon.svg", "platform/assets/brand/mark-gradient.svg", "platform/assets/brand/apple-touch-icon.png", "asset-worker.js", "platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js", "game-bootstrap.js", "game-host.html", "runtime-games.json", "web-bridge.js", "room-menu.js", "launcher.js", "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
+             for rel in [*seo_files, "platform/legal.css", "platform/legal-content.json", *["platform/"+p["id"]+".html" for p in legal["pages"]], "platform/assets/brand/app-icon.svg", "platform/assets/brand/mark-gradient.svg", "platform/assets/brand/apple-touch-icon.png", "asset-worker.js", "platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js", "game-bootstrap.js", "game-host.html", "runtime-games.json", "web-bridge.js", "room-menu.js", "launcher.js", "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
     digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()[:16]
     manifest = {"release": "V37", "buildId": "samidev-v37-" + digest,
                 "games": ["carrom", "tablesoccer", "crazy8", "pool"], "files": files}

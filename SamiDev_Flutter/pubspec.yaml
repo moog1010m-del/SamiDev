@@ -24,6 +24,7 @@ flutter:
   assets:
     - assets/runtime-manifest.json
     - assets/runtime/
+    - assets/runtime/discover/
     - assets/runtime/games/crazy8/
     - assets/runtime/games/crazy8/anim/
     - assets/runtime/games/crazy8/images/

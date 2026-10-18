@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-790540caaec7b55e",
+  "buildId": "samidev-v30-719cdedd650570fb",
   "games": [
     "carrom",
     "tablesoccer",
@@ -8,6 +8,16 @@
     "pool"
   ],
   "files": {
+    "discover/discover.css": "13ed8656fbcf180d49e89d721d37625ec745a4a1942c05261db28b758807a9af",
+    "robots.txt": "1ef70d5251f07aee83a0302816e43df8b61534b99dae51175d599a1823847611",
+    "sitemap.xml": "af41ae5324f30bc7f2aa4dbf84d546c292f1a31e92beee90fd46b7c9345e19a2",
+    "discover/index.html": "adc52ab30e3831a1464970122f38ce81b8639deddd371d54198def022fed741a",
+    "discover/billiards.html": "fc7aa1142fd231b607aed6c9ca9e67eacfcd2afb0b5942c642fdeff98fd95f70",
+    "discover/carrom.html": "d08a8494292ce539ec530bb78c3c3ae94f892405d0c02d9fe3552e27277db52d",
+    "discover/table-soccer.html": "bc4aab5025adcd45085934e5494a30f8f6b54ceb48adaa814995e961625b11c2",
+    "discover/crazy8.html": "b32ac5ca0b5c14d51cd80c70ccd7c7626821e88549375f058ba238668324d08d",
+    "discover/alternatives.html": "1c00eb9749a0240ae403d2600c7036ea04a8e4c23b9db4811dc34c6c46a0346c",
+    "discover/english.html": "cd18d00c125a294835a9d4f59e314cdc6828909f2d3c1be6bd40f0a2119a39b9",
     "platform/legal.css": "ca3e74c2639af8d6c14076d55ff762af054c285e5ebc7ce0e17dd0a7a516fd0c",
     "platform/legal-content.json": "08197cc6a678c947dcfb18a5b94443a41e677980b23c2a982a29acbf4f0733de",
     "platform/privacy.html": "8a2a416df7d4dff1b50d92ae0b11d3a3eb96eec3708ad9939ff8e4d2891856e3",
@@ -20,7 +30,7 @@
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
     "asset-worker.js": "54702cc1019f2cbf882b90ed6daccd134296cb7bf937c3c517de35064e3589ba",
-    "platform/index.html": "ff893050cb8fa8cc800bf898c846314a2b3d4226489f29eaa7f29b746e566c04",
+    "platform/index.html": "65e0d0617d5fade2611c7ce865934404fd3aeb75725d9dbf3dd1453c507d65ee",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
     "platform/game-entry.js": "204ee121ae45f53140574fe7f189f4a818d48e34f73727018c029a8e28704149",
