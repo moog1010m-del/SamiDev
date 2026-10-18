@@ -2,10 +2,18 @@
   'use strict';
   let clipId=0;
   const sheet='/platform/assets/stickers/samidev-stickers.png';
+  const independent=['badge_crown','badge_orbit','badge_shell','badge_fox','badge_fire','badge_crystal','badge_leopard','badge_jellyfish'];
+  function resolve(value){
+    const index=cell(value);
+    if(index!==null&&index<9)return index<independent.length?'/platform/assets/stickers/'+independent[index]+'-v2.png':'';
+    const old=String(value||'').match(/^\/platform\/assets\/cosmetics\/(badge_(?:shard|ember|moonstone|steward))\.webp$/);
+    return old?'/platform/assets/stickers/'+old[1]+'-v2.png':String(value||'');
+  }
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function cell(value){if(value==='/platform/assets/profile/identity/profile-atlas.png#star')return 9;const match=String(value||'').match(/^\/platform\/assets\/stickers\/samidev-stickers\.png#cell-([0-8])$/);return match?Number(match[1]):null;}
   function markup(value,className='',label=''){
     if(value==='/platform/assets/profile/raster/palm-swords.webp')return '';
+    value=resolve(value);
     value=String(value||'').replace('/images/cues/classic-preview.webp','/images/cues/classic.webp').replace('/images/cues/moon-preview.webp','/images/cues/moon.webp');
     const index=cell(value);
     if(index!==null){
@@ -17,5 +25,5 @@
   }
   function render(root,value,label=''){if(!root)return;root.classList.add('sd-sprite-badge');root.innerHTML=markup(value,'',label);root.hidden=!root.innerHTML;}
   const style=document.createElement('style');style.textContent='.sd-sticker-art{display:block;overflow:hidden;max-width:100%;max-height:100%}.sd-sprite-badge[hidden]{display:none!important}.sd-sprite-badge{background-image:none!important;display:inline-flex;align-items:center;justify-content:center}.sd-sprite-badge>svg,.sd-sprite-badge>img{width:100%;height:100%;object-fit:contain}.sd-owned-card .sd-sticker-art{width:100%;height:64px}.sd-item-art{height:140px;width:100%;display:grid;place-items:center}.sd-item-art>svg,.sd-item-art>img{width:100%;height:100%;object-fit:contain}.profile-stars [hidden],.lobby-profile-stars [hidden],.community-member-stars [hidden]{display:none!important}';document.head.appendChild(style);
-  window.SamiDevStickerArt={cell,markup,render};
+  window.SamiDevStickerArt={cell,resolve,markup,render};
 })();

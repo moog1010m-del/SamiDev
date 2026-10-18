@@ -20,6 +20,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from dataclasses import dataclass
 from typing import Any
+from pathlib import Path
 
 AUTH_AUDIT = logging.getLogger('samidev.auth')
 if not AUTH_AUDIT.handlers:
@@ -135,6 +136,14 @@ for _id, _slot, _category, _name in [("chat_default", "chat_bubble", "chat", "ا
     STORE_CATALOG[_id] = dict(name=_name, description="العودة إلى التصميم الافتراضي.", slot=_slot, category=_category, gameId="", asset="", price=0, availableToAll=True, default=True)
 
 STORE_CATALOG['badge_steward'] = dict(name='أمانة المجلس', description='ملصق مشرفي المجتمع من سيتم. متاح ما دمت مشرفًا في مساحة واحدة على الأقل، ولا يمنح صلاحيات إضافية.', slot='name_badge', category='profile', gameId='', asset='/platform/assets/cosmetics/badge_steward.webp', price=0, availableToAll=False, default=False, retired=True)
+
+# Refresh artwork without changing inventory IDs, prices, or moderator entitlements.
+_badge_art = json.loads((Path(__file__).resolve().parents[1] / 'game/platform/assets/stickers/collection.json').read_text(encoding='utf-8'))
+for _badge in _badge_art['items']:
+    _item = STORE_CATALOG[_badge['id']]
+    _item.update(name=_badge['name'], asset=_badge['asset'])
+    if _badge['id'] != 'badge_steward':
+        _item.update(description=_badge['description'], retired=False)
 
 def system_notifications(user):
     try:

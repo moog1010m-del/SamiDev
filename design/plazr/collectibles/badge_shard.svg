@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128"><defs>
+<linearGradient id="ice" x2=".8" y2="1"><stop stop-color="#edfeff"/><stop offset=".45" stop-color="#a1edff"/><stop offset="1" stop-color="#5794df"/></linearGradient>
+<linearGradient id="opal" x2=".8" y2="1"><stop stop-color="#f2e9ff"/><stop offset=".4" stop-color="#9ee8ee"/><stop offset=".7" stop-color="#b0b0ed"/><stop offset="1" stop-color="#5c91b9"/></linearGradient>
+<linearGradient id="gold" x2=".8" y2="1"><stop stop-color="#fff2ae"/><stop offset=".5" stop-color="#f2bd58"/><stop offset="1" stop-color="#b97631"/></linearGradient>
+<linearGradient id="violet" x2=".8" y2="1"><stop stop-color="#eedbff"/><stop offset=".5" stop-color="#b79be9"/><stop offset="1" stop-color="#735bc5"/></linearGradient>
+<linearGradient id="aqua" x2=".7" y2="1"><stop stop-color="#d5fff1"/><stop offset=".45" stop-color="#40d7cc"/><stop offset="1" stop-color="#158fa7"/></linearGradient>
+<linearGradient id="coral" x2=".8" y2="1"><stop stop-color="#ffd29e"/><stop offset=".55" stop-color="#ff826f"/><stop offset="1" stop-color="#d34462"/></linearGradient>
+<linearGradient id="silver" x2=".8" y2="1"><stop stop-color="#fcfdff"/><stop offset=".5" stop-color="#cfdfec"/><stop offset="1" stop-color="#8697c2"/></linearGradient>
+</defs><path d="m72 12-47 58h31l-5 44 52-64H72l10-38Z" fill="url(#aqua)" stroke="#24899c" stroke-width="3" stroke-linejoin="round"/><path d="M72 20 39 62h24l-3 29 30-35H65Z" fill="#b4fff0" opacity=".7"/></svg>

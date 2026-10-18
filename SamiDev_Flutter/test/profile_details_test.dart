@@ -22,6 +22,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('(4 / 20)'), findsOneWidget);
     expect(find.byType(GameRankCard),findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('game-level-pool')), matching: find.text('3')), findsOneWidget);
     expect(tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator).first).value,.2);
     expect(find.text('مقتنى 0'), findsOneWidget);
     expect(find.text('مقتنى 3'), findsNothing);

@@ -1299,7 +1299,7 @@ class SamiDevRealtime:
         return web.json_response({"ok": True, **UI_BUILD}, headers={"Cache-Control": "no-store"})
 
     async def index(self, request: web.Request) -> web.StreamResponse:
-        return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-store", "X-SamiDev-Build": UI_BUILD["buildId"]})
+        return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-store", "Content-Type": "text/html; charset=utf-8", "X-SamiDev-Build": UI_BUILD["buildId"]})
 
     async def platform_redirect(self, request: web.Request) -> web.StreamResponse:
         raise web.HTTPPermanentRedirect("/platform/")
@@ -1315,7 +1315,10 @@ class SamiDevRealtime:
             raise web.HTTPNotFound()
         suffix = path.suffix.lower()
         cache_control = "no-store" if suffix in {".html", ".js", ".css", ".json"} else "public, max-age=3600"
-        return web.FileResponse(path, headers={"Cache-Control": cache_control})
+        headers = {"Cache-Control": cache_control}
+        if suffix == ".html":
+            headers["Content-Type"] = "text/html; charset=utf-8"
+        return web.FileResponse(path, headers=headers)
 
 
 SERVICE = SamiDevRealtime()

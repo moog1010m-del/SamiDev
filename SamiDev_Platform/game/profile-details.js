@@ -24,7 +24,7 @@
   function rankMarkup(level) {
     level=Math.max(1,Math.min(100,number(level)));
     const tier=Math.floor((level-1)/10);
-    return `<span class="sd-rank-star" data-tier="${tier}" role="img" aria-label="المستوى ${level}"><svg viewBox="0 0 64 64" aria-hidden="true"><path class="sd-star-edge" d="m32 5 8 16 18 3-13 13 3 19-16-9-16 9 3-19L6 24l18-3Z"/><path class="sd-star-face" d="m32 11 6.5 14 15 2-11 11 2.5 14-13-7-13 7 2.5-14-11-11 15-2Z"/></svg><b>${level}</b></span>`;
+    return `<span class="sd-rank-star" data-tier="${tier}" role="img" aria-label="المستوى ${level}"><svg viewBox="0 0 64 64" aria-hidden="true"><path class="sd-star-edge" d="m32 5 8 16 18 3-13 13 3 19-16-9-16 9 3-19L6 24l18-3Z"/><path class="sd-star-face" d="m32 11 6.5 14 15 2-11 11 2.5 14-13-7-13 7 2.5-14-11-11 15-2Z"/></svg><b aria-hidden="true">${level}</b></span>`;
   }
 
   function render(root, user, {own = false} = {}) {
@@ -55,7 +55,7 @@
         const level = Math.max(1, Math.min(100, number(s.level)));
         const progress = Math.max(0, Math.min(1, Number(s.progress) || 0));
         return `<article class="sd-rank-row" data-game="${id}"><div class="sd-game-emblem"><img class="sd-game-logo" src="/room-sprites/${mark}.png" alt="">${rankMarkup(level)}</div>
-          <div class="sd-rank-info"><div class="sd-rank-title"><h4>${name}</h4><span>المستوى ${count(level)}</span></div>
+          <div class="sd-rank-info"><div class="sd-rank-title"><h4>${name}</h4><span class="sd-level-chip" aria-label="المستوى ${level}"><small>المستوى</small><b dir="ltr">${level}</b></span></div>
           <div class="sd-rank-progress" role="progressbar" aria-label="تقدم مستوى ${name}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(progress * 100)}"><span style="width:${progress * 100}%"></span></div><div class="sd-rank-label"><strong>${count(s.played)} لعب · ${count(s.wins)} فوز</strong><span>${esc(s.rankName || '')}</span></div>
           <div class="sd-rank-expanded" hidden><p>${level === 100 ? 'وصلت إلى قمة المستويات' : `${count(s.winsToNextLevel)} فوز للوصول إلى المستوى ${count(level + 1)}`}</p><div class="sd-match-numbers"><span>لعب <b>${count(s.played)}</b></span><span>خسر <b>${count(s.losses)}</b></span><span>تعادل <b>${count(s.draws)}</b></span></div></div></div></article>`;
       }).join('')}

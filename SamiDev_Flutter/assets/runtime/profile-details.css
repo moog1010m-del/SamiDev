@@ -20,7 +20,10 @@ html[data-theme="light"] .sd-profile-details{--sd-rank-bg:#f1f6f6;--sd-rank-line
 .sd-rank-star svg{width:100%;height:100%;position:absolute;inset:0;overflow:visible}
 .sd-star-edge{fill:var(--star-edge);stroke:var(--star-edge);stroke-width:4;stroke-linejoin:round}
 .sd-star-face{fill:var(--star-face);stroke:#ffffff75;stroke-width:1.5;stroke-linejoin:round}
-.sd-rank-star b{font:700 13px/1 system-ui;top:1px;color:#263c43;text-shadow:none;z-index:1}
+.sd-rank-star b{position:absolute;inset:0;display:grid;place-items:center;padding-top:3px;font:700 13px/1 system-ui;color:#263c43;text-shadow:none;z-index:1}
+.sd-rank-title>.sd-level-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--sd-rank-line);border-radius:9px;background:var(--sd-rank-bg);color:var(--sd-rank-ink);flex-shrink:0}
+.sd-level-chip small{font:500 10px/1.3 system-ui;color:var(--sd-rank-muted)}
+.sd-level-chip b{font:750 17px/1 system-ui;font-variant-numeric:tabular-nums;color:var(--sd-rank-ink)}
 .sd-rank-star[data-tier="1"]{--star-edge:#b98369;--star-face:#efc7ae}.sd-rank-star[data-tier="2"]{--star-edge:#8c9eaf;--star-face:#e1ebf2}.sd-rank-star[data-tier="3"]{--star-edge:#c79c43;--star-face:#f7df93}.sd-rank-star[data-tier="4"]{--star-edge:#75a7b0;--star-face:#d3eeee}.sd-rank-star[data-tier="5"]{--star-edge:#a083c0;--star-face:#e2cef2}.sd-rank-star[data-tier="6"]{--star-edge:#6b98c3;--star-face:#bcdcf5}.sd-rank-star[data-tier="7"]{--star-edge:#64a78c;--star-face:#b9e8ce}.sd-rank-star[data-tier="8"]{--star-edge:#c47d91;--star-face:#f4c0cc}.sd-rank-star[data-tier="9"]{--star-edge:#7aaec0;--star-face:#d0f3fa}
 .sd-reputation-slot{display:inline-flex!important;align-items:center;justify-content:center;background:none!important;width:32px!important;height:36px!important;flex:0 0 32px!important}
 .sd-reputation-flame{--flame:#c89e66;--halo:#ecd6a6;display:inline-flex;width:32px;height:36px;flex:0 0 32px;vertical-align:middle;align-items:center;justify-content:center}

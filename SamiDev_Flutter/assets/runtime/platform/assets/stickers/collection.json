@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "items": [
+    {
+      "id": "badge_crown",
+      "name": "أوبال الضوء",
+      "description": "قطرة أوبال بلمعة لؤلؤية هادئة.",
+      "asset": "/platform/assets/stickers/badge_crown-v2.png"
+    },
+    {
+      "id": "badge_orbit",
+      "name": "هلال الفضة",
+      "description": "هلال فضي ولمعة بنفسجية صغيرة.",
+      "asset": "/platform/assets/stickers/badge_orbit-v2.png"
+    },
+    {
+      "id": "badge_shell",
+      "name": "ندفة الجليد",
+      "description": "ستة أذرع بلورية، بحضور خفيف وواضح.",
+      "asset": "/platform/assets/stickers/badge_shell-v2.png"
+    },
+    {
+      "id": "badge_fox",
+      "name": "مؤشر الطيف",
+      "description": "مؤشر فيروزي بلمسات رقمية متقطعة.",
+      "asset": "/platform/assets/stickers/badge_fox-v2.png"
+    },
+    {
+      "id": "badge_fire",
+      "name": "فانوس العنبر",
+      "description": "ضوء ذهبي داخل فانوس هندسي بسيط.",
+      "asset": "/platform/assets/stickers/badge_fire-v2.png"
+    },
+    {
+      "id": "badge_crystal",
+      "name": "بلورة البنفسج",
+      "description": "حجر بنفسجي بأوجه لؤلؤية متوازنة.",
+      "asset": "/platform/assets/stickers/badge_crystal-v2.png"
+    },
+    {
+      "id": "badge_leopard",
+      "name": "حرف الفوز",
+      "description": "حرف W أحمر بلمسة فرشاة حيوية.",
+      "asset": "/platform/assets/stickers/badge_leopard-v2.png"
+    },
+    {
+      "id": "badge_jellyfish",
+      "name": "مدار النيون",
+      "description": "حلقة فيروزية تدور حول بلورة بنفسجية.",
+      "asset": "/platform/assets/stickers/badge_jellyfish-v2.png"
+    },
+    {
+      "id": "badge_shard",
+      "name": "شظية البرق",
+      "description": "برق فيروزي بحدود واضحة بجانب اسمك.",
+      "asset": "/platform/assets/stickers/badge_shard-v2.png"
+    },
+    {
+      "id": "badge_ember",
+      "name": "وهج المرجان",
+      "description": "شعلة مرجانية صغيرة بدون ملامح.",
+      "asset": "/platform/assets/stickers/badge_ember-v2.png"
+    },
+    {
+      "id": "badge_moonstone",
+      "name": "حجر السحاب",
+      "description": "ماسة سماوية بتفاصيل فضية ناعمة.",
+      "asset": "/platform/assets/stickers/badge_moonstone-v2.png"
+    },
+    {
+      "id": "badge_steward",
+      "name": "بوصلة المجلس",
+      "description": "بوصلة هندسية خاصة بمشرفي المساحات.",
+      "asset": "/platform/assets/stickers/badge_steward-v2.png"
+    }
+  ]
+}

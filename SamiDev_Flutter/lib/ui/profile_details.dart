@@ -313,9 +313,22 @@ class GameRankCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        'المستوى $level',
-                        style: const TextStyle(fontSize: 11),
+                      Semantics(
+                        label: 'المستوى $level',
+                        child: Container(
+                          key: ValueKey('game-level-$id'),
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: colors.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          child: Row(mainAxisSize: MainAxisSize.min, children: [
+                            const Text('المستوى', style: TextStyle(fontSize: 10)),
+                            const SizedBox(width: 7),
+                            Text('$level', textDirection: TextDirection.ltr,
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                          ]),
+                        ),
                       ),
                     ],
                   ),

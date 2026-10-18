@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'game/platform'
 
 def build():
- c=json.loads((ROOT/'legal/operator.json').read_text());email=c['supportEmail']
+ c=json.loads((ROOT/'legal/operator.json').read_text(encoding='utf-8'));email=c['supportEmail']
  missing=[]
  if not c.get('operatorLegalName'):missing.append('الاسم القانوني للمالك أو الجهة المشغلة لم يُستكمل؛ Plazr اسم المشروع المعلن.')
  if not c.get('operatingCountry'):missing.append('دولة التشغيل والقانون المنطبق لم يُحددا.')
@@ -81,7 +81,7 @@ def build():
  ('ما الذي يلزم قبل الاعتماد؟',['تحديد دولة التشغيل والأسواق والأعمار بدقة، وتقييم متطلبات جمع بيانات الأطفال والموافقات والتحقق من ولي الأمر وتقليل البيانات والخصوصية الافتراضية والمحادثات والإشراف والبلاغات وطلبات الحذف والإفصاحات في المتاجر. لا يفترض هذا التقييم أن سن 13 وحده هو الحد القانوني في كل بلد.','إما تنفيذ تجربة أطفال مناسبة فعليًا، أو تغيير الجمهور المخطط واعتماد القيود المناسبة فعليًا. لم يغيّر نشر هذه الصفحة جمهور المنصة تلقائيًا، ولم يضف هذه الضوابط في الخلفية.']),
  ('تواصل ولي الأمر',['طلبات الاستفسار أو حذف بيانات مرتبطة بطفل توجه إلى '+email+' بعد تفعيل البريد. لا ترسل بيانات الطفل أو رموز دخوله في المحادثات العامة. سياسة الخصوصية تشرح مسار حذف الحساب وحدود حذف النسخ الخارجية.'])])
  data={'brand':c['brand'],'revision':c['revision'],'draft':draft,'supportEmail':email,'operatorLegalName':c.get('operatorLegalName'),'operatingCountry':c.get('operatingCountry'),'reviewItems':missing,'pages':pages}
- (OUT/'legal-content.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+ (OUT/'legal-content.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  e=html.escape
  nav=''.join(f'<a href="/platform/{e(p["id"])}.html">{e(p["title"])}</a>' for p in pages)
  for p in pages:
@@ -92,7 +92,7 @@ def build():
   document=f'''<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="{'noindex' if draft else 'index,follow'}"><title>{e(p['title'])} | Plazr</title><link rel="icon" href="/platform/assets/brand/app-icon.svg" type="image/svg+xml"><link rel="stylesheet" href="/platform/legal.css"></head>
 <body><a class="skip-link" href="#legal-main">انتقل للمحتوى</a><header class="legal-header"><a href="/platform/"><img src="/platform/assets/brand/mark-gradient.svg" alt="" width="40" height="40"><b>Plazr</b></a><a href="/platform/">العودة للمنصة</a></header><main id="legal-main"><h1>{e(p['title'])}</h1><p class="legal-summary">{e(p['summary'])}</p><p class="legal-revision">نسخة المراجعة: <time datetime="{e(c['revision'])}">{e(c['revision'])}</time></p>{banner}{sections}{providers}<section><h2>التواصل والروابط</h2><p>{mail}</p><a href="/platform/account-deletion.html">حذف الحساب والبيانات</a></section></main><footer><nav aria-label="الوثائق والتواصل">{nav}</nav><p>Plazr · {e(c['revision'])}</p></footer></body></html>\n'''
-  (OUT/(p['id']+'.html')).write_text(document)
+  (OUT/(p['id']+'.html')).write_text(document,encoding='utf-8')
  return data
 if __name__=='__main__':
  d=build();print(json.dumps({'pages':len(d['pages']),'draft':d['draft'],'reviewItems':len(d['reviewItems'])}))
