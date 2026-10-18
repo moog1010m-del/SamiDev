@@ -12,7 +12,7 @@ async def main():
  for row in rows:
   assert STORE_CATALOG[row['id']]['asset']==row['asset']
   with Image.open(ROOT/'game'/row['asset'].lstrip('/')) as art:
-   assert art.size==(256,256) and art.mode=='RGBA'
+   assert art.size==(1254,1254) and art.mode=='RGBA'
    assert art.getchannel('A').getextrema()==(0,255)
  assert STORE_CATALOG['badge_steward']['retired'] is True
  assert STORE_CATALOG['badge_steward']['price']==0
@@ -30,7 +30,7 @@ async def main():
  await service.equip_store_item(uid,'badge_fox')
  profile=await service.public_profile(uid,uid)
  assert profile['nameBadge']=='badge_fox'
- assert profile['nameBadgeAsset'].endswith('/badge_fox-v2.png')
+ assert profile['nameBadgeAsset'].endswith('/badge_fox-v3.png')
  owned=next(item for item in profile['showcaseItems'] if item['id']=='badge_fox')
  assert owned['description'] and owned['slot']=='name_badge' and owned['availability']['kind']=='store'
  assert (await service.store_snapshot(uid))['coins']==before['coins']
@@ -39,7 +39,7 @@ async def main():
  assert after['coins']==before['coins']-STORE_CATALOG['badge_shell']['price']
  assert 'badge_fox' in after['inventory'] and 'badge_shell' in after['inventory']
  message=await service.chat_sticker(uid,'badge_shell')
- assert message['stickerAsset'].endswith('/badge_shell-v2.png')
+ assert message['stickerAsset'].endswith('/badge_shell-v3.png')
  try:await service.chat_sticker(uid,'badge_crystal')
  except PlatformError:pass
  else:raise AssertionError('unowned art sent')

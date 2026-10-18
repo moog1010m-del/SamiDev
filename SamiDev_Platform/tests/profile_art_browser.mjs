@@ -46,7 +46,7 @@ try {
   SamiDevStickerArt.resolve('/platform/assets/stickers/samidev-stickers.png#cell-3'),
   SamiDevStickerArt.markup('/platform/assets/stickers/samidev-stickers.png#cell-8'),
   SamiDevStickerArt.resolve('/platform/assets/cosmetics/badge_shard.webp')]);
- assert.deepEqual(historical,['/platform/assets/stickers/badge_fox-v2.png','','/platform/assets/stickers/badge_shard-v2.png']);
+ assert.deepEqual(historical,['/platform/assets/stickers/badge_fox-v3.png','','/platform/assets/stickers/badge_shard-v3.png']);
  await page.setViewportSize({width:1100,height:1050});
  await page.evaluate(badges=>{
   const gallery=document.createElement('section');gallery.id='new-art-gallery';
@@ -56,7 +56,7 @@ try {
   gallery.querySelectorAll('img').forEach(img=>{img.loading='eager';img.style='width:145px;height:145px;object-fit:contain'});
  },badges);
  await page.locator('#new-art-gallery img').evaluateAll(images=>Promise.all(images.map(img=>img.decode())));
- assert(await page.locator('#new-art-gallery img').evaluateAll(images=>images.every(img=>img.naturalWidth===256)));
+ assert(await page.locator('#new-art-gallery img').evaluateAll(images=>images.every(img=>img.naturalWidth===1254)));
  await page.screenshot({path:out+'/collection.png'});
  assert.deepEqual(errors,[]);
  console.log('PROFILE_ART_BROWSER_PASS: UTF-8 HTTP + Arabic; numeric level chips; light/dark/phone; 11 saleable independent assets; historical URLs');

@@ -4,10 +4,11 @@
   const sheet='/platform/assets/stickers/samidev-stickers.png';
   const independent=['badge_crown','badge_orbit','badge_shell','badge_fox','badge_fire','badge_crystal','badge_leopard','badge_jellyfish'];
   function resolve(value){
+    value=String(value||'').replace(/^(\/platform\/assets\/stickers\/badge_[a-z]+)-v2\.png$/,'$1-v3.png');
     const index=cell(value);
-    if(index!==null&&index<9)return index<independent.length?'/platform/assets/stickers/'+independent[index]+'-v2.png':'';
+    if(index!==null&&index<9)return index<independent.length?'/platform/assets/stickers/'+independent[index]+'-v3.png':'';
     const old=String(value||'').match(/^\/platform\/assets\/cosmetics\/(badge_(?:shard|ember|moonstone|steward))\.webp$/);
-    return old?'/platform/assets/stickers/'+old[1]+'-v2.png':String(value||'');
+    return old?'/platform/assets/stickers/'+old[1]+'-v3.png':String(value||'');
   }
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function cell(value){if(value==='/platform/assets/profile/identity/profile-atlas.png#star')return 9;const match=String(value||'').match(/^\/platform\/assets\/stickers\/samidev-stickers\.png#cell-([0-8])$/);return match?Number(match[1]):null;}

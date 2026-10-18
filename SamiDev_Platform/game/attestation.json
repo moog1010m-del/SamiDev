@@ -35,7 +35,7 @@
     "imported/m7sv9ojmunv3q.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "imported/m7sv9srtb23tn.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "imported/n72nbifpyp661.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "index.html": "98ec4d12c7acb163028b5b487d36d2024ff0aafcc47f581c3c1629de898b2eb5",
+    "index.html": "f38b0f100c21fc92149f7fbe19c5945567cb1419df25f2a1be631733ce4c78d7",
     "inventory-ui.css": "3fd364b75c609c2765dacb711369e868a222c519dc0f5dc28f09216193adb653",
     "inventory-ui.js": "773429c7d8cae8e5940f012d0bb0dbc4f29790a9653c0dcde79a89ba09084b33",
     "launcher.js": "564733a3467c675465252833b179e9f62e94d63cf133e730d580e337b4717bc2",
@@ -261,8 +261,8 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "1e58ba7ea7151de7ae94af1764d0bb9a57e7bb3e5126e8352df5ec7946915cd1",
     "platform/assets/stickers/samidev-stickers.png": "d8fd2e6d4bd94a8cd48fae28c97339faf282654c899fa1a21e150addf75112ea",
-    "platform/build.json": "244bbd7eb249d73e852bba90c65e06bf2ba54709f2664caa8dc5c09c75de9819",
-    "platform/index.html": "767967c835555b238a7623efb2eb3813bf4b656e1280bd149b24d423199746b3",
+    "platform/build.json": "9dc9635ff4cdd6e045350b892c2463df4d13ffe4d0dbff0e1ef5a2bdad5fad41",
+    "platform/index.html": "ff893050cb8fa8cc800bf898c846314a2b3d4226489f29eaa7f29b746e566c04",
     "platform/platform.css": "840ca9ad15ca77ed01fdb3b905478ef1ebe7949c29601c3d4db0dc55419a0995",
     "platform/platform.js": "c1931ecf7c0f351b8835cd2842275ad1963f3f1c45fd34cf059af6738ab9bef7",
     "platform/profile-identity.css": "15879ae93c08ae416ed369d4089cd1c1591f2e36e9881a0c51037f77894088dc",
@@ -332,7 +332,7 @@
     "sounds/tap_disabled.m4a": "085b5d4c8ad35273f42faa1ba4af907dfeb2e68feb1ee4ed8486ba65b51accc1",
     "sounds/woosh1.m4a": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97",
     "sounds/woosh2.m4a": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b",
-    "sticker-art.js": "631ccec4a330c928a170fe76855c175bd278e1b78b6dc2e8ce6a26a02b12abc7",
+    "sticker-art.js": "96bfc5a927cc671176f3ccb23d5a9979bdb59a5b775fb83ff03c694397a5b88c",
     "web-bridge.js": "b78634d59f954d9b97091b4696a37d86503fd822bb3ac7dfd77a66ffb65facab",
     "platform/firebase-auth.js": "31cb90b972fe1d899e28c4fa0a674619a68148b707c5187d0e611b9f83bd4ae5"
   }

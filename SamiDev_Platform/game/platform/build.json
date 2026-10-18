@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-97d91441e8ddd5aa",
+  "buildId": "samidev-v30-790540caaec7b55e",
   "games": [
     "carrom",
     "tablesoccer",
@@ -19,8 +19,8 @@
     "platform/assets/brand/app-icon.svg": "e27575c3c47b43e588720ea31f45dc3d1b209c25eb9117aaeee3c2b7fdc8132f",
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
-    "asset-worker.js": "6cedebea00a1e6ede3d84939d7cb09fba07fee4268c7dafcb2e8aed43cd23a0d",
-    "platform/index.html": "767967c835555b238a7623efb2eb3813bf4b656e1280bd149b24d423199746b3",
+    "asset-worker.js": "54702cc1019f2cbf882b90ed6daccd134296cb7bf937c3c517de35064e3589ba",
+    "platform/index.html": "ff893050cb8fa8cc800bf898c846314a2b3d4226489f29eaa7f29b746e566c04",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
     "platform/game-entry.js": "204ee121ae45f53140574fe7f189f4a818d48e34f73727018c029a8e28704149",
@@ -32,7 +32,7 @@
     "cosmetic-ui.css": "b3d75983b026bdd27bc44da50a63448494d3bcf4ad2602644d35b2359b1ecd7b",
     "cosmetic-ui.js": "a2854338c7e2a53795ac2ed27f0794431c1b44d75a61be2a2b6172695ebda571",
     "platform/store.css": "b79219a4a27e0f9c61220de9929e3051d99ec00017f9454247421a23ce171f46",
-    "sticker-art.js": "631ccec4a330c928a170fe76855c175bd278e1b78b6dc2e8ce6a26a02b12abc7",
+    "sticker-art.js": "96bfc5a927cc671176f3ccb23d5a9979bdb59a5b775fb83ff03c694397a5b88c",
     "platform/platform.css": "840ca9ad15ca77ed01fdb3b905478ef1ebe7949c29601c3d4db0dc55419a0995",
     "platform/profile-identity.css": "15879ae93c08ae416ed369d4089cd1c1591f2e36e9881a0c51037f77894088dc",
     "platform/platform.js": "c1931ecf7c0f351b8835cd2842275ad1963f3f1c45fd34cf059af6738ab9bef7",
@@ -41,11 +41,11 @@
     "samidev-games.js": "487759056cfa0c5fa299c10e99db1c7d04ddaf885589367505a5f5d603d24a57",
     "profile-details.css": "9370d727bf1acbe790d61b00a52c95b7c93d96cb26635efcbac704b041404857",
     "profile-details.js": "292f443a60dd7bed83b1972e00e963ff1b8163501eadaf15c40cd42bdb2fd896",
-    "index.html": "98ec4d12c7acb163028b5b487d36d2024ff0aafcc47f581c3c1629de898b2eb5",
+    "index.html": "f38b0f100c21fc92149f7fbe19c5945567cb1419df25f2a1be631733ce4c78d7",
     "browser-runtime.js": "ffe6e48b3ec7eec7d3e7882f92142b0191f3c3ce12b52f2dc0f0208e2defec73",
     "game-bootstrap.js": "3aa07576c42ebd0a5d434947594771ab9c0fe94b3d6cddf487e31d7dc64434cc",
     "game-host.html": "187ee5a94ac8324b3887c786352321ee8fa4a85eb9f94348296c6db623ca9467",
-    "runtime-games.json": "c5bd5bf8b232ddff8fda9a4ace2290ce871d7c2e2ce42fde36b3523973d1c3a3",
+    "runtime-games.json": "31f251172ab96feaff136941c632dc6024c370c33dc7724275319a9926ce4d1a",
     "web-bridge.js": "b78634d59f954d9b97091b4696a37d86503fd822bb3ac7dfd77a66ffb65facab",
     "room-menu.js": "eb34a70a3e6e9d4fc60f0c1ef3afe9198b4deeb876db2b070d0cd6b3e527fb01",
     "launcher.js": "564733a3467c675465252833b179e9f62e94d63cf133e730d580e337b4717bc2",
@@ -58,8 +58,8 @@
     "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
     "game-touch.css": "d6de2c4a5fa3db10f86db7ce06aab3b74fcf75133a27ebfa73cde870dc3f9274",
     "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
-    "games/tablesoccer/index.html": "843bcd24e94e9481025dfb231ae50405c7a2b96c2d624623872f4904bb6948ae",
-    "games/crazy8/index.html": "844e8a59c296ccb682545326ec66768b60dc968a2b1ed5820f21eb87f8260f29",
-    "games/pool/index.html": "70bd44105ab1946ba7ccced149c5cea29c9c8290f08f15bcfe284c313237f81a"
+    "games/tablesoccer/index.html": "36821009ad3039d4950bbb7537dd71294b148854796a38097e29e9a8bfa50eea",
+    "games/crazy8/index.html": "f659cee5ff34a955377067a7a442a72fef758251c278539397502d6068ad2733",
+    "games/pool/index.html": "c52892ca1a9256c5cfe95ef820cc2b0d7df94b689ea1ca8ab3f5f7245bebf618"
   }
 }

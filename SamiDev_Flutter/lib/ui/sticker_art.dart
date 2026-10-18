@@ -7,10 +7,11 @@ class StickerArtwork extends StatelessWidget {
   final double size;
   static String resolve(String value) {
     const badges=['badge_crown','badge_orbit','badge_shell','badge_fox','badge_fire','badge_crystal','badge_leopard','badge_jellyfish'];
+    value=value.replaceFirstMapped(RegExp(r'^(/platform/assets/stickers/badge_[a-z]+)-v2\.png$'),(match)=>'${match.group(1)}-v3.png');
     final index=cell(value);
-    if(index!=null && index<9)return index<badges.length?'/platform/assets/stickers/${badges[index]}-v2.png':'';
+    if(index!=null && index<9)return index<badges.length?'/platform/assets/stickers/${badges[index]}-v3.png':'';
     final old=RegExp(r'^/platform/assets/cosmetics/(badge_(?:shard|ember|moonstone|steward))\.webp$').firstMatch(value);
-    return old==null?value:'/platform/assets/stickers/${old.group(1)}-v2.png';
+    return old==null?value:'/platform/assets/stickers/${old.group(1)}-v3.png';
   }
   static int? cell(String value){
     if(value=='/platform/assets/profile/identity/profile-atlas.png#star')return 9;
