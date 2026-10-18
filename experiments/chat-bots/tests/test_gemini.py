@@ -1,4 +1,4 @@
-import unittest
+import json,unittest
 from gemini import Gemini
 class Response:
     def __init__(self,status,data):self.status=status;self.data=data
@@ -18,6 +18,16 @@ class GeminiTests(unittest.IsolatedAsyncioTestCase):
         url,request=session.request
         self.assertNotIn('test-only-secret',url);self.assertFalse(request['allow_redirects'])
         self.assertEqual(request['json']['generationConfig']['responseMimeType'],'application/json')
+    async def test_group_context_and_selected_persona_reach_model(self):
+        session=Session();provider=Gemini(session,'test','model')
+        context=[{'speaker':'participant-1','name':'نواف','kind':'bot','persona_id':'nawaf','text':'هلا والله'},
+                 {'speaker':'participant-2','text':'أي سوالف؟'}]
+        await provider.generate({'id':'fahad','name':'فهد','style':'سعودي هادي'},context,None)
+        payload=session.request[1]['json']
+        content=json.loads(payload['contents'][0]['parts'][0]['text'])
+        self.assertEqual(content['persona_id'],'fahad')
+        self.assertEqual(content['persona_name'],'فهد')
+        self.assertEqual(content['context'],context)
     async def test_refusal_and_quota_failure(self):
         self.assertEqual(await Gemini(Session(finish='SAFETY'),'test','model').generate({'style':'سعودي'},[],None),'')
         with self.assertRaises(RuntimeError):await Gemini(Session(status=429),'test','model').generate({'style':'سعودي'},[],None)

@@ -59,13 +59,14 @@ class Memory:
         with self.db:
             self.db.execute('DELETE FROM users WHERE uid=?',(uid,))
             self.db.execute('DELETE FROM messages WHERE uid=?',(uid,))
-    def context(self,room):
+    def context(self,room,identities=None):
         rows=self.db.execute('SELECT uid,text FROM messages WHERE room=? AND ts>? ORDER BY rowid DESC LIMIT 12',(room,time.time()-3600,)).fetchall()
         participants={}
         result=[]
         for uid,text in reversed(rows):
             if uid not in participants:participants[uid]='participant-'+str(len(participants)+1)
-            result.append({'speaker':participants[uid],'text':text})
+            identity=(identities or {}).get(uid)
+            result.append({'speaker':participants[uid],'text':text,**(identity or {})})
         return result
     def reserve_call(self,limit):
         day=datetime.now(timezone.utc).date().isoformat()
@@ -80,6 +81,7 @@ class Coordinator:
         self.config=config;self.memory=memory;self.scripts=scripts;self.provider=provider
         self.room=config['room'];self.last_sent=-1e9;self.turn=0;self.revision=0
         self.script_index=0;self.line_index=0
+        self.identities={}
     def active(self,now=None):
         hour=(now or datetime.now(ZoneInfo(self.config['timezone']))).hour
         def present(p):
@@ -131,11 +133,15 @@ class Coordinator:
         if not self.provider or not self.memory.reserve_call(self.config['daily_model_calls']):return None
         revision=self.revision
         try:
-            answer=await self.provider.generate(profile,self.memory.context(self.room),self.memory.preference(message.user_id))
+            context=self.memory.context(self.room,self.identities)
+            answer=await self.provider.generate(profile,context,self.memory.preference(message.user_id))
         except Exception:
             # Never dump an exception containing request bodies, credentials or user text.
             return None
         if revision!=self.revision or not valid_output(answer, allow_numbers=True):return None
+        # A second persona must not echo another bot's recent line verbatim.
+        normalize=lambda value:re.sub(r'[\W_]+','',value).casefold()
+        if any(row.get('kind')=='bot' and normalize(row['text'])==normalize(answer) for row in context[-6:]):return None
         tokens=getattr(self.provider,'last_usage',None)
         return Reply(profile['id'],answer,'model',tokens)
 

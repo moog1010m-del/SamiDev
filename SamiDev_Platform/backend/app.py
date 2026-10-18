@@ -329,7 +329,8 @@ class SamiDevRealtime:
             revision = int(authority.get("authorityRevision", authority.get("revision", 0)) or 0)
         except (TypeError, ValueError):
             revision = 0
-        await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+        await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision,
+            authority_epoch=authority.get('authorityEpoch'), authority_shard=authority.get('lease', {}).get('shard'))
 
     async def _client_start(self, rid: str, seat: int) -> dict[str, Any]:
         start = await self.store.get_start(rid, seat)
@@ -467,7 +468,8 @@ class SamiDevRealtime:
             # Snapshot persistence is optional for an event. Never drop a valid alarm just
             # because the current physics checkpoint is intentionally not serializable yet.
             if isinstance(snapshot, dict):
-                await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision)
+                await self.store.set_snapshot(rid, -1, snapshot, move_count, revision=revision,
+                    authority_epoch=epoch, authority_shard=shard)
             if event_type == "authority_alarm":
                 reveal_by_seat = event.get("revealBySeat") if isinstance(event.get("revealBySeat"), dict) else {}
                 if not reveal_by_seat:
@@ -1100,7 +1102,8 @@ class SamiDevRealtime:
 
             snapshot = authority.get("snapshot")
             if isinstance(snapshot, dict):
-                await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0))
+                await self.store.set_snapshot(c.room_id, -1, snapshot, move_count, revision=int(authority.get("authorityRevision", 0) or 0),
+                    authority_epoch=int(lease['epoch']), authority_shard=str(lease['shard']))
 
             # A normal player move can end the match without producing a separate SSE
             # authority event. Results/rewards are idempotent per account and match.

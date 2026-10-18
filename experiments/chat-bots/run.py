@@ -70,6 +70,7 @@ async def live(args,config,memory,scripts):
             session=await stack.enter_async_context(aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)))
             model=Gemini(session,os.environ.get('GEMINI_API_KEY',''),os.environ.get('GEMINI_MODEL',''))
         engine=Coordinator(config,memory,scripts,model);pending=asyncio.Queue(maxsize=1)
+        engine.identities={clients[p['id']].uid:{'name':p['name'],'kind':'bot','persona_id':p['id']} for p in config['profiles']}
         bot_ids={c.uid for c in clients.values()};members=None;joined=set();last_human=time.monotonic();last_idle=0
         room='/api/communities/'+config['room']
         async def presence():
@@ -105,7 +106,7 @@ async def live(args,config,memory,scripts):
                             print(json.dumps({'event':'snapshot_ready'}),flush=True)
                             for row in data.get('messages',[]):
                                 msg=parse_message(row)
-                                if msg and msg.user_id not in bot_ids:memory.add(config['room'],msg)
+                                if msg:memory.add(config['room'],msg)
                             continue
                         row=data.get('message')
                         msg=parse_message(row) if isinstance(row,dict) else None

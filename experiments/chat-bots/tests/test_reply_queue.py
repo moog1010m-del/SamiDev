@@ -20,11 +20,11 @@ class ReplyQueueTests(unittest.IsolatedAsyncioTestCase):
     async def test_latest_message_replaces_pending_reply_and_resets_debounce(self):
         engine=self.engine(.01);pending=asyncio.Queue(maxsize=1)
         pending.put_nowait('first')
-        task=asyncio.create_task(next_reply_message(pending,engine,.06))
+        task=asyncio.create_task(next_reply_message(pending,engine,.10))
         await asyncio.sleep(.03)
         engine.revision=2;pending.put_nowait('second');sent=time.monotonic()
         self.assertEqual(await task,('second',2))
-        self.assertGreaterEqual(time.monotonic()-sent,.06)
+        self.assertGreaterEqual(time.monotonic()-sent,.09)
 
     async def test_shutdown_cancels_long_wait(self):
         engine=self.engine(3600);pending=asyncio.Queue(maxsize=1)
