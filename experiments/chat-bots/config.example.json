@@ -1,0 +1,13 @@
+{
+  "room": "majlis",
+  "timezone": "Asia/Riyadh",
+  "daily_model_calls": 100,
+  "cooldown_seconds": 12,
+  "reply_delay_seconds": 2,
+  "idle_seconds": 90,
+  "memory_days": 30,
+  "profiles": [
+    {"id": "nawaf", "name": "نواف", "style": "سعودي هادي، يحب البلياردو، ردوده قصيرة", "hours": [0, 24], "session_env": "PLAZR_BOT_NAWAF_SESSION"},
+    {"id": "fahad", "name": "فهد", "style": "سعودي خفيف دم، يحب الكيرم، مزحه لطيف بدون تجريح", "hours": [0, 24], "session_env": "PLAZR_BOT_FAHAD_SESSION"}
+  ]
+}
