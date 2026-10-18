@@ -70,7 +70,8 @@ async def live(args,config,memory,scripts):
             session=await stack.enter_async_context(aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)))
             model=Gemini(session,os.environ.get('GEMINI_API_KEY',''),os.environ.get('GEMINI_MODEL',''))
         engine=Coordinator(config,memory,scripts,model);pending=asyncio.Queue(maxsize=1)
-        engine.identities={clients[p['id']].uid:{'name':p['name'],'kind':'bot','persona_id':p['id']} for p in config['profiles']}
+        engine.identities={clients[p['id']].uid:{'name':p['name'],'kind':'bot','persona_id':p['id'],'gender':p.get('gender','unspecified')} for p in config['profiles']}
+        print(json.dumps({'event':'behavior_ready','version':'group-context-initiative-v2','model':model.model if model else None,'initiativeSeconds':config.get('initiative_seconds',45)}),flush=True)
         bot_ids={c.uid for c in clients.values()};members=None;joined=set();last_human=time.monotonic();last_idle=0
         room='/api/communities/'+config['room']
         async def presence():
@@ -86,7 +87,7 @@ async def live(args,config,memory,scripts):
                         await client.request('POST',room+'/leave',{});joined.remove(pid)
                 observer=clients[next(iter(active))]
                 state=await observer.request('GET',room+'?chat=0')
-                next_members={u['id'] for u in state['members']} - bot_ids
+                next_members={u['id'] for u in state['members'] if not u.get('isBot')} - bot_ids
                 if members and not next_members:engine.revision+=1
                 if next_members:last_human=time.monotonic()
                 members=next_members
@@ -121,7 +122,7 @@ async def live(args,config,memory,scripts):
             client=clients[reply.speaker]
             # Final membership read closes most presence races before a recorded line.
             state=await client.request('GET',room+'?chat=0')
-            humans={u['id'] for u in state['members']}-bot_ids
+            humans={u['id'] for u in state['members'] if not u.get('isBot')}-bot_ids
             if reply.reason=='recorded' and humans:return
             if reply.reason!='recorded' and not humans:return
             if revision!=engine.revision:return
@@ -134,6 +135,9 @@ async def live(args,config,memory,scripts):
             while not stop.is_set():
                 if pending.empty():
                     now=time.monotonic()
+                    if members:
+                        revision=engine.revision;reply=await engine.initiative(len(members))
+                        if reply:await publish(reply,revision)
                     if members==set() and now-last_human>=config['idle_seconds'] and now-last_idle>=config['idle_seconds']:
                         revision=engine.revision;reply=engine.idle(0)
                         if reply:

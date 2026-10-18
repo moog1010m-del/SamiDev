@@ -37,6 +37,8 @@ async def main():
             process=await asyncio.create_subprocess_exec(sys.executable,str(BASE/'run.py'),'live','--enable-live','--config',str(path),'--state',str(Path(directory)/'db.sqlite'),'--base-url',str(server.make_url('')).rstrip('/'),env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
             try:
                 line=await asyncio.wait_for(process.stdout.readline(),15)
+                assert b'group-context-initiative-v2' in line,line
+                line=await asyncio.wait_for(process.stdout.readline(),15)
                 assert b'snapshot_ready' in line,line
                 await asyncio.sleep(.5)
                 rows=await service.community_chat_history('majlis');assert not any(r['userId'] in bot_ids for r in rows)
