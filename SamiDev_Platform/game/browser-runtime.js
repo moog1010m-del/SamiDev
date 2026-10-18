@@ -16,7 +16,9 @@
   const mobileDevice = Number(navigator.maxTouchPoints || 0) > 0 || !!window.matchMedia?.('(pointer: coarse)').matches;
   const HOST_GLOBAL = 'SamiDev';
   const HOST_PLAYER_ID_METHOD = 'getSamiDevID';
-  const contextOptions = {alpha:true, antialias:!mobileDevice||!window.SamiDevMobile?.postMessage, preserveDrawingBuffer:false};
+  // Pool's native pocket animation clips sinking balls with STENCIL_TEST.
+  // WebGL otherwise defaults to a surface without stencil storage.
+  const contextOptions = {alpha:true, stencil:isPool, antialias:!mobileDevice||!window.SamiDevMobile?.postMessage, preserveDrawingBuffer:false};
   const gl = canvas.getContext('webgl', contextOptions) || canvas.getContext('experimental-webgl', contextOptions);
   if (!gl) throw new Error('WebGL غير مدعوم في هذا المتصفح');
 
