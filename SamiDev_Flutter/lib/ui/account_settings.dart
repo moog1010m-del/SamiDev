@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../runtime/api.dart';
 import '../runtime/native_auth.dart';
 import 'auth_screen.dart';
+import 'legal_page.dart';
 import 'settings_components.dart';
 
 class AccountSettings extends StatefulWidget {
@@ -41,6 +42,7 @@ class _AccountSettingsState extends State<AccountSettings> {
     super.dispose();
   }
 
+  void openLegal(String page)=>Navigator.push(context,MaterialPageRoute<void>(builder:(_)=>PlazrLegalPage(pageId:page,onAccount:()async{Navigator.pop(context);await openAccount();})));
   Future<void> editBio() async {
     final field=TextEditingController(text:user['bio']?.toString()??'');
     final value=await showDialog<String>(context:context,builder:(context)=>AlertDialog(title:const Text('نبذة عني'),content:TextField(controller:field,maxLength:160,minLines:2,maxLines:4,decoration:const InputDecoration(hintText:'اكتب نبذة قصيرة عنك')),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('إلغاء')),FilledButton(onPressed:()=>Navigator.pop(context,field.text),child:const Text('حفظ'))]));
@@ -576,9 +578,11 @@ class _AccountSettingsState extends State<AccountSettings> {
               entry(
                 Icons.lock_outline,
                 'الخصوصية',
-                () => setState(() => section = 'الخصوصية'),
+                () => openLegal('privacy'),
               ),
             ]),
+            const SizedBox(height:22),
+            settingsGroup(context,[entry(Icons.info_outline,'من نحن',()=>openLegal('about')),entry(Icons.description_outlined,'شروط الاستخدام',()=>openLegal('terms')),entry(Icons.groups_outlined,'قواعد المجتمع',()=>openLegal('community-guidelines')),entry(Icons.family_restroom_outlined,'الأطفال والعائلة',()=>openLegal('children')),entry(Icons.help_outline,'التواصل والدعم',()=>openLegal('contact'))]),
             if (widget.onAdmin != null &&
                 {'admin', 'moderator'}.contains(user['role'])) ...[
               const SizedBox(height: 22),

@@ -808,3 +808,6 @@ html[data-sd-native] .lobby-profile{display:none!important}
 #profile-bio-input{width:100%;font:inherit;font-size:16px;line-height:1.6;min-height:86px;max-height:160px;resize:vertical;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text)}
 
 .community-member-title{direction:rtl;gap:3px}
+
+.platform-legal-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 16px;padding:16px 10px;font-size:12px;line-height:1.8}
+.platform-legal-links a{color:var(--muted);text-underline-offset:3px}.platform-legal-links small{width:100%;text-align:center;color:var(--muted);font-size:11px}

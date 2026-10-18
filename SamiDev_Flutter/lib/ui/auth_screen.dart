@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'legal_page.dart';
 import 'package:flutter/services.dart';
 
 import '../runtime/native_auth.dart';
@@ -450,6 +451,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
+                  Wrap(alignment:WrapAlignment.center,children:[for(final item in const {'privacy':'الخصوصية','terms':'الشروط','contact':'التواصل'}.entries)TextButton(onPressed:()=>Navigator.push(context,MaterialPageRoute<void>(builder:(_)=>PlazrLegalPage(pageId:item.key))),child:Text(item.value))]),
                 ],
               ),
             ),
