@@ -782,3 +782,7 @@ html[data-sd-native] .lobby-profile{display:none!important}
 /* Plazr brand marks retain clear space at small interface sizes. */
 .logo-small,.logo-mark{background:#171b26;box-shadow:none}
 .logo-small img,.logo-mark img{display:block;object-fit:contain;width:100%;height:100%;padding:3px;box-sizing:border-box}
+
+/* Local country artwork is consistent across browsers, including Windows. */
+.community-country-flag{display:block;width:100%;height:100%;object-fit:contain;border-radius:50%}
+.community-card-mark:has(.community-country-flag),.community-mark:has(.community-country-flag){background:transparent;border:0;padding:0;box-shadow:none;border-radius:50%}

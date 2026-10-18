@@ -101,10 +101,10 @@ def effective_store_equipment(equipped: dict[str, str], inventory: list[str]) ->
 
 
 COMMUNITIES = {
-    "majlis": {"id":"majlis","name":"المجلس","description":"مساحة اجتماعية مفتوحة للقاء اللاعبين وبدء مباريات سريعة.","accent":"#d5a34c","mark":"م","order":1},
-    "square": {"id":"square","name":"الساحة","description":"غرفة نشطة للمباريات السريعة والتجمعات اليومية.","accent":"#2f9ea0","mark":"س","order":2},
-    "diwan": {"id":"diwan","name":"الديوان","description":"مساحة هادئة للمحادثة وتكوين مجموعات قبل اللعب.","accent":"#8d6bd1","mark":"د","order":3},
-    "elite": {"id":"elite","name":"النخبة","description":"غرفة بطابع تنافسي للاعبين الباحثين عن مباريات أقوى.","accent":"#c45b57","mark":"ن","order":4},
+    "majlis": {"id":"majlis","name":"Saudi Arabia","description":"مساحة السعودية للمحادثة ولقاء اللاعبين وبدء المباريات.","accent":"#238150","mark":"🇸🇦","countryCode":"sa","order":1},
+    "square": {"id":"square","name":"Kuwait","description":"مساحة الكويت للمحادثة والمباريات والتجمعات اليومية.","accent":"#27927b","mark":"🇰🇼","countryCode":"kw","order":2},
+    "diwan": {"id":"diwan","name":"Jordan","description":"مساحة الأردن للتعارف وتكوين مجموعات ومشاركة اللعب.","accent":"#b95352","mark":"🇯🇴","countryCode":"jo","order":3},
+    "elite": {"id":"elite","name":"Iraq","description":"مساحة العراق للمحادثة والتحديات ولقاء اللاعبين.","accent":"#b88942","mark":"🇮🇶","countryCode":"iq","order":4},
 }
 
 def normalize_community_id(value: Any) -> str:

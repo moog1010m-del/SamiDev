@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-2a5a6502650bd6c7",
+  "buildId": "samidev-v30-10586229174cf53c",
   "games": [
     "carrom",
     "tablesoccer",
@@ -12,7 +12,7 @@
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
     "asset-worker.js": "aadd5bcb4700fbbc8824c6b41e30151a85b1ef7a095c2429f2fc2cae06a123f7",
-    "platform/index.html": "fb56643a8436934ac4eac9e336c9edeb8d73e2a9bf01426b19d02d411fddbd48",
+    "platform/index.html": "b4632abc316146588dd86dd6064365f558272025b0dfe4f7e507ecf2ed4a8c0c",
     "platform/account-deletion.html": "dd87dff600e31dababb3c7bbf6a65651e566061f5e125799130cb3d700d82f7e",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
     "platform/game-preload.js": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072",
@@ -24,9 +24,9 @@
     "cosmetic-ui.js": "a2854338c7e2a53795ac2ed27f0794431c1b44d75a61be2a2b6172695ebda571",
     "platform/store.css": "369f11c8b891172cf4f4bdfb92908a9c044ee5a1d67884b557695ac7a65d6964",
     "sticker-art.js": "a4f6d69e525afad0cc8d2a3d3d57bf62d0f0858008aee4e707228ae9be54fa5c",
-    "platform/platform.css": "f9000897aedf07556723ae7dc16ff666d0dc29904cf0267666460e9336689097",
+    "platform/platform.css": "00c09825f588f9e69cb4a54c5945468925a554ae9be1fd3a6202c119827efd2c",
     "platform/profile-identity.css": "56bcf68394c99a9c7027724e213d3e060de8d50e3581c8a1f4712dda940d50e7",
-    "platform/platform.js": "1e75148ceca8a4e28ee4ac6a2f623960365abe53c237d0c3f8ad83228c66db3f",
+    "platform/platform.js": "ae5dd646b311dc3446aa7790b4e99da5e00b5beea6abae890355cb7393a7aa31",
     "platform/community-live.js": "35f58b17490cf2e5f2844a9eaf246955e96f6582e0760b9434e56ac892f563f0",
     "platform/game-host.js": "75881dadaab1270d1cb0678e60ae8385573836b1168348eee322fea030d341cc",
     "samidev-games.js": "487759056cfa0c5fa299c10e99db1c7d04ddaf885589367505a5f5d603d24a57",

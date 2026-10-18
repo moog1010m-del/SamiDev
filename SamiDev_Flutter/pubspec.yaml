@@ -60,6 +60,7 @@ flutter:
     - assets/runtime/platform/
     - assets/runtime/platform/assets/brand/
     - assets/runtime/platform/assets/cosmetics/
+    - assets/runtime/platform/assets/flags/
     - assets/runtime/platform/assets/profile/
     - assets/runtime/platform/assets/profile/identity/
     - assets/runtime/platform/assets/profile/raster/

@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "30e7dce90e7c08732d4f6877525352c7bc8b06836c268ee0cb0a352fb055a094"
+      "sha256": "5062880a37b4f84a6e6f4f23edf803f48aeed1223e78cbca0f9c6f3a0cbb2de0"
     },
     "browser-runtime.js": {
       "size": 80328,
@@ -1555,6 +1555,42 @@
       "size": 82464,
       "sha256": "98dfd5d885d484cd5640c44f8fd4d3ce807e5976d5057564073ca36b4fc3f6ec"
     },
+    "platform/assets/flags/LICENSE.txt": {
+      "size": 1069,
+      "sha256": "9ef248a32ebbb1587b7c4caa3203a33065de29aa6098a6933bad67de2057e72f"
+    },
+    "platform/assets/flags/iq.png": {
+      "size": 4025,
+      "sha256": "842c1714f86d236a27c11b1d3708525dc072bd9b8c596e5d14e99744abdf26b5"
+    },
+    "platform/assets/flags/iq.svg": {
+      "size": 1066,
+      "sha256": "b7178e5d3eee44c9bc8e43a3592747635689e298338a991c7cf525028a40bdd0"
+    },
+    "platform/assets/flags/jo.png": {
+      "size": 4055,
+      "sha256": "a6b8f1004f23771d5b1ae15bbdc95b1bfdce2faad97076b68f1a28f77693729f"
+    },
+    "platform/assets/flags/jo.svg": {
+      "size": 542,
+      "sha256": "58c333d953dc228e42fa6acdd9178ad70b2c6edfa80dbf756322b70c950d6c24"
+    },
+    "platform/assets/flags/kw.png": {
+      "size": 3214,
+      "sha256": "a954b62ba05d72cfbaefaa515ad0d7ab2867d7553e85cdc4f75ac8091fb1bbdf"
+    },
+    "platform/assets/flags/kw.svg": {
+      "size": 388,
+      "sha256": "3dc308356979f1eb7683a1581acd074e82e2dd765c6e9e715bc4141cba543bbd"
+    },
+    "platform/assets/flags/sa.png": {
+      "size": 5407,
+      "sha256": "b546d0eb94d9a910c641862838f81e9ca72dd2940a21a7b7ab3121dee3c1b212"
+    },
+    "platform/assets/flags/sa.svg": {
+      "size": 2684,
+      "sha256": "c69496f3eeef80224321f875cf2bbc3cecd39f8975bd65369912a5348f9c9506"
+    },
     "platform/assets/profile/calendar.svg": {
       "size": 993,
       "sha256": "b03a1e1060bc6bfc61f06fca8b3c7bb164a1b0cab2ab732a82ad896410a2a098"
@@ -2441,7 +2477,7 @@
     },
     "platform/build.json": {
       "size": 4402,
-      "sha256": "6143058577adef660fdb5172de93af2d148790dc43156c62e85ac4923f3d37a7"
+      "sha256": "b9d6946ac21e26ff20ecafd8a85a4fed36a200577d9c72a3d26ac61634ee1b23"
     },
     "platform/community-live.js": {
       "size": 6867,
@@ -2464,16 +2500,16 @@
       "sha256": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072"
     },
     "platform/index.html": {
-      "size": 48201,
-      "sha256": "fb56643a8436934ac4eac9e336c9edeb8d73e2a9bf01426b19d02d411fddbd48"
+      "size": 48324,
+      "sha256": "b4632abc316146588dd86dd6064365f558272025b0dfe4f7e507ecf2ed4a8c0c"
     },
     "platform/platform.css": {
-      "size": 114385,
-      "sha256": "f9000897aedf07556723ae7dc16ff666d0dc29904cf0267666460e9336689097"
+      "size": 114735,
+      "sha256": "00c09825f588f9e69cb4a54c5945468925a554ae9be1fd3a6202c119827efd2c"
     },
     "platform/platform.js": {
-      "size": 90643,
-      "sha256": "1e75148ceca8a4e28ee4ac6a2f623960365abe53c237d0c3f8ad83228c66db3f"
+      "size": 90920,
+      "sha256": "ae5dd646b311dc3446aa7790b4e99da5e00b5beea6abae890355cb7393a7aa31"
     },
     "platform/profile-identity.css": {
       "size": 12731,

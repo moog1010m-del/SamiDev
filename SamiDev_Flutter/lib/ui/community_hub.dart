@@ -177,12 +177,19 @@ class CommunityHubState extends State<CommunityHub> {
     if(config==null||!mounted)return;await widget.onGame(config['game']!,{'online':'1','action':'create','community':community!['id'].toString(),...config});
   }
   @override void dispose(){stopLive();timer?.cancel();input.dispose();scroll.dispose();super.dispose();}
+  Widget communityFlag(Map<String,dynamic> value,{double size=40}){
+    final code=value['countryCode']?.toString();
+    if(const ['sa','kw','jo','iq'].contains(code)){
+      return Image.asset('assets/runtime/platform/assets/flags/$code.png',width:size,height:size,fit:BoxFit.contain,semanticLabel:value['name']?.toString());
+    }
+    return Text(value['mark']?.toString()??'P');
+  }
   @override Widget build(BuildContext context){
     final colors=Theme.of(context).colorScheme;
     return Column(children:[
       if(community!=null)SizedBox(height:58,child:Row(children:[
         if(community!=null)IconButton(onPressed:back,tooltip:'المساحات',icon:const Icon(Icons.chevron_right,size:30))else const SizedBox(width:16),
-        if(community!=null)CircleAvatar(radius:17,backgroundColor:colors.primary,child:Text(community!['mark']?.toString()??'S',style:const TextStyle(color:Colors.white,fontSize:14))),
+        if(community!=null)CircleAvatar(radius:17,backgroundColor:Colors.transparent,child:communityFlag(community!,size:34)),
         const SizedBox(width:10),Expanded(child:Text(community?['name']?.toString()??'المساحات',maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:17))),
         if(community!=null)IconButton(onPressed:create,tooltip:'إنشاء طاولة',icon:const Icon(Icons.add,size:24)),
         if(community==null)IconButton(onPressed:widget.onInvite,tooltip:'دخول بدعوة',icon:const Icon(Icons.link)),
@@ -192,7 +199,7 @@ class CommunityHubState extends State<CommunityHub> {
       if(community!=null)Row(children:List.generate(3,(i)=>Expanded(child:InkWell(onTap:()=>setState((){tab=i;if(i==1){scrollToEnd();}else{FocusScope.of(context).unfocus();}}),child:Container(height:49,alignment:Alignment.center,decoration:BoxDecoration(border:Border(bottom:BorderSide(color:tab==i?colors.primary:colors.outlineVariant,width:tab==i?3:.5))),child:Text(['الألعاب (${rooms.length})','الدردشة','متصل (${members.length})'][i],style:TextStyle(color:tab==i?colors.primary:colors.onSurfaceVariant,fontWeight:tab==i?FontWeight.w700:FontWeight.normal,fontSize:14))))))),
       if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:refresh,child:const Text('إعادة المحاولة'))]),
       Expanded(child:RefreshIndicator(onRefresh:refresh,child:community==null?
-        (spaces.isEmpty?empty(busy?'تحميل المساحات…':'لا توجد مساحات متاحة'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.all(8),itemCount:spaces.length,separatorBuilder:(_,__)=>const SizedBox(height:8),itemBuilder:(_,i){final c=spaces[i];return ListTile(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12)),tileColor:colors.surfaceContainerLow,contentPadding:const EdgeInsets.all(18),leading:CircleAvatar(backgroundColor:colors.primaryContainer,child:Text(c['mark']?.toString()??'S')),title:Text(c['name'].toString(),style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${c['onlineCount']??0} متصل · ${c['gameRoomCount']??0} مباراة\n${c['description']??''}'),trailing:const Icon(Icons.chevron_left),onTap:()=>enter(c));})):
+        (spaces.isEmpty?empty(busy?'تحميل المساحات…':'لا توجد مساحات متاحة'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.all(8),itemCount:spaces.length,separatorBuilder:(_,__)=>const SizedBox(height:8),itemBuilder:(_,i){final c=spaces[i];return ListTile(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12)),tileColor:colors.surfaceContainerLow,contentPadding:const EdgeInsets.all(18),leading:CircleAvatar(backgroundColor:Colors.transparent,child:communityFlag(c)),title:Text(c['name'].toString(),style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${c['onlineCount']??0} متصل · ${c['gameRoomCount']??0} مباراة\n${c['description']??''}'),trailing:const Icon(Icons.chevron_left),onTap:()=>enter(c));})):
         tab==0?(rooms.isEmpty?empty('لا توجد مباريات حاليًا. أنشئ أول مباراة.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:rooms.length,itemBuilder:(_,i)=>roomRow(rooms[i]),separatorBuilder:(_,__)=>const Divider(height:1,indent:16,endIndent:16))):
         tab==2?(members.isEmpty?empty('لا يوجد أعضاء متصلون الآن.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:members.length,itemBuilder:(_,i)=>memberRow(members[i]),separatorBuilder:(_,__)=>const Divider(height:1,indent:16,endIndent:16))):
         messages.isEmpty?empty('قل مرحبًا وابدأ المحادثة.'):ListView.builder(controller:scroll,physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.symmetric(vertical:12),itemCount:messages.length,itemBuilder:(_,i)=>messageRow(messages[i])),

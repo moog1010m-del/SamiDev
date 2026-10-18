@@ -538,10 +538,14 @@
       if(manual)toast('تم تحديث المساحات');
     }catch(err){if(err.status===401)return showAuth();if(manual)toast(err.message,true);}
   }
+  function communityFlag(c){
+    const code=String(c.countryCode||'');
+    return ['sa','kw','jo','iq'].includes(code)?`<img class="community-country-flag" src="/platform/assets/flags/${code}.svg" alt="${escapeHtml(c.name||'')}" width="52" height="52">`:escapeHtml(c.mark||initials(c.name));
+  }
   function renderCommunities(){
     const box=$('#community-grid');if(!box)return;
     if(!state.communities.length){box.innerHTML='<div class="empty">لا توجد مساحات متاحة الآن.</div>';return;}
-    box.innerHTML=state.communities.map(c=>`<button class="community-card" type="button" data-community="${escapeHtml(c.id)}" style="--community-accent:${escapeHtml(c.accent||'#d5a34c')}"><div class="community-card-copy"><small class="eyebrow">مساحة اجتماعية</small><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||'')}</p></div><span class="community-card-mark">${escapeHtml(c.mark||initials(c.name))}</span><div class="community-card-meta"><span><b>${Number(c.onlineCount)||0}</b> متصل</span><span><b>${Number(c.gameRoomCount)||0}</b> مباراة</span><span class="community-card-enter">دخول ‹</span></div></button>`).join('');
+    box.innerHTML=state.communities.map(c=>`<button class="community-card" type="button" data-community="${escapeHtml(c.id)}" style="--community-accent:${escapeHtml(c.accent||'#d5a34c')}"><div class="community-card-copy"><small class="eyebrow">مساحة اجتماعية</small><h3 dir="auto">${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||'')}</p></div><span class="community-card-mark">${communityFlag(c)}</span><div class="community-card-meta"><span><b>${Number(c.onlineCount)||0}</b> متصل</span><span><b>${Number(c.gameRoomCount)||0}</b> مباراة</span><span class="community-card-enter">دخول ‹</span></div></button>`).join('');
     $$('.community-card',box).forEach(card=>card.onclick=()=>enterCommunity(card.dataset.community));
   }
   function communityLocationId(){
@@ -599,7 +603,7 @@
   function renderCommunityState(){
     const c=state.activeCommunity;if(!c)return;
     const room=$('#community-room');room.style.setProperty('--community-accent',c.accent||'#d5a34c');
-    $('#active-community-name').textContent=c.name||'المساحة';$('#active-community-description').textContent=(c.description||'')+(state.communityCapabilities?.canModerate?' · لديك صلاحية إدارة المساحة: افتح ملف عضو للكتم أو الحظر أو الإخراج.':'');$('#active-community-mark').textContent=c.mark||initials(c.name);$('#active-community-mark').style.setProperty('--community-accent',c.accent||'#d5a34c');
+    $('#active-community-name').textContent=c.name||'المساحة';$('#active-community-description').textContent=(c.description||'')+(state.communityCapabilities?.canModerate?' · لديك صلاحية إدارة المساحة: افتح ملف عضو للكتم أو الحظر أو الإخراج.':'');$('#active-community-mark').innerHTML=communityFlag(c);$('#active-community-mark').style.setProperty('--community-accent',c.accent||'#d5a34c');
     $('#community-tab-members').textContent=`متصل (${state.communityMembers.length})`;$('#community-tab-games').textContent=`الألعاب (${state.rooms.length})`;
     $('#community-chat-title').textContent=`شات ${c.name||'المساحة'}`;$('#community-member-count').textContent=String(visibleCommunityMembers().length);
     renderCommunityMembers();renderCommunityMessages();
