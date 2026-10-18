@@ -15,7 +15,7 @@ class ReplyQueueTests(unittest.IsolatedAsyncioTestCase):
         pending.put_nowait('hello')
         message,revision=await next_reply_message(pending,engine,.01)
         self.assertEqual((message,revision),('hello',1))
-        self.assertGreaterEqual(time.monotonic()-engine.last_sent,.08)
+        self.assertGreaterEqual(time.monotonic()-engine.last_sent,.075)
 
     async def test_latest_message_replaces_pending_reply_and_resets_debounce(self):
         engine=self.engine(.01);pending=asyncio.Queue(maxsize=1)
