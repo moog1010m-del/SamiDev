@@ -662,7 +662,11 @@
         stars.append(star);
       }
       const meta=document.createElement('div');meta.className='community-member-meta';
-      for(const text of [`${String(u.username||'player')}`,`فوز ${formatProfileStat(u.wins)}`,`سمعة ${formatProfileStat(u.reputation)}`]){const span=document.createElement('span');span.textContent=text;meta.append(span);}
+      const wins=document.createElement('span');wins.className='community-member-wins';wins.append(profileSprite('profile-sprite-trophy community-member-trophy'),document.createTextNode(`فوز ${formatProfileStat(u.wins)}`));
+      const reputation=document.createElement('span');reputation.className='community-member-reputation';
+      reputation.innerHTML=window.SamiDevProfileDetails.flameMarkup(u.reputation);
+      reputation.append(document.createTextNode(`سمعة ${formatProfileStat(u.reputation)}`));
+      meta.append(wins,reputation);
       copy.append(title,stars,meta);const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);update.add(row);
     }update.finish();
   }

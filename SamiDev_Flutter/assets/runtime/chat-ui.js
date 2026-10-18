@@ -374,7 +374,7 @@
     launcher.id = 'sd-chat-launcher';
     launcher.type = 'button';
     launcher.setAttribute('aria-label', 'فتح محادثة المباراة');
-    launcher.innerHTML = `<span aria-hidden="true">💬</span><span id="sd-chat-unread" hidden></span>`;
+    launcher.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2 1.5-6A8 8 0 1 1 20 11.5Z"/><path d="M7 10h8M7 14h5"/></svg><span id="sd-chat-unread" hidden></span>`;
     document.body.appendChild(launcher);
 
     list = root.querySelector('#sd-chat-messages');

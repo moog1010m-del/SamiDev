@@ -14,6 +14,20 @@ body, body * {
 #game { touch-action: none; }
 img, canvas { -webkit-user-drag: none; }
 button, a, [role="button"] { touch-action: manipulation; }
+/* Normalize inherited button padding/min-width: every floating control has one
+   circular hit surface, with an aligned line icon instead of platform emoji. */
+body #sd-room-menu-button,body #sd-room-back-button,body #sd-chat-launcher{
+  box-sizing:border-box!important;width:44px!important;height:44px!important;
+  min-width:44px!important;max-width:44px!important;min-height:44px!important;
+  padding:0!important;border-radius:50%!important;line-height:1!important;
+  background:#111a23b8!important;border:1px solid #ffffff26!important;
+  color:#f3f7f7!important;box-shadow:none!important;transform:none!important;
+  align-items:center;justify-content:center;
+}
+body #sd-room-menu-button,body #sd-room-back-button{display:grid!important}
+body #sd-room-menu-button>svg,body #sd-room-back-button>svg,body #sd-chat-launcher>svg{
+  width:22px!important;height:22px!important;display:block;pointer-events:none;
+}
 input, textarea, [contenteditable]:not([contenteditable="false"]) {
   -webkit-user-select: text;
   user-select: text;

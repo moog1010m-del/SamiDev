@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../runtime/api.dart';
 import 'profile_details.dart';
 import 'sticker_art.dart';
+import 'reputation_flame.dart';
 
 class ProfileDecoration extends StatelessWidget {
   const ProfileDecoration(this.name,{super.key,this.size=22});
@@ -140,7 +141,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           Padding(padding:const EdgeInsets.symmetric(vertical:23),child:Row(children:[
             stat('لاعب منذ','${u['accountAgeDays']??0} يوم',const ProfileDecoration('calendar',size:18)),
             stat('الفوز','${u['wins']??0}',const ProfileDecoration('trophy')),
-            stat('السمعة','${u['reputation']??0}',const ProfileDecoration('reputation-flame')),
+            stat('السمعة','${u['reputation']??0}',ReputationFlame(score:int.tryParse('${u['reputation']}')??0)),
           ])),
           if(!self)Wrap(alignment:WrapAlignment.center,spacing:8,runSpacing:8,children:[
             FilledButton.icon(onPressed:busy||relation=='friend'||relation=='outgoing'?null:()=>action('friend'),icon:const Icon(Icons.person_add_outlined,size:19),label:Text(switch(relation){'friend'=>'صديق','outgoing'=>'تم إرسال الطلب','incoming'=>'قبول الصداقة',_=>'إضافة صديق'})),

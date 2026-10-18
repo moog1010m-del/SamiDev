@@ -8,6 +8,7 @@ import 'chat_cosmetic.dart';
 import '../runtime/api.dart';
 import 'player_profile.dart';
 import 'sticker_art.dart';
+import 'reputation_flame.dart';
 
 class CommunityHub extends StatefulWidget {
   const CommunityHub({super.key,required this.api,required this.active,required this.onGame,required this.onProfile,required this.onTheme,required this.onInvite,required this.onNavigationChanged,required this.onUnauthorized,this.initialCommunity,this.onAccount,this.user});
@@ -164,10 +165,9 @@ class CommunityHubState extends State<CommunityHub> {
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Row(children:[StickerArtwork(asset:user['nameBadgeAsset']?.toString()??'',size:24),const SizedBox(width:3),Expanded(child:Text(name(user),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w600)))]),
         const SizedBox(height:5),ProfileStars(size:18,count:(user['starsCount'] as num?)?.toInt()??0),
-        if(user['username']!=null)Padding(padding:const EdgeInsets.only(top:4),child:Text('${user['username']}',textDirection:TextDirection.ltr,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant))),
         const SizedBox(height:8),Wrap(spacing:16,runSpacing:6,children:[
           Row(mainAxisSize:MainAxisSize.min,children:[const ProfileDecoration('trophy',size:18),const SizedBox(width:5),Text('فوز ${user['wins']??0}',style:const TextStyle(fontSize:12))]),
-          Row(mainAxisSize:MainAxisSize.min,children:[const ProfileDecoration('reputation-flame',size:18),const SizedBox(width:5),Text('سمعة ${user['reputation']??0}',style:const TextStyle(fontSize:12))]),
+          Row(mainAxisSize:MainAxisSize.min,children:[ReputationFlame(score:int.tryParse('${user['reputation']}')??0,size:20),const SizedBox(width:5),Text('سمعة ${user['reputation']??0}',style:const TextStyle(fontSize:12))]),
         ]),
       ])),
     ])));

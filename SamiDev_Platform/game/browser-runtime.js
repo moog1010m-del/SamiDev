@@ -16,7 +16,7 @@
   const mobileDevice = Number(navigator.maxTouchPoints || 0) > 0 || !!window.matchMedia?.('(pointer: coarse)').matches;
   const HOST_GLOBAL = 'SamiDev';
   const HOST_PLAYER_ID_METHOD = 'getSamiDevID';
-  const contextOptions = {alpha:true, antialias:!mobileDevice, preserveDrawingBuffer:false};
+  const contextOptions = {alpha:true, antialias:!mobileDevice||!window.SamiDevMobile?.postMessage, preserveDrawingBuffer:false};
   const gl = canvas.getContext('webgl', contextOptions) || canvas.getContext('experimental-webgl', contextOptions);
   if (!gl) throw new Error('WebGL غير مدعوم في هذا المتصفح');
 
@@ -125,6 +125,17 @@
   }
 
   function uploadProfileAvatarTexture(img) {
+    // Uploaded pictures can be rectangular; the shared engine receives a circular
+    // transparent texture with a centered cover crop, never a square background.
+    const portrait=document.createElement('canvas');portrait.width=portrait.height=256;
+    const ctx=portrait.getContext('2d');
+    if(!ctx)throw new Error('Avatar canvas unavailable');
+    const width=img.naturalWidth||img.width,height=img.naturalHeight||img.height;
+    const side=Math.min(width,height);
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.beginPath();ctx.arc(128,128,128,0,Math.PI*2);ctx.clip();
+    ctx.drawImage(img,(width-side)/2,(height-side)/2,side,side,0,0,256,256);
+    img=portrait;
     const tex = gl.createTexture();
     const id = idFor(state.textures, tex);
     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -462,8 +473,8 @@
     if(rect.width < 8 || rect.height < 8) return false;
     // Keep CSS/scene geometry unchanged while limiting phone fill-rate and buffer memory.
     const mobileWeb=mobileDevice && !window.SamiDevMobile?.postMessage;
-    const pixelCap=isCarrom?1500000:(mobileWeb?750000:1000000);
-    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? (isCarrom?2:(mobileWeb?1.25:1.5)) : 2,
+    const pixelCap=isCarrom?1500000:(mobileWeb?2000000:1000000);
+    const dpr=Math.min(devicePixelRatio||1, mobileDevice ? (isCarrom||mobileWeb?2:1.5) : 2,
       mobileDevice ? Math.sqrt(pixelCap/(rect.width*rect.height)) : Infinity);
     state.performance.pixelRatio=dpr;
     const w=Math.max(1,Math.round(rect.width*dpr)), h=Math.max(1,Math.round(rect.height*dpr));

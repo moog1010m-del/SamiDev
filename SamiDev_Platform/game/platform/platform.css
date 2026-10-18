@@ -808,6 +808,21 @@ html[data-sd-native] .lobby-profile{display:none!important}
 #profile-bio-input{width:100%;font:inherit;font-size:16px;line-height:1.6;min-height:86px;max-height:160px;resize:vertical;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text)}
 
 .community-member-title{direction:rtl;gap:3px}
+.community-members .community-member{display:grid;grid-template-columns:66px minmax(0,1fr) 7px;gap:13px;min-height:110px;padding:15px 5px;border:0;border-bottom:1px solid var(--line,#294248);border-radius:0;background:none;transform:none}
+.community-members .community-member:last-child{border-bottom:0}
+.community-members .community-member-avatar{width:64px;height:64px;border:1.5px solid #b89137;border-radius:50%;overflow:hidden;padding:2px;box-shadow:none;box-sizing:border-box;flex-shrink:0}
+.community-members .community-member-avatar img{border-radius:50%;object-fit:cover}
+.community-members .community-member-copy{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0}
+.community-members .community-member-title{display:flex;flex:initial;gap:3px;min-width:0}
+.community-members .community-member-title strong{font-size:17px;font-weight:600;line-height:1.4;max-width:none;min-width:0;flex:1}
+.community-members .community-member-emblem{width:24px;height:24px;flex:0 0 24px}
+.community-members .community-member-stars{display:flex;justify-content:flex-end;direction:ltr;gap:0;min-height:0;flex:initial}
+.community-members .community-member-star{width:18px;height:18px}
+.community-members .community-member-meta{display:flex;direction:rtl;align-items:center;flex-wrap:wrap;gap:6px 16px;overflow:visible;font-size:12px;line-height:1.5;color:var(--muted,#a0b7ba)}
+.community-members .community-member-meta>span{display:inline-flex;align-items:center;gap:4px;overflow:visible;white-space:nowrap}
+.community-members .community-member-meta span+span:before{content:none}
+.community-members .community-member-reputation .sd-reputation-flame{width:20px;height:24px;flex:0 0 20px}
+.community-members .community-member-trophy{width:18px;height:18px;flex:0 0 18px}
 
 .platform-legal-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 16px;padding:16px 10px;font-size:12px;line-height:1.8}
 .platform-legal-links a{color:var(--muted);text-underline-offset:3px}.platform-legal-links small{width:100%;text-align:center;color:var(--muted);font-size:11px}
