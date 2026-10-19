@@ -1311,6 +1311,16 @@ class SamiDevRealtime:
     async def index(self, request: web.Request) -> web.StreamResponse:
         return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-store", "Content-Type": "text/html; charset=utf-8", "X-SamiDev-Build": UI_BUILD["buildId"]})
 
+    async def landing(self, request: web.Request) -> web.StreamResponse:
+        # Preserve legacy app links; campaign parameters alone stay on the public home.
+        if {'invite', 'match', 'community', 'launch', 'settings'} & set(request.query):
+            raise web.HTTPFound(str(request.rel_url.with_path('/platform/').with_query(request.query)))
+        return web.FileResponse(GAME_ROOT / 'discover' / 'index.html', headers={
+            'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+
+    async def discovery_home_redirect(self, request: web.Request) -> web.StreamResponse:
+        raise web.HTTPMovedPermanently('/')
+
     async def platform_redirect(self, request: web.Request) -> web.StreamResponse:
         raise web.HTTPPermanentRedirect("/platform/")
 
@@ -1442,7 +1452,10 @@ def make_app() -> web.Application:
     app.router.add_get("/health", SERVICE.health)
     app.router.add_get("/metrics", SERVICE.metrics_endpoint)
     app.router.add_get("/client-config.js", SERVICE.client_config)
-    app.router.add_get("/", SERVICE.index)
+    app.router.add_get("/", SERVICE.landing)
+    app.router.add_get("/discover", SERVICE.discovery_home_redirect)
+    app.router.add_get("/discover/", SERVICE.discovery_home_redirect)
+    app.router.add_get("/discover/index.html", SERVICE.discovery_home_redirect)
     app.router.add_get("/platform", SERVICE.platform_redirect)
     app.router.add_get("/platform/", SERVICE.index)
     app.router.add_get("/{path:.*}", SERVICE.static_game)
