@@ -23,9 +23,31 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.mem.close();self.mem=Memory(self.path);self.assertEqual(self.mem.preference('a'),'البلياردو')
         self.mem.forget('a');self.assertIsNone(self.mem.preference('a'))
     async def test_no_api_for_facts_contacts_and_unknown_account(self):
-        for text in ['كم الساعة','عطني سنابك','السلام عليكم','كم فوز عندي','أنت بوت']:
+        for text in ['كم الساعة','عطني سنابك','كم فوز عندي','أنت بوت']:
             reply=await self.engine.respond(Message(text,'a',text));self.assertIsNotNone(reply)
         self.assertEqual(self.provider.calls,0)
+    async def test_greeting_uses_model_and_same_persona_follows_user_answer(self):
+        seen=[]
+        class Capture:
+            async def generate(inner,profile,context,*args):
+                seen.append((profile,context));return 'وعليكم السلام، كيفك؟' if profile['conversation_mode']=='welcome' else 'وش كان متعبك بالدوام؟'
+        self.engine.provider=Capture()
+        greeting=Message('greeting','human','السلام عليكم');self.engine.ingest(greeting)
+        first=await self.engine.respond(greeting)
+        self.assertEqual(seen[0][0]['conversation_mode'],'welcome')
+        self.engine.turn+=1
+        answer=Message('answer','human','الحمد لله، توي راجع من الدوام');self.engine.ingest(answer)
+        second=await self.engine.respond(answer)
+        self.assertEqual(first.speaker,second.speaker)
+        self.assertEqual(seen[-1][1][-1]['text'],answer.text)
+        addressed=Message('address','human','فهد وش رايك؟');self.engine.ingest(addressed)
+        self.assertEqual((await self.engine.respond(addressed)).speaker,'fahad')
+    async def test_greeting_falls_back_to_checkin_when_model_unavailable(self):
+        class Broken:
+            async def generate(*args):raise RuntimeError('unavailable')
+        self.engine.provider=Broken()
+        reply=await self.engine.respond(Message('greeting','human','السلام عليكم'))
+        self.assertEqual(reply.reason,'local');self.assertIn('كيفك؟',reply.text)
     async def test_one_speaker_cooldown_and_recorded_handoff(self):
         self.assertIsNone(self.engine.idle(1));self.assertIsNotNone(self.engine.idle(0))
         m=Message('one','a','نواف وش ودك تلعب؟');self.engine.ingest(m)

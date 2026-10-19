@@ -52,7 +52,7 @@ async def main():
                     if replies:break
                     await asyncio.sleep(.2)
                 assert len(replies)==1,replies
-                assert replies[0]['text']=='وعليكم السلام، حيّاك الله!'
+                assert replies[0]['text']=='وعليكم السلام، حيّاك الله! كيفك؟'
                 await asyncio.sleep(.5)
                 rows=await service.community_chat_history('majlis');assert len([r for r in rows if r['userId'] in bot_ids])==1
                 # A fresh message during cooldown must wait, rather than disappear.

@@ -82,6 +82,7 @@ class Coordinator:
         self.script_index=0;self.line_index=0
         self.identities={}
         self.last_input=time.monotonic();self.initiative_revision=None
+        self.threads={};self.last_user_id=None
     def active(self,now=None):
         hour=(now or datetime.now(ZoneInfo(self.config['timezone']))).hour
         def present(p):
@@ -92,13 +93,19 @@ class Coordinator:
         if not message.id or not message.user_id or not message.text:return False
         fresh=self.memory.add(self.room,message)
         if fresh:
-            self.memory.remember(message);self.revision+=1;self.last_input=time.monotonic()
+            self.memory.remember(message);self.revision+=1;self.last_input=time.monotonic();self.last_user_id=message.user_id
         return fresh
-    def choose(self,text=''):
+    def choose(self,text='',user_id=None):
         active=self.active()
         if not active:return None
         addressed=[p for p in active if p['name'] in text]
-        return addressed[0] if addressed else active[self.turn%len(active)]
+        thread=self.threads.get(user_id or self.last_user_id)
+        owner=next((p for p in active if thread and thread[0]==p['id'] and time.monotonic()-thread[1]<300),None)
+        profile=addressed[0] if addressed else owner or active[self.turn%len(active)]
+        if user_id:
+            if user_id not in self.threads and len(self.threads)>=128:self.threads.pop(next(iter(self.threads)))
+            self.threads[user_id]=(profile['id'],time.monotonic())
+        return profile
     def ready(self):return time.monotonic()-self.last_sent>=self.config['cooldown_seconds']
     def sent(self):self.last_sent=time.monotonic();self.turn+=1
     def idle(self,human_count):
@@ -111,7 +118,7 @@ class Coordinator:
         return Reply(line['speaker'],line['text'],'recorded')
     async def respond(self,message):
         if not self.ready():return None
-        profile=self.choose(message.text)
+        profile=self.choose(message.text,message.user_id)
         if not profile:return None
         text=message.text.strip()
         def local(value):return Reply(profile['id'],value,'local')
@@ -124,7 +131,11 @@ class Coordinator:
         if any(term in text for term in ('كم الساعة','كم الساعه')):
             clock=datetime.now(ZoneInfo(self.config['timezone'])).strftime('%H:%M')
             return local(f'الساعة الحين {clock} بتوقيت السعودية.')
-        if text in ('السلام عليكم','سلام عليكم'):return local('وعليكم السلام، حيّاك الله!')
+        if text in ('السلام عليكم','سلام عليكم'):
+            revision=self.revision
+            reply=await self.generate_reply(profile,self.memory.preference(message.user_id),'welcome') if self.provider else None
+            if revision!=self.revision:return None
+            return reply or local('وعليكم السلام، حيّاك الله! كيفك؟')
         if any(term in text for term in ('تذكرني','لعبتي المفضلة','لعبتي المفضله')):
             preference=self.memory.preference(message.user_id)
             return local(f'اللي قلت لي إن لعبتك المفضلة {preference}.' if preference else 'ما عندي معلومة أكيدة عن لعبتك المفضلة، وش تحب تلعب؟')
