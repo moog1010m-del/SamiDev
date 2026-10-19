@@ -38,6 +38,8 @@ class BotAccounts:
         rows=[]
         for raw in await self.raw():
             user=public_user(raw,online=await self.p.is_online(raw['id']))
+            stats=await self.p.r.hgetall(self.p.k_game_stats(raw['id'],'pool')) if self.p.r is not None else self.p.mem_game_stats.get(raw['id'],{}).get('pool',{})
+            user.update(poolPlayed=max(0,int(stats.get('played') or 0)),matchCooldownUntil=int(raw.get('matchCooldownUntil') or 0))
             user.update(room=raw.get('botRoom','majlis'),enabled=raw.get('botEnabled')=='1',skill=raw.get('botSkill','medium'),avatarUrl=('/api/avatar/'+raw['id']+'?v='+raw.get('botAvatarVersion','0')) if raw.get('avatarData') else '',presenceError=raw.get('botPresenceError',''),gameplayReady=worker['online'])
             rows.append(user)
         return dict(ok=True,bots=rows,communities=list(COMMUNITIES.values()),badges=[dict(id=k,name=v['name'],asset=v.get('asset','')) for k,v in STORE_CATALOG.items() if v.get('slot')=='name_badge' and not v.get('retired')],gameplayReady=worker['online'],playWorker=worker)

@@ -100,6 +100,14 @@ async def main():
   async with ordinary.post(server.make_url('/api/admin/bots/play-worker'),json={'online':True,'activeGames':1}) as response:assert response.status==403
   async with client.post(server.make_url('/api/admin/bots/play-worker'),json={'online':True,'activeGames':1}) as response:assert response.status==200
   assert (await manager.snapshot())['gameplayReady'] is True
+  counts={'online':True,'activeGames':120,'selfPlayingBots':160,'humanPlayingBots':4,'readyBots':36}
+  async with client.post(server.make_url('/api/admin/bots/play-worker'),json=counts) as response:assert response.status==200
+  state=(await manager.snapshot())['playWorker'];assert all(state[k]==v for k,v in counts.items())
+  for bad in (-1,True,1001):
+   async with client.post(server.make_url('/api/admin/bots/play-worker'),json={**counts,'readyBots':bad}) as response:assert response.status==400
+  p.mem_game_stats.setdefault(eligible['id'],{})['pool']={'played':7,'wins':3,'draws':0}
+  assert next(b for b in (await manager.snapshot())['bots'] if b['id']==eligible['id'])['poolPlayed']==7
+
   async with client.post(server.make_url('/api/admin/bots/play-worker'),json={'online':False,'activeGames':0}) as response:assert response.status==200
   if os.getenv('SAMIDEV_BOT_ADMIN_BROWSER')=='1':
    proc=await asyncio.create_subprocess_exec('node',str(ROOT/'tests/bot_admin_browser.mjs'),env=dict(os.environ,SAMIDEV_TEST_BASE_URL=str(server.make_url('')),SAMIDEV_TEST_ADMIN_SESSION=admin_token))

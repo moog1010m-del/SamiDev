@@ -1,10 +1,10 @@
 """Optional pool player process. All play goes through the normal authenticated /ws."""
-import argparse,asyncio,json,os,random,signal,time,uuid
-from pathlib import Path
+import argparse,asyncio,json,os,signal,time,uuid
 from urllib.parse import urlsplit
 import aiohttp
 from planner import plan
 from fill_schedule import FillSchedule
+from rotation import Rotation
 
 def log(event,**fields):print(json.dumps({'event':event,**fields},ensure_ascii=False),flush=True)
 class BridgeError(RuntimeError):pass
@@ -118,59 +118,98 @@ class Player:
             await asyncio.gather(*(t for t in (reader,heartbeat,actor) if t),return_exceptions=True)
 
 class Worker:
-    def __init__(self,base,token,max_games=4,wait=10,scale=1,bot_vs_bot=False):
+    def __init__(self,base,token,max_games=None,wait=10,scale=1,bot_vs_bot=False,selfplay_per_room=40,reserve_per_room=10):
         self.base=base;self.token=token;self.max_games=max_games;self.wait=wait;self.scale=scale;self.bot_vs_bot=bot_vs_bot
         self.jobs={};self.targets={};self.join_targets={};self.joined=set();self.schedule=FillSchedule();self.bots=[];self.communities=[];self.stop=asyncio.Event();self.last_roster=0
+        self.selfplay_per_room=selfplay_per_room;self.reserve_per_room=reserve_per_room
+        self.kinds={};self.retry_at={};self.rotation=Rotation();self.room_cursor=0
+    def game_limit(self):
+        return self.max_games or (min(1000,max(1,len(self.communities)*(self.selfplay_per_room//2+self.reserve_per_room))) if self.bot_vs_bot else 4)
+    def assign(self,bot,room,kind,task):
+        self.targets[bot['id']]=room;self.kinds[bot['id']]=kind;self.rotation.selected(bot);self.jobs[bot['id']]=asyncio.create_task(task)
     def confirmed_join(self,uid,rid):
         self.targets[uid]=rid;self.joined.add(uid);self.schedule.confirmed(rid)
         log('bot_joined',bot=uid,room=rid,confirmedBotJoins=self.schedule.joins[rid][0])
-    async def launch(self,admin,bot,room=None,create=False):
+    async def launch(self,admin,bot,room=None,create=False,created=None):
         token=None
         try:
             result=await request(admin,self.base,'POST','/api/admin/bots/'+bot['id']+'/play-session',{})
             token=result['session']
             async with aiohttp.ClientSession(headers={'Origin':self.base},cookies={'samidev_session':token},timeout=aiohttp.ClientTimeout(total=15)) as session:
-                player=Player(session,self.base,dict(bot),room,self.scale,create,lambda rid:self.confirmed_join(bot['id'],rid))
+                def joined(rid):
+                    self.confirmed_join(bot['id'],rid)
+                    if created is not None and not created.done():created.set_result(rid)
+                player=Player(session,self.base,dict(bot),room,self.scale,create,joined)
                 await player.run()
                 log('match_done',bot=bot['id'],room=player.room,shots=player.shots)
         except asyncio.CancelledError:raise
-        except Exception as error:log('match_stopped',bot=bot['id'],reason=str(error) if isinstance(error,BridgeError) else type(error).__name__)
+        except Exception as error:
+            self.retry_at[bot['id']]=time.time()+20
+            log('match_stopped',bot=bot['id'],reason=str(error) if isinstance(error,BridgeError) else type(error).__name__)
         finally:
+            if created is not None and not created.done():created.set_result(None)
             if token:
                 try:
                     async with aiohttp.ClientSession(headers={'Origin':self.base},cookies={'samidev_session':token},timeout=aiohttp.ClientTimeout(total=3)) as session:
                         await request(session,self.base,'POST','/api/auth/logout',{})
                 except Exception:pass
+    async def partner(self,admin,bot,created):
+        try:
+            room=await asyncio.wait_for(asyncio.shield(created),30)
+            if room:
+                self.targets[bot['id']]=room
+                await self.launch(admin,bot,room)
+        except asyncio.CancelledError:raise
+        except Exception:
+            self.retry_at[bot['id']]=time.time()+20
+            log('partner_stopped',bot=bot['id'])
     async def run(self):
         async with aiohttp.ClientSession(headers={'Origin':self.base},cookies={'samidev_session':self.token},timeout=aiohttp.ClientTimeout(total=20)) as admin:
             try:
                 while not self.stop.is_set():
+                    completed=any(task.done() for task in self.jobs.values())
                     self.jobs={uid:task for uid,task in self.jobs.items() if not task.done()}
                     self.targets={uid:rid for uid,rid in self.targets.items() if uid in self.jobs}
+                    self.kinds={uid:kind for uid,kind in self.kinds.items() if uid in self.jobs}
                     self.join_targets={uid:rid for uid,rid in self.join_targets.items() if uid in self.jobs}
                     self.joined.intersection_update(self.jobs)
-                    if time.monotonic()-self.last_roster>20:
+                    if completed or time.monotonic()-self.last_roster>20:
                         roster=await request(admin,self.base,'GET','/api/admin/bots')
                         self.bots=roster['bots'];self.communities=[c['id'] for c in roster['communities'] if c.get('enabled',True)];self.last_roster=time.monotonic()
+                        self.rotation.prune(self.bots)
+                        self.retry_at={uid:until for uid,until in self.retry_at.items() if until>time.time()}
                     rooms=(await request(admin,self.base,'GET','/api/lobby/rooms'))['rooms']
                     self.schedule.prune(rooms)
-                    free=[b for b in self.bots if b['enabled'] and not b.get('banned') and b['id'] not in self.jobs]
+                    now=time.time()
+                    free=[b for b in self.bots if b['enabled'] and not b.get('banned') and b['room'] in self.communities and b['id'] not in self.jobs and b.get('matchCooldownUntil',0)<=now*1000 and self.retry_at.get(b['id'],0)<=now]
+                    names={b['username'] for b in self.bots}
+                    selfplay_rooms={rid for uid,rid in self.targets.items() if self.kinds.get(uid)=='selfplay'}
+                    # Human waiting tables always receive the first available players.
                     for room in rooms:
+                        if room['communityId'] not in self.communities or room['roomId'] in selfplay_rooms:continue
+                        occupied=[p for p in room.get('roster',[]) if p and p.get('name')]
+                        if occupied and all(p['name'] in names for p in occupied):continue
                         if any(rid==room['roomId'] and uid not in self.joined for uid,rid in self.join_targets.items()):continue
-                        if room['roomId'] not in self.targets.values() and len(set(self.targets.values()))>=self.max_games:continue
+                        if room['roomId'] not in self.targets.values() and len(set(self.targets.values()))>=self.game_limit():continue
                         if not self.schedule.eligible(room,self.wait,scale=self.scale):continue
                         matching=[b for b in free if b['room']==room['communityId']]
                         if not matching:continue
-                        bot=random.choice(matching);free.remove(bot)
-                        self.targets[bot['id']]=room['roomId'];self.join_targets[bot['id']]=room['roomId']
-                        self.jobs[bot['id']]=asyncio.create_task(self.launch(admin,bot,room['roomId']))
-                    if self.bot_vs_bot and len(set(self.targets.values()))<self.max_games:
-                        occupied_rooms={r['communityId'] for r in rooms if r['settings'].get('gameId')=='pool'}
-                        for cid in self.communities:
-                            matching=[b for b in free if b['room']==cid]
-                            if cid not in occupied_rooms and len(matching)>=2 and len(set(self.targets.values()))<self.max_games:
-                                bot=matching[0];free.remove(bot);self.targets[bot['id']]='create:'+bot['id'];self.jobs[bot['id']]=asyncio.create_task(self.launch(admin,bot,create=True))
-                    await request(admin,self.base,'POST','/api/admin/bots/play-worker',{'online':True,'activeGames':len(set(self.targets.values()))})
+                        bot=self.rotation.order(matching)[0];free.remove(bot)
+                        self.join_targets[bot['id']]=room['roomId']
+                        self.assign(bot,room['roomId'],'human',self.launch(admin,bot,room['roomId']))
+                    if self.bot_vs_bot and len(set(self.targets.values()))<self.game_limit():
+                        # One new pair per cycle limits connection bursts across communities.
+                        for offset in range(len(self.communities)):
+                            index=(self.room_cursor+offset)%len(self.communities);cid=self.communities[index]
+                            pair=self.rotation.pair(free,self.bots,self.jobs,self.kinds,cid,self.selfplay_per_room,self.reserve_per_room)
+                            if not pair:continue
+                            creator,partner=pair
+                            created=asyncio.get_running_loop().create_future();placeholder='create:'+creator['id']
+                            self.assign(creator,placeholder,'selfplay',self.launch(admin,creator,create=True,created=created))
+                            self.assign(partner,placeholder,'selfplay',self.partner(admin,partner,created))
+                            free.remove(creator);free.remove(partner);self.room_cursor=(index+1)%len(self.communities)
+                            break
+                    await request(admin,self.base,'POST','/api/admin/bots/play-worker',{'online':True,'activeGames':len(set(self.targets.values())),'selfPlayingBots':sum(k=='selfplay' for k in self.kinds.values()),'humanPlayingBots':sum(k=='human' for k in self.kinds.values()),'readyBots':len(free)})
                     try:await asyncio.wait_for(self.stop.wait(),2)
                     except TimeoutError:pass
             finally:
@@ -186,15 +225,16 @@ def origin(value):
     return value.rstrip('/')
 async def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--base-url',required=True);parser.add_argument('--enable-play',action='store_true');parser.add_argument('--max-games',type=int,default=4)
+    parser.add_argument('--base-url',required=True);parser.add_argument('--enable-play',action='store_true');parser.add_argument('--max-games',type=int,default=None)
     parser.add_argument('--join-after',type=float,default=10);parser.add_argument('--bot-vs-bot',action='store_true');parser.add_argument('--test-time-scale',type=float,default=1)
+    parser.add_argument('--selfplay-per-room',type=int,default=40);parser.add_argument('--reserve-per-room',type=int,default=10)
     args=parser.parse_args();base=origin(args.base_url)
     if not args.enable_play:raise ValueError('Explicit --enable-play required')
-    if not 1<=args.max_games<=16 or not 0<=args.join_after<=120 or not .01<=args.test_time_scale<=1:raise ValueError('Invalid limits')
+    if (args.max_games is not None and not 1<=args.max_games<=1000) or not 0<=args.selfplay_per_room<=100 or args.selfplay_per_room%2 or not 0<=args.reserve_per_room<=100 or not 0<=args.join_after<=120 or not .01<=args.test_time_scale<=1:raise ValueError('Invalid limits')
     if args.test_time_scale!=1 and urlsplit(base).hostname not in ('127.0.0.1','localhost','::1'):raise ValueError('Test clock is localhost-only')
     token=os.environ.get('PLAZR_POOL_WORKER_ADMIN_SESSION','')
     if not token:raise ValueError('Set PLAZR_POOL_WORKER_ADMIN_SESSION securely')
-    worker=Worker(base,token,args.max_games,args.join_after,args.test_time_scale,args.bot_vs_bot)
+    worker=Worker(base,token,args.max_games,args.join_after,args.test_time_scale,args.bot_vs_bot,args.selfplay_per_room,args.reserve_per_room)
     for sig in (signal.SIGINT,signal.SIGTERM):
         try:asyncio.get_running_loop().add_signal_handler(sig,worker.stop.set)
         except NotImplementedError:pass

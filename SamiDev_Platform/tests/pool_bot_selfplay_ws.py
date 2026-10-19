@@ -22,7 +22,7 @@ async def main():
    async with client.get(base+'/api/admin/bots') as response:bots=(await response.json())['bots']
    for bot in bots:
     async with client.patch(base+'/api/admin/bots/'+bot['id'],json={'skill':'expert'}) as response:assert response.status==200
-   worker=await asyncio.create_subprocess_exec(sys.executable,str(ROOT.parent/'experiments/pool-bots/worker.py'),'--base-url',base,'--enable-play','--bot-vs-bot','--join-after','0','--max-games','1','--test-time-scale','.01',env=dict(os.environ,PLAZR_POOL_WORKER_ADMIN_SESSION=token),stdout=log,stderr=log)
+   worker=await asyncio.create_subprocess_exec(sys.executable,str(ROOT.parent/'experiments/pool-bots/worker.py'),'--base-url',base,'--enable-play','--bot-vs-bot','--selfplay-per-room','2','--reserve-per-room','0','--join-after','0','--max-games','1','--test-time-scale','.01',env=dict(os.environ,PLAZR_POOL_WORKER_ADMIN_SESSION=token),stdout=log,stderr=log)
    completed=None
    for _ in range(600):
     for room in app.SERVICE.store.rooms.values():
@@ -41,6 +41,8 @@ async def main():
    statistics=[await p.game_statistics(bot['id']) for bot in bots]
    assert all(next(s for s in stats if s['gameId']=='pool')['played']==1 for stats in statistics)
    assert all(int(u.get('coins','0'))>=50 for u in users)
+   async with client.get(base+'/api/admin/bots') as response:roster=await response.json()
+   assert all(bot['poolPlayed']==1 for bot in roster['bots'])
    worker.terminate();await asyncio.wait_for(worker.wait(),15);assert worker.returncode==0
    state=await app.SERVICE.gamehost.state(completed['roomId']);assert state['gameOver']
    print(json.dumps({'case':'POOL_BOT_SELFPLAY_PASS','moves':completed['moveCount'],'winner':state['finishOrder'][0],'accountWins':[u['wins'] for u in users],'ordinaryRewards':True,'unchangedPhysics':True}))
