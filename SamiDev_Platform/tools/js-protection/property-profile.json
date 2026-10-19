@@ -1,0 +1,4 @@
+{
+  "version": "internal-properties-v1",
+  "properties": ["getRank", "isSinking", "getJustPocketed"]
+}

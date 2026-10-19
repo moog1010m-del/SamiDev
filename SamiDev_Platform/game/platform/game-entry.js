@@ -41,6 +41,7 @@
   const sheet=state.element.firstElementChild;sheet.setAttribute('aria-busy','true');sheet.tabIndex=-1;sheet.focus({preventScroll:true});
  }
  function fail(error){
+  if(error?.code==='MATCH_COOLDOWN'){finish();return;}
   if(!current)return;const state=current;state.busy=false;state.element.firstElementChild.removeAttribute('aria-busy');
   state.element.querySelector('.game-entry-loading').hidden=true;
   const message=state.element.querySelector('.game-entry-error');message.hidden=false;message.textContent=error?.message||'تعذر فتح الطاولة. حاول مجددًا.';

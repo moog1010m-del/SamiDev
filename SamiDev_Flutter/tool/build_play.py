@@ -5,6 +5,7 @@ from play_preflight import ROOT,https_origin
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('--protection-seed', help='Reuse the seed from the private protection report for a rebuild')
  parser.add_argument('--server-url',required=True);parser.add_argument('--flutter',default='flutter')
  args=parser.parse_args()
  if not https_origin(args.server_url):parser.error('A stable HTTPS server origin is required')
@@ -16,7 +17,11 @@ def main():
  # SAMIDEV_GAME_DIR so existing exact engine-hash checks remain enforced.
  platform=ROOT.parent/'SamiDev_Platform'
  protected=platform/'build/protected-game'
- subprocess.run([sys.executable,str(platform/'tools/protect_game_release.py'),'--output',str(protected)],cwd=ROOT,check=True)
+ for check in ('properties.test.cjs','pipeline.test.cjs'):
+  subprocess.run(['node',str(platform/'tools/js-protection'/check)],cwd=ROOT,check=True)
+ protection=[sys.executable,str(platform/'tools/protect_game_release.py'),'--output',str(protected)]
+ if args.protection_seed: protection+=['--seed',args.protection_seed]
+ subprocess.run(protection,cwd=ROOT,check=True)
  subprocess.run([sys.executable,str(platform/'tests/protected_release.py'),str(protected)],cwd=ROOT,check=True)
  subprocess.run([sys.executable,str(ROOT/'tool/sync_assets.py'),'--web-root',str(protected)],cwd=ROOT,check=True)
  subprocess.run([args.flutter,'pub','get','--enforce-lockfile'],cwd=ROOT,check=True)

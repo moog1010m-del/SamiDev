@@ -61,6 +61,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   int gameProgress=0;
   bool _openingGame=false,_profileOpen=false,_returnToGames=false,_awaitingGameSurface=false;
   Completer<bool>? _gameSurfaceReady;
+  bool _entryFrameReady=false,_entryAdmitted=false;
+  String? _entryFailure;
   StreamSubscription<Map<String,dynamic>>? subscription;
   final input=TextEditingController(),chatScroll=ScrollController();
   final List<Map<String,dynamic>> messages=[];
@@ -133,8 +135,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       if(!live()||page()==null||!r.owns(page()!)||message.message.length>5000)return;
       try{final data=jsonDecode(message.message) as Map;
         if(data['type']=='copy'&&data['text'] is String){unawaited(copyText(data['text'] as String));}
-        if(game&&data['type']=='game_surface_ready'&&_gameSurfaceReady?.isCompleted==false){setState(()=>_awaitingGameSurface=false);_gameSurfaceReady!.complete(true);}
-        if(game&&data['type']=='game_surface_error'&&_gameSurfaceReady?.isCompleted==false){_gameSurfaceReady!.complete(false);}
+        if(game&&data['type']=='game_surface_ready'&&_gameSurfaceReady?.isCompleted==false){_entryFrameReady=true;completeGameEntry();}
+        if(game&&data['type']=='game_surface_error'&&_gameSurfaceReady?.isCompleted==false){_entryFailure=data['code']=='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.';_gameSurfaceReady!.complete(false);}
         if(game&&data['type']=='room_background'){parkGame();}
         if(game&&data['type']=='game_runtime_ready'){
           final suspend=_background||!inGame?' window.audio?.suspend?.();':'';
@@ -218,9 +220,14 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     await configurePlatform();
     if(_returnToGames&&authenticated)unawaited(refreshGamesProfile());
   }
-  void notify(String message){if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(message)));}
+  void notify(String message){if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(message),behavior:message=='حاول بعد دقيقة'?SnackBarBehavior.floating:null));}
+  void completeGameEntry(){
+    if(_entryFrameReady&&_entryAdmitted&&_gameSurfaceReady?.isCompleted==false){setState(()=>_awaitingGameSurface=false);_gameSurfaceReady!.complete(true);}
+  }
   void onEvent(Map<String,dynamic> event){
     if(!mounted)return;
+    if(_awaitingGameSurface&&event['type']=='error'&&_gameSurfaceReady?.isCompleted==false){_entryFailure=event['code']=='MATCH_COOLDOWN'?'حاول بعد دقيقة':(event['message']?.toString()??'تعذر فتح الطاولة');_gameSurfaceReady!.complete(false);return;}
+    if(_awaitingGameSurface&&{'created','joined','watching'}.contains(event['type'])&&(event['roomId']?.toString().isNotEmpty??false)){_entryAdmitted=true;completeGameEntry();}
     final firstBegin=event['type']=='begin_match'&&notifiedMatch!=event['roomId'];
     if(firstBegin)notifiedMatch=event['roomId']?.toString();
     if({'created','joined','watching','room_state','begin_match'}.contains(event['type'])&&gameController!=null){
@@ -312,27 +319,28 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     final r=runtime;if(r==null||!entries.containsKey(game))return;
     if(!RuntimePolicy.isCommunityId(query['community']))return;
     if(gameController==null)_returnToGames=nativeGames;
-    await openGameUri(r.origin.replace(path:entries[game],queryParameters:query));
-    if(gameController==null)throw StateError('تعذر تجهيز الطاولة');
+    if(!await openGameUri(r.origin.replace(path:entries[game],queryParameters:query)))throw StateError(_entryFailure??'تعذر تجهيز الطاولة');
   }
-  Future<void> openGameUri(Uri uri) async {
-    final r=runtime;if(r==null||!r.allowsNavigation(uri)||!RuntimePolicy.isGame(uri.path)||_openingGame)return;
+  Future<bool> openGameUri(Uri uri) async {
+    final r=runtime;if(r==null||!r.allowsNavigation(uri)||!RuntimePolicy.isGame(uri.path)||_openingGame)return false;
     if(gameController!=null){
-      if(uri.queryParameters['room']==table.roomId&&table.roomId.isNotEmpty){resumeGame();}
+      if(uri.queryParameters['room']==table.roomId&&table.roomId.isNotEmpty){resumeGame();return true;}
       else{notify('لديك طاولة مفتوحة. عد إليها أو غادرها من قائمة الثلاث نقاط أولًا.');}
-      return;
+      return false;
     }
+    _entryFrameReady=false;_entryAdmitted=false;_entryFailure=null;
     _openingGame=true;FocusManager.instance.primaryFocus?.unfocus();
     try{
       final cid=uri.queryParameters['community'];if(RuntimePolicy.isCommunityId(cid))r.community=cid!;
-      final c=await makeController(r,game:true);if(!mounted||runtime!=r)return;
+      final c=await makeController(r,game:true);if(!mounted||runtime!=r)return false;
       final surface=Completer<bool>();_gameSurfaceReady=surface;
       setState((){_awaitingGameSurface=true;gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';notifiedMatch=null;notifiedMineTurn=null;messages.clear();table.clear();});
       await configurePlatform();
       // The gateway supplies a one-time ticket; no session or ticket enters a URL.
       await c.loadRequest(uri);
-      if(!await surface.future.timeout(const Duration(seconds:45)))throw StateError('تعذر تجهيز الطاولة');
-    }catch(_){await discardGame();notify('تعذر فتح الطاولة. حاول مجددًا.');}
+      if(!await surface.future.timeout(const Duration(seconds:45)))throw StateError(_entryFailure??'تعذر تجهيز الطاولة');
+      return true;
+    }catch(_){_entryFailure??='تعذر فتح الطاولة. حاول مجددًا.';await discardGame();notify(_entryFailure!);return false;}
     finally{_openingGame=false;if(mounted)setState(()=>_awaitingGameSurface=false);}
   }
   Future<void> back() async {
@@ -374,7 +382,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   @override Widget build(BuildContext context){
     final ready=!loading&&error==null&&runtime!=null;
     return PopScope(canPop:!inGame&&webPage==null&&hubKey.currentState?.community==null,onPopInvokedWithResult:(didPop,result){if(!didPop)unawaited(back());},child:Scaffold(
-      bottomNavigationBar:authenticated&&!inGame&&ready&&(nativeGames||hubKey.currentState?.community==null)?NavigationBar(selectedIndex:selectedTab,onDestinationSelected:(index){setState(()=>selectedTab=index);if(index==0){setState(()=>webPage=null);unawaited(configurePlatform());}else if(index==2){setState(()=>webPage='games');unawaited(refreshGamesProfile());unawaited(configurePlatform());}else{unawaited(openPage(['lobby','friends','games','store','profile'][index]));}},destinations:const [
+      bottomNavigationBar:authenticated&&(!inGame||_awaitingGameSurface)&&ready&&(nativeGames||hubKey.currentState?.community==null)?NavigationBar(selectedIndex:selectedTab,onDestinationSelected:(index){setState(()=>selectedTab=index);if(index==0){setState(()=>webPage=null);unawaited(configurePlatform());}else if(index==2){setState(()=>webPage='games');unawaited(refreshGamesProfile());unawaited(configurePlatform());}else{unawaited(openPage(['lobby','friends','games','store','profile'][index]));}},destinations:const [
         NavigationDestination(icon:Icon(Icons.public_outlined),selectedIcon:Icon(Icons.public),label:'المساحات'),
         NavigationDestination(icon:Icon(Icons.people_outline),selectedIcon:Icon(Icons.people),label:'الأصدقاء'),
         NavigationDestination(icon:Icon(Icons.sports_esports_outlined),selectedIcon:Icon(Icons.sports_esports),label:'الألعاب'),
@@ -382,8 +390,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         NavigationDestination(icon:Icon(Icons.person_outline),selectedIcon:Icon(Icons.person),label:'البروفايل'),
       ]):null,
       body:SafeArea(bottom:true,child:error!=null?Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.cloud_off,size:48),const SizedBox(height:16),Text(error!,textAlign:TextAlign.center),const SizedBox(height:20),FilledButton(onPressed:start,child:const Text('إعادة المحاولة'))]))):!ready?const Center(child:CircularProgressIndicator()):!authenticated?AuthScreen(key:ValueKey(runtime),auth:NativeAuth(runtime!.api),onAuthenticated:(user)=>completeAuthentication(runtime!,user)):Column(children:[
-        if((inGame?gameProgress:progress)<100&&(inGame||!nativeHome))LinearProgressIndicator(value:(inGame?gameProgress:progress)/100,minHeight:2),
-        if(inGame&&!table.begun&&!table.finished&&table.seat>=0&&table.ownerSeat==table.seat)Align(
+        if(!_awaitingGameSurface&&(inGame?gameProgress:progress)<100&&(inGame||!nativeHome))LinearProgressIndicator(value:(inGame?gameProgress:progress)/100,minHeight:2),
+        if(inGame&&!_awaitingGameSurface&&!table.begun&&!table.finished&&table.seat>=0&&table.ownerSeat==table.seat)Align(
           alignment:Alignment.centerRight,child:PopupMenuButton<int>(tooltip:'إدارة الطاولة قبل اللعب',
             onSelected:(seat)=>unawaited(manageTable(seat==-1?'close':'kick',seat==-1?null:seat)),
             itemBuilder:(_)=>[const PopupMenuItem(value:-1,child:Text('إغلاق الطاولة')),
