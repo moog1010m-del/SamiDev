@@ -6,7 +6,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
-ASSETS = ["platform/admin-workspace.js", "platform/admin-workspace.css", "platform/bot-admin.js", "platform/bot-admin.css", "platform/game-entry.js", "platform/game-preload.js", "platform/desktop-layout.css", "platform/settings.css", "platform/account-settings.js", "platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "platform/community-live.js", "platform/game-host.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
+ASSETS = ["platform/friends.js", "platform/friends.css", "platform/admin-workspace.js", "platform/admin-workspace.css", "platform/bot-admin.js", "platform/bot-admin.css", "platform/game-entry.js", "platform/game-preload.js", "platform/desktop-layout.css", "platform/settings.css", "platform/account-settings.js", "platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "platform/community-live.js", "platform/game-host.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
 
 
 def build() -> dict:

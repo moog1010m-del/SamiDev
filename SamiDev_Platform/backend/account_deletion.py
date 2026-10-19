@@ -93,6 +93,8 @@ class AccountDeletion:
                 for key, entry in list(s.mem_tickets.items()):
                     if uid in str(entry.value):
                         s.mem_tickets.pop(key, None)
+                for key in list(s.direct.memory):
+                    if uid in key.split(':'): s.direct.memory.pop(key, None)
                 self.jobs.pop(uid, None)
         else:
             # Deletion is available for durable PostgreSQL accounts. Identify

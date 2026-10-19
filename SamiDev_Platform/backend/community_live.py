@@ -8,8 +8,9 @@ from contextlib import asynccontextmanager
 
 
 class CommunityLive:
-    def __init__(self, service):
+    def __init__(self, service, namespace="community-live"):
         self.service = service
+        self.namespace = namespace
         self.listeners = {}
         self.connections = {}
         self.task = None
@@ -34,7 +35,7 @@ class CommunityLive:
 
     def channel(self, cid):
         from social_platform import PREFIX
-        return f'{PREFIX}:community-live:{cid}'
+        return f'{PREFIX}:{self.namespace}:{cid}'
 
     def deliver(self, cid, event):
         for queue in tuple(self.listeners.get(cid, ())):
@@ -59,7 +60,7 @@ class CommunityLive:
         while True:
             try:
                 async with self.redis.pubsub() as sub:
-                    await sub.psubscribe(f'{PREFIX}:community-live:*')
+                    await sub.psubscribe(f'{PREFIX}:{self.namespace}:*')
                     async for message in sub.listen():
                         if message['type']=='psubscribe':self.ready.set();continue
                         if message['type'] != 'pmessage': continue

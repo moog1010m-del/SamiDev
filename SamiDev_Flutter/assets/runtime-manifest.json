@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "58ca53b179b777babf9beaad49e3d76e2ce7ac821cbc7723234cba6e75f36307"
+      "sha256": "f869239f596494171447a8a413a4d4b887356ff0836d32ce34778b0497af0f14"
     },
     "browser-runtime.js": {
       "size": 82160,
@@ -2628,8 +2628,8 @@
       "sha256": "bf4553ca952bddc9d0cc018d59254e6e5280c5e8320a1486815b4cc51a89bb8a"
     },
     "platform/build.json": {
-      "size": 6648,
-      "sha256": "9954e9f1803a54c73d8becca3838f6a12b0eededdfee291a4d37c4209d2be7f5"
+      "size": 6839,
+      "sha256": "9e5d52a6fb12998163bcf504896e570ec6e9daf2d125634094428b58be378912"
     },
     "platform/children.html": {
       "size": 4695,
@@ -2655,6 +2655,14 @@
       "size": 10297,
       "sha256": "31cb90b972fe1d899e28c4fa0a674619a68148b707c5187d0e611b9f83bd4ae5"
     },
+    "platform/friends.css": {
+      "size": 7218,
+      "sha256": "ebee90979465e78e6bd2567ab7769083400bd6cee2e7560f716eb1645dd85d3e"
+    },
+    "platform/friends.js": {
+      "size": 16382,
+      "sha256": "7638306e07fa9bb2a357b926907a1b31ac00b2475d7388c0c65949485a85e2b8"
+    },
     "platform/game-entry.js": {
       "size": 4437,
       "sha256": "a1fd36c0a200137a777ff6b170863d700e64f9675c1145499a0ae75d5b5a5748"
@@ -2668,12 +2676,12 @@
       "sha256": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072"
     },
     "platform/index.html": {
-      "size": 55948,
-      "sha256": "2a631d9ea82b30f5db69eb2bbb4088ad4a8459720aad66e46534af85a3ca5c79"
+      "size": 55017,
+      "sha256": "b632db2a8eefc9face46fec99bdcbb5a66e0675ed37a7cf4a88f12954885f934"
     },
     "platform/legal-content.json": {
-      "size": 31595,
-      "sha256": "7ba04cafc37ab1c591632199484a285d068c35cf9584bc51c16b603771a355f4"
+      "size": 32811,
+      "sha256": "0ad260e0f69e3777f6979051b6a8269fedb4a8bfb6d6aa846a7c254553905f0f"
     },
     "platform/legal.css": {
       "size": 2275,
@@ -2684,12 +2692,12 @@
       "sha256": "979fe96d7c96eb70234fbb8fc2c4274bdb7e7cfee85c278875e7c87d8e1fb9a3"
     },
     "platform/platform.js": {
-      "size": 94025,
-      "sha256": "ddeb093c01172a93c196103fe12c950e04a3e816e2f12e34b71f8a5b618a6393"
+      "size": 93613,
+      "sha256": "5c3c93574093aa18c107fd2d330858e9dcc632586e6f63755b8ddec42fc1e6fb"
     },
     "platform/privacy.html": {
-      "size": 15156,
-      "sha256": "451cb458c3d722b07f1b57be406261617785cc6ef7b5b8e6e895928aa00706e4"
+      "size": 16363,
+      "sha256": "1fec0f207b3761a8afea6ad61dd4ea335486a61020ab7f8f100a1bf5d861cf32"
     },
     "platform/profile-identity.css": {
       "size": 12859,

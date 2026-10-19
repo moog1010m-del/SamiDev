@@ -33,6 +33,19 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = maxOf(36, flutter.targetSdkVersion)
+        // Public Firebase application configuration, never service-account keys.
+        // Native resources let FCM receive notifications after process death.
+        // Registration remains opt-in via firebase_messaging_auto_init_enabled=false.
+        val pushApp = System.getenv("SAMIDEV_FIREBASE_ANDROID_APP_ID")?.trim().orEmpty()
+        val pushProject = System.getenv("SAMIDEV_FIREBASE_PROJECT_ID")?.trim().orEmpty()
+        val pushKey = System.getenv("SAMIDEV_FIREBASE_API_KEY")?.trim().orEmpty()
+        val pushSender = System.getenv("SAMIDEV_FIREBASE_MESSAGING_SENDER_ID")?.trim().orEmpty()
+        if (listOf(pushApp, pushProject, pushKey, pushSender).all { it.isNotEmpty() }) {
+            resValue("string", "google_app_id", pushApp)
+            resValue("string", "google_api_key", pushKey)
+            resValue("string", "gcm_defaultSenderId", pushSender)
+            resValue("string", "project_id", pushProject)
+        }
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
         // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
         // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`

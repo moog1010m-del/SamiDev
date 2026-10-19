@@ -25,6 +25,8 @@ import 'ui/account_settings.dart';
 import 'ui/participation_gate.dart';
 import 'ui/audience_gate.dart';
 import 'runtime/native_auth.dart';
+import 'runtime/friend_notifications.dart';
+import 'ui/friend_banner.dart';
 
 final appTheme=ValueNotifier<ThemeMode>(ThemeMode.system);
 Future<void> main() async {
@@ -55,6 +57,10 @@ class PlatformScreen extends StatefulWidget {
 }
 class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObserver {
   GameRuntime? runtime;
+  FriendNotifications? friendNotifications;
+  OverlayEntry? friendBanner;
+  String? pendingFriendId;
+  bool pendingFriendRequests=false,changingPhoneNotifications=false;
   WebViewController? controller,gameController;
   final table=RetainedTable();
   Uri? gameCurrent;
@@ -87,6 +93,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     if(_starting)return;_starting=true;
     if(mounted)setState((){error=null;loading=true;authenticated=false;controller=null;current=null;gamesProfile=null;webPage=null;selectedTab=0;role='user';});
     try {
+      dismissFriendBanner();await friendNotifications?.stop();friendNotifications=null;
       await discardGame();await subscription?.cancel();await runtime?.close();
       final r=widget.runtimeFactory?.call()??GameRuntime(PlatformApi(
         RuntimePolicy(const String.fromEnvironment('SAMIDEV_SERVER_URL'),allowLocalDevelopment:const bool.fromEnvironment('SAMIDEV_LOCAL_DEV')),SecureSessionVault()));runtime=r;
@@ -111,7 +118,28 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     await c.loadRequest(fresh?r.launch:r.origin.replace(path:'/platform/'));
     if(!mounted||runtime!=r||!r.api.signedIn)return;
     setState((){authenticated=true;gamesProfile=user;role=user['role']?.toString()??'user';webPage=null;selectedTab=0;});
+    if(friendNotifications?.accountId!=user['id']){
+      await friendNotifications?.stop();dismissFriendBanner();
+      final notifications=FriendNotifications(r.api,user['id'] as String,onMessage:showFriendBanner,onRequests:(){if(inGame)parkGame();setState(()=>selectedTab=1);pendingFriendId=null;pendingFriendRequests=true;unawaited(openPage('friends'));},onOpen:(id)=>unawaited(openFriendConversation(id)),onUpdate:(){if(mounted&&webPage=='friends')unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.refreshFriends();').catchError((_){ }));});
+      friendNotifications=notifications;unawaited(notifications.start());
+    }
     unawaited(configurePlatform());
+  }
+  void dismissFriendBanner(){friendBanner?.remove();friendBanner=null;}
+  void showFriendBanner(Map<String,dynamic> thread){
+    if(!mounted||_background||!authenticated||webPage=='friends')return;
+    final user=Map<String,dynamic>.from(thread['user'] as Map),message=Map<String,dynamic>.from(thread['lastMessage'] as Map);
+    dismissFriendBanner();
+    friendBanner=OverlayEntry(builder:(_)=>FriendBanner(username:user['username']?.toString()??'صديق',text:message['text']?.toString()??'رسالة جديدة',onDismiss:dismissFriendBanner,onOpen:(){dismissFriendBanner();unawaited(openFriendConversation(user['id'] as String));}));
+    Overlay.of(context).insert(friendBanner!);
+  }
+  Future<void> openFriendConversation(String id) async {
+    if(!mounted||runtime==null||!authenticated)return;
+    if(inGame)parkGame();pendingFriendRequests=false;pendingFriendId=id;setState(()=>selectedTab=1);await openPage('friends');
+  }
+  Future<void> phoneNotifications(bool enable) async {
+    if(changingPhoneNotifications)return;changingPhoneNotifications=true;
+    try{final text=enable?await friendNotifications?.enable():await friendNotifications?.disable();if(mounted&&text!=null&&text.isNotEmpty)notify(text);}catch(_){if(mounted)notify('تعذر تفعيل الإشعارات. تحقق من اتصال الهاتف وإعدادات Firebase.');}finally{changingPhoneNotifications=false;}
   }
   Future<WebViewController> makeController(GameRuntime r,{required bool game}) async {
     PlatformWebViewControllerCreationParams params=const PlatformWebViewControllerCreationParams();
@@ -148,6 +176,8 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         }
         if(!game&&data['type']=='platform_ready'&&authenticated&&r.api.signedIn){unawaited(configurePlatform());}
         if(!game&&data['type']=='open_settings'&&authenticated){unawaited(openAccountSettings());}
+        if(!game&&data['type']=='friend_push_enable'&&authenticated){unawaited(phoneNotifications(true));}
+        if(!game&&data['type']=='friend_push_disable'&&authenticated){unawaited(phoneNotifications(false));}
         if(!game&&data['type']=='native_home'){setState((){webPage=null;selectedTab=0;});unawaited(configurePlatform());}
       }catch(_){}
     });
@@ -290,6 +320,15 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     try{
       await controller!.runJavaScript('window.SamiDevMobilePlatform?.closeProfile(); window.SamiDevMobilePlatform?.setNativeActive(${nativeHome||inGame?'true':'false'});');
       if(!inGame&&webPage!=null)await controller!.runJavaScript('window.SamiDevMobilePlatform?.navigate(${jsonEncode(webPage)});');
+      if(!inGame&&webPage=='friends'&&pendingFriendRequests){
+        final ready=await controller!.runJavaScriptReturningResult('typeof window.SamiDevMobilePlatform?.openFriendRequests === "function"');
+        if(ready==true||ready.toString()=='true'){pendingFriendRequests=false;await controller!.runJavaScript('window.SamiDevMobilePlatform.openFriendRequests();');}
+      }
+      if(!inGame&&webPage=='friends'&&pendingFriendId!=null){
+        final id=pendingFriendId;
+        final ready=await controller!.runJavaScriptReturningResult('typeof window.SamiDevMobilePlatform?.openConversation === "function"');
+        if(ready==true||ready.toString()=='true'){pendingFriendId=null;await controller!.runJavaScript('window.SamiDevMobilePlatform.openConversation(${jsonEncode(id)});');}
+      }
     }catch(_){}
   }
   Future<void> openPage(String page) async {
@@ -361,16 +400,16 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   @override void didChangeAppLifecycleState(AppLifecycleState state){
     final r=runtime;if(r==null||controller==null)return;
     if(state==AppLifecycleState.paused||state==AppLifecycleState.hidden){
-      setState(()=>_background=true);
+      setState(()=>_background=true);dismissFriendBanner();unawaited(friendNotifications?.background(true));
       for(final c in [controller,gameController]){unawaited(c?.runJavaScript('window.audio?.suspend?.();').catchError((_){ }));}
       unawaited(r.suspend());
     }else if(state==AppLifecycleState.resumed&&_background){
-      setState(()=>_background=false);r.resume();
+      setState(()=>_background=false);r.resume();unawaited(friendNotifications?.background(false));
       // Reconnect the retained table even if the community is in the foreground.
       unawaited(gameController?.reload());if(!nativeHome&&!inGame)unawaited(controller?.reload());
     }
   }
-  @override void dispose(){for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
+  @override void dispose(){unawaited(friendNotifications?.stop());dismissFriendBanner();for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
   Widget chatHistory(){
     final colors=Theme.of(context).colorScheme;
     return ConstrainedBox(constraints:BoxConstraints(maxHeight:min(230,MediaQuery.sizeOf(context).height*.28)),child:Material(color:colors.surface.withValues(alpha:.97),elevation:6,child:messages.isEmpty?
