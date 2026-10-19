@@ -70,12 +70,12 @@ class AccountDeletion:
                         await s.security.drop(key)
                 s.security.memory.pop(uid, None)
                 for mapping in (s.mem_users, s.mem_friends, s.mem_requests, s.mem_presence, s.mem_inventory,
-                        s.mem_equipped, s.mem_store_ledger, s.mem_game_stats, s.mem_active_community):
+                        s.mem_equipped, s.mem_store_ledger, s.mem_game_stats, s.mem_active_community, s.safety.memory):
                     mapping.pop(uid, None)
                 if s.mem_usernames.get(job['usernameLower']) == uid:
                     s.mem_usernames.pop(job['usernameLower'], None)
                 s.mem_firebase.pop((s.firebase.project, job['firebaseUid']), None)
-                for mapping in (s.mem_friends, s.mem_requests):
+                for mapping in (s.mem_friends, s.mem_requests, s.safety.memory):
                     for value in mapping.values():
                         value.discard(uid)
                 for mapping in (s.mem_community_chat, s.community_rules.audit):

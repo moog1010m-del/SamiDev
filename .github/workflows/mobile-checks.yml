@@ -53,6 +53,9 @@ jobs:
           SAMIDEV_TEST_REDIS_URL: redis://127.0.0.1:6379/15
           SAMIDEV_CHAT_DIAGNOSTIC_DIR: ${{ runner.temp }}/chat-results
         run: |
+          python tests/user_safety_regression.py
+          python tests/user_safety_http.py
+          python tests/user_safety_postgres.py
           python tests/community_socket_regression.py
           python tests/postgres_community_latency.py
           node tests/network_liveness_regression.js

@@ -107,6 +107,9 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           body:u['relation']=='incoming'?{'userId':widget.id,'accept':true}:{'username':u['username']});
       }else if(kind=='reputation'){
         await request('/api/users/${widget.id}/reputation',body:{'source':'profile'});
+      }else if(kind=='block'){
+        await request('/api/users/${widget.id}/block',body:{'blocked':u['blocked']!=true});
+        if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(u['blocked']==true?'تم إلغاء الحظر':'تم الحظر. ستُخفى رسائله ولن تصلك طلبات صداقته.')));
       }else if(kind=='report'){
         final text=report.text.trim();if(text.isEmpty)throw StateError('اكتب وصف المشكلة أولًا');
         await request('/api/users/${widget.id}/report',body:{'message':text,if(widget.roomId.isNotEmpty)'roomId':widget.roomId});
@@ -144,9 +147,10 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
             stat('السمعة','${u['reputation']??0}',ReputationFlame(score:int.tryParse('${u['reputation']}')??0)),
           ])),
           if(!self)Wrap(alignment:WrapAlignment.center,spacing:8,runSpacing:8,children:[
-            FilledButton.icon(onPressed:busy||relation=='friend'||relation=='outgoing'?null:()=>action('friend'),icon:const Icon(Icons.person_add_outlined,size:19),label:Text(switch(relation){'friend'=>'صديق','outgoing'=>'تم إرسال الطلب','incoming'=>'قبول الصداقة',_=>'إضافة صديق'})),
+            FilledButton.icon(onPressed:busy||u['blocked']==true||relation=='friend'||relation=='outgoing'?null:()=>action('friend'),icon:const Icon(Icons.person_add_outlined,size:19),label:Text(switch(relation){'friend'=>'صديق','outgoing'=>'تم إرسال الطلب','incoming'=>'قبول الصداقة',_=>'إضافة صديق'})),
             OutlinedButton.icon(onPressed:busy||remaining<=0||u['reputationGrantedToday']==true?null:()=>action('reputation'),icon:const ProfileDecoration('reputation-flame',size:19),label:Text(u['reputationGrantedToday']==true?'مُنحت اليوم':'منح سمعة ($remaining/5)')),
             TextButton.icon(onPressed:busy?null:()=>setState(()=>reporting=!reporting),icon:const Icon(Icons.flag_outlined,size:19),label:const Text('إبلاغ')),
+            TextButton.icon(onPressed:busy?null:()=>action('block'),icon:Icon(u['blocked']==true?Icons.lock_open:Icons.block,size:19),label:Text(u['blocked']==true?'إلغاء الحظر':'حظر المستخدم')),
           ]),
           if(canModerate&&u['isSelf']!=true)PopupMenuButton<String>(
             enabled:!busy,tooltip:'إدارة العضو في المساحة',

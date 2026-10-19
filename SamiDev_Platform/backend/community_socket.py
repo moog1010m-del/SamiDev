@@ -24,6 +24,8 @@ async def serve(api, request):
     write_lock = asyncio.Lock()
 
     async def send(event):
+        event=await api.platform.safety.community_event(uid,event)
+        if event is None:return
         async with write_lock:
             await asyncio.wait_for(socket.send_json(event), 5)
 
@@ -37,6 +39,7 @@ async def serve(api, request):
                     event = await asyncio.wait_for(queue.get(), 12)
                 except TimeoutError:
                     event = {'type': 'resync'}
+                if event.get('targetUserId') and event['targetUserId']!=uid:continue
                 if event.get('type') == 'closed':
                     break
                 if time.monotonic() - checked >= 12:

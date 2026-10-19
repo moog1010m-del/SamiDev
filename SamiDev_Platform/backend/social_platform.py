@@ -366,6 +366,8 @@ class PlatformService:
         self.security = AccountSecurity(self)
         from account_deletion import AccountDeletion
         self.deletions = AccountDeletion(self)
+        from user_safety import UserSafety
+        self.safety = UserSafety(self)
         from community_live import CommunityLive
         self.live = CommunityLive(self)
         self.mem_inventory: dict[str, set[str]] = {}
@@ -1214,6 +1216,8 @@ class PlatformService:
         if not target:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         a, b = str(sender["id"]), str(target["id"])
+        if await self.safety.pair_blocked(a,b):
+            raise PlatformError("USER_BLOCKED", "لا يمكن إرسال طلب صداقة لهذا الحساب", 403)
         if a == b:
             raise PlatformError("SELF_FRIEND", "لا يمكنك إضافة نفسك")
         if await self.are_friends(a, b):
@@ -1256,6 +1260,8 @@ class PlatformService:
         uid = str(user["id"])
         if not await self.get_user(uid):
             raise PlatformError('AUTH_REQUIRED', 'الحساب غير متاح', 401)
+        if accept and await self.safety.pair_blocked(uid,sender_id):
+            raise PlatformError("USER_BLOCKED", "لا يمكن قبول هذا الطلب أثناء الحظر",403)
         sender = await self.get_user(sender_id)
         if not sender:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
@@ -1323,6 +1329,7 @@ class PlatformService:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         relation = await self.relationship(viewer_id, target_id) if viewer_id and viewer_id != target_id else ("self" if viewer_id == target_id else "none")
         out = public_user(target, relation=relation, online=await self.is_online(target_id))
+        out["blocked"] = target_id in await self.safety.blocked(viewer_id) if viewer_id else False
         out["hasAvatar"] = bool(str(target.get("avatarData") or "").strip())
         # Public, read-only showcase sourced from the existing store inventory.
         # No private balances, purchases, or equipment mutation is exposed.
@@ -1861,7 +1868,7 @@ class PlatformHttp:
             "ok": True, "community": dict(COMMUNITIES[cid]),
             "capabilities": {"canModerate":self.platform.community_rules.can_moderate(user,cid),"canAssignModerators":user.get("role")=="admin"},
             "members": await self.platform.community_members(cid),
-            "messages": await self.platform.community_chat_history(cid) if request.query.get("chat") != "0" else [],
+            "messages": (await self.platform.safety.community_event(user["id"], {"messages": await self.platform.community_chat_history(cid)}))["messages"] if request.query.get("chat") != "0" else [],
             "rooms": rooms, "ts": now_ms(),
         })
 
@@ -1902,6 +1909,8 @@ class PlatformHttp:
             raise PlatformError('RATE_LIMIT','اتصالات كثيرة؛ حاول لاحقًا',429)
         response=web.StreamResponse(headers={'Content-Type':'text/event-stream','Cache-Control':'private, no-store, no-transform','X-Accel-Buffering':'no'})
         async def emit(event):
+            event=await self.platform.safety.community_event(user["id"],event)
+            if event is None:return
             payload=('data: '+json.dumps(event,ensure_ascii=False,separators=(',',':'))+'\n\n').encode()
             await asyncio.wait_for(response.write(payload),5)
         async with self.platform.live.subscribe(cid,str(user['id'])) as queue:
@@ -1912,6 +1921,7 @@ class PlatformHttp:
                 while True:
                     try: event=await asyncio.wait_for(queue.get(),12)
                     except TimeoutError: event={'type':'resync'}
+                    if event.get('targetUserId') and event['targetUserId']!=user['id']:continue
                     if event.get('type')=='closed': break
                     if time.monotonic()-checked>=12:
                         try:

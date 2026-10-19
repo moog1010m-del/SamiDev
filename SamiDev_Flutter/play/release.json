@@ -1,0 +1,16 @@
+{
+  "applicationId": "com.samidev.platform",
+  "apiOrigin": null,
+  "privacyUrl": "https://plazr.cc/platform/privacy.html",
+  "deletionUrl": "https://plazr.cc/platform/account-deletion.html",
+  "audienceMode": "pending",
+  "policyReviewDate": null,
+  "reviewerAccessVerified": false,
+  "dataSafetyReviewed": false,
+  "contentRatingCompleted": false,
+  "contentRightsEvidenceReviewed": false,
+  "realDeviceTestsPassed": false,
+  "preLaunchReportReviewed": false,
+  "chatAiEnabled": null,
+  "notes": "Publication inputs are pending. Do not replace evidence with unchecked declarations. Audience still includes under-13s in operator.json."
+}
