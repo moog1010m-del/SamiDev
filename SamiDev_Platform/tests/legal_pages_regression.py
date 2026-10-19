@@ -30,5 +30,5 @@ class LegalTests(unittest.TestCase):
   self.assertEqual(json.loads((ROOT/'game/platform/legal-content.json').read_text())['pages'],data['pages'])
  def test_child_and_retention_disclosures(self):
   data=build();privacy=next(p for p in data['pages'] if p['id']=='privacy');text=json.dumps(privacy,ensure_ascii=False)
-  self.assertIn('لا تطبق بوابة عمر',text);self.assertIn('حد عددي وليس مدة حذف',text);self.assertIn('لا نضع مدة حذف غير مطبقة',text)
+  self.assertIn('اللعب المحلي',text);self.assertIn('لا يرسله إلى الخادم',text);self.assertIn('ليس إثبات عمر',text);self.assertIn('حد عددي وليس مدة حذف',text);self.assertIn('لا نضع مدة حذف غير مطبقة',text)
 if __name__=='__main__':unittest.main()

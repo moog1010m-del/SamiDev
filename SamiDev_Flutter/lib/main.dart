@@ -23,6 +23,7 @@ import 'ui/games_hub.dart';
 import 'ui/auth_screen.dart';
 import 'ui/account_settings.dart';
 import 'ui/participation_gate.dart';
+import 'ui/audience_gate.dart';
 import 'runtime/native_auth.dart';
 
 final appTheme=ValueNotifier<ThemeMode>(ThemeMode.system);
@@ -45,7 +46,7 @@ class SamiDevApp extends StatelessWidget {
   }
   @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,__)=>MaterialApp(
     debugShowCheckedModeBanner:false,title:'Plazr',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
-    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const ParticipationGate(child:PlatformScreen())));
+    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const AudienceGate(child:ParticipationGate(child:PlatformScreen()))));
 }
 class PlatformScreen extends StatefulWidget {
   const PlatformScreen({super.key,this.runtimeFactory});

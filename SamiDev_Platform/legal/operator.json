@@ -7,8 +7,10 @@
   "audienceIncludesUnder13": true,
   "childrenSafeguardsReviewed": false,
   "infrastructureRetentionReviewed": false,
-  "supportMailboxVerified": false,
+  "supportMailboxVerified": true,
   "publicationStatus": "draft",
   "revision": "2026-10-19",
-  "operatingCountryCandidate": "Saudi Arabia — unconfirmed; not a published jurisdiction"
+  "operatingCountryCandidate": "Saudi Arabia — unconfirmed; not a published jurisdiction",
+  "supportMailboxVerificationSource": "Operator confirmed support team receives messages on 2026-10-19",
+  "mobileChildrenExperience": "local-only-no-account"
 }

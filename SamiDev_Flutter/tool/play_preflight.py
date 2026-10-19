@@ -59,7 +59,8 @@ def readiness(root=ROOT,stage="submission"):
         except ValueError:errors.append('Invalid public '+field)
     if release.get('audienceMode') not in ('mixed-with-children','13-plus'):errors.append('Target audience decision and implementation are pending')
     if operator.get('audienceIncludesUnder13'):
-        errors.append('Under-13 audience remains enabled: parental/child experience implementation must be completed and independently assessed; the current app has public stranger chat and no child consent flow')
+        if release.get('audienceMode')!='mixed-with-children' or release.get('childrenExperience')!='offline-local-v1':errors.append('Under-13 audience requires the implemented isolated local-only mobile experience')
+        if operator.get('childrenSafeguardsReviewed') is not True:errors.append('Under-13 local-only experience is implemented but documented Families/market compliance review remains unverified; no online parental-consent flow is enabled')
     elif release.get('audienceMode')!='13-plus':errors.append('Target audience disagrees with operator.json')
     fields=['reviewerAccessVerified','dataSafetyReviewed','contentRatingCompleted','contentRightsEvidenceReviewed']
     if stage=='submission':fields+=['realDeviceTestsPassed','preLaunchReportReviewed']

@@ -3,7 +3,7 @@
   "apiOrigin": null,
   "privacyUrl": "https://plazr.cc/platform/privacy.html",
   "deletionUrl": "https://plazr.cc/platform/account-deletion.html",
-  "audienceMode": "pending",
+  "audienceMode": "mixed-with-children",
   "policyReviewDate": null,
   "reviewerAccessVerified": false,
   "dataSafetyReviewed": false,
@@ -12,5 +12,6 @@
   "realDeviceTestsPassed": false,
   "preLaunchReportReviewed": false,
   "chatAiEnabled": null,
-  "notes": "Publication inputs are pending. Do not replace evidence with unchecked declarations. Audience still includes under-13s in operator.json."
+  "notes": "Mixed audience confirmed. Under-13 mobile path is local-only without accounts or social services. Documented Families compliance review, actual operator identity, deployment and Console evidence remain pending.",
+  "childrenExperience": "offline-local-v1"
 }
