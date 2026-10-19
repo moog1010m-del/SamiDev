@@ -120,16 +120,30 @@ async def live(args,config,memory,scripts):
         async def publish(reply,revision,trigger_text=''):
             if stop.is_set() or revision!=engine.revision or reply.speaker not in {p['id'] for p in engine.active()}:return
             client=clients[reply.speaker]
-            # Final membership read closes most presence races before a recorded line.
-            state=await client.request('GET',room+'?chat=0')
-            humans={u['id'] for u in state['members'] if not u.get('isBot')}-bot_ids
-            if reply.reason=='recorded' and humans:return
-            if reply.reason!='recorded' and not humans:return
-            if revision!=engine.revision:return
-            result=await client.request('POST',room+'/chat',{'text':reply.text,'clientMessageId':'bot_'+uuid.uuid4().hex})
-            memory.add(config['room'],Message(result['message']['id'],client.uid,reply.text))
-            engine.sent()
-            log_entry={'event':'sent','speaker':reply.speaker,'reason':reply.reason}
+            messages_to_send=list(reply.messages) if getattr(reply,'messages',None) else [reply.text]
+            messages_to_send=[m.strip() for m in messages_to_send if isinstance(m,str) and m.strip()]
+            if not messages_to_send:return
+
+            for i,msg in enumerate(messages_to_send):
+                # Simulate realistic typing time: reading pause + typing duration proportional to message length
+                typing_delay=(0.7 if i==0 else 0.5)+(len(msg)*0.025)
+                typing_delay=max(1.0,min(3.5,typing_delay))
+                try:
+                    await asyncio.wait_for(stop.wait(),typing_delay)
+                    return
+                except TimeoutError:
+                    pass
+                if stop.is_set() or revision!=engine.revision:return
+                state=await client.request('GET',room+'?chat=0')
+                humans={u['id'] for u in state['members'] if not u.get('isBot')}-bot_ids
+                if reply.reason=='recorded' and humans:return
+                if reply.reason!='recorded' and not humans:return
+                if revision!=engine.revision:return
+                result=await client.request('POST',room+'/chat',{'text':msg,'clientMessageId':'bot_'+uuid.uuid4().hex})
+                memory.add(config['room'],Message(result['message']['id'],client.uid,msg))
+                engine.sent()
+
+            log_entry={'event':'sent','speaker':reply.speaker,'reason':reply.reason,'bubbles':len(messages_to_send)}
             if reply.tokens:
                 tokens_info={
                     'prompt':reply.tokens.get('promptTokenCount',0),

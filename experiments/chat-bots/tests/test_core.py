@@ -151,4 +151,16 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.engine.active(datetime(2026,1,1,23))),1);self.assertEqual(len(self.engine.active(datetime(2026,1,1,12))),0)
         self.assertEqual(parse_message({'id':'m','userId':'u','text':'هلا'}),Message('m','u','هلا'))
         self.assertTrue(valid_output('هلا والله'));self.assertFalse(valid_output('رصيدك 500'));self.assertFalse(valid_output('Hello'))
+    async def test_multi_message_reply_support(self):
+        class MultiProvider:
+            async def generate(inner,*args):
+                return {'messages':['هههههههه مو صاحي أخوك','تخيل أدور جوالي بالحوش 😂'],'text':'هههههههه مو صاحي أخوك تخيل أدور جوالي بالحوش 😂'}
+        self.engine.provider=MultiProvider()
+        msg=Message('multi-1','user-x','تخيل أخوي رمى جوالي بالحوش');self.engine.ingest(msg)
+        reply=await self.engine.respond(msg)
+        self.assertIsNotNone(reply)
+        self.assertEqual(len(reply.messages),2)
+        self.assertEqual(reply.messages[0],'هههههههه مو صاحي أخوك')
+        self.assertEqual(reply.messages[1],'تخيل أدور جوالي بالحوش 😂')
+        self.assertIn('أخوك',reply.text)
 if __name__=='__main__':unittest.main()

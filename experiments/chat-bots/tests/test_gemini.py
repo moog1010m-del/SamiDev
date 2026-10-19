@@ -10,11 +10,11 @@ class Session:
         self.status=status;self.finish=finish;self.request=None
     def post(self,url,**kwargs):
         self.request=(url,kwargs)
-        return Response(self.status,{'candidates':[{'finishReason':self.finish,'content':{'parts':[{'text':'{"text":"هلا والله"}'}]}}]})
+        return Response(self.status,{'candidates':[{'finishReason':self.finish,'content':{'parts':[{'text':'{"text":"هلا والله","messages":["هلا والله"]}'}]}}]})
 class GeminiTests(unittest.IsolatedAsyncioTestCase):
     async def test_structured_request_and_key_not_in_url(self):
         session=Session();provider=Gemini(session,'test-only-secret','test-model')
-        self.assertEqual(await provider.generate({'style':'سعودي'},[],'الكيرم'),'هلا والله')
+        self.assertEqual(await provider.generate({'style':'سعودي'},[],'الكيرم'),{'text':'هلا والله','messages':['هلا والله']})
         url,request=session.request
         self.assertNotIn('test-only-secret',url);self.assertFalse(request['allow_redirects'])
         self.assertEqual(request['json']['generationConfig']['responseMimeType'],'application/json')
@@ -35,6 +35,14 @@ class GeminiTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(content['persona_gender'],'female')
         self.assertEqual(content['persona_name'],'فيصل')
         self.assertEqual(content['conversation_mode'],'initiative')
+    async def test_multi_message_parsing(self):
+        class MultiSession(Session):
+            def post(self,url,**kwargs):
+                return Response(self.status,{'candidates':[{'finishReason':'STOP','content':{'parts':[{'text':'{"messages":["هلا والله","وش مسوي؟"],"text":"هلا والله وش مسوي؟"}'}]}}]})
+        provider=Gemini(MultiSession(),'test','model')
+        res=await provider.generate({'style':'سعودي'},[],None)
+        self.assertEqual(res['messages'],['هلا والله','وش مسوي؟'])
+        self.assertEqual(res['text'],'هلا والله وش مسوي؟')
     async def test_refusal_and_quota_failure(self):
-        self.assertEqual(await Gemini(Session(finish='SAFETY'),'test','model').generate({'style':'سعودي'},[],None),'')
+        self.assertEqual(await Gemini(Session(finish='SAFETY'),'test','model').generate({'style':'سعودي'},[],None),{'text':'','messages':[]})
         with self.assertRaises(RuntimeError):await Gemini(Session(status=429),'test','model').generate({'style':'سعودي'},[],None)

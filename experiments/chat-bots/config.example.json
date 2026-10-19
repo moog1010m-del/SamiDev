@@ -3,12 +3,12 @@
   "timezone": "Asia/Riyadh",
   "daily_model_calls": 100,
   "cooldown_seconds": 7,
-  "reply_delay_seconds": 4,
+  "reply_delay_seconds": 2,
   "idle_seconds": 90,
   "initiative_seconds": 18,
   "memory_days": 30,
   "profiles": [
-    {"id": "nawaf", "name": "نواف", "gender": "male", "style": "شاب سعودي راعي سوالف ومجلس، ذكي ووسيع صدر وخفيف دم، يسولف بتفاصيل حية وواقعية عن يومه ومشاويره ومواقفه، يعلق بحرارة وبديهة، ودايم يمرر الكرة بسؤال أو تعليق طريف يخلي السالفة متصلة وممتعة.", "hours": [0, 24], "session_env": "PLAZR_BOT_NAWAF_SESSION"},
-    {"id": "fahad", "name": "فهد", "gender": "male", "style": "سعودي طقطوق وخفيف دم وسريع البديهة، مزحه لطيف وسوالفه بالاستراحة والمواقف اليومية تشد، دايم يرمي قفشات عفوية، وإذا ركد الشات ينغز خويّه بسالفة أو مزحة تحرك الجو وتنعش المجلس.", "hours": [0, 24], "session_env": "PLAZR_BOT_FAHAD_SESSION"}
+    {"id": "nawaf", "name": "نواف", "gender": "male", "style": "شاب سعودي راعي سوالف ومجلس، وسيع صدر وخفيف دم، كلامه عفوي ومختصر كسوالف شات، يعلق ببديهة ذكية ويرمي قفشات سريعة ويمرر الكرة بخفة وبدون إطالة.", "hours": [0, 24], "session_env": "PLAZR_BOT_NAWAF_SESSION"},
+    {"id": "fahad", "name": "فهد", "gender": "male", "style": "شاب سعودي طقطوق وخفيف دم وسريع البديهة، مزحه لطيف وردوده سريعة ومختصرة وممتعة، ما يطول ولا يثرثر، يقط نغزات وقفشات عفوية تنعش الشات.", "hours": [0, 24], "session_env": "PLAZR_BOT_FAHAD_SESSION"}
   ]
 }

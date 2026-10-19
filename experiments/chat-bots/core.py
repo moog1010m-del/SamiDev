@@ -23,6 +23,7 @@ class Reply:
     text: str
     reason: str
     tokens: dict | None = None
+    messages: tuple[str, ...] = ()
 
 class Memory:
     def __init__(self,path,days=30):
@@ -116,13 +117,13 @@ class Coordinator:
         if line['speaker'] not in {p['id'] for p in self.active()}:return None
         self.line_index+=1
         if self.line_index==len(lines):self.line_index=0;self.script_index+=1
-        return Reply(line['speaker'],line['text'],'recorded')
+        return Reply(line['speaker'],line['text'],'recorded',messages=(line['text'],))
     async def respond(self,message):
         if not self.ready():return None
         profile=self.choose(message.text,message.user_id)
         if not profile:return None
         text=message.text.strip()
-        def local(value):return Reply(profile['id'],value,'local')
+        def local(value):return Reply(profile['id'],value,'local',messages=(value,))
         if text in ('انس كلامي','احذف ذاكرتي','احذف معلوماتي'):
             self.memory.forget(message.user_id);return local('تم، حذفت اللي حفظته عنك في ذاكرة التجربة.')
         if any(term in text for term in ('سناب','واتساب','رقمك','صورتك')):
@@ -164,12 +165,29 @@ class Coordinator:
         except Exception:
             # Never dump an exception containing request bodies, credentials or user text.
             return None
-        if revision!=self.revision or not valid_output(answer, allow_numbers=True):return None
+        if isinstance(answer,dict):
+            text=answer.get('text','')
+            messages=answer.get('messages',[])
+        elif isinstance(answer,(list,tuple)):
+            text=answer[0] if answer else ''
+            messages=list(answer[1]) if len(answer)>1 else ([text] if text else [])
+        else:
+            text=str(answer or '')
+            messages=[text] if text else []
+        valid_msgs=[m.strip() for m in messages if isinstance(m,str) and valid_output(m.strip(),allow_numbers=True)]
+        if not valid_msgs:
+            if not isinstance(text,str) or not valid_output(text.strip(),allow_numbers=True):return None
+            valid_msgs=[text.strip()]
+        text=text.strip() if isinstance(text,str) and text.strip() else ' '.join(valid_msgs)
+        if len(text)>280:
+            valid_msgs=valid_msgs[:1]
+            text=valid_msgs[0]
+        if revision!=self.revision or not valid_output(text,allow_numbers=True):return None
         # A second persona must not echo another bot's recent line verbatim.
         normalize=lambda value:re.sub(r'[\W_]+','',value).casefold()
-        if any(row.get('kind')=='bot' and normalize(row['text'])==normalize(answer) for row in context[-6:]):return None
+        if any(row.get('kind')=='bot' and normalize(row['text'])==normalize(text) for row in context[-6:]):return None
         tokens=getattr(self.provider,'last_usage',None)
-        return Reply(profile['id'],answer,'initiative' if mode=='initiative' else 'model',tokens)
+        return Reply(profile['id'],text,'initiative' if mode=='initiative' else 'model',tokens,tuple(valid_msgs[:2]))
 
 def valid_output(text, allow_numbers=False):
     if not isinstance(text,str) or not 1<=len(text)<=280:return False
