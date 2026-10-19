@@ -4,4 +4,4 @@ Disallow: /api/
 Disallow: /ws
 Disallow: /health
 Disallow: /metrics
-Sitemap: https://plazr.cc/sitemap.xml
+Sitemap: https://plazr.net/sitemap.xml

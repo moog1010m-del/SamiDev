@@ -370,6 +370,8 @@ class PlatformService:
         self.safety = UserSafety(self)
         from community_live import CommunityLive
         self.live = CommunityLive(self)
+        from direct_messages import DirectMessages
+        self.direct = DirectMessages(self)
         self.mem_inventory: dict[str, set[str]] = {}
         self.mem_equipped: dict[str, dict[str, str]] = {}
         self.mem_store_ledger: dict[str, list[dict[str, Any]]] = {}
@@ -1982,6 +1984,7 @@ class PlatformHttp:
         user = await self._user(request)
         body = await self._body(request)
         result = await self.platform.send_friend_request(user, str(body.get("username") or ""))
+        await self.platform.direct.friendship_changed(user["id"], result["user"]["id"], result["status"] == "pending")
         return web.json_response({"ok": True, **result})
 
     async def friend_respond(self, request: web.Request) -> web.Response:
@@ -1991,12 +1994,14 @@ class PlatformHttp:
         if not sender_id:
             raise PlatformError("BAD_USER", "المستخدم غير صالح")
         result = await self.platform.respond_friend_request(user, sender_id, bool(body.get("accept")))
+        await self.platform.direct.friendship_changed(user["id"], sender_id)
         return web.json_response({"ok": True, **result})
 
     async def friend_remove(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         friend_id = str(request.match_info.get("user_id") or "")
         await self.platform.remove_friend(str(user["id"]), friend_id)
+        await self.platform.direct.friendship_changed(user["id"], friend_id)
         return web.json_response({"ok": True})
 
     async def public_profile(self, request: web.Request) -> web.Response:

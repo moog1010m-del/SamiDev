@@ -189,8 +189,8 @@
     guestResume=api('/api/auth/guest',{method:'POST',body:'{}'}).then(d=>{setUser(d.user);showApp();}).catch(error=>toast(error.message,true)).finally(()=>{guestResume=null;});
     return guestResume;
   }
-  function showAuth({accountSettings=false}={}){if(!accountSettings){clearInterval(state.poll);resumeGuest();return;}openSettings('account');}
-  function showApp(){ if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={MATCH_COOLDOWN:'حاول بعد دقيقة',ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة',COMMUNITY_DISABLED:'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
+  function showAuth({accountSettings=false}={}){if(!accountSettings){friendsWorkspace.stop();clearInterval(state.poll);resumeGuest();return;}openSettings('account');}
+  function showApp(){friendsWorkspace.stop(); if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); friendsWorkspace.start(); handleFriendLink(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={MATCH_COOLDOWN:'حاول بعد دقيقة',ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة',COMMUNITY_DISABLED:'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
@@ -251,7 +251,7 @@
     $('#settings-auth-slot').append($('#auth-screen .auth-card'));
     $('#profile-settings-btn').onclick=()=>openSettings();
     $('#desktop-settings').onclick=()=>openSettings();
-    $('#desktop-notifications').onclick=()=>openSettings('notifications');
+    $('#desktop-notifications').onclick=()=>friendsWorkspace.center();
     $('#desktop-theme').onclick=toggleTheme;
     window.matchMedia('(min-width:821px)').addEventListener('change',event=>{if(event.matches&&state.page==='profile'&&!window.SamiDevMobile)navigate('lobby');});
     $('#settings-close').onclick=()=>closeSettings();
@@ -266,9 +266,9 @@
     $$('.auth-tab').forEach(b=>b.onclick=()=>{$$('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('#login-form').classList.toggle('hidden',b.dataset.auth!=='login');$('#register-form').classList.toggle('hidden',b.dataset.auth!=='register');});
     $('#login-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);try{const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
     $('#register-form').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.currentTarget);if(f.get('password')!==f.get('confirmPassword')){toast('كلمتا المرور غير متطابقتين',true);return;}f.delete('confirmPassword');try{const d=await api('/api/auth/register',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});setUser(d.user);showApp();}catch(err){toast(err.message,true);}};
-    window.SamiDevAccountSettings.init({api,currentUser:()=>state.user,onUserChanged:user=>setUser(user),signedOut:async()=>{window.SamiDevFirebaseAuth?.clear();state.user=null;closeSettings(true);await resumeGuest();}});
+    window.SamiDevAccountSettings.init({api,currentUser:()=>state.user,onUserChanged:user=>setUser(user),signedOut:async()=>{window.SamiDevFirebaseAuth?.clear();friendsWorkspace.stop();state.user=null;closeSettings(true);await resumeGuest();}});
     $('#auth-back').onclick=()=>{if(window.SamiDevFirebaseAuth?.cancel?.()===false)return;if(state.user)showApp();};
-    $('#logout-btn').onclick=async()=>{if(state.user?.isGuest&&!confirm('الخروج ينشئ ضيفًا جديدًا. اربط البريد أولًا إذا أردت استرداد تقدمك. هل تريد المتابعة؟'))return;try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
+    $('#logout-btn').onclick=async()=>{if(state.user?.isGuest&&!confirm('الخروج ينشئ ضيفًا جديدًا. اربط البريد أولًا إذا أردت استرداد تقدمك. هل تريد المتابعة؟'))return;try{await api('/api/auth/logout',{method:'POST',body:'{}'});}catch(err){toast(err.message,true);return;}try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.removeItem('samidev_return_community');}catch(_){}window.SamiDevFirebaseAuth?.clear();friendsWorkspace.stop();state.user=null;try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}};
     $$('.nav-btn,.bottom-btn,[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
     $$('.theme-toggle').forEach(b=>b.addEventListener('click',toggleTheme));
     $$('[data-community-tab]').forEach(button=>button.addEventListener('click',()=>{
@@ -310,8 +310,8 @@
     $('#create-modal').addEventListener('click',e=>{if(e.target.id==='create-modal')e.currentTarget.classList.add('hidden');});
     $$('[data-setting]').forEach(b=>b.onclick=()=>{const key=b.dataset.setting;state.settings[key]=b.dataset.value;$$(`[data-setting="${key}"]`).forEach(x=>x.classList.toggle('selected',x===b));});
     $('#create-go').onclick=createRoom;
-    $('#friend-add').onsubmit=async e=>{e.preventDefault();const username=new FormData(e.currentTarget).get('username');try{const d=await api('/api/friends/request',{method:'POST',body:JSON.stringify({username})});toast(d.status==='accepted'?'تمت إضافة الصديق':'تم إرسال الطلب');e.currentTarget.reset();loadFriends();}catch(err){toast(err.message,true);}};
-    $('#search-btn').onclick=searchUsers; $('#user-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchUsers();}});
+
+    if($('#search-btn'))$('#search-btn').onclick=searchUsers; $('#user-search')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchUsers();}});
     $('#admin-refresh').onclick=loadAdmin;
     window.matchMedia('(max-width:600px)').addEventListener('change',()=>{state.storePage=0;if(state.store)renderStore();});
     $('#store-refresh').onclick=()=>loadStore(true);
@@ -538,7 +538,7 @@
         if(state.activeCommunity)loadCommunityState(); else loadCommunities();
       }
       api('/api/heartbeat',{method:'POST',body:'{}'}).catch(()=>{});
-      if(state.page==='friends')loadFriends();
+      if(state.page==='friends'&&Date.now()-(state.friendRefresh||0)>15000){state.friendRefresh=Date.now();loadFriends();}
     },3000);
   }
   async function loadCommunities(manual=false){
@@ -927,15 +927,10 @@
     if(!await window.PlazrGameEntry.confirm({game,room,watch:true,description:row?window.SamiDevGames.label(row.settings)+' · المقاعد: '+(Number(row.occupied)||0)+' من '+(Number(row.capacity)||2):''}))return;
     try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){window.PlazrGameEntry?.fail(err);toast(err.message,true);}}
   async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}await openGame(gid,q);}catch(err){toast(err.message,true);}}
-  async function loadFriends(){try{const d=await api('/api/friends');state.friends=d.friends||[];state.requests=d.requests||[];renderFriends();}catch(err){if(err.status===401)showAuth();}}
+  async function handleFriendLink(){const u=new URL(location.href),token=u.searchParams.get('friend');if(!token)return;u.searchParams.delete('friend');history.replaceState(null,'',u);if(!confirm('إرسال طلب صداقة لصاحب هذا الرابط؟'))return;try{const d=await api('/api/direct/redeem',{method:'POST',body:JSON.stringify({token})});toast(d.status==='accepted'?'تمت إضافة الصديق':'تم إرسال طلب الصداقة');friendsWorkspace.refresh();}catch(e){toast(e.message,true);}}
+  async function loadFriends(){return friendsWorkspace.refresh();}
   function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}
-  function renderFriends(){
-    const req=$('#friend-requests');req.innerHTML=state.requests.length?state.requests.map(u=>personRow(u,`<button class="small-btn accept" data-id="${u.id}">قبول</button><button class="danger-btn reject" data-id="${u.id}">رفض</button>`)).join(''):'<div class="empty small">لا توجد طلبات</div>';
-    $('#request-badge').textContent=state.requests.length;$('#request-badge').classList.toggle('hidden',!state.requests.length);
-    $$('.accept',req).forEach(b=>b.onclick=()=>respondFriend(b.dataset.id,true));$$('.reject',req).forEach(b=>b.onclick=()=>respondFriend(b.dataset.id,false));
-    const list=$('#friends-list');list.innerHTML=state.friends.length?state.friends.map(u=>personRow(u,`<button class="danger-btn remove-friend" data-id="${u.id}">إزالة</button>`)).join(''):'<div class="empty small">لا يوجد أصدقاء حتى الآن</div>';
-    $$('.remove-friend',list).forEach(b=>b.onclick=()=>removeFriend(b.dataset.id));
-  }
+  function renderFriends(){friendsWorkspace.render();friendsWorkspace.refresh();}
   async function respondFriend(id,accept){try{await api('/api/friends/respond',{method:'POST',body:JSON.stringify({userId:id,accept})});loadFriends();}catch(err){toast(err.message,true);}}
   async function removeFriend(id){try{await api('/api/friends/'+encodeURIComponent(id),{method:'DELETE'});loadFriends();}catch(err){toast(err.message,true);}}
   async function searchUsers(){const q=$('#user-search').value.trim();if(q.length<2)return toast('اكتب حرفين على الأقل',true);try{const d=await api('/api/users/search?q='+encodeURIComponent(q));const box=$('#search-results');box.innerHTML=d.users.length?d.users.map(u=>personRow(u,u.relation==='friend'?'<span class="role-chip">صديق</span>':`<button class="small-btn add-user" data-username="${escapeHtml(u.username)}">إضافة</button>`)).join(''):'<div class="empty small">لا توجد نتائج</div>';$$('.add-user',box).forEach(b=>b.onclick=async()=>{try{await api('/api/friends/request',{method:'POST',body:JSON.stringify({username:b.dataset.username})});toast('تم إرسال الطلب');loadFriends();searchUsers();}catch(err){toast(err.message,true);}});}catch(err){toast(err.message,true);}}
@@ -977,8 +972,12 @@
     navigate(page){if(!['lobby','profile','friends','store','admin'].includes(page))return;navigate(page);},
     setNativeActive(active){clearInterval(state.poll);state.poll=null;if(!active&&state.user)startPolling();},
     setTheme(theme){applyTheme(theme);},
+    openFriendRequests(){friendsWorkspace.requests();},
+    refreshFriends(){friendsWorkspace.refresh();},
+    openConversation(id){friendsWorkspace.open(id);},
     closeProfile(){window.__sdNativePublicProfile=false;closeCommunityProfile();},
     openProfile(id){if(!/^[A-Za-z0-9_-]{1,64}$/.test(id))return;window.__sdNativePublicProfile=true;openCommunityProfile(id);},
   };
+  const friendsWorkspace=window.PlazrFriends({api,state,navigate,toast,avatarNode});
   boot();
 })();

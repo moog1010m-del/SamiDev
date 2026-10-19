@@ -1,8 +1,8 @@
 {
   "applicationId": "com.samidev.platform",
   "apiOrigin": null,
-  "privacyUrl": "https://plazr.cc/platform/privacy.html",
-  "deletionUrl": "https://plazr.cc/platform/account-deletion.html",
+  "privacyUrl": "https://plazr.net/platform/privacy.html",
+  "deletionUrl": "https://plazr.net/platform/account-deletion.html",
   "audienceMode": "mixed-with-children",
   "policyReviewDate": null,
   "reviewerAccessVerified": false,

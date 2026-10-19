@@ -71,6 +71,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<false/>
+	<key>FirebaseDataCollectionDefaultEnabled</key>
+	<false/>
+	<key>UIBackgroundModes</key>
+	<array><string>remote-notification</string></array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>اختيار صورة ملفك الشخصي في Plazr</string>
 </dict>

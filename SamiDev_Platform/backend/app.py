@@ -184,6 +184,7 @@ class SamiDevRealtime:
         await asyncio.gather(*(close_client(c) for c in list(self.connections.values())), return_exceptions=True)
         await self.gamehost.close()
         await self.platform.live.close()
+        await self.platform.direct.close()
         if PLATFORM_STORE == "postgres": await self.platform.close()
         if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
 
@@ -1311,6 +1312,16 @@ class SamiDevRealtime:
     async def index(self, request: web.Request) -> web.StreamResponse:
         return web.FileResponse(GAME_ROOT / "platform" / "index.html", headers={"Cache-Control": "no-store", "Content-Type": "text/html; charset=utf-8", "X-SamiDev-Build": UI_BUILD["buildId"]})
 
+    async def landing(self, request: web.Request) -> web.StreamResponse:
+        # Preserve legacy app links; campaign parameters alone stay on the public home.
+        if {'invite', 'match', 'community', 'launch', 'settings'} & set(request.query):
+            raise web.HTTPFound(str(request.rel_url.with_path('/platform/').with_query(request.query)))
+        return web.FileResponse(GAME_ROOT / 'discover' / 'index.html', headers={
+            'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+
+    async def discovery_home_redirect(self, request: web.Request) -> web.StreamResponse:
+        raise web.HTTPMovedPermanently('/')
+
     async def platform_redirect(self, request: web.Request) -> web.StreamResponse:
         raise web.HTTPPermanentRedirect("/platform/")
 
@@ -1390,6 +1401,8 @@ def make_app() -> web.Application:
     bot_accounts = install_bot_accounts(app, api)
     from account_security import AccountSecurityHttp
     AccountSecurityHttp(api).install(app.router)
+    from direct_messages import DirectHttp
+    DirectHttp(api).install(app)
     app.router.add_post("/api/auth/guest", api.guest)
     app.router.add_post("/api/auth/register", api.register)
     app.router.add_get("/api/auth/config", api.auth_config)
@@ -1438,11 +1451,15 @@ def make_app() -> web.Application:
     app.router.add_get("/ws", SERVICE.websocket)
     async def close_community_streams(app):
         await SERVICE.platform.live.close()
+        await SERVICE.platform.direct.close()
     app.on_shutdown.append(close_community_streams)
     app.router.add_get("/health", SERVICE.health)
     app.router.add_get("/metrics", SERVICE.metrics_endpoint)
     app.router.add_get("/client-config.js", SERVICE.client_config)
-    app.router.add_get("/", SERVICE.index)
+    app.router.add_get("/", SERVICE.landing)
+    app.router.add_get("/discover", SERVICE.discovery_home_redirect)
+    app.router.add_get("/discover/", SERVICE.discovery_home_redirect)
+    app.router.add_get("/discover/index.html", SERVICE.discovery_home_redirect)
     app.router.add_get("/platform", SERVICE.platform_redirect)
     app.router.add_get("/platform/", SERVICE.index)
     app.router.add_get("/{path:.*}", SERVICE.static_game)
