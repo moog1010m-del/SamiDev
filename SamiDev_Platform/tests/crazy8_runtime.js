@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const path=require('node:path');
 const {GameRuntimeFactory}=require('../gamehost/runtime');
-const f=new GameRuntimeFactory(path.join(__dirname,'../game/games/crazy8'),{gameId:'crazy8'});
+const f=new GameRuntimeFactory(path.join(path.resolve(process.env.SAMIDEV_GAME_DIR||path.join(__dirname,'../game')),'games/crazy8'),{gameId:'crazy8'});
 let checks=0, matches=0;
 function check(v,msg){assert.ok(v,msg);checks++;}
 function packet(r,s,m){return {i:`test-${checks}-${s}`,n:r.logic._sequence[s],m};}

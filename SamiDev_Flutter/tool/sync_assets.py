@@ -1,12 +1,14 @@
 """Bundle the complete web lobby and game assets; no backend code, secrets or sourcemaps."""
 from pathlib import Path
-import hashlib,json,shutil,subprocess,sys
+import argparse,hashlib,json,shutil,subprocess,sys
 ROOT=Path(__file__).resolve().parents[1]
-WEB=ROOT.parent/'SamiDev_Platform/game'
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--web-root',type=Path,default=ROOT.parent/'SamiDev_Platform/game')
+WEB=parser.parse_args().web_root.resolve()
 TARGET=ROOT/'assets/runtime'
 ALLOWED={'.html','.js','.css','.json','.atlas','.glsl','.txt','.svg','.png','.webp','.jpg','.jpeg','.m4a','.mp3','.ogg','.wav','.woff','.woff2','.ttf','.otf'}
 # Refuse stale branding before copying any asset into the mobile bundle.
-subprocess.run([sys.executable,str(WEB.parent/'tools/check_runtime_branding.py'),'--root',str(WEB)],check=True)
+subprocess.run([sys.executable,str(ROOT.parent/'SamiDev_Platform/tools/check_runtime_branding.py'),'--root',str(WEB)],check=True)
 files={}
 for source in sorted(WEB.rglob('*')):
  if not source.is_file():continue

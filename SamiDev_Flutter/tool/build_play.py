@@ -12,7 +12,13 @@ def main():
  if args.server_url.rstrip('/')!=(release.get('apiOrigin') or '').rstrip('/'):parser.error('Server URL must match the reviewed apiOrigin in play/release.json')
  subprocess.run([sys.executable,str(ROOT/'tool/play_preflight.py'),'--stage','build'],cwd=ROOT,check=True)
  if not (ROOT/'android/key.properties').is_file():raise SystemExit('Missing private android/key.properties upload-key configuration; never commit it')
- subprocess.run([sys.executable,str(ROOT/'tool/sync_assets.py')],cwd=ROOT,check=True)
+ # Protect a distribution copy; the backend must serve this same tree via
+ # SAMIDEV_GAME_DIR so existing exact engine-hash checks remain enforced.
+ platform=ROOT.parent/'SamiDev_Platform'
+ protected=platform/'build/protected-game'
+ subprocess.run([sys.executable,str(platform/'tools/protect_game_release.py'),'--output',str(protected)],cwd=ROOT,check=True)
+ subprocess.run([sys.executable,str(platform/'tests/protected_release.py'),str(protected)],cwd=ROOT,check=True)
+ subprocess.run([sys.executable,str(ROOT/'tool/sync_assets.py'),'--web-root',str(protected)],cwd=ROOT,check=True)
  subprocess.run([args.flutter,'pub','get','--enforce-lockfile'],cwd=ROOT,check=True)
  subprocess.run([args.flutter,'analyze','--no-fatal-infos'],cwd=ROOT,check=True)
  subprocess.run([args.flutter,'test','--no-pub'],cwd=ROOT,check=True)

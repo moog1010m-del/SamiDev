@@ -25,7 +25,7 @@ from game_views import client_state
 from quick_play import QuickPlay
 
 ROOT = Path(__file__).resolve().parent.parent
-GAME_ROOT = ROOT / "game"
+GAME_ROOT = Path(os.getenv("SAMIDEV_GAME_DIR") or ROOT / "game").resolve()
 UI_BUILD = json.loads((GAME_ROOT / "platform/build.json").read_text(encoding="utf-8"))
 MAIN_JS_SHA256 = hashlib.sha256((GAME_ROOT / "main.js").read_bytes()).hexdigest()
 GAME_CATALOG = {gid: {**info, "mainJsSha256": hashlib.sha256((GAME_ROOT / info["main"]).read_bytes()).hexdigest()} for gid, info in GAMES.items()}

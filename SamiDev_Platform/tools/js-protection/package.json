@@ -1,0 +1,7 @@
+{
+  "name": "plazr-build-js-protection",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build-only protection for distribution copies of licensed game engines",
+  "dependencies": {"javascript-obfuscator": "4.1.1"}
+}
