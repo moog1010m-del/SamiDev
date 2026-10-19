@@ -2,8 +2,8 @@
 const assert=require('node:assert/strict');
 const path=require('node:path');
 const {GameRuntimeFactory}=require('../gamehost/runtime');
-const root=path.join(__dirname,'..','game');
-const hashes=require('../game/samidev-integrity.json');
+const root=path.resolve(process.env.SAMIDEV_GAME_DIR||path.join(__dirname,'..','game'));
+const hashes=require(path.join(root,'samidev-integrity.json'));
 const factories={};
 for(const id of ['carrom','tablesoccer'])factories[id]=new GameRuntimeFactory(id==='carrom'?root:path.join(root,'games',id),{gameId:id,expectedSha256:hashes.games[id].sha256});
 let checks=0;const results=[];

@@ -35,7 +35,7 @@ class RuntimePolicy {
       'PATCH' => path == '/api/admin/bots' || RegExp('^/api/admin/bots/$id\$').hasMatch(path) || RegExp('^/api/admin/communities/$id\$').hasMatch(path),
       'PUT' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path),
       'GET' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path)||RegExp('^/api/(avatar|public-profile|communities)/$id\$').hasMatch(path)||RegExp('^/api/communities/$id/events\$').hasMatch(path),
-      'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat|moderation)|users/$id/(reputation|report)|admin/users/$id/(ban|role))\$').hasMatch(path),
+      'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat|moderation)|users/$id/(reputation|report|block)|admin/users/$id/(ban|role))\$').hasMatch(path),
       'DELETE' => RegExp('^/api/(friends|account/devices)/$id\$').hasMatch(path),
       _ => false,
     };

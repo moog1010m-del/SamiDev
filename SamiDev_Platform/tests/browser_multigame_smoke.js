@@ -1,6 +1,6 @@
 // API compatibility smoke only: WebGL/audio are mocked, no visual assertion.
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert');
-const game=process.argv[2]||'tablesoccer',root=path.resolve(__dirname,'..','game'),dir=game==='carrom'?root:path.join(root,'games',game);
+const game=process.argv[2]||'tablesoccer',root=path.resolve(process.env.SAMIDEV_GAME_DIR||path.join(__dirname,'..','game')),dir=game==='carrom'?root:path.join(root,'games',game);
 const warnings=[],errors=[],frames=[],timers=new Set(),resourceRequests=[],nativeUploads=[],nativeUploadObjects=[],contextRequests=[],syncRequests=[];let context;
 const mobile=process.env.SD_MOBILE==='1',layoutOnly=process.env.SD_LAYOUT_ONLY==='1';
 const [viewWidth,viewHeight]=(process.env.SD_VIEWPORT||'700x950').split('x').map(Number);
@@ -37,7 +37,7 @@ const base={document:doc,Image,Audio,XMLHttpRequest:XHR,URLSearchParams,URL,Abor
 base.fetch=async url=>{if(url==='/api/store')return {ok:true,json:async()=>({equipped:{carrom_theme:requestedTheme,pool_theme:requestedTheme},catalog:[{id:requestedTheme,slot:'carrom_theme',owned:true}]})};const file=path.join(dir,url);if(url.startsWith('/api/')||!fs.existsSync(file))return {ok:false};const text=fs.readFileSync(file,'utf8');return {ok:true,json:async()=>JSON.parse(text),text:async()=>text};};
 base.window=base;base.globalThis=base;context=vm.createContext(base);
 if(online){
- const {GameRuntimeFactory}=require(path.join(root,'..','gamehost','runtime'));
+ const {GameRuntimeFactory}=require(path.join(__dirname,'..','gamehost','runtime'));
  factory=new GameRuntimeFactory(dir,{gameId:game});
  if(game==='pool'&&!afk){const schedule=factory._scheduleAlarm;factory._scheduleAlarm=function(r,ms,id){return schedule.call(this,r,ms>1000?60000:ms,id);};}
  const settings=game==='pool'?{gameId:'pool',gameType:0,break:0,live:1,trickShots:0}:game==='crazy8'?{gameId:game,seats:capacity===2?0:capacity===3?1:capacity===4?2:3,special:0,live:afk?1:0}:{gameId:game,players:capacity===4?1:0,live:0,goalsToWin:0,passes:0,gamemode:0,break:0};

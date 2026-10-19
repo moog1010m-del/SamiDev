@@ -288,6 +288,7 @@
     $('#community-profile-close').onclick=()=>{$('#community-profile-modal').classList.contains('sd-profile-expanded')?setPublicProfileFull(false):closeCommunityProfile();};
     $('#community-profile-modal').addEventListener('click',e=>{if(e.target.id==='community-profile-modal')closeCommunityProfile();});
     $('#community-profile-friend').onclick=communityProfileFriendAction;
+    $('#community-profile-block').onclick=async()=>{const u=activePublicProfile;if(!u||u.relation==='self')return;const btn=$('#community-profile-block');btn.disabled=true;try{const d=await api('/api/users/'+encodeURIComponent(u.id)+'/block',{method:'POST',body:JSON.stringify({blocked:!u.blocked})});u.blocked=d.blocked;renderCommunityPublicProfile(u);loadFriends();toast(d.blocked?'تم حظر المستخدم وإخفاء رسائله':'تم إلغاء الحظر');}catch(e){toast(e.message,true);}finally{btn.disabled=false;}};
     $('#community-profile-full').onclick=()=>setPublicProfileFull(true);
     $('#community-profile-collection').onclick=()=>{setPublicProfileFull(true);$('#sd-public-extra .sd-collection-section')?.scrollIntoView({block:'start',behavior:'smooth'});};
     $('#community-profile-reputation-btn').onclick=communityProfileReputationAction;
@@ -735,7 +736,8 @@
     const img=$('#community-profile-avatar-image'),fallback=$('#community-profile-avatar-fallback');fallback.textContent=initials(name);
     wireAvatarImage(img,fallback);img.src=user.id?'/api/avatar/'+encodeURIComponent(user.id)+'?v='+Date.now():DEFAULT_AVATAR_URL;
     const self=user.relation==='self'||String(user.id)===String(state.user?.id);
-    const friend=$('#community-profile-friend');friend.querySelector('span:last-child').textContent=communityRelationLabel(user);friend.disabled=self||['friend','outgoing'].includes(user.relation);
+    const friend=$('#community-profile-friend');friend.querySelector('span:last-child').textContent=communityRelationLabel(user);friend.disabled=self||user.blocked||['friend','outgoing'].includes(user.relation);
+    $('#community-profile-block').disabled=self;$('#community-profile-block').textContent=user.blocked?'إلغاء الحظر':'حظر المستخدم';
     const remaining=Math.max(0,Number(user.reputationDailyRemaining??5)||0);const rep=$('#community-profile-reputation-btn');rep.disabled=self||!!user.reputationGrantedToday||remaining<=0;rep.querySelector('span:nth-child(2)').textContent=user.reputationGrantedToday?'مُنحت اليوم':'منح سمعة';$('#community-profile-reputation-left').textContent=`${remaining}/5 اليوم`;
     $('#community-profile-report').disabled=self;$('#community-profile-actions').classList.toggle('self',self);
     let extra=$('#sd-public-extra');

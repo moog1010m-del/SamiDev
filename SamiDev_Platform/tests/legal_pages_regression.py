@@ -22,13 +22,13 @@ class LegalTests(unittest.TestCase):
   self.assertEqual({p['id'] for p in data['pages']},{'privacy','terms','about','contact','community-guidelines','children'})
   self.assertTrue(any('13' in item for item in data['reviewItems']))
   for page in data['pages']:
-   text=(ROOT/'game/platform'/f"{page['id']}.html").read_text();self.assertIn('مسودة للمراجعة',text);self.assertNotIn('<script',text)
+   text=(ROOT/'game/platform'/f"{page['id']}.html").read_text();self.assertNotIn('مسودة للمراجعة',text);self.assertNotIn('جهة مسجلة',text);self.assertNotIn('لم يُستكمل الاسم',text);self.assertNotIn('<script',text)
    links=Links();links.feed(text)
    for url in links.links:
     if url=='/platform/':continue
     self.assertTrue((ROOT/'game'/url.lstrip('/')).is_file(),url)
-  self.assertEqual(json.loads((ROOT/'game/platform/legal-content.json').read_text())['pages'],data['pages'])
+  public=json.loads((ROOT/'game/platform/legal-content.json').read_text());self.assertEqual(public['pages'],data['pages']);self.assertNotIn('reviewItems',public);self.assertNotIn('operatorLegalName',public);self.assertNotIn('draft',public)
  def test_child_and_retention_disclosures(self):
   data=build();privacy=next(p for p in data['pages'] if p['id']=='privacy');text=json.dumps(privacy,ensure_ascii=False)
-  self.assertIn('لا تطبق بوابة عمر',text);self.assertIn('حد عددي وليس مدة حذف',text);self.assertIn('لا نضع مدة حذف غير مطبقة',text)
+  self.assertIn('اللعب المحلي',text);self.assertIn('لا يرسله إلى الخادم',text);self.assertIn('ليس إثبات عمر',text);self.assertIn('حد عددي وليس مدة حذف',text);self.assertIn('لا تحدد هذه السياسة مدة حذف موحدة',text)
 if __name__=='__main__':unittest.main()

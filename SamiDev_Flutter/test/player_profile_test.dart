@@ -15,6 +15,7 @@ class ProfileApi extends PlatformApi {
     'starsCount':1,'wins':17,'reputation':6,'accountAgeDays':23,'relation':'none','reputationDailyRemaining':4,'reputationGrantedToday':false};
   @override Future<ApiResponse> request(String method,String path,{String? query,List<int>? body}) async {
     calls.add('$method $path');
+    if(path=='/api/users/profile_test_123/block'){user['blocked']=jsonDecode(utf8.decode(body!))['blocked'];}
     if(path=='/api/friends/request'){expect(jsonDecode(utf8.decode(body!))['username'],'test');user['relation']='outgoing';}
     return ApiResponse(200,'application/json',Uint8List.fromList(utf8.encode(jsonEncode({'ok':true,'user':user}))));
   }
@@ -32,6 +33,9 @@ void main(){
       expect(find.byType(ProfileStars),findsOneWidget);expect(find.byWidgetPredicate((widget)=>widget is ProfileDecoration&&widget.name=='star'),findsOneWidget);expect(find.byType(PlayerAvatar),findsOneWidget);
       await tester.ensureVisible(find.text('إضافة صديق'));await tester.tap(find.text('إضافة صديق'));await tester.pumpAndSettle();
       expect(api.calls,contains('POST /api/friends/request'));expect(find.text('تم إرسال الطلب'),findsOneWidget);
+      await tester.ensureVisible(find.text('حظر المستخدم'));await tester.tap(find.text('حظر المستخدم'));await tester.pumpAndSettle();
+      expect(api.calls,contains('POST /api/users/profile_test_123/block'));expect(find.text('إلغاء الحظر'),findsOneWidget);
+      await tester.tap(find.text('إلغاء الحظر'));await tester.pumpAndSettle();expect(api.user['blocked'],false);
       expect(find.byType(ProfileDetails),findsNothing);
       await tester.ensureVisible(find.text('الملف الكامل والمقتنيات والإحصاءات'));
       await tester.tap(find.text('الملف الكامل والمقتنيات والإحصاءات'));await tester.pumpAndSettle();

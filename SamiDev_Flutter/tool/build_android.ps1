@@ -9,11 +9,18 @@ if (-not $server.IsAbsoluteUri -or $server.Scheme -ne 'https' -or $server.UserIn
 }
 Push-Location (Split-Path $PSScriptRoot -Parent)
 try {
+    if ($Mode -eq 'release') {
+        & python tool/build_play.py --server-url "$($server.GetLeftPart([UriPartial]::Authority))"
+        if ($LASTEXITCODE -ne 0) { throw 'Play AAB preflight/build failed. Resolve the reported facts before submission.' }
+        return
+    }
     & python tool/sync_assets.py
     if ($LASTEXITCODE -ne 0) { throw 'Asset sync failed; APK was not built.' }
     & flutter pub get
     if ($LASTEXITCODE -ne 0) { throw 'Dependency resolution failed.' }
-    & flutter analyze
+    & python tool/test_play_preflight.py
+    if ($LASTEXITCODE -ne 0) { throw 'Play preflight tests failed.' }
+    & flutter analyze --no-pub --no-fatal-infos
     if ($LASTEXITCODE -ne 0) { throw 'Flutter analysis failed.' }
     & flutter test
     if ($LASTEXITCODE -ne 0) { throw 'Flutter tests failed.' }

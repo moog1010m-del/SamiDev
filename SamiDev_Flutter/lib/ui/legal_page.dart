@@ -21,8 +21,7 @@ class _PlazrLegalPageState extends State<PlazrLegalPage>{
       final page=pages.firstWhere((p)=>p['id']==widget.pageId,orElse:()=>pages.first);
       final colors=Theme.of(context).colorScheme;
       return Align(alignment:Alignment.topCenter,child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:820),child:ListView(padding:const EdgeInsets.all(22),children:[
-        Text(page['title'].toString(),style:Theme.of(context).textTheme.headlineSmall),const SizedBox(height:12),SelectableText(page['summary'].toString()),const SizedBox(height:10),Text('نسخة المراجعة: ${data['revision']}',style:TextStyle(color:colors.onSurfaceVariant,fontSize:12)),
-        if(data['draft']==true)Container(margin:const EdgeInsets.symmetric(vertical:22),padding:const EdgeInsets.all(18),decoration:BoxDecoration(color:colors.tertiaryContainer,borderRadius:BorderRadius.circular(14)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('مسودة للمراجعة — ليست وثيقة إطلاق معتمدة',style:TextStyle(fontWeight:FontWeight.w700)),const SizedBox(height:10),for(final item in data['reviewItems'] as List)Padding(padding:const EdgeInsets.only(bottom:8),child:Text('• $item',style:const TextStyle(fontSize:13,height:1.7)))])),
+        Text(page['title'].toString(),style:Theme.of(context).textTheme.headlineSmall),const SizedBox(height:12),SelectableText(page['summary'].toString()),const SizedBox(height:10),Text('آخر تحديث: ${data['revision']}',style:TextStyle(color:colors.onSurfaceVariant,fontSize:12)),
         for(final section in (page['sections'] as List).cast<Map<String,dynamic>>())...[
           Padding(padding:const EdgeInsets.only(top:24,bottom:10),child:Text(section['title'].toString(),style:Theme.of(context).textTheme.titleLarge)),
           for(final text in section['paragraphs'] as List)Padding(padding:const EdgeInsets.only(bottom:12),child:SelectableText(text.toString(),style:const TextStyle(fontSize:15,height:1.9))),

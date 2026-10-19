@@ -41,7 +41,7 @@ class PlatformApi {
     if (saved != null && RegExp(r'^[A-Za-z0-9_-]{32,128}$').hasMatch(saved)) _session = saved;
   }
   Map<String, String> get headers => {'Origin':policy.backend.origin,
-    'User-Agent':'SamiDev/1.0.3+4 (${Platform.isIOS ? 'iPhone' : Platform.isAndroid ? 'Android' : Platform.operatingSystem})',
+    'User-Agent':'SamiDev/1.0.5+6 (${Platform.isIOS ? 'iPhone' : Platform.isAndroid ? 'Android' : Platform.operatingSystem})',
     if (_session != null) 'Cookie':'samidev_session=$_session'};
   Future<ApiResponse> request(String method, String path, {String? query, List<int>? body}) async {
     if (_closed || !RuntimePolicy.allowApi(method,path)) throw const HttpException('Route denied');

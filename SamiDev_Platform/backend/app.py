@@ -25,7 +25,7 @@ from game_views import client_state
 from quick_play import QuickPlay
 
 ROOT = Path(__file__).resolve().parent.parent
-GAME_ROOT = ROOT / "game"
+GAME_ROOT = Path(os.getenv("SAMIDEV_GAME_DIR") or ROOT / "game").resolve()
 UI_BUILD = json.loads((GAME_ROOT / "platform/build.json").read_text(encoding="utf-8"))
 MAIN_JS_SHA256 = hashlib.sha256((GAME_ROOT / "main.js").read_bytes()).hexdigest()
 GAME_CATALOG = {gid: {**info, "mainJsSha256": hashlib.sha256((GAME_ROOT / info["main"]).read_bytes()).hexdigest()} for gid, info in GAMES.items()}
@@ -515,6 +515,9 @@ class SamiDevRealtime:
     async def send(self, c: Conn, payload: dict[str, Any]) -> None:
         if c.ws.closed:
             return
+        if c.account_id and c.room_id and payload.get("type") in {"chat_message","chat_history"}:
+            payload=await self.platform.safety.game_event(c.account_id,c.room_id,payload,self.store)
+            if payload is None:return
         try:
             async with asyncio.timeout(3):
                 async with c.send_lock:
@@ -976,6 +979,7 @@ class SamiDevRealtime:
             user = await self.platform.get_user(c.account_id) if c.account_id else None
             bubble = cosmetic_id((user or {}).get("chatBubble"), "chat_bubble")
             entry = await self.store.append_chat(c.room_id, c.seat, c.conn_id, c.connection_epoch, text, chat_bubble=bubble, sticker=sticker)
+            entry={**entry,"userId":c.account_id}
             self.metrics.chat_messages += 1
             await self.fanout(c.room_id, {"type": "chat_message", **entry})
             return
@@ -1418,6 +1422,9 @@ def make_app() -> web.Application:
     app.router.add_get("/api/users/search", api.user_search)
     app.router.add_get("/api/public-profile/{user_id}", api.public_profile)
     app.router.add_post("/api/users/{user_id}/reputation", api.reputation_give)
+    from user_safety import block_user
+    async def user_block_request(request):return await block_user(api,request)
+    app.router.add_post("/api/users/{user_id}/block", user_block_request)
     app.router.add_post("/api/users/{user_id}/report", api.report_user)
     app.router.add_get("/api/admin/users", api.admin_users)
     app.router.add_get("/api/admin/stats", api.admin_stats)

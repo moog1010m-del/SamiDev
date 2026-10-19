@@ -22,6 +22,8 @@ import 'ui/sticker_art.dart';
 import 'ui/games_hub.dart';
 import 'ui/auth_screen.dart';
 import 'ui/account_settings.dart';
+import 'ui/participation_gate.dart';
+import 'ui/audience_gate.dart';
 import 'runtime/native_auth.dart';
 
 final appTheme=ValueNotifier<ThemeMode>(ThemeMode.system);
@@ -44,7 +46,7 @@ class SamiDevApp extends StatelessWidget {
   }
   @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,__)=>MaterialApp(
     debugShowCheckedModeBanner:false,title:'Plazr',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
-    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const PlatformScreen()));
+    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const AudienceGate(child:ParticipationGate(child:PlatformScreen()))));
 }
 class PlatformScreen extends StatefulWidget {
   const PlatformScreen({super.key,this.runtimeFactory});
@@ -297,7 +299,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     if(_profileOpen||runtime==null||!RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id))return;
     _profileOpen=true;
     unawaited(showPlayerProfile(context,api:runtime!.api,id:id,roomId:room,communityId:inGame?runtime!.community:(hubKey.currentState?.community?['id']?.toString()??''),onUnauthorized:()=>onEvent({'type':'auth_expired'}))
-      .whenComplete(()=>_profileOpen=false));
+      .whenComplete((){_profileOpen=false;if(mounted&&gameController!=null){unawaited(gameController!.runJavaScript('window.SamiDevNetwork?.requestChatHistory();').catchError((_){ }));}}));
   }
   Future<void> refreshGamesProfile()async{
     final r=runtime;if(r==null||!authenticated)return;

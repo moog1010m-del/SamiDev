@@ -474,7 +474,7 @@ class MemoryStore:
             player = room.players.get(seat) if room else None
             if not player or not player.connected or player.conn_id != conn_id or player.connection_epoch != connection_epoch:
                 raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
-            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble, **(sticker or {})}
+            message = {"id": secrets.token_urlsafe(9), "seat": int(seat), "text": str(text), "ts": now_ms(), "chatBubble": chat_bubble, **(sticker or {}), "userId": player.account_id}
             room.chat.append(message)
             if len(room.chat) > CHAT_HISTORY_MAX:
                 room.chat = room.chat[-CHAT_HISTORY_MAX:]
@@ -1171,18 +1171,19 @@ class RedisStore:
         local raw = redis.call('HGET', KEYS[2], ARGV[1]); if not raw then return -11 end
         local p = cjson.decode(raw)
         if p['connected'] ~= true or p['connId'] ~= ARGV[2] or tonumber(p['connectionEpoch'] or 1) ~= tonumber(ARGV[3]) then return -12 end
-        redis.call('RPUSH', KEYS[3], ARGV[4])
+        local message = cjson.decode(ARGV[4]); message['userId'] = p['accountId']
+        redis.call('RPUSH', KEYS[3], cjson.encode(message))
         redis.call('LTRIM', KEYS[3], -tonumber(ARGV[5]), -1)
         redis.call('EXPIRE', KEYS[3], ARGV[6])
-        return 1
+        return cjson.encode(message)
         """
-        code = int(await self.r.eval(script, 3, self.kroom(rid), self.kplayers(rid), self.kchat(rid), str(seat), conn_id, str(connection_epoch), json.dumps(message, ensure_ascii=False, separators=(",", ":")), str(CHAT_HISTORY_MAX), str(ROOM_TTL_SECONDS)))
+        code = await self.r.eval(script, 3, self.kroom(rid), self.kplayers(rid), self.kchat(rid), str(seat), conn_id, str(connection_epoch), json.dumps(message, ensure_ascii=False, separators=(",", ":")), str(CHAT_HISTORY_MAX), str(ROOM_TTL_SECONDS))
         if code == -12:
             raise StoreError("STALE_CONNECTION", "تم استبدال هذا الاتصال باتصال أحدث")
-        if code < 0:
+        if isinstance(code,int) and code < 0:
             raise StoreError("ROOM_NOT_FOUND", "الغرفة غير موجودة")
         await self._touch(rid)
-        return message
+        return json.loads(code)
 
     async def chat_history(self, rid: str) -> list[dict[str, Any]]:
         if not await self.r.exists(self.kroom(rid)):

@@ -146,7 +146,7 @@ class PostgresPlatformService(PlatformService):
             return await super().equip_store_item(uid, item_id)
 
     def _friend_keys(self, a, b):
-        return [self.k_user(a), self.k_user(b), self.k_requests(a), self.k_requests(b),
+        return [self.safety.key(a),self.safety.key(b),self.k_user(a), self.k_user(b), self.k_requests(a), self.k_requests(b),
                 self.k_friends(a), self.k_friends(b)]
 
     async def send_friend_request(self, sender, target_username):
