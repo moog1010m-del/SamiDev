@@ -3,7 +3,7 @@
 Install tools/js-protection dependencies with npm ci --ignore-scripts first.
 The same output must serve the backend and supply the Flutter runtime bundle.
 """
-import argparse, hashlib, importlib.util, json, shutil, subprocess
+import argparse, hashlib, importlib.util, json, re, shutil, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'game'
@@ -19,6 +19,16 @@ def build(output):
         raise RuntimeError('Run npm ci --ignore-scripts in tools/js-protection first')
     if json.loads(package.read_text())['version'] != '4.1.1':
         raise RuntimeError('Unexpected obfuscator version; restore dependencies with npm ci --ignore-scripts')
+    profile = json.loads((ROOT/'tools/js-protection/property-profile.json').read_text())
+    for directory in (SOURCE, ROOT/'backend', ROOT/'gamehost', ROOT.parent/'SamiDev_Flutter/lib'):
+        for path in directory.rglob('*'):
+            if not path.is_file() or path.suffix not in {'.js', '.py', '.html', '.json', '.dart', '.ts'} or 'node_modules' in path.parts:
+                continue
+            if directory == SOURCE and path.relative_to(SOURCE).as_posix() in ENGINES.values():
+                continue
+            text = path.read_text(encoding='utf-8')
+            if any(re.search(r'\b'+re.escape(name)+r'\b', text) for name in profile['properties']):
+                raise RuntimeError('Audited property now referenced outside engine: '+str(path))
     marker = output / '.plazr-generated-distribution'
     if output.exists():
         if not marker.is_file():
@@ -27,7 +37,8 @@ def build(output):
     shutil.copytree(SOURCE, output, ignore=shutil.ignore_patterns('*.map', '.*'))
     marker.touch()
     digest = lambda p, algorithm='sha256': hashlib.new(algorithm, p.read_bytes()).hexdigest()
-    report = {'tool': 'javascript-obfuscator@4.1.1', 'profile': 'local-identifiers-v1', 'engines': {}}
+    report = {'tool': 'javascript-obfuscator@4.1.1', 'profile': 'local-identifiers-v2',
+              'propertyProfile': profile['version'], 'properties': profile['properties'], 'engines': {}}
     for game, relative in ENGINES.items():
         path = output/relative
         subprocess.run(['node', str(ROOT/'tools/js-protection/protect.cjs'), str(path)], check=True)
