@@ -108,6 +108,8 @@ COMMUNITIES = {
     "elite": {"id":"elite","name":"Iraq","description":"مساحة العراق للمحادثة والتحديات ولقاء اللاعبين.","accent":"#b88942","mark":"🇮🇶","countryCode":"iq","order":4},
 }
 
+DEFAULT_COMMUNITIES = {key:dict(value) for key,value in COMMUNITIES.items()}
+
 def normalize_community_id(value: Any) -> str:
     cid = str(value or "").strip().lower()
     if cid not in COMMUNITIES:
@@ -336,6 +338,8 @@ class PlatformService:
     def __init__(self, redis_client: Any | None = None):
         self.firebase = FirebaseIdentity()
         self.community_rules = CommunityRules(self)
+        from community_catalog import CommunityCatalog
+        self.community_definitions=CommunityCatalog(self)
         from room_policy import RoomPolicy
         self.room_policy=RoomPolicy(self)
         self.mem_firebase = {}
@@ -438,9 +442,11 @@ class PlatformService:
     def k_daily_match_count(self, uid: str, day: str) -> str: return f"{PREFIX}:store:daily-match:{uid}:{day}"
     def k_match_reward_claim(self, uid: str, room_id: str) -> str: return f"{PREFIX}:store:match-claim:{uid}:{room_id}"
 
-    async def community_catalog(self) -> list[dict[str, Any]]:
+    async def community_catalog(self, *, include_disabled=False) -> list[dict[str, Any]]:
+        await self.community_definitions.refresh()
         out: list[dict[str, Any]] = []
         for item in sorted(COMMUNITIES.values(), key=lambda x: int(x.get("order") or 0)):
+            if not include_disabled and not item.get('enabled',True):continue
             cid = str(item["id"])
             members = await self.community_members(cid, 250)
             out.append({**item, "onlineCount": len(members)})
@@ -461,9 +467,9 @@ class PlatformService:
         active=await self.r.get(self.k_active_community(uid)) if self.r is not None else next((value[0] for value in [self.mem_active_community.get(uid)] if value and value[1]>time.monotonic()),None)
         if active==cid:await self._touch_community(uid,cid)
 
-    async def _touch_community(self, uid: str, community_id: str) -> str:
+    async def _touch_community(self, uid: str, community_id: str, *, allow_disabled=False) -> str:
         cid = normalize_community_id(community_id)
-        await self.community_rules.access(uid,cid)
+        await self.community_rules.access(uid,cid,allow_disabled=allow_disabled)
         await self.touch_presence(uid)
         if self.r is not None:
             active_key = self.k_active_community(uid)
@@ -615,6 +621,7 @@ class PlatformService:
         return entry
 
     async def start(self) -> None:
+        await self.community_definitions.refresh()
         if self.firebase.enabled:
             return
         admin_username = os.getenv("SAMIDEV_ADMIN_USERNAME", "").strip()
@@ -1614,6 +1621,7 @@ class PlatformHttp:
         user = await self.platform.resolve_session(token)
         if not user:
             raise PlatformError("AUTH_REQUIRED", "يجب تسجيل الدخول أولًا", 401)
+        await self.platform.community_definitions.refresh()
         return user
 
     async def _optional_user(self, request: web.Request) -> dict[str, Any] | None:
@@ -1939,13 +1947,18 @@ class PlatformHttp:
     async def lobby_rooms(self, request: web.Request) -> web.Response:
         await self._user(request)
         rooms = await self.room_store.list_public_rooms(120)
+        rooms=[room for room in rooms if COMMUNITIES.get(room.get('communityId') or 'majlis',{}).get('enabled',True)]
         return web.json_response({"ok": True, "rooms": rooms, "ts": now_ms()})
 
     async def game_ticket(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         body = await self._body(request)
         community_id = body.get("communityId")
-        await self.platform.community_rules.access(str(user["id"]),str(community_id or "majlis"))
+        cid=str(community_id or 'majlis')
+        reconnect=False
+        if not COMMUNITIES.get(cid,{}).get('enabled',True):
+            reconnect=any(room.get('communityId')==cid and room.get('begun') and any(p.get('accountId')==user['id'] for p in room.get('roster',[])) for room in await self.platform.room_policy.snapshots(self.room_store))
+        await self.platform.community_rules.access(str(user['id']),cid,allow_disabled=reconnect)
         if not await self.platform.allow_rate(f"game-ticket:{user['id']}", 30, 60):
             raise PlatformError("RATE_LIMIT", "محاولات كثيرة؛ حاول لاحقًا", 429)
         value = await self.platform.issue_game_ticket(user, str(community_id) if community_id else None, session_token=request.cookies.get(SESSION_COOKIE))

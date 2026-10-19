@@ -198,6 +198,7 @@ class SamiDevRealtime:
             if not user or str(user.get("banned") or "0") == "1" or str(user.get("authVersion") or "0") != c.auth_version: return False
             c.account_role = str(user.get("role") or "user")
             c.community_blocked = None
+            await self.platform.community_definitions.refresh()
             try: self.platform.community_rules.check(user,c.community_id)
             except PlatformError as error: c.community_blocked = error.code
             return True
@@ -220,7 +221,7 @@ class SamiDevRealtime:
                         if departed.get('seatFreed'):
                             self.room_local[rid].discard(c.conn_id)
                             c.room_id=None;c.seat=None;c.token=None
-                            await self.send(c,{'type':'left_room','reason':c.community_blocked,'message':'أُخرجت من هذه المساحة','roomId':rid})
+                            await self.send(c,{'type':'left_room','reason':c.community_blocked,'message':'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى' if c.community_blocked=='COMMUNITY_DISABLED' else 'أُخرجت من هذه المساحة','roomId':rid})
                             if not departed.get('roomDeleted'): await self.fanout(rid,await self.room_state_event(rid))
                     except StoreError: pass
                     except Exception: await c.ws.close(code=1013,message=b'community service unavailable; retry')
@@ -776,9 +777,11 @@ class SamiDevRealtime:
                 else:
                     entry=self.store.invites.get(token);rid=entry[0] if entry else None
                 if rid: cid=(await self.store.get_room_state(rid)).get('communityId') or 'majlis'
-            await self.platform.community_rules.access(c.account_id,cid)
+            reconnect=kind=='join_room' and bool(msg.get('token')) and room.get('begun') and any(p.get('accountId')==c.account_id for p in room.get('roster',[]))
+            await self.platform.community_rules.access(c.account_id,cid,allow_disabled=bool(reconnect))
         if c.account_id and kind=='chat_send':
-            await self.platform.community_rules.access(c.account_id,c.community_id,chat=True)
+            current=await self.store.get_room_state(c.room_id) if c.room_id else {}
+            await self.platform.community_rules.access(c.account_id,c.community_id,chat=True,allow_disabled=bool(current.get('begun')))
         if kind=='manage_table':
             if c.room_id is None or c.seat is None or c.spectator:raise StoreError('NOT_IN_ROOM','ادخل طاولتك أولًا')
             await self.enforce_action_rate(c,'manage-table',30)
@@ -1419,6 +1422,8 @@ def make_app() -> web.Application:
     app.router.add_get("/api/admin/users", api.admin_users)
     app.router.add_get("/api/admin/stats", api.admin_stats)
     app.router.add_get("/api/admin/communities/{community_id}/policy", api.community_policy)
+    from community_catalog import install as install_community_catalog
+    install_community_catalog(app,api)
     app.router.add_put("/api/admin/communities/{community_id}/policy", api.community_policy)
     app.router.add_get("/api/admin/reports", api.admin_reports)
     app.router.add_post("/api/admin/users/{user_id}/ban", api.admin_ban)

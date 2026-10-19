@@ -20,7 +20,7 @@ class QuickPlay:
     def __init__(self, store):
         self.store = store
         self.waiting = {}
-        # Four communities x bounded preset list; do not grow locks from user input.
+        # Registered communities x bounded preset list; never grow locks from arbitrary input.
         self.locks = {}
 
     @asynccontextmanager
@@ -44,7 +44,8 @@ class QuickPlay:
             raise StoreError('AUTH_REQUIRED', 'سجّل الدخول للبحث عن مباراة')
         if preset not in PRESETS:
             raise StoreError('UNKNOWN_QUICK_MODE', 'نمط اللعب السريع غير مدعوم')
-        if community_id not in {'majlis', 'square', 'diwan', 'elite'}:
+        from social_platform import COMMUNITIES
+        if community_id not in COMMUNITIES:
             raise StoreError('BAD_COMMUNITY', 'المساحة غير مدعومة')
         settings = sanitize_settings(PRESETS[preset])
         key = f'{getattr(self.store, "prefix", "local")}:quick:{community_id}:{preset}'

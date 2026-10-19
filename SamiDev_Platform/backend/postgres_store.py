@@ -48,7 +48,7 @@ def durable_key(key):
     parts = str(key).split(':')
     return len(parts) >= 2 and parts[0] == os.getenv('SAMIDEV_PLATFORM_PREFIX', 'sdp') and parts[1] in {
         'user', 'username', 'firebase', 'account-sessions', 'account-deletion', 'moderation-audit', 'users', 'friends', 'requests', 'repday',
-        'reptarget', 'matchrating', 'reports', 'store', 'community', 'game-stats', 'game-result',
+        'reptarget', 'matchrating', 'reports', 'store', 'community', 'community-catalog', 'game-stats', 'game-result',
     } and not (parts[1] == 'community' and (
         len(parts) < 4 or parts[-1] != 'chat'
     ))

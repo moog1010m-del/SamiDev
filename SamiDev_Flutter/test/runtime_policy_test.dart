@@ -1,6 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:samidev/runtime/policy.dart';
 void main(){
+ test('custom community ids stay bounded and cannot inject routes',(){
+  for(final value in ['majlis','coffee_room','tech-2026']){expect(RuntimePolicy.isCommunityId(value),isTrue);}
+  for(final value in [null,'../admin','x/y','https://evil','UPPER','a']){expect(RuntimePolicy.isCommunityId(value),isFalse);}
+ });
  test('production origin is fixed and HTTPS',(){
   expect(RuntimePolicy('https://games.example.com').backend.origin,'https://games.example.com');
   for(final value in ['http://example.com','https://user:pass@example.com','https://example.com/path','https://example.com?x=1','javascript:alert(1)','https://example.com#frag']){
@@ -13,6 +17,10 @@ void main(){
  });
  test('API proxy permits only full platform routes',(){
   expect(RuntimePolicy.allowApi('PATCH','/api/profile'),isTrue);
+  expect(RuntimePolicy.allowApi('GET','/api/admin/communities'),isTrue);
+  expect(RuntimePolicy.allowApi('POST','/api/admin/communities'),isTrue);
+  expect(RuntimePolicy.allowApi('PATCH','/api/admin/communities/new_room'),isTrue);
+  expect(RuntimePolicy.allowApi('DELETE','/api/admin/communities/new_room'),isFalse);
   expect(RuntimePolicy.allowApi('POST','/api/communities/majlis/chat'),isTrue);
   expect(RuntimePolicy.allowApi('POST','/api/admin/users/user_id/ban'),isTrue);
   expect(RuntimePolicy.allowApi('GET','/api/avatar/user_id'),isTrue);

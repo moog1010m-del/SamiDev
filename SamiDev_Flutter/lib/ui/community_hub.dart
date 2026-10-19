@@ -6,6 +6,7 @@ import 'chat_stickers.dart';
 import 'package:flutter/material.dart';
 import 'chat_cosmetic.dart';
 import '../runtime/api.dart';
+import '../runtime/policy.dart';
 import 'player_profile.dart';
 import 'sticker_art.dart';
 import 'reputation_flame.dart';
@@ -38,9 +39,9 @@ class CommunityHubState extends State<CommunityHub> {
   List<Map<String,dynamic>> rows(dynamic data)=>(data as List? ?? []).whereType<Map>().map((e)=>Map<String,dynamic>.from(e)).toList();
   Future<Map<String,dynamic>> request(String path,{String method='GET',String? query,Map<String,dynamic>? body}) async {
     final r=await widget.api.request(method,path,query:query,body:body==null?null:utf8.encode(jsonEncode(body)));
-    final data=r.json;if(r.status==403&&{'COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(data['error'])){final denied=path.split('/').length>3?path.split('/')[3]:null;WidgetsBinding.instance.addPostFrameCallback((_){if(mounted&&community?['id']==denied)unawaited(back());});}if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
+    final data=r.json;if(r.status==403&&{'COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'}.contains(data['error'])){final denied=path.split('/').length>3?path.split('/')[3]:null;WidgetsBinding.instance.addPostFrameCallback((_){if(mounted&&community?['id']==denied)unawaited(back());});}if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
   }
-  @override void initState(){super.initState();final cid=widget.initialCommunity;if({'majlis','square','diwan','elite'}.contains(cid))community={'id':cid};WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});restart();}
+  @override void initState(){super.initState();final cid=widget.initialCommunity;if(RuntimePolicy.isCommunityId(cid))community={'id':cid};WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});restart();}
   @override void didUpdateWidget(covariant CommunityHub old){super.didUpdateWidget(old);if(old.active!=widget.active||old.user?['id']!=widget.user?['id']||old.user?['isGuest']!=widget.user?['isGuest']){stopLive();restart();}}
   void stopLive(){liveRetry?.cancel();unawaited(live?.cancel());live=null;liveCid=null;}
   void mergeMessages(List<Map<String,dynamic>> incoming){
@@ -82,7 +83,7 @@ class CommunityHubState extends State<CommunityHub> {
     }catch(e){report(e);}finally{navigating=false;}
   }
   void restoreCommunity(String cid){
-    if(!{'majlis','square','diwan','elite'}.contains(cid)||community?['id']==cid)return;
+    if(!RuntimePolicy.isCommunityId(cid)||community?['id']==cid)return;
     generation++;setState((){community={'id':cid};rooms=[];members=[];messages=[];tab=0;});
     WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});
     if(widget.active)unawaited(refresh());

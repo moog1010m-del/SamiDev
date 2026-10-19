@@ -190,7 +190,7 @@
     return guestResume;
   }
   function showAuth({accountSettings=false}={}){if(!accountSettings){clearInterval(state.poll);resumeGuest();return;}openSettings('account');}
-  function showApp(){ if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
+  function showApp(){ if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة',COMMUNITY_DISABLED:'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
@@ -602,7 +602,7 @@
       state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);window.SamiDevCommunityLive?.history(d.messages||[]);
       renderCommunityState();renderRooms();
       if(manual)toast('تم تحديث المساحة');
-    }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
+    }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
   }
   function visibleCommunityMembers(){
     const selfId=String(state.user?.id||'');
@@ -945,11 +945,11 @@
   async function loadAdmin(){
     if(!state.user||state.user.role!=='admin')return;
     try{
-      const [s,u,r,spaces]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports'),api('/api/communities')]);
+      const [s,u,r,spaces]=await Promise.all([api('/api/admin/stats'),api('/api/admin/users'),api('/api/admin/reports'),api('/api/admin/communities')]);
       const communityOptions=(spaces.communities||[]).map(c=>`<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
       const communityNames=new Map((spaces.communities||[]).map(c=>[c.id,c.name]));
       const policyForm=$('#room-policy-form'),select=$('#room-policy-community');
-      if(!select.options.length){select.innerHTML=communityOptions;select.onchange=async()=>{delete policyForm.dataset.loadedCommunity;policyForm.querySelector('button[type=submit]').disabled=true;try{const cid=select.value;const d=await api('/api/admin/communities/'+cid+'/policy');if(select.value!==cid)return;for(const [key,value]of Object.entries(d.settings))policyForm.elements.namedItem(key).value=value;policyForm.dataset.loadedCommunity=cid;policyForm.querySelector('button[type=submit]').disabled=false;}catch(e){toast(e.message,true);}};
+      if(select.innerHTML!==communityOptions){select.innerHTML=communityOptions;select.onchange=async()=>{delete policyForm.dataset.loadedCommunity;policyForm.querySelector('button[type=submit]').disabled=true;try{const cid=select.value;const d=await api('/api/admin/communities/'+cid+'/policy');if(select.value!==cid)return;for(const [key,value]of Object.entries(d.settings))policyForm.elements.namedItem(key).value=value;policyForm.dataset.loadedCommunity=cid;policyForm.querySelector('button[type=submit]').disabled=false;}catch(e){toast(e.message,true);}};
       policyForm.onsubmit=async event=>{event.preventDefault();if(policyForm.dataset.loadedCommunity!==select.value)return;const settings=Object.fromEntries(['maxMembers','maxTables','shortMatchSeconds','cooldownSeconds'].map(key=>[key,Number(policyForm.elements.namedItem(key).value)]));try{await api('/api/admin/communities/'+select.value+'/policy',{method:'PUT',body:JSON.stringify(settings)});$('#room-policy-status').textContent='تم حفظ القوانين';}catch(e){toast(e.message,true);}};await select.onchange();}
       const st=s.stats;
       $('#admin-stats').innerHTML=`<div><span>${st.users}</span><small>المستخدمون</small></div><div><span>${st.onlineUsers}</span><small>متصلون</small></div><div><span>${st.waitingRooms}</span><small>غرف انتظار</small></div><div><span>${st.runningRooms}</span><small>مباريات جارية</small></div>`;

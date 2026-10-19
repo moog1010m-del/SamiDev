@@ -76,7 +76,7 @@ class RoomPolicy:
                 meta,players=rows[i*2:i*2+2]
                 if all(value is None for value in meta) or meta[1]=='1' or meta[2]=='1':continue
                 if meta[3]!='1' and meta[4]!='1' and int(meta[5] or 0)>0 and now>=int(meta[5]):continue
-                out.append({'roomId':rid,'communityId':meta[0] or 'majlis','roster':[json.loads(player) for player in players]})
+                out.append({'roomId':rid,'communityId':meta[0] or 'majlis','begun':meta[4]=='1','roster':[json.loads(player) for player in players]})
             return out
         ids=list(store.rooms)
         out=[]
@@ -105,7 +105,7 @@ class RoomPolicy:
             if mapped and mapped[0]==target:
                 reconnect=any(p.get('accountId')==uid and p.get('seat')==mapped[1] for p in room.get('roster',[]))
         if reconnect:
-            await self.platform._touch_community(uid,cid)
+            await self.platform._touch_community(uid,cid,allow_disabled=bool(room.get('begun')))
             return True
         config=await self.settings(cid)
         until=await self.read('cooldown:'+uid) or 0
