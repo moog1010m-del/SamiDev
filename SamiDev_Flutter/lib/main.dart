@@ -155,7 +155,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         if(uri==null||!request.isMainFrame||!r.allowsNavigation(uri))return NavigationDecision.prevent;
         if(!game&&RuntimePolicy.isGame(uri.path)){unawaited(openGameUri(uri));return NavigationDecision.prevent;}
         if(game&&!RuntimePolicy.isGame(uri.path)){unawaited(discardGame());return NavigationDecision.prevent;}
-        final cid=uri.queryParameters['community'];if({'majlis','square','diwan','elite'}.contains(cid))r.community=cid!;
+        final cid=uri.queryParameters['community'];if(RuntimePolicy.isCommunityId(cid))r.community=cid!;
         return NavigationDecision.navigate;
       },
       onPageStarted:(url){if(!live())return;final uri=Uri.tryParse(url);if(uri==null)return;
@@ -224,7 +224,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     if({'created','joined','watching','room_state','begin_match'}.contains(event['type'])&&gameController!=null){
       final newcomers=table.apply(event);
       setState(()=>room=table.roomId);
-      if({'majlis','square','diwan','elite'}.contains(table.communityId)){runtime?.community=table.communityId;if(!_returnToGames)hubKey.currentState?.restoreCommunity(table.communityId);}
+      if(RuntimePolicy.isCommunityId(table.communityId)){runtime?.community=table.communityId;if(!_returnToGames)hubKey.currentState?.restoreCommunity(table.communityId);}
       if(!inGame&&!_background&&newcomers.isNotEmpty){
         final names=newcomers.map((p)=>p['name'].toString()).join('، ');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text('انضم $names إلى طاولتك'),
@@ -240,7 +240,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       case 'chat_pending':if(gameController!=null){final nonce=event['clientMessageId'];if(!messages.any((m)=>m['clientMessageId']==nonce)){final pending=<String,dynamic>{...event,'id':'pending_$nonce','seat':table.seat,'pending':true,'chatBubble':gamesProfile?['chatBubble'],'stickerAsset':event['previewAsset']};setState(()=>messages.add(pending));scrollChat();chatPendingTimers[nonce]?.cancel();chatPendingTimers[nonce]=Timer(const Duration(seconds:8),(){chatPendingTimers.remove(nonce);if(mounted&&messages.contains(pending)){setState(()=>pending['failed']=true);}});}}
       case 'chat_message':if(gameController!=null){chatPendingTimers.remove(event['clientMessageId'])?.cancel();setState((){messages.removeWhere((m)=>m['pending']==true&&m['seat']==event['seat']&&m['clientMessageId']==event['clientMessageId']);messages.add(event);if(messages.length>80)messages.removeAt(0);});scrollChat();}
       case 'invite_created':final token=event['inviteToken'];if(token is String&&RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token)){unawaited(copyText(runtime!.api.policy.backend.replace(path:'/platform/',queryParameters:{'invite':token}).toString()));}
-      case 'left_room':if({'ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'}.contains(event['reason'])){unawaited(discardGame());notify(event['message']?.toString()??'أُغلقت الطاولة');}
+      case 'left_room':if({'ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'}.contains(event['reason'])){unawaited(discardGame());notify(event['message']?.toString()??'أُغلقت الطاولة');}
       case 'error':if(event['clientMessageId']!=null){setState((){for(final m in messages){if(m['pending']==true&&m['clientMessageId']==event['clientMessageId'])m['failed']=true;}});}notify(event['message']?.toString()??'تعذر تنفيذ العملية');
       case 'auth_expired':final hadSession=authenticated||gameController!=null;unawaited(discardGame());setState((){authenticated=false;gamesProfile=null;webPage=null;selectedTab=0;});unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.setNativeActive(true);'));if(hadSession){notify('انتهت الجلسة. يمكنك الدخول إلى حسابك من الإعدادات.');}unawaited(start());
     }
@@ -308,7 +308,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   Future<void> openGame(String game,Map<String,String> query) async {
     const entries={'pool':'/games/pool/index.html','crazy8':'/games/crazy8/index.html','carrom':'/index.html','tablesoccer':'/games/tablesoccer/index.html'};
     final r=runtime;if(r==null||!entries.containsKey(game))return;
-    if(!{'majlis','square','diwan','elite'}.contains(query['community']))return;
+    if(!RuntimePolicy.isCommunityId(query['community']))return;
     if(gameController==null)_returnToGames=nativeGames;
     await openGameUri(r.origin.replace(path:entries[game],queryParameters:query));
     if(gameController==null)throw StateError('تعذر تجهيز الطاولة');
@@ -322,7 +322,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     }
     _openingGame=true;FocusManager.instance.primaryFocus?.unfocus();
     try{
-      final cid=uri.queryParameters['community'];if({'majlis','square','diwan','elite'}.contains(cid))r.community=cid!;
+      final cid=uri.queryParameters['community'];if(RuntimePolicy.isCommunityId(cid))r.community=cid!;
       final c=await makeController(r,game:true);if(!mounted||runtime!=r)return;
       final surface=Completer<bool>();_gameSurfaceReady=surface;
       setState((){_awaitingGameSurface=true;gameController=c;gameCurrent=uri;gameProgress=0;inGame=true;room='';notifiedMatch=null;notifiedMineTurn=null;messages.clear();table.clear();});

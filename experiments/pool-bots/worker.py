@@ -120,7 +120,7 @@ class Player:
 class Worker:
     def __init__(self,base,token,max_games=4,wait=10,scale=1,bot_vs_bot=False):
         self.base=base;self.token=token;self.max_games=max_games;self.wait=wait;self.scale=scale;self.bot_vs_bot=bot_vs_bot
-        self.jobs={};self.targets={};self.join_targets={};self.bots=[];self.stop=asyncio.Event();self.last_roster=0
+        self.jobs={};self.targets={};self.join_targets={};self.bots=[];self.communities=[];self.stop=asyncio.Event();self.last_roster=0
     async def launch(self,admin,bot,room=None,create=False):
         token=None
         try:
@@ -146,7 +146,8 @@ class Worker:
                     self.targets={uid:rid for uid,rid in self.targets.items() if uid in self.jobs}
                     self.join_targets={uid:rid for uid,rid in self.join_targets.items() if uid in self.jobs}
                     if time.monotonic()-self.last_roster>20:
-                        self.bots=(await request(admin,self.base,'GET','/api/admin/bots'))['bots'];self.last_roster=time.monotonic()
+                        roster=await request(admin,self.base,'GET','/api/admin/bots')
+                        self.bots=roster['bots'];self.communities=[c['id'] for c in roster['communities'] if c.get('enabled',True)];self.last_roster=time.monotonic()
                     rooms=(await request(admin,self.base,'GET','/api/lobby/rooms'))['rooms']
                     free=[b for b in self.bots if b['enabled'] and not b.get('banned') and b['id'] not in self.jobs]
                     for room in rooms:
@@ -160,7 +161,7 @@ class Worker:
                         self.jobs[bot['id']]=asyncio.create_task(self.launch(admin,bot,room['roomId']))
                     if self.bot_vs_bot and len(set(self.targets.values()))<self.max_games:
                         occupied_rooms={r['communityId'] for r in rooms if r['settings'].get('gameId')=='pool'}
-                        for cid in ('majlis','square','diwan','elite'):
+                        for cid in self.communities:
                             matching=[b for b in free if b['room']==cid]
                             if cid not in occupied_rooms and len(matching)>=2 and len(set(self.targets.values()))<self.max_games:
                                 bot=matching[0];free.remove(bot);self.targets[bot['id']]='create:'+bot['id'];self.jobs[bot['id']]=asyncio.create_task(self.launch(admin,bot,create=True))

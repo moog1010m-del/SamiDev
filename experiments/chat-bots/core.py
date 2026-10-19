@@ -177,7 +177,7 @@ def valid_output(text):
 
 def load_config(path):
     config=json.loads(Path(path).read_text(encoding='utf-8'))
-    if config.get('room') not in ('majlis','square','diwan','elite'):raise ValueError('Invalid room')
+    if not isinstance(config.get('room'),str) or not re.fullmatch(r'[a-z][a-z0-9_-]{1,31}',config['room']):raise ValueError('Invalid room')
     ZoneInfo(config['timezone'])
     profiles=config['profiles']
     if type(config.get('initiative_seconds',45)) is not int or not 30<=config.get('initiative_seconds',45)<=600:raise ValueError('Invalid initiative_seconds')

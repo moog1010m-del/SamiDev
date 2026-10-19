@@ -28,7 +28,7 @@ class BotPlayBridge:
     async def heartbeat(self,request):
         user=await self.api._user(request);token=request.cookies.get('samidev_session')
         if user.get('managedBot')!='1' or user.get('botEnabled')!='1' or user.get('role')!='user' or user.get('botPlaySession')!=self.p.token_key(token):raise PlatformError('BOT_UNAVAILABLE','توقف تشغيل الحساب الآلي',403)
-        await self.p.community_rules.access(user['id'],user.get('botRoom','majlis'))
+        await self.p.community_rules.access(user['id'],user.get('botRoom','majlis'),allow_disabled=True)
         await self.shorten(token)
         return web.json_response({'ok':True,'room':user.get('botRoom'),'skill':user.get('botSkill','medium')})
     async def status(self,request):

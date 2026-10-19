@@ -11,7 +11,7 @@ try{
  await page.goto(base+'/platform/');await page.locator('#app').waitFor({state:'visible'});
  for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
   await page.setViewportSize(viewport);
-  await page.locator('[data-page=admin]:visible').first().click();await page.locator('#admin-bots-open').click();
+  await page.locator('[data-page=admin]:visible').first().click();await page.locator('#admin-tab-bots').click();await page.locator('#admin-bots-open').click();
   const dialog=page.locator('.bot-admin-dialog');await dialog.locator('[data-bot]').first().waitFor();
   assert(await dialog.evaluate(el=>el.matches(':modal')&&el.parentNode===document.body));
   assert.match(await dialog.innerText(),/غير متصل حاليًا/);assert(await dialog.locator('[data-bot]').count()>=200);

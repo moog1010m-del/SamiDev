@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class RuntimePolicy {
+  static bool isCommunityId(String? value) => value != null && RegExp(r'^[a-z][a-z0-9_-]{1,31}$').hasMatch(value);
   RuntimePolicy(String value, {bool allowLocalDevelopment = false}) {
     final uri = Uri.tryParse(value);
     if (uri == null || !uri.hasAuthority || uri.userInfo.isNotEmpty ||
@@ -23,15 +24,15 @@ class RuntimePolicy {
     if (path.contains('%') || path.contains('..') || path.contains('\\')) return false;
     const get = {'/api/account','/api/account/devices','/api/auth/config','/api/me','/api/games','/api/build','/api/store','/api/communities',
       '/api/lobby/rooms','/api/friends','/api/users/search','/api/admin/users',
-      '/api/admin/stats','/api/admin/reports','/api/admin/bots'};
-    const post = {'/api/admin/bots','/api/account/logout-all','/api/account/delete','/api/auth/guest','/api/store/buy','/api/auth/firebase','/api/auth/login','/api/auth/register','/api/auth/logout',
+      '/api/admin/stats','/api/admin/reports','/api/admin/bots','/api/admin/communities'};
+    const post = {'/api/admin/communities','/api/admin/bots','/api/account/logout-all','/api/account/delete','/api/auth/guest','/api/store/buy','/api/auth/firebase','/api/auth/login','/api/auth/register','/api/auth/logout',
       '/api/store/equip','/api/heartbeat','/api/game-ticket','/api/friends/request','/api/friends/respond'};
     if (method == 'GET' && get.contains(path)) return true;
     if (method == 'POST' && post.contains(path)) return true;
     if (method == 'PATCH' && path == '/api/profile') return true;
     const id = r'[A-Za-z0-9_-]{1,64}';
     return switch (method) {
-      'PATCH' => path == '/api/admin/bots' || RegExp('^/api/admin/bots/$id\$').hasMatch(path),
+      'PATCH' => path == '/api/admin/bots' || RegExp('^/api/admin/bots/$id\$').hasMatch(path) || RegExp('^/api/admin/communities/$id\$').hasMatch(path),
       'PUT' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path),
       'GET' => RegExp('^/api/admin/communities/$id/policy\$').hasMatch(path)||RegExp('^/api/(avatar|public-profile|communities)/$id\$').hasMatch(path)||RegExp('^/api/communities/$id/events\$').hasMatch(path),
       'POST' => RegExp('^/api/(communities/$id/(enter|leave|chat|moderation)|users/$id/(reputation|report)|admin/users/$id/(ban|role))\$').hasMatch(path),

@@ -20,11 +20,12 @@ class CommunityRules:
     def can_moderate(self, user, cid):
         return user.get('role') == 'admin' or self.data(user, 'communityModeratorOf').get(cid) is True
 
-    def check(self, user, cid, *, chat=False):
-        from social_platform import PlatformError, normalize_community_id
+    def check(self, user, cid, *, chat=False,allow_disabled=False):
+        from social_platform import PlatformError, normalize_community_id,COMMUNITIES
         cid = normalize_community_id(cid)
         if not user: raise PlatformError('AUTH_REQUIRED', 'سجّل الدخول أولًا', 401)
         if str(user.get('banned') or '0')=='1': raise PlatformError('ACCOUNT_BANNED','هذا الحساب محظور',403)
+        if not allow_disabled and not COMMUNITIES[cid].get('enabled',True):raise PlatformError('COMMUNITY_DISABLED','هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى',403)
         if user.get('role')=='admin': return user
         state = self.data(user,'communityRestrictions').get(cid) or {}
         clock = int(time.time()*1000)
@@ -36,8 +37,9 @@ class CommunityRules:
             raise PlatformError('COMMUNITY_MUTED', 'أنت مكتوم في هذه المساحة مؤقتًا', 403)
         return user
 
-    async def access(self, uid, cid, *, chat=False):
-        return self.check(await self.service.get_user(uid),cid,chat=chat)
+    async def access(self, uid, cid, *, chat=False,allow_disabled=False):
+        await self.service.community_definitions.refresh()
+        return self.check(await self.service.get_user(uid),cid,chat=chat,allow_disabled=allow_disabled)
 
     @asynccontextmanager
     async def transaction(self, keys):

@@ -234,7 +234,7 @@
         state.startData = null;
         try { sessionStorage.removeItem('samidev_reconnect'); } catch (_) {}
         emit('left_room', msg);
-        if(['ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED'].includes(msg.reason)&&!document.documentElement.hasAttribute('data-sd-native')){
+        if(['ROOM_WAIT_EXPIRED','TABLE_CLOSED','TABLE_KICKED','COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'].includes(msg.reason)&&!document.documentElement.hasAttribute('data-sd-native')){
           const cid=state.communityId||'majlis';if(window.__SAMIDEV_APP_HOST)window.__SAMIDEV_APP_HOST.returnToPlatform();else location.assign('/platform/?community='+encodeURIComponent(cid)+'&notice='+encodeURIComponent(msg.reason));
         }
         break;
