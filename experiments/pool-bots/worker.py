@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 import aiohttp
 from planner import plan
+from fill_schedule import FillSchedule
 
 def log(event,**fields):print(json.dumps({'event':event,**fields},ensure_ascii=False),flush=True)
 class BridgeError(RuntimeError):pass
@@ -14,8 +15,7 @@ async def request(session,base,method,path,body=None):
         return result
 
 def eligible_room(room,join_after,now=None):
-    settings=room.get('settings') or {}
-    return settings.get('gameId')=='pool' and settings.get('gameType',0) in (0,7) and not room.get('started') and not room.get('finished') and room.get('occupied')==1 and room.get('capacity')==2 and (now if now is not None else time.time())*1000-room.get('createdAt',0)>=join_after*1000
+    return FillSchedule().eligible(room,join_after,now)
 
 class Player:
     def __init__(self,session,base,bot,room,scale=1,create=False,on_room=None):
@@ -120,14 +120,17 @@ class Player:
 class Worker:
     def __init__(self,base,token,max_games=4,wait=10,scale=1,bot_vs_bot=False):
         self.base=base;self.token=token;self.max_games=max_games;self.wait=wait;self.scale=scale;self.bot_vs_bot=bot_vs_bot
-        self.jobs={};self.targets={};self.join_targets={};self.bots=[];self.communities=[];self.stop=asyncio.Event();self.last_roster=0
+        self.jobs={};self.targets={};self.join_targets={};self.joined=set();self.schedule=FillSchedule();self.bots=[];self.communities=[];self.stop=asyncio.Event();self.last_roster=0
+    def confirmed_join(self,uid,rid):
+        self.targets[uid]=rid;self.joined.add(uid);self.schedule.confirmed(rid)
+        log('bot_joined',bot=uid,room=rid,confirmedBotJoins=self.schedule.joins[rid][0])
     async def launch(self,admin,bot,room=None,create=False):
         token=None
         try:
             result=await request(admin,self.base,'POST','/api/admin/bots/'+bot['id']+'/play-session',{})
             token=result['session']
             async with aiohttp.ClientSession(headers={'Origin':self.base},cookies={'samidev_session':token},timeout=aiohttp.ClientTimeout(total=15)) as session:
-                player=Player(session,self.base,dict(bot),room,self.scale,create,lambda rid:self.targets.__setitem__(bot['id'],rid))
+                player=Player(session,self.base,dict(bot),room,self.scale,create,lambda rid:self.confirmed_join(bot['id'],rid))
                 await player.run()
                 log('match_done',bot=bot['id'],room=player.room,shots=player.shots)
         except asyncio.CancelledError:raise
@@ -145,15 +148,17 @@ class Worker:
                     self.jobs={uid:task for uid,task in self.jobs.items() if not task.done()}
                     self.targets={uid:rid for uid,rid in self.targets.items() if uid in self.jobs}
                     self.join_targets={uid:rid for uid,rid in self.join_targets.items() if uid in self.jobs}
+                    self.joined.intersection_update(self.jobs)
                     if time.monotonic()-self.last_roster>20:
                         roster=await request(admin,self.base,'GET','/api/admin/bots')
                         self.bots=roster['bots'];self.communities=[c['id'] for c in roster['communities'] if c.get('enabled',True)];self.last_roster=time.monotonic()
                     rooms=(await request(admin,self.base,'GET','/api/lobby/rooms'))['rooms']
+                    self.schedule.prune(rooms)
                     free=[b for b in self.bots if b['enabled'] and not b.get('banned') and b['id'] not in self.jobs]
                     for room in rooms:
-                        if room['roomId'] in self.join_targets.values():continue
+                        if any(rid==room['roomId'] and uid not in self.joined for uid,rid in self.join_targets.items()):continue
                         if room['roomId'] not in self.targets.values() and len(set(self.targets.values()))>=self.max_games:continue
-                        if not eligible_room(room,self.wait):continue
+                        if not self.schedule.eligible(room,self.wait,scale=self.scale):continue
                         matching=[b for b in free if b['room']==room['communityId']]
                         if not matching:continue
                         bot=random.choice(matching);free.remove(bot)

@@ -24,9 +24,11 @@ def segment_distance(point,a,b):
 def legal_targets(view,seat):
     live=[b for b in view['balls'] if b[0] and not b[3]]
     if view.get('freePool'):return live
+    if view.get('ruleType') in (1,2):return [min(live,key=lambda b:b[0])] if live else []
     solids=view.get('solids',-1)
     if solids not in (0,1):return [b for b in live if b[0]!=8]
-    group=[b for b in live if (1<=b[0]<=7 if solids==seat else 9<=b[0]<=15)]
+    team=next((index for index,members in enumerate(view.get('teams') or []) if seat in members),seat)
+    group=[b for b in live if (1<=b[0]<=7 if solids==team else 9<=b[0]<=15)]
     return group or [b for b in live if b[0]==8]
 def candidates(view,seat,cue=None):
     balls=[b for b in view['balls'] if not b[3]]
