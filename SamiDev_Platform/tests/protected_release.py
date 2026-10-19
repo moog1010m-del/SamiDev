@@ -14,6 +14,8 @@ def verify(output):
   assert digest(file)!=digest(original), 'Engine was not transformed'
   for name in report.get('properties', []):
    assert not re.search(r'\b'+re.escape(name)+r'\b',file.read_text()), ('Internal property remains readable',game,name)
+  if report.get('releaseSeed'):
+   assert report['releaseSeed'] not in file.read_text(), 'Private release seed embedded in engine'
   for name,sha in json.loads((file.parent/'__assets.json').read_text()).items():
    assert digest(file.parent/name.removeprefix(game+'/'),'sha1')==sha,(game,name)
   for name,sha in json.loads((file.parent/'attestation.json').read_text())['files'].items():

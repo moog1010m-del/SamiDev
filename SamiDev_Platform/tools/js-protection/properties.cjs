@@ -2,9 +2,9 @@
 const acorn = require('acorn');
 const crypto = require('node:crypto');
 const profile = require('./property-profile.json');
-function renameInternalProperties(source) {
+function renameInternalProperties(source, releaseSeed = '') {
   const names = new Map(profile.properties.map(name => [name, '_p' + crypto.createHash('sha256')
-    .update(profile.version + ':' + name).digest('hex').slice(0, 12)]));
+    .update(profile.version + ':' + releaseSeed + ':' + name).digest('hex').slice(0, 12)]));
   for (const value of names.values()) {
     if (source.includes(value)) throw new Error('Property alias already exists in input');
   }

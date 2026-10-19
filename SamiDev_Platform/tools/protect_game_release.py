@@ -3,14 +3,17 @@
 Install tools/js-protection dependencies with npm ci --ignore-scripts first.
 The same output must serve the backend and supply the Flutter runtime bundle.
 """
-import argparse, hashlib, importlib.util, json, re, shutil, subprocess
+import argparse, hashlib, importlib.util, json, re, secrets, shutil, subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'game'
 ENGINES = {'carrom': 'main.js', 'pool': 'games/pool/main.js',
            'crazy8': 'games/crazy8/main.js', 'tablesoccer': 'games/tablesoccer/main.js'}
 
-def build(output):
+def build(output, seed=None):
+    seed = seed if seed is not None else secrets.token_hex(16)
+    if not re.fullmatch(r'[0-9a-f]{32}', seed):
+        raise ValueError('Seed must be 32 lowercase hexadecimal characters')
     output = Path(output).resolve()
     if output == SOURCE or output in SOURCE.parents or SOURCE in output.parents:
         raise ValueError('Distribution must be separate from the source game tree')
@@ -19,6 +22,9 @@ def build(output):
         raise RuntimeError('Run npm ci --ignore-scripts in tools/js-protection first')
     if json.loads(package.read_text())['version'] != '4.1.1':
         raise RuntimeError('Unexpected obfuscator version; restore dependencies with npm ci --ignore-scripts')
+    terser = ROOT/'tools/js-protection/node_modules/terser/package.json'
+    if not terser.is_file() or json.loads(terser.read_text())['version'] != '5.44.1':
+        raise RuntimeError('Restore pinned Terser with npm ci --ignore-scripts')
     profile = json.loads((ROOT/'tools/js-protection/property-profile.json').read_text())
     for directory in (SOURCE, ROOT/'backend', ROOT/'gamehost', ROOT.parent/'SamiDev_Flutter/lib'):
         for path in directory.rglob('*'):
@@ -37,11 +43,12 @@ def build(output):
     shutil.copytree(SOURCE, output, ignore=shutil.ignore_patterns('*.map', '.*'))
     marker.touch()
     digest = lambda p, algorithm='sha256': hashlib.new(algorithm, p.read_bytes()).hexdigest()
-    report = {'tool': 'javascript-obfuscator@4.1.1', 'profile': 'local-identifiers-v2',
+    report = {'tool': 'terser@5.44.1 + javascript-obfuscator@4.1.1', 'profile': 'local-identifiers-v3',
+              'releaseSeed': seed,
               'propertyProfile': profile['version'], 'properties': profile['properties'], 'engines': {}}
     for game, relative in ENGINES.items():
         path = output/relative
-        subprocess.run(['node', str(ROOT/'tools/js-protection/protect.cjs'), str(path)], check=True)
+        subprocess.run(['node', str(ROOT/'tools/js-protection/protect.cjs'), str(path), seed], check=True)
         subprocess.run(['node', '--check', str(path)], check=True, capture_output=True)
         report['engines'][game] = {'sourceSha256': digest(SOURCE/relative), 'sha256': digest(path),
                                  'sourceBytes': (SOURCE/relative).stat().st_size, 'bytes': path.stat().st_size}
@@ -75,4 +82,6 @@ def build(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=ROOT/'build/protected-game')
-    build(parser.parse_args().output)
+    parser.add_argument('--seed', help='Reuse a private release report seed to reproduce the same build')
+    args = parser.parse_args()
+    build(args.output, args.seed)
