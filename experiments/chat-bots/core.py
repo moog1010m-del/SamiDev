@@ -127,7 +127,7 @@ class Coordinator:
             self.memory.forget(message.user_id);return local('تم، حذفت اللي حفظته عنك في ذاكرة التجربة.')
         if any(term in text for term in ('سناب','واتساب','رقمك','صورتك')):
             return local('ما عندي حساب تواصل أعطيك إياه، خل سوالفنا هنا 😄')
-        if any(term in text for term in ('انت بوت','أنت بوت','انت انسان','أنت إنسان','انت ريبورت','أنت ريبورت','انت روبوت','أنت روبوت')):
+        if text in ('انت بوت','أنت بوت','انت انسان','أنت إنسان','انت ريبورت','أنت ريبورت','انت روبوت','أنت روبوت'):
             return local('وش دعوة يا خوي أكيد إنسان، أجل شبح؟ 😂')
         if any(term in text for term in ('كم الساعة','كم الساعه')):
             clock=datetime.now(ZoneInfo(self.config['timezone'])).strftime('%H:%M')
@@ -183,7 +183,7 @@ def load_config(path):
     if config.get('room') not in ('majlis','square','diwan','elite'):raise ValueError('Invalid room')
     ZoneInfo(config['timezone'])
     profiles=config['profiles']
-    if type(config.get('initiative_seconds',45)) is not int or not 30<=config.get('initiative_seconds',45)<=600:raise ValueError('Invalid initiative_seconds')
+    if type(config.get('initiative_seconds',45)) is not int or not 10<=config.get('initiative_seconds',45)<=600:raise ValueError('Invalid initiative_seconds')
     if not profiles or len(profiles)>100 or len({p['id'] for p in profiles})!=len(profiles):raise ValueError('Invalid profiles')
     for key,low,high in [('daily_model_calls',0,10000),('cooldown_seconds',5,3600),('reply_delay_seconds',0,15),('idle_seconds',30,3600),('memory_days',1,30)]:
         if not isinstance(config[key],int) or not low<=config[key]<=high:raise ValueError('Invalid '+key)

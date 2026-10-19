@@ -11,10 +11,14 @@ class Fake:
     async def generate(self,*args):self.calls+=1;return self.text
 class CoreTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
-        self.temp=tempfile.TemporaryDirectory();self.path=Path(self.temp.name)/'db.sqlite'
+        self.temp=tempfile.TemporaryDirectory(ignore_cleanup_errors=True);self.path=Path(self.temp.name)/'db.sqlite'
         self.mem=Memory(self.path);self.config=load_config(BASE/'config.example.json')
         self.provider=Fake();self.engine=Coordinator(self.config,self.mem,read_scripts(BASE/'scripts.example.json',self.config),self.provider)
-    def tearDown(self):self.mem.close();self.temp.cleanup()
+    def tearDown(self):
+        try:self.mem.close()
+        except Exception:pass
+        try:self.temp.cleanup()
+        except Exception:pass
     async def test_memory_and_identity_isolation(self):
         m=Message('one','a','لعبتي المفضلة البلياردو')
         self.assertTrue(self.engine.ingest(m));self.assertFalse(self.engine.ingest(m))
