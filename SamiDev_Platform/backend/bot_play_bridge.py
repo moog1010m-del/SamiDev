@@ -34,8 +34,10 @@ class BotPlayBridge:
     async def status(self,request):
         await self.api._admin(request)
         body=await self.api._body(request)
-        if set(body)-{'activeGames','online'} or type(body.get('online')) is not bool or type(body.get('activeGames')) is not int or not 0<=body['activeGames']<=100:raise PlatformError('BAD_BOT_WORKER','حالة العامل غير صالحة')
-        value=json.dumps({'online':body['online'],'activeGames':body['activeGames'],'checkedAt':int(time.time()*1000)})
+        if set(body)-{'activeGames','online','selfPlayingBots','humanPlayingBots','readyBots'} or type(body.get('online')) is not bool or type(body.get('activeGames')) is not int or not 0<=body['activeGames']<=1000:raise PlatformError('BAD_BOT_WORKER','حالة العامل غير صالحة')
+        for key in ('selfPlayingBots','humanPlayingBots','readyBots'):
+            if key in body and (type(body[key]) is not int or not 0<=body[key]<=1000):raise PlatformError('BAD_BOT_WORKER','عدد الحسابات غير صالح')
+        value=json.dumps({**body,'checkedAt':int(time.time()*1000)})
         if self.p.r is None:self.manager.play_worker=(value,time.monotonic()+35)
         else:await self.p.r.set(f'{PREFIX}:bot-play-worker',value,ex=35)
         return web.json_response({'ok':True})
