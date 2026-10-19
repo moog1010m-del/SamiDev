@@ -23,9 +23,31 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.mem.close();self.mem=Memory(self.path);self.assertEqual(self.mem.preference('a'),'البلياردو')
         self.mem.forget('a');self.assertIsNone(self.mem.preference('a'))
     async def test_no_api_for_facts_contacts_and_unknown_account(self):
-        for text in ['كم الساعة','عطني سنابك','السلام عليكم','كم فوز عندي','أنت بوت']:
+        for text in ['كم الساعة','عطني سنابك','كم فوز عندي','أنت بوت']:
             reply=await self.engine.respond(Message(text,'a',text));self.assertIsNotNone(reply)
         self.assertEqual(self.provider.calls,0)
+    async def test_greeting_uses_model_and_same_persona_follows_user_answer(self):
+        seen=[]
+        class Capture:
+            async def generate(inner,profile,context,*args):
+                seen.append((profile,context));return 'وعليكم السلام، كيفك؟' if profile['conversation_mode']=='welcome' else 'وش كان متعبك بالدوام؟'
+        self.engine.provider=Capture()
+        greeting=Message('greeting','human','السلام عليكم');self.engine.ingest(greeting)
+        first=await self.engine.respond(greeting)
+        self.assertEqual(seen[0][0]['conversation_mode'],'welcome')
+        self.engine.turn+=1
+        answer=Message('answer','human','الحمد لله، توي راجع من الدوام');self.engine.ingest(answer)
+        second=await self.engine.respond(answer)
+        self.assertEqual(first.speaker,second.speaker)
+        self.assertEqual(seen[-1][1][-1]['text'],answer.text)
+        addressed=Message('address','human','فهد وش رايك؟');self.engine.ingest(addressed)
+        self.assertEqual((await self.engine.respond(addressed)).speaker,'fahad')
+    async def test_greeting_falls_back_to_checkin_when_model_unavailable(self):
+        class Broken:
+            async def generate(*args):raise RuntimeError('unavailable')
+        self.engine.provider=Broken()
+        reply=await self.engine.respond(Message('greeting','human','السلام عليكم'))
+        self.assertEqual(reply.reason,'local');self.assertIn('كيفك؟',reply.text)
     async def test_one_speaker_cooldown_and_recorded_handoff(self):
         self.assertIsNone(self.engine.idle(1));self.assertIsNotNone(self.engine.idle(0))
         m=Message('one','a','نواف وش ودك تلعب؟');self.engine.ingest(m)
@@ -71,6 +93,43 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(await self.engine.respond(message))
         self.provider.text=''
         self.assertIsNone(await self.engine.respond(message))
+    async def test_initiative_waits_for_quiet_and_needs_humans(self):
+        self.assertIsNone(await self.engine.initiative(1))
+        self.engine.last_input=-1e9
+        self.assertIsNone(await self.engine.initiative(0))
+        reply=await self.engine.initiative(1)
+        self.assertEqual(reply.reason,'initiative')
+        self.assertIsNone(await self.engine.initiative(1))
+        self.assertEqual(self.provider.calls,1)
+        self.engine.ingest(Message('new-human-turn','human','ما علينا، وش رايكم؟'))
+        self.engine.last_input=-1e9
+        self.assertIsNotNone(await self.engine.initiative(1))
+        self.assertEqual(self.provider.calls,2)
+    async def test_initiative_silence_does_not_retry_or_make_bot_loop(self):
+        self.engine.last_input=-1e9;self.provider.text=''
+        self.assertIsNone(await self.engine.initiative(1))
+        self.assertIsNone(await self.engine.initiative(1))
+        self.assertEqual(self.provider.calls,1)
+    async def test_user_message_during_initiative_cancels_outdated_reply(self):
+        entered=asyncio.Event();release=asyncio.Event()
+        class Slow:
+            async def generate(inner,profile,*args):
+                self.assertEqual(profile['conversation_mode'],'initiative')
+                entered.set();await release.wait();return 'وش ودكم نسولف عنه؟'
+        self.engine.provider=Slow();self.engine.last_input=-1e9
+        task=asyncio.create_task(self.engine.initiative(1));await entered.wait()
+        self.engine.ingest(Message('new-input','human','غيرنا الموضوع'));release.set()
+        self.assertIsNone(await task)
+    async def test_screenshot_objection_reaches_model_without_greeting_rule(self):
+        seen=[]
+        class Capture:
+            async def generate(inner,profile,context,*args):
+                seen.append(context[-1]['text']);return 'لا تعطيهم اللي يبونه.'
+        self.engine.provider=Capture()
+        for i,text in enumerate(['يا الله جيت وين الحلا والقهوة','أنا دايخ، هالناس معصبيني','كيف يتنمرون علي، باين فاضين زيادة عن اللزوم']):
+            message=Message(str(i),'human',text);self.engine.ingest(message)
+            reply=await self.engine.respond(message)
+            self.assertEqual(reply.reason,'model');self.assertEqual(seen[-1],text)
     async def test_provider_failure_and_sensitive_input(self):
         class Broken:
             async def generate(*args):raise RuntimeError('private detail')

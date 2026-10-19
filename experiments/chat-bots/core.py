@@ -82,6 +82,8 @@ class Coordinator:
         self.room=config['room'];self.last_sent=-1e9;self.turn=0;self.revision=0
         self.script_index=0;self.line_index=0
         self.identities={}
+        self.last_input=time.monotonic();self.initiative_revision=None
+        self.threads={};self.last_user_id=None
     def active(self,now=None):
         hour=(now or datetime.now(ZoneInfo(self.config['timezone']))).hour
         def present(p):
@@ -92,13 +94,19 @@ class Coordinator:
         if not message.id or not message.user_id or not message.text:return False
         fresh=self.memory.add(self.room,message)
         if fresh:
-            self.memory.remember(message);self.revision+=1
+            self.memory.remember(message);self.revision+=1;self.last_input=time.monotonic();self.last_user_id=message.user_id
         return fresh
-    def choose(self,text=''):
+    def choose(self,text='',user_id=None):
         active=self.active()
         if not active:return None
         addressed=[p for p in active if p['name'] in text]
-        return addressed[0] if addressed else active[self.turn%len(active)]
+        thread=self.threads.get(user_id or self.last_user_id)
+        owner=next((p for p in active if thread and thread[0]==p['id'] and time.monotonic()-thread[1]<300),None)
+        profile=addressed[0] if addressed else owner or active[self.turn%len(active)]
+        if user_id:
+            if user_id not in self.threads and len(self.threads)>=128:self.threads.pop(next(iter(self.threads)))
+            self.threads[user_id]=(profile['id'],time.monotonic())
+        return profile
     def ready(self):return time.monotonic()-self.last_sent>=self.config['cooldown_seconds']
     def sent(self):self.last_sent=time.monotonic();self.turn+=1
     def idle(self,human_count):
@@ -111,7 +119,7 @@ class Coordinator:
         return Reply(line['speaker'],line['text'],'recorded')
     async def respond(self,message):
         if not self.ready():return None
-        profile=self.choose(message.text)
+        profile=self.choose(message.text,message.user_id)
         if not profile:return None
         text=message.text.strip()
         def local(value):return Reply(profile['id'],value,'local')
@@ -124,17 +132,35 @@ class Coordinator:
         if any(term in text for term in ('كم الساعة','كم الساعه')):
             clock=datetime.now(ZoneInfo(self.config['timezone'])).strftime('%H:%M')
             return local(f'الساعة الحين {clock} بتوقيت السعودية.')
-        if text in ('السلام عليكم','سلام عليكم'):return local('وعليكم السلام، حيّاك الله!')
+        if text in ('السلام عليكم','سلام عليكم'):
+            revision=self.revision
+            reply=await self.generate_reply(profile,self.memory.preference(message.user_id),'welcome') if self.provider else None
+            if revision!=self.revision:return None
+            return reply or local('وعليكم السلام، حيّاك الله! كيفك؟')
         if any(term in text for term in ('تذكرني','لعبتي المفضلة','لعبتي المفضله')):
             preference=self.memory.preference(message.user_id)
             return local(f'أذكر إنك قلت لعبتك المفضلة {preference}.' if preference else 'ما خبرتك ذكرت لي شي معين من قبل.')
         if any(term in text for term in ('رصيدي','كم فوز','كم عمري','وش اسمي','نتيجة','نتيجه','سعر','عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي، شيّك من المنصة.')
+        return await self.generate_reply(profile,self.memory.preference(message.user_id),'reply')
+
+    async def initiative(self,human_count):
+        # At most one attempt per human turn (including the initial quiet room).
+        # Bot messages never reset this allowance, so autonomous chatter cannot loop.
+        if not human_count or not self.ready() or self.initiative_revision==self.revision:return None
+        quiet=self.config.get('initiative_seconds',45)
+        if time.monotonic()-max(self.last_input,self.last_sent)<quiet:return None
+        profile=self.choose()
+        if not profile or not self.provider:return None
+        self.initiative_revision=self.revision
+        return await self.generate_reply(profile,None,'initiative')
+
+    async def generate_reply(self,profile,preference,mode):
         if not self.provider or not self.memory.reserve_call(self.config['daily_model_calls']):return None
         revision=self.revision
         try:
             context=self.memory.context(self.room,self.identities)
-            answer=await self.provider.generate(profile,context,self.memory.preference(message.user_id))
+            answer=await self.provider.generate({**profile,'conversation_mode':mode},context,preference)
         except Exception:
             # Never dump an exception containing request bodies, credentials or user text.
             return None
@@ -143,7 +169,7 @@ class Coordinator:
         normalize=lambda value:re.sub(r'[\W_]+','',value).casefold()
         if any(row.get('kind')=='bot' and normalize(row['text'])==normalize(answer) for row in context[-6:]):return None
         tokens=getattr(self.provider,'last_usage',None)
-        return Reply(profile['id'],answer,'model',tokens)
+        return Reply(profile['id'],answer,'initiative' if mode=='initiative' else 'model',tokens)
 
 def valid_output(text, allow_numbers=False):
     if not isinstance(text,str) or not 1<=len(text)<=280:return False
@@ -157,10 +183,12 @@ def load_config(path):
     if config.get('room') not in ('majlis','square','diwan','elite'):raise ValueError('Invalid room')
     ZoneInfo(config['timezone'])
     profiles=config['profiles']
+    if type(config.get('initiative_seconds',45)) is not int or not 30<=config.get('initiative_seconds',45)<=600:raise ValueError('Invalid initiative_seconds')
     if not profiles or len(profiles)>100 or len({p['id'] for p in profiles})!=len(profiles):raise ValueError('Invalid profiles')
     for key,low,high in [('daily_model_calls',0,10000),('cooldown_seconds',5,3600),('reply_delay_seconds',0,15),('idle_seconds',30,3600),('memory_days',1,30)]:
         if not isinstance(config[key],int) or not low<=config[key]<=high:raise ValueError('Invalid '+key)
     for p in profiles:
+        if p.get('gender','unspecified') not in ('male','female','unspecified'):raise ValueError('Invalid profile gender')
         if not re.fullmatch(r'[a-z][a-z0-9_]{1,30}',p['id']) or not p['name'] or not re.fullmatch(r'PLAZR_BOT_[A-Z0-9_]+_SESSION',p['session_env']):raise ValueError('Invalid profile')
         a,b=p['hours']
         if not 0<=a<=23 or not 1<=b<=24:raise ValueError('Invalid schedule')

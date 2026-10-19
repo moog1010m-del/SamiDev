@@ -37,6 +37,8 @@ async def main():
             process=await asyncio.create_subprocess_exec(sys.executable,str(BASE/'run.py'),'live','--enable-live','--config',str(path),'--state',str(Path(directory)/'db.sqlite'),'--base-url',str(server.make_url('')).rstrip('/'),env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
             try:
                 line=await asyncio.wait_for(process.stdout.readline(),15)
+                assert b'group-context-initiative-v2' in line,line
+                line=await asyncio.wait_for(process.stdout.readline(),15)
                 assert b'snapshot_ready' in line,line
                 await asyncio.sleep(.5)
                 rows=await service.community_chat_history('majlis');assert not any(r['userId'] in bot_ids for r in rows)
@@ -50,7 +52,7 @@ async def main():
                     if replies:break
                     await asyncio.sleep(.2)
                 assert len(replies)==1,replies
-                assert replies[0]['text']=='وعليكم السلام، حيّاك الله!'
+                assert replies[0]['text']=='وعليكم السلام، حيّاك الله! كيفك؟'
                 await asyncio.sleep(.5)
                 rows=await service.community_chat_history('majlis');assert len([r for r in rows if r['userId'] in bot_ids])==1
                 # A fresh message during cooldown must wait, rather than disappear.

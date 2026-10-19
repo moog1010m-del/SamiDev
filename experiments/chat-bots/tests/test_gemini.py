@@ -28,6 +28,13 @@ class GeminiTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(content['persona_id'],'fahad')
         self.assertEqual(content['persona_name'],'فهد')
         self.assertEqual(content['context'],context)
+    async def test_gender_is_explicit_even_when_name_suggests_otherwise(self):
+        session=Session();provider=Gemini(session,'test','model')
+        await provider.generate({'id':'faisal','name':'فيصل','gender':'female','style':'سعودية هادية','conversation_mode':'initiative'},[],None)
+        content=json.loads(session.request[1]['json']['contents'][0]['parts'][0]['text'])
+        self.assertEqual(content['persona_gender'],'female')
+        self.assertEqual(content['persona_name'],'فيصل')
+        self.assertEqual(content['conversation_mode'],'initiative')
     async def test_refusal_and_quota_failure(self):
         self.assertEqual(await Gemini(Session(finish='SAFETY'),'test','model').generate({'style':'سعودي'},[],None),'')
         with self.assertRaises(RuntimeError):await Gemini(Session(status=429),'test','model').generate({'style':'سعودي'},[],None)

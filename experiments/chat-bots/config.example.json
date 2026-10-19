@@ -5,9 +5,10 @@
   "cooldown_seconds": 7,
   "reply_delay_seconds": 4,
   "idle_seconds": 90,
+  "initiative_seconds": 45,
   "memory_days": 30,
   "profiles": [
-    {"id": "nawaf", "name": "نواف", "style": "سعودي رايق وهادي، ردوده عفوية ومختصرة، خويه عسل وسوالفه زينة في كل المواضيع", "hours": [0, 24], "session_env": "PLAZR_BOT_NAWAF_SESSION"},
-    {"id": "fahad", "name": "فهد", "style": "سعودي خفيف دم، وسيع صدر، مزحه لطيف ويفهم في السوالف العامة والمواقف والضحك", "hours": [0, 24], "session_env": "PLAZR_BOT_FAHAD_SESSION"}
+    {"id": "nawaf", "name": "نواف", "gender": "male", "style": "سعودي هادي، كلامه مباشر وقصير، يسمع السالفة ويرد على معناها، اهتماماته يومية ومتنوعة", "hours": [0, 24], "session_env": "PLAZR_BOT_NAWAF_SESSION"},
+    {"id": "fahad", "name": "فهد", "gender": "male", "style": "سعودي خفيف دم، تعليقاته عفوية ومزحه لطيف بدون تجريح، ما يمزح إذا السالفة متضايقة ولا يكرر كلام غيره", "hours": [0, 24], "session_env": "PLAZR_BOT_FAHAD_SESSION"}
   ]
 }
