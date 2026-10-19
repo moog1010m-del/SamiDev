@@ -109,7 +109,7 @@ class RoomPolicy:
             return True
         config=await self.settings(cid)
         until=await self.read('cooldown:'+uid) or 0
-        if until>now:raise StoreError('MATCH_COOLDOWN',f'انتظر {max(1,(until-now+999)//1000)} ثانية قبل الدخول إلى طاولة جديدة')
+        if until>now:raise StoreError('MATCH_COOLDOWN','حاول بعد دقيقة')
         rooms=await self.snapshots(store)
         if any(any(p.get('accountId')==uid for p in r.get('roster',[])) for r in rooms):
             raise StoreError('ACCOUNT_IN_MATCH','لديك طاولة مفتوحة؛ عد إليها أو أنهِ المباراة أولًا')

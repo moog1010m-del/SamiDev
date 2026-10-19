@@ -137,7 +137,7 @@ class CommunityHubState extends State<CommunityHub> {
       actions:loading?[]:[TextButton(onPressed:()=>Navigator.pop(dialogContext),child:Text(failure==null?'إلغاء':'رجوع')),if(failure==null)FilledButton(onPressed:()async{
         if(loading)return;update(()=>loading=true);
         try{await widget.onGame(game,{'online':'1','action':join?'join':'watch','room':room['roomId'].toString(),'community':community!['id'].toString()});if(dialogContext.mounted)Navigator.pop(dialogContext);}
-        catch(_){if(dialogContext.mounted)update((){loading=false;failure='تعذر فتح الطاولة. ارجع وحاول مجددًا.';});}
+        catch(e){if(dialogContext.mounted){if(e is StateError&&e.message=='حاول بعد دقيقة'){Navigator.pop(dialogContext);}else{update((){loading=false;failure='تعذر فتح الطاولة. ارجع وحاول مجددًا.';});}}}
       },child:Text(join?'انضم':'مشاهدة'))],
     ))));}finally{navigating=false;}
   }
@@ -189,7 +189,7 @@ class CommunityHubState extends State<CommunityHub> {
   Future<void> create() async {
     if(community==null)return;
     final config=await showModalBottomSheet<Map<String,String>>(context:context,isScrollControlled:true,useSafeArea:true,builder:(_)=>const CreateMatchSheet());
-    if(config==null||!mounted)return;await widget.onGame(config['game']!,{'online':'1','action':'create','community':community!['id'].toString(),...config});
+    if(config==null||!mounted)return;try{await widget.onGame(config['game']!,{'online':'1','action':'create','community':community!['id'].toString(),...config});}on StateError{/* Entry failure is already shown by the host. */}
   }
   @override void dispose(){stopLive();timer?.cancel();input.dispose();scroll.dispose();super.dispose();}
   Widget communityFlag(Map<String,dynamic> value,{double size=40}){

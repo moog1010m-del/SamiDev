@@ -50,6 +50,7 @@ class GamesHubState extends State<GamesHub> {
     if(opening||selected==null)return;
     setState(()=>opening=true);
     try{await widget.onGame(selected!.id,{'online':'1','action':'quick','community':'square','preset':mode.id,...mode.query});}
+    on StateError{/* Entry failure is already shown by the host. */}
     finally{if(mounted)setState(()=>opening=false);}
   }
   Future<void> privateMatch()async{
@@ -58,6 +59,7 @@ class GamesHubState extends State<GamesHub> {
     if(config==null||!mounted)return;
     setState(()=>opening=true);
     try{await widget.onGame(config['game']!,{'online':'1','action':'create','community':'square',...config});}
+    on StateError{/* Entry failure is already shown by the host. */}
     finally{if(mounted)setState(()=>opening=false);}
   }
   Widget artwork(GameCardData game,{double size=110})=>Image.asset('assets/runtime/room-sprites/${game.asset}.png',width:size,height:size,fit:BoxFit.contain,errorBuilder:(_,error,stack)=>Icon(Icons.sports_esports_outlined,size:size*.6,color:Colors.white70));

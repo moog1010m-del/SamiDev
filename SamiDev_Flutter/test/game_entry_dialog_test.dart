@@ -8,11 +8,12 @@ import 'package:samidev/runtime/policy.dart';
 import 'package:samidev/ui/community_hub.dart';
 import 'session_test.dart' show MemoryVault;
 class EntryApi extends PlatformApi {
- EntryApi():super(RuntimePolicy('https://entry.example.test'),MemoryVault());
+ EntryApi({this.game='pool'}):super(RuntimePolicy('https://entry.example.test'),MemoryVault());
+ final String game;
  @override Stream<Map<String,dynamic>> events(String path)=>const Stream.empty();
- @override Future<ApiResponse> request(String method,String path,{String? query,List<int>? body})async=>ApiResponse(200,'application/json',Uint8List.fromList(utf8.encode(jsonEncode({'ok':true,'community':{'id':'majlis','name':'Saudi Arabia','mark':'🇸🇦','countryCode':'sa'},'capabilities':{},'rooms':[{'roomId':'ENTRY1','settings':{'gameId':'pool','live':1},'capacity':2,'occupied':1,'roster':[]}],'members':[],'messages':[]}))));
+ @override Future<ApiResponse> request(String method,String path,{String? query,List<int>? body})async=>ApiResponse(200,'application/json',Uint8List.fromList(utf8.encode(jsonEncode({'ok':true,'community':{'id':'majlis','name':'Saudi Arabia','mark':'🇸🇦','countryCode':'sa'},'capabilities':{},'rooms':[{'roomId':'ENTRY1','settings':{'gameId':game,'live':1},'capacity':2,'occupied':1,'roster':[]}],'members':[],'messages':[]}))));
 }
-void main(){testWidgets('cancel makes no request; same dialog stays busy until game readiness',(tester)async{
+void main(){cooldownEntryTests();testWidgets('cancel makes no request; same dialog stays busy until game readiness',(tester)async{
  final api=EntryApi();addTearDown(api.close);final ready=Completer<void>();var calls=0;
  await tester.pumpWidget(MaterialApp(home:Scaffold(body:CommunityHub(api:api,active:true,initialCommunity:'majlis',onGame:(game,query){calls++;expect(query['action'],'join');return ready.future;},onProfile:(_){},onTheme:(){},onInvite:(){},onNavigationChanged:(){},onUnauthorized:(){}))));
  await tester.pumpAndSettle();await tester.tap(find.text('انضم'));await tester.pumpAndSettle();
@@ -22,3 +23,20 @@ void main(){testWidgets('cancel makes no request; same dialog stays busy until g
  ready.complete();await tester.pumpAndSettle();expect(find.byType(AlertDialog),findsNothing);expect(tester.takeException(),isNull);
  await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();
 });}
+
+void cooldownEntryTests(){
+ for(final game in ['pool','carrom','crazy8','tablesoccer']){
+  testWidgets('$game cooldown dismisses loading and keeps lobby available for retry',(tester)async{
+   final api=EntryApi(game:game);addTearDown(api.close);var attempts=0;
+   await tester.pumpWidget(MaterialApp(home:Scaffold(body:CommunityHub(api:api,active:true,initialCommunity:'majlis',onGame:(game,query)async{attempts++;if(attempts==1)throw StateError('حاول بعد دقيقة');},onProfile:(_){},onTheme:(){},onInvite:(){},onNavigationChanged:(){},onUnauthorized:(){}))));
+   await tester.pumpAndSettle();
+   for(var attempt=0;attempt<2;attempt++){
+    await tester.tap(find.text('انضم'));await tester.pumpAndSettle();
+    await tester.tap(find.descendant(of:find.byType(AlertDialog),matching:find.text('انضم')));await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog),findsNothing);expect(find.text('انضم'),findsOneWidget);
+   }
+   expect(attempts,2);expect(tester.takeException(),isNull);
+   await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();
+  });
+ }
+}

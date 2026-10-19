@@ -1309,7 +1309,7 @@
         const preview=message=>{
           if(!roomScenePromise){
             roomScenePromise=prepareRoomScene(message);
-            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent='تعذر تشغيل اللعبة:\n'+String(error?.stack||error);window.__previewError=String(error?.stack||error);window.__SAMIDEV_APP_HOST?.startupError?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error'}));});
+            roomScenePromise.catch(error=>{if(state.disposed)return;status.style.display='block';status.textContent=error?.code==='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.';window.__previewError=String(error?.stack||error);window.__SAMIDEV_APP_HOST?.startupError?.({code:error?.code,message:error?.code==='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.'});window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error',code:error?.code}));});
           }else{
             state.network.roster=message.roster||state.network.roster;
             applyCosmetics(message);refreshNativeAvatars();state.frameRequested=true;
@@ -1414,10 +1414,11 @@
     } catch(e) {
       if(state.disposed)return;
       console.error(e);
+      if(e?.code==='MATCH_COOLDOWN'&&!window.__SAMIDEV_APP_HOST&&!window.SamiDevMobile){const query=new URLSearchParams(window.__SAMIDEV_QUERY??location.search);location.assign('/platform/?community='+encodeURIComponent(query.get('community')||'majlis')+'&notice=MATCH_COOLDOWN');return;}
       status.style.display='block';
-      status.textContent='تعذر تشغيل اللعبة:\n'+String(e?.stack||e);
+      status.textContent=e?.code==='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.';
       window.__previewError=String(e?.stack||e);
-      window.__SAMIDEV_APP_HOST?.startupError?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error'}));
+      window.__SAMIDEV_APP_HOST?.startupError?.({code:e?.code,message:e?.code==='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.'});window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_error',code:e?.code}));
     }
   };
 

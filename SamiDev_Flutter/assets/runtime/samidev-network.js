@@ -241,7 +241,7 @@
       case 'error':
         emit('error', msg);
         if (inviteRequest) { const r = inviteRequest; inviteRequest = null; r.reject(Object.assign(new Error(msg.message || msg.code || 'Invite error'), {code: msg.code, detail: msg})); }
-        if (!state.started && startReject) startReject(new Error(msg.message || msg.code || 'Network error'));
+        if (!state.started && startReject) startReject(Object.assign(new Error(msg.code==='MATCH_COOLDOWN'?'حاول بعد دقيقة':(msg.message || msg.code || 'تعذر دخول الطاولة')), {code:msg.code}));
         break;
       case 'pong':
         if (msg.authority && state.started) emit('authority_probe', msg.authority);
