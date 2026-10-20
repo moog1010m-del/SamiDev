@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-5a1701dda2ae684f",
+  "buildId": "samidev-v30-e9d0bfcae24cb24a",
   "games": [
     "carrom",
     "tablesoccer",
@@ -29,7 +29,7 @@
     "platform/assets/brand/app-icon.svg": "e27575c3c47b43e588720ea31f45dc3d1b209c25eb9117aaeee3c2b7fdc8132f",
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
-    "asset-worker.js": "9110085a7664a0ab485d5e69da52d5cc6b4fbda7027c6c9819bccc7cead8ded1",
+    "asset-worker.js": "0f0954bc8320b4855244e18bc079df33838c899710c2a8779448686f3f740dec",
     "platform/index.html": "183e589d0688cada8c4971fca2d70577558dc4db791d72976d06f51ca90bd0a4",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
@@ -57,12 +57,12 @@
     "samidev-games.js": "487759056cfa0c5fa299c10e99db1c7d04ddaf885589367505a5f5d603d24a57",
     "profile-details.css": "cf54832112138972566486d86ac574444336069446c2da920a1c29b0c621f85d",
     "profile-details.js": "6452258e6f78ab77e27ee80583a2b4161f2f1a1517fcbfb5a40f77232ea4e32f",
-    "index.html": "07e81a9651e8386f015e0bd05e3fd13a8204a0ea1b2a0de7251a1d45492d128b",
-    "browser-runtime.js": "4db8ea54a78042790ffef3db3fcd36ba69fa223e0426faec1afaef0c003dfb26",
+    "index.html": "ed0c3a9bad741c4b89944188082cb91ae440a07f8be83852e02cb1b9944911e5",
+    "browser-runtime.js": "bb835b286f5ded5e050f50a3ca298b82d9035849e6d4882c2099e962e970d29f",
     "pool-presentation.js": "b2ac24884a89236c01a5bf4e97827d36e8a3ffcaebd50265a5c2abc88753ed2d",
     "game-bootstrap.js": "3aa07576c42ebd0a5d434947594771ab9c0fe94b3d6cddf487e31d7dc64434cc",
     "game-host.html": "3125af3eeab9310800cfeaf9a1e85298eecff09b20ce0250f4ddcf45ff74dac5",
-    "runtime-games.json": "e9fa58d85e5738229dccebf44615c97743d0379cde458505f20834d1e81fc24e",
+    "runtime-games.json": "dfef59d383e362456a5295152e9244dff62f9bf0d48bdb15c4495fcce31644ea",
     "web-bridge.js": "b78634d59f954d9b97091b4696a37d86503fd822bb3ac7dfd77a66ffb65facab",
     "room-menu.js": "b817ad7b27502814c1fc4b5da33ce323d4ebd6640937ef731d498607429be3e2",
     "launcher.js": "564733a3467c675465252833b179e9f62e94d63cf133e730d580e337b4717bc2",
@@ -75,8 +75,8 @@
     "crazy8-audio.js": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180",
     "game-touch.css": "d6de2c4a5fa3db10f86db7ce06aab3b74fcf75133a27ebfa73cde870dc3f9274",
     "game-touch.js": "ed0eba3808e9d418867f05d02ad4e7aee625cbfbb88dc2bc5c6000e4e316b277",
-    "games/tablesoccer/index.html": "1d65eceee9bc28ebe5fabeae5fdc6ca524a1a636f07aea116c434bda2016d641",
-    "games/crazy8/index.html": "8a8aa43bd684c9d786d10caf46b020d000b936c001ed5f3dd256b01b747c3e13",
-    "games/pool/index.html": "ecde33f8efe05d1d0dda28b9053656e0fc7e78b08328b618f5f1ffc148e30582"
+    "games/tablesoccer/index.html": "64d75c1300f573b0912c4874478bbd0a21057a5353fe796fa97c222e29dbe00b",
+    "games/crazy8/index.html": "2ec1e8d5b4ee686c18ebe3b5e238d14bec96ce71141ecda511313659944601d6",
+    "games/pool/index.html": "c4612c27c999902704ae2a6eafc8e6e64636650ebd055c5217f5b0d68faf5f8b"
   }
 }

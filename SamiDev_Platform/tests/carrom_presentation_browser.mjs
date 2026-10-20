@@ -15,6 +15,7 @@ try{
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/index.html?play=1&players='+players);await page.waitForFunction(()=>window.__gameLogic?.started&&window.__samidevGameState.carromLayout,{},{timeout:30000});
   await page.waitForTimeout(500);
+  const contextOptions=await page.evaluate(()=>document.querySelector('canvas').getContext('webgl').getContextAttributes());assert.equal(contextOptions.antialias,!mobile);
   const layout=await page.evaluate(()=>window.__samidevGameState.carromLayout);
   assert(layout.boardWidth<layout.width,'board exceeds viewport width');
   assert(layout.sliderWidth<layout.boardWidth,'slider exceeds board width');
