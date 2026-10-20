@@ -97,3 +97,23 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 .community-public-action.collection{--action-icon:url('/platform/assets/profile/collection-soft.svg')}
 .community-public-action.report{--action-icon:url('/platform/assets/profile/report-soft.svg')}
 .community-public-action.reputation{--action-icon:url('/platform/assets/profile/reputation-soft.svg')}
+
+/* A 32px visual disc inside a 44px touch target, shared by room/game profiles. */
+.community-public-profile-modal .profile-card-bar .community-public-profile-close,
+.community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-close,
+#sdpp-card .sdpp-close{
+ position:relative;appearance:none;-webkit-appearance:none;box-sizing:border-box;
+ width:44px;height:44px;min-width:44px;min-height:44px;max-width:44px;max-height:44px;
+ padding:0;margin:0;border:0;border-radius:50%;background:transparent;box-shadow:none;
+ display:grid;place-items:center;line-height:1;isolation:isolate;flex:0 0 44px;
+ color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.community-public-profile-close::before,#sdpp-card .sdpp-close::before{
+ content:"";position:absolute;inset:6px;border:1px solid #ffffff26;
+ border-radius:50%;background:#10181cb8;z-index:-1;pointer-events:none;
+}
+.community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-close,
+#sdpp-card .sdpp-close{position:absolute;top:6px;left:6px;color:#f1f3ef}
+.community-public-profile-close svg,#sdpp-card .sdpp-close svg{width:18px;height:18px;display:block;pointer-events:none}
+.sd-profile-expanded .community-public-profile-close::before{background:var(--identity-panel);border-color:var(--identity-line)}
+.community-public-profile-close:focus-visible,#sdpp-card .sdpp-close:focus-visible{outline:2px solid #65cbbc;outline-offset:1px}

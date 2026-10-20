@@ -18,7 +18,8 @@
   const HOST_PLAYER_ID_METHOD = 'getSamiDevID';
   // Pool's native pocket animation clips sinking balls with STENCIL_TEST.
   // WebGL otherwise defaults to a surface without stencil storage.
-  const contextOptions = {alpha:true, stencil:isPool, antialias:!mobileDevice||!window.SamiDevMobile?.postMessage, preserveDrawingBuffer:false};
+  // Pool/carrom phone browsers keep high-resolution textures without costly MSAA.
+  const contextOptions = {alpha:true, stencil:isPool, antialias:!mobileDevice||(!window.SamiDevMobile?.postMessage&&!isPool&&!isCarrom), preserveDrawingBuffer:false};
   const gl = canvas.getContext('webgl', contextOptions) || canvas.getContext('experimental-webgl', contextOptions);
   if (!gl) throw new Error('WebGL غير مدعوم في هذا المتصفح');
 

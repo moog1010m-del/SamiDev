@@ -2,6 +2,7 @@
 import asyncio,json,os,sys,tempfile,xml.etree.ElementTree as ET
 from pathlib import Path
 from html.parser import HTMLParser
+from urllib.robotparser import RobotFileParser
 from aiohttp import web,ClientSession
 from aiohttp.test_utils import TestServer
 ROOT=Path(__file__).resolve().parents[1]
@@ -22,16 +23,23 @@ async def main():
   (fixture/'samidev-games.js').write_text('Plato');assert not audit(fixture)['ok']
  files=build();before={p:(ROOT/'game'/p).read_bytes() for p in files};build()
  assert all((ROOT/'game'/p).read_bytes()==v for p,v in before.items())
- app=web.Application();app.router.add_get('/',application.SERVICE.landing);app.router.add_get('/discover/index.html',application.SERVICE.discovery_home_redirect);app.router.add_get('/discover/',application.SERVICE.discovery_home_redirect);app.router.add_get('/platform/',application.SERVICE.index);app.router.add_get('/{path:.*}',application.SERVICE.static_game)
+ app=web.Application();app.on_response_prepare.append(application.security_headers);app.router.add_get('/',application.SERVICE.landing);app.router.add_get('/discover/index.html',application.SERVICE.discovery_home_redirect);app.router.add_get('/discover/',application.SERVICE.discovery_home_redirect);app.router.add_get('/platform/',application.SERVICE.index);app.router.add_get('/{path:.*}',application.SERVICE.static_game)
  async with TestServer(app) as server,ClientSession() as client:
   async with client.get(server.make_url('/sitemap.xml')) as response:
    assert response.status==200;xml=ET.fromstring(await response.text())
+  async with client.get(server.make_url('/robots.txt')) as response:
+   robots=RobotFileParser();robots.parse((await response.text()).splitlines())
   urls=[e.text for e in xml.findall('.//{*}loc')];assert len(urls)==7 and len(set(urls))==7;assert ORIGIN+'/' in urls;assert ORIGIN+'/platform/' not in urls
   for url in urls:
    assert url.startswith(ORIGIN+'/');path=url[len(ORIGIN):]
+   assert robots.can_fetch('Googlebot',url),(url,'blocked by robots.txt')
    async with client.get(server.make_url(path)) as response:
     assert response.status==200 and 'charset=utf-8' in response.headers['Content-Type'];html=await response.text()
    assert '\ufffd' not in html;doc=Document();doc.feed(html)
+   assert not any(t=='meta' and a.get('name')=='robots' and 'noindex' in a.get('content','').lower() for t,a in doc.tags),(path,'sitemap page has noindex')
+   async with client.get(server.make_url(path),headers={'User-Agent':'Googlebot'},allow_redirects=False) as bot_response:
+    assert bot_response.status==200 and 'noindex' not in bot_response.headers.get('X-Robots-Tag','').lower()
+    assert await bot_response.text()==html,'public content must not change for crawler user agents'
    canonical=[a['href'] for t,a in doc.tags if t=='link' and a.get('rel')=='canonical'];assert canonical==[url]
    assert any(t=='meta' and a.get('name')=='description' and a.get('content') for t,a in doc.tags)
    if path=='/' or path.startswith('/discover/'):
@@ -45,9 +53,11 @@ async def main():
      target=attrs.get('src') if tag=='img' else attrs.get('href') if tag in ('a','link') else attrs.get('content') if tag=='meta' and attrs.get('property')=='og:image' else None
      if target and target.startswith(ORIGIN):target=target[len(ORIGIN):]
      if target and target.startswith('/'):
-      async with client.get(server.make_url(target)) as response:assert response.status==200,(path,target,response.status)
+      async with client.get(server.make_url(target),allow_redirects=False) as response:assert response.status==200,(path,target,response.status)
   async with client.get(server.make_url('/robots.txt')) as response:
    assert response.status==200 and ORIGIN+'/sitemap.xml' in await response.text()
+  async with client.get(server.make_url('/discover/does-not-exist.html')) as response:
+   assert response.status==404,'unknown URL must not become an indexable soft 404'
   async with client.get(server.make_url('/discover/index.html'),allow_redirects=False) as response:
    assert response.status==301 and response.headers['Location']=='/'
   async with client.get(server.make_url('/?invite=fixture&game=pool'),allow_redirects=False) as response:
