@@ -4,8 +4,9 @@ $b = Get-Content "C:\Users\Dev\.samidev\secrets\bot_sessions.json" | ConvertFrom
 
 $env:GEMINI_API_KEY = $g.GEMINI_API_KEY
 $env:GEMINI_MODEL = "gemini-flash-lite-latest"
-$env:PLAZR_BOT_NAWAF_SESSION = $b.PLAZR_BOT_NAWAF_SESSION
-$env:PLAZR_BOT_FAHAD_SESSION = $b.PLAZR_BOT_FAHAD_SESSION
+$b.psobject.properties | ForEach-Object {
+    Set-Item "env:$($_.Name)" $_.Value
+}
 $env:PYTHONUNBUFFERED = "1"
 $env:PYTHONIOENCODING = "utf-8"
 $env:PYTHONUTF8 = "1"
