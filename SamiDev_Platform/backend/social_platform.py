@@ -31,6 +31,8 @@ AUTH_AUDIT.setLevel(logging.INFO)
 AUTH_AUDIT.propagate = False
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
+# Official system identity: never claimable through normal account flows.
+RESERVED_USERNAMES = frozenset({"plazr"})
 DISPLAY_MAX = 24
 PASSWORD_MIN = 8
 PASSWORD_MAX = 128
@@ -215,6 +217,8 @@ def normalize_username(value: Any) -> str:
     value = str(value or "").strip()
     if not USERNAME_RE.fullmatch(value):
         raise PlatformError("BAD_USERNAME", "اسم المستخدم يجب أن يكون 3-20 حرفًا ويحتوي حروفًا إنجليزية أو أرقامًا أو _ فقط")
+    if value.casefold() in RESERVED_USERNAMES:
+        raise PlatformError("USERNAME_RESERVED", "اسم المستخدم محجوز لحساب النظام", 409)
     return value
 
 
