@@ -5,6 +5,7 @@ import '../runtime/api.dart';
 import 'profile_details.dart';
 import 'sticker_art.dart';
 import 'reputation_flame.dart';
+import 'safety_sheet.dart';
 
 class ProfileDecoration extends StatelessWidget {
   const ProfileDecoration(this.name,{super.key,this.size=22});
@@ -61,8 +62,7 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
   Map<String,dynamic>? user;
   bool canModerate=false,canAssignModerators=false;
   String? error;
-  bool loading=true,busy=false,reporting=false,full=false;
-  final report=TextEditingController();
+  bool loading=true,busy=false,full=false;
   Future<Map<String,dynamic>> request(String path,{Map<String,dynamic>? body}) async {
     final response=await widget.api.request(body==null?'GET':'POST',path,body:body==null?null:utf8.encode(jsonEncode(body)));
     if(response.status==401){widget.onUnauthorized();throw StateError('انتهت الجلسة، سجّل الدخول مجددًا');}
@@ -71,7 +71,6 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
     return data;
   }
   @override void initState(){super.initState();unawaited(load());if(widget.communityId.isNotEmpty)unawaited(loadModeration());}
-  @override void dispose(){report.dispose();super.dispose();}
   Future<void> load() async {
     setState((){loading=true;error=null;});
     try{final data=await request('/api/public-profile/${widget.id}');if(mounted)setState(()=>user=Map<String,dynamic>.from(data['user']));}
@@ -110,14 +109,15 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
       }else if(kind=='block'){
         await request('/api/users/${widget.id}/block',body:{'blocked':u['blocked']!=true});
         if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(u['blocked']==true?'تم إلغاء الحظر':'تم الحظر. ستُخفى رسائله ولن تصلك طلبات صداقته.')));
-      }else if(kind=='report'){
-        final text=report.text.trim();if(text.isEmpty)throw StateError('اكتب وصف المشكلة أولًا');
-        await request('/api/users/${widget.id}/report',body:{'message':text,if(widget.roomId.isNotEmpty)'roomId':widget.roomId});
-        if(mounted){setState(()=>reporting=false);report.clear();ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('تم إرسال البلاغ للإدارة')));}
       }
       final data=await request('/api/public-profile/${widget.id}');if(mounted)setState(()=>user=Map<String,dynamic>.from(data['user']));
     }catch(e){if(mounted)setState(()=>error=e is StateError?e.message.toString():'تعذر إكمال العملية. حاول مجددًا.');}
     finally{if(mounted)setState(()=>busy=false);}
+  }
+  Future<void> openSafety()async{
+    if(busy||user==null)return;
+    final result=await showModalBottomSheet<bool>(context:context,isScrollControlled:true,useSafeArea:true,builder:(_)=>SafetySheet(api:widget.api,userId:widget.id,username:user!['username']?.toString()??'المستخدم',roomId:widget.roomId,onUnauthorized:widget.onUnauthorized));
+    if(result==true&&mounted)await load();
   }
   Widget stat(String label,String value,Widget icon)=>Expanded(child:Column(children:[Text(label,style:TextStyle(fontSize:12,color:Theme.of(context).colorScheme.onSurfaceVariant)),const SizedBox(height:7),Row(mainAxisAlignment:MainAxisAlignment.center,children:[icon,const SizedBox(width:5),Flexible(child:Text(value,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:16)))] )]));
   @override Widget build(BuildContext context){
@@ -149,8 +149,8 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
           if(!self)Wrap(alignment:WrapAlignment.center,spacing:8,runSpacing:8,children:[
             FilledButton.icon(onPressed:busy||u['blocked']==true||relation=='friend'||relation=='outgoing'?null:()=>action('friend'),icon:const Icon(Icons.person_add_outlined,size:19),label:Text(switch(relation){'friend'=>'صديق','outgoing'=>'تم إرسال الطلب','incoming'=>'قبول الصداقة',_=>'إضافة صديق'})),
             OutlinedButton.icon(onPressed:busy||remaining<=0||u['reputationGrantedToday']==true?null:()=>action('reputation'),icon:const ProfileDecoration('reputation-flame',size:19),label:Text(u['reputationGrantedToday']==true?'مُنحت اليوم':'منح سمعة ($remaining/5)')),
-            TextButton.icon(onPressed:busy?null:()=>setState(()=>reporting=!reporting),icon:const Icon(Icons.flag_outlined,size:19),label:const Text('إبلاغ')),
-            TextButton.icon(onPressed:busy?null:()=>action('block'),icon:Icon(u['blocked']==true?Icons.lock_open:Icons.block,size:19),label:Text(u['blocked']==true?'إلغاء الحظر':'حظر المستخدم')),
+            TextButton.icon(onPressed:busy?null:openSafety,icon:const Icon(Icons.flag_outlined,size:19),label:const Text('إبلاغ')),
+            TextButton.icon(onPressed:busy?null:()=>u['blocked']==true?action('block'):openSafety(),icon:Icon(u['blocked']==true?Icons.lock_open:Icons.block,size:19),label:Text(u['blocked']==true?'إلغاء الحظر':'حظر المستخدم')),
           ]),
           if(canModerate&&u['isSelf']!=true)PopupMenuButton<String>(
             enabled:!busy,tooltip:'إدارة العضو في المساحة',
@@ -158,7 +158,6 @@ class _PlayerProfileSheetState extends State<PlayerProfileSheet> {
             itemBuilder:(_)=>[const PopupMenuItem(value:'kick',child:Text('إخراج لمدة دقيقة')),const PopupMenuItem(value:'mute',child:Text('كتم ١٠ دقائق')),const PopupMenuItem(value:'unmute',child:Text('إلغاء الكتم')),const PopupMenuItem(value:'ban',child:Text('حظر من المساحة')),const PopupMenuItem(value:'unban',child:Text('فك حظر المساحة')),
               if(canAssignModerators)...[const PopupMenuItem(value:'grant_moderator',child:Text('تعيين مشرف للمساحة')),const PopupMenuItem(value:'revoke_moderator',child:Text('سحب إشراف المساحة'))]],
             child:const Padding(padding:EdgeInsets.all(12),child:Text('إدارة العضو في المساحة'))),
-          if(reporting)...[TextField(controller:report,maxLength:500,maxLines:3,decoration:const InputDecoration(labelText:'وصف المشكلة',border:OutlineInputBorder())),FilledButton(onPressed:busy?null:()=>action('report'),child:const Text('إرسال للإدارة'))],
           if(busy)const Padding(padding:EdgeInsets.all(12),child:LinearProgressIndicator()),
           const SizedBox(height:12),
           if(!full)SizedBox(width:double.infinity,child:OutlinedButton(

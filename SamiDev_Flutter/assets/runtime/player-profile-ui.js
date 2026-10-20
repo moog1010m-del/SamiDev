@@ -158,7 +158,7 @@
     window.SamiDevProfileDetails?.render(card.querySelector('[data-profile-details]'),user,{own:user.relation==='self'});
     card.querySelector('[data-action="friend"]')?.addEventListener('click',()=>friendAction());
     card.querySelector('[data-action="reputation"]')?.addEventListener('click',()=>reputationAction());
-    card.querySelector('[data-action="report"]')?.addEventListener('click',()=>{const b=$('#sdpp-report-box',card);if(b){b.hidden=false;$('#sdpp-report-text',card)?.focus();positionLayer();}});
+    card.querySelector('[data-action="report"]')?.addEventListener('click',()=>window.PlazrSafety.open({api,user,roomId:String(net()?.state?.roomId||''),toast,onChanged:(blocked)=>{if(blocked){user.blocked=true;net()?.requestChatHistory?.();}}}));
     card.querySelector('[data-action="report-cancel"]')?.addEventListener('click',()=>{$('#sdpp-report-box',card).hidden=true;positionLayer();});
     card.querySelector('[data-action="report-send"]')?.addEventListener('click',()=>reportAction());
     layer.classList.add('open'); layer.setAttribute('aria-hidden','false');

@@ -9,10 +9,11 @@ class UserSafety:
         if not uid:return set()
         return set(await self.p.r.smembers(self.key(uid))) if self.p.r is not None else set(self.memory.get(uid,set()))
     async def pair_blocked(self,a,b):return b in await self.blocked(a) or a in await self.blocked(b)
-    async def update(self,uid,target,enabled):
+    async def update(self,uid,target,enabled,*,report=None):
         if uid==target:raise PlatformError('SELF_BLOCK','لا يمكنك حظر نفسك')
         if not await self.p.get_user(target):raise PlatformError('USER_NOT_FOUND','المستخدم غير موجود',404)
         keys=[self.key(uid),self.p.k_user(uid),self.p.k_user(target),self.p.k_friends(uid),self.p.k_friends(target),self.p.k_requests(uid),self.p.k_requests(target)]
+        if report is not None: keys.append(self.p.k_reports())
         async with self.p.accounts.transaction(keys):
             if not await self.p.get_user(uid):raise PlatformError('AUTH_REQUIRED','الحساب غير متاح',401)
             current=await self.blocked(uid)
@@ -32,6 +33,9 @@ class UserSafety:
                     for owner,other in ((uid,target),(target,uid)):
                         await self.p.r.srem(self.p.k_friends(owner),other)
                         await self.p.r.srem(self.p.k_requests(owner),other)
+            if report is not None:
+                from report_review import store_report
+                await store_report(self.p,report)
         # History and live subscriptions refresh without changing game state.
         for cid in COMMUNITIES:await self.p.live.publish(cid,{'type':'resync','targetUserId':uid})
         return {'blocked':enabled}

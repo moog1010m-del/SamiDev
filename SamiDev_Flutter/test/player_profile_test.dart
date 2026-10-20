@@ -33,7 +33,7 @@ void main(){
       expect(find.byType(ProfileStars),findsOneWidget);expect(find.byWidgetPredicate((widget)=>widget is ProfileDecoration&&widget.name=='star'),findsOneWidget);expect(find.byType(PlayerAvatar),findsOneWidget);
       await tester.ensureVisible(find.text('إضافة صديق'));await tester.tap(find.text('إضافة صديق'));await tester.pumpAndSettle();
       expect(api.calls,contains('POST /api/friends/request'));expect(find.text('تم إرسال الطلب'),findsOneWidget);
-      await tester.ensureVisible(find.text('حظر المستخدم'));await tester.tap(find.text('حظر المستخدم'));await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('حظر المستخدم'));await tester.tap(find.text('حظر المستخدم'));await tester.pumpAndSettle();await tester.tap(find.text('حظر فقط'));await tester.pumpAndSettle();
       expect(api.calls,contains('POST /api/users/profile_test_123/block'));expect(find.text('إلغاء الحظر'),findsOneWidget);
       await tester.tap(find.text('إلغاء الحظر'));await tester.pumpAndSettle();expect(api.user['blocked'],false);
       expect(find.byType(ProfileDetails),findsNothing);

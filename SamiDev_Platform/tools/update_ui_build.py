@@ -6,7 +6,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
-ASSETS = ["platform/friends.js", "platform/friends.css", "platform/admin-workspace.js", "platform/admin-workspace.css", "platform/bot-admin.js", "platform/bot-admin.css", "platform/game-entry.js", "platform/game-preload.js", "platform/desktop-layout.css", "platform/settings.css", "platform/account-settings.js", "platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "platform/community-live.js", "platform/game-host.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
+ASSETS = ["safety-ui.js", "platform/friends.js", "platform/friends.css", "platform/admin-workspace.js", "platform/admin-workspace.css", "platform/bot-admin.js", "platform/bot-admin.css", "platform/game-entry.js", "platform/game-preload.js", "platform/desktop-layout.css", "platform/settings.css", "platform/account-settings.js", "platform/firebase-auth.js","cosmetic-ui.css","cosmetic-ui.js","platform/store.css","sticker-art.js","platform/platform.css", "platform/profile-identity.css", "platform/platform.js", "platform/community-live.js", "platform/game-host.js", "samidev-games.js", "profile-details.css", "profile-details.js"]
 
 
 def build() -> dict:
@@ -29,7 +29,7 @@ def build() -> dict:
     for entry in ["index.html", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]:
         shell = GAME / entry
         text = shell.read_text(encoding="utf-8")
-        for rel in ["browser-runtime.js", "samidev-network.js", "profile-details.js", "profile-details.css", "player-profile-ui.js", "cosmetic-ui.js", "cosmetic-ui.css", "sticker-art.js", "chat-ui.js", "room-menu.js", "web-bridge.js", "samidev-games.js", "launcher.js"]:
+        for rel in ["browser-runtime.js", "samidev-network.js", "safety-ui.js", "profile-details.js", "profile-details.css", "player-profile-ui.js", "cosmetic-ui.js", "cosmetic-ui.css", "sticker-art.js", "chat-ui.js", "room-menu.js", "web-bridge.js", "samidev-games.js", "launcher.js"]:
             version = hashlib.sha256((GAME / rel).read_bytes()).hexdigest()[:16]
             text, count = re.subn(r'(["\'])(/?)' + re.escape(rel) + r'(?:\?[^"\']*)?(["\'])',
                                  lambda m: m[1] + m[2] + rel + "?v=" + version + m[3], text)

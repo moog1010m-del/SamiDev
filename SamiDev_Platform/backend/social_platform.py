@@ -1490,7 +1490,9 @@ class PlatformService:
             current["reputation"] = str(reputation)
             return {"liked": bool(liked), "reputation": reputation}
 
-    async def submit_report(self, reporter_id: str, target_id: str, *, message: str = "", room_id: str = "") -> dict[str, Any]:
+    async def submit_report(self, reporter_id: str, target_id: str, *, message: str = "", room_id: str = "", reason: str = "other", blocked: bool = False) -> dict[str, Any]:
+        from report_review import REASONS, transaction, store_report
+        if reason not in REASONS: raise PlatformError("BAD_REASON", "اختر سببًا صالحًا للبلاغ")
         if reporter_id == target_id:
             raise PlatformError("SELF_REPORT", "لا يمكنك الإبلاغ عن نفسك")
         target = await self.get_user(target_id)
@@ -1508,21 +1510,17 @@ class PlatformService:
             "targetName": str(target.get("displayName") or target.get("username") or "Player"),
             "roomId": str(room_id or "")[:32],
             "message": message,
+            "reason": reason, "reasonLabel": REASONS[reason], "blocked": blocked,
         }
-        if self.r is not None:
-            encoded = json.dumps(report, ensure_ascii=False, separators=(",", ":"))
-            p = self.r.pipeline(transaction=True)
-            p.lpush(self.k_reports(), encoded)
-            p.ltrim(self.k_reports(), 0, 4999)
-            await p.execute()
+        if blocked:
+            await self.safety.update(reporter_id,target_id,True,report=report)
         else:
-            async with self.lock:
-                self.mem_reports.insert(0, report)
-                del self.mem_reports[5000:]
+            async with transaction(self, [self.k_reports()]):
+                await store_report(self,report)
         return report
 
     async def list_reports(self, limit: int = 200) -> list[dict[str, Any]]:
-        limit = max(1, min(500, int(limit)))
+        limit = max(1, min(5000, int(limit)))
         if self.r is not None:
             raw = await self.r.lrange(self.k_reports(), 0, limit - 1)
             out: list[dict[str, Any]] = []
@@ -2073,13 +2071,18 @@ class PlatformHttp:
             raise PlatformError("RATE_LIMIT", "وصلت للحد المؤقت للبلاغات؛ حاول لاحقًا", 429)
         target_id = str(request.match_info.get("user_id") or "").strip()
         body = await self._body(request)
+        from report_review import REASONS
+        reason = body.get('reason', 'other')
+        if not isinstance(reason, str) or reason not in REASONS: raise PlatformError('BAD_REASON', 'اختر سببًا صالحًا')
+        if type(body.get('block', False)) is not bool: raise PlatformError('BAD_BLOCK', 'حالة الحظر غير صالحة')
+        blocked = body.get('block',False)
         report = await self.platform.submit_report(
             str(user["id"]),
             target_id,
             message=str(body.get("message") or ""),
-            room_id=str(body.get("roomId") or ""),
+            room_id=str(body.get("roomId") or ""), reason=reason, blocked=blocked,
         )
-        return web.json_response({"ok": True, "reportId": report["id"]})
+        return web.json_response({"ok": True, "reportId": report["id"], "blocked": blocked})
 
     async def user_search(self, request: web.Request) -> web.Response:
         user = await self._user(request)
@@ -2109,6 +2112,15 @@ class PlatformHttp:
     async def admin_reports(self, request: web.Request) -> web.Response:
         await self._admin(request)
         return web.json_response({"ok": True, "reports": await self.platform.list_reports(250)})
+
+    async def admin_review_report(self, request: web.Request) -> web.Response:
+        from report_review import review
+        actor = await self._admin(request)
+        body = await self._body(request)
+        if not await self.platform.allow_rate('report-review:'+actor['id'], 60, 60):
+            raise PlatformError('RATE_LIMIT', 'محاولات كثيرة، حاول لاحقًا', 429)
+        report = await review(self.platform, actor, request.match_info['report_id'], body.get('decision'), body.get('note', ''))
+        return web.json_response({'ok': True, 'report': report})
 
     async def admin_ban(self, request: web.Request) -> web.Response:
         admin = await self._admin(request)

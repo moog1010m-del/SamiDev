@@ -1455,6 +1455,7 @@ def make_app() -> web.Application:
     install_community_catalog(app,api)
     app.router.add_put("/api/admin/communities/{community_id}/policy", api.community_policy)
     app.router.add_get("/api/admin/reports", api.admin_reports)
+    app.router.add_post("/api/admin/reports/{report_id}/review", api.admin_review_report)
     app.router.add_post("/api/admin/users/{user_id}/ban", api.admin_ban)
     app.router.add_post("/api/admin/users/{user_id}/role", api.admin_role)
     app.router.add_get("/ws", SERVICE.websocket)
