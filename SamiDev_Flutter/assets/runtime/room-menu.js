@@ -135,12 +135,12 @@
     visible = !!open;
     root?.classList.toggle('open', visible);
     panel?.setAttribute('aria-hidden', visible ? 'false' : 'true');
-    if (visible) { const help=$('#sd-help');if(help)help.hidden=!gameUi()?.canHelp?.();updateSoundLabel(); platform()?.haptic?.(); }
+    if (visible) { const help=$('#sd-help');if(help)help.hidden=!gameUi()?.canHelp?.();updateSoundLabel();const control=$('#sd-control');if(control){control.hidden=!window.SamiDevPoolControls?.available;$('#sd-control-label').textContent=window.SamiDevPoolControls?.mode==='hold'?'التحكم: تثبيت الكلك وإفلاته':'التحكم: شريط القوة';} platform()?.haptic?.(); }
   }
 
   function openInfo() { setMenu(false); renderInfo(); infoModal?.classList.add('open'); platform()?.haptic?.(); }
   function closeInfo() { infoModal?.classList.remove('open'); }
-  function openConfirm() { setMenu(false); confirmModal?.classList.add('open'); platform()?.haptic?.('warning'); }
+  function openConfirm() { if(gameUi()?.isGameOver?.() || net()?.state?.finished) return confirmExit(); setMenu(false); confirmModal?.classList.add('open'); platform()?.haptic?.('warning'); }
   function closeConfirm() { confirmModal?.classList.remove('open'); }
 
   function openHelp() {
@@ -267,6 +267,7 @@
         <button class="sd-menu-item" id="sd-info" type="button"><span class="ico">ⓘ</span><span>معلومات المباراة</span></button>
         <button class="sd-menu-item" id="sd-invite" type="button"><span class="ico">✉️</span><span>دعوة صديق</span></button>
         <button class="sd-menu-item" id="sd-sound" type="button"><span class="ico" id="sd-sound-icon">🔊</span><span id="sd-sound-label">كتم الصوت</span></button>
+        <button class="sd-menu-item" id="sd-control" type="button" hidden><span class="ico">↕</span><span id="sd-control-label">طريقة التحكم</span></button>
         <button class="sd-menu-item" id="sd-help" type="button"><span class="ico">❓</span><span>المساعدة</span></button>
         <button class="sd-menu-item danger" id="sd-exit" type="button"><span class="ico">🚪</span><span>خروج</span></button>
       </div>
@@ -283,6 +284,7 @@
     $('#sd-invite').addEventListener('click', inviteFriend);
     $('#sd-sound').addEventListener('click', toggleSound);
     $('#sd-help').addEventListener('click', openHelp);
+    $('#sd-control').addEventListener('click',()=>{const c=window.SamiDevPoolControls;if(!c)return;c.setMode(c.mode==='hold'?'meter':'hold');setMenu(true);let hint=$('#sd-control-hint');if(!hint){hint=document.createElement('p');hint.id='sd-control-hint';hint.style.cssText='font-size:12px;line-height:1.7;padding:0 12px;color:#9cbbc6';panel.append(hint);}hint.textContent=c.mode==='hold'?'ثبّت الكلك اليسار على الطاولة لشحن القوة صعودًا ونزولًا، وأفلته للضرب.':'اسحب شريط القوة ثم أفلته للضرب.';});
     $('#sd-exit').addEventListener('click', openConfirm);
     infoModal.querySelector('.sd-close').addEventListener('click', closeInfo);
     confirmModal.querySelector('.sd-close').addEventListener('click', closeConfirm);

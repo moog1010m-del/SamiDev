@@ -563,6 +563,37 @@
     try { state.mouse({x:p.x,y:p.y,mask,button:ev.button??0,buttons:ev.buttons??0,alt:!!ev.altKey,control:!!ev.ctrlKey,shift:!!ev.shiftKey}); } catch(e){ console.warn('[web-host] mouse',e); }
   }
 
+  // Desktop option stays outside the engine and uses its normal shooting signal.
+  const desktopPoolControls = (() => {
+    const available=isPool&&!mobileDevice&&!window.SamiDevMobile;
+    let mode='meter',charge=null,lastSent=0;
+    const observed=new WeakSet();
+    try{if(localStorage.getItem('plazr_pool_control')==='hold')mode='hold';}catch{}
+    const logic=()=>state.gameLogic;
+    const blocked=()=>!!document.querySelector('#sd-room-ui.open,.sd-modal.open,.sd-inventory:not([hidden]),#sdpp-layer.open,#sdpp-rating-layer.open');
+    function legal(){const g=logic(),s=g?.sceneMgr;return available&&!!g?.started&&!g.gameOver&&!g.paused&&!g.preshooting&&g.localSeat>=0&&g.turn?.includes(g.localSeat)&&!g.animator?.isAnimatingWorld?.()&&!s?.shotOfTheGameShowing&&!s?.spinPanel?.visible&&!s?.shopWidget?.visible&&!s?.settingsWidget?.visible&&!blocked();}
+    function power(value){const g=logic();g?.sceneMgr?.powerMeter?.setStrength(value);if(performance.now()-lastSent>=100||value===0){lastSent=performance.now();g?.requestPowerChange?.(value);}state.frameRequested=true;}
+    function cancel(){if(!charge)return;charge=null;power(0);}
+    function strength(now){const phase=((now-charge.start)/1600)%2;return Math.max(.01,phase<=1?phase:2-phase);}
+    function down(ev){
+      if(mode!=='hold'||ev.pointerType!=='mouse'||ev.button!==0||charge||!legal())return false;
+      const g=logic(),s=g.sceneMgr,p=eventPoint(ev),factor=s.layoutInfo.logScale;
+      const x=p.x*factor,y=p.y*factor,t=s.table;
+      if(Math.abs(x-t.x)>t.width*t.scaleX*.45||Math.abs(y-t.y)>t.height*t.scaleY*.45)return false;
+      // Placement is always the original drag gesture, even with hold controls.
+      if(g.ballInHand){const q=t.toTableCoordinates([x,y]),b=g.table.cueBall;if(Math.hypot(q[0]-b.position[0],q[1]-b.position[1])<3*(b.radius||16))return false;}
+      if(!observed.has(g)){observed.add(g);g.onTurnChange?.receive(cancel);g.onSynchronize?.receive(cancel);g.onPreShot?.receive(cancel);}
+      charge={id:ev.pointerId,start:performance.now(),turn:JSON.stringify(g.turn)};
+      power(.01);return true;
+    }
+    function tick(now){if(!charge)return;if(!legal()||document.hidden||JSON.stringify(logic().turn)!==charge.turn){cancel();return;}power(strength(now));}
+    function up(ev){if(!charge||charge.id!==ev.pointerId)return false;const ok=legal()&&JSON.stringify(logic().turn)===charge.turn,value=strength(performance.now());charge=null;if(ok){logic().sceneMgr.powerMeter.setStrength(value);logic().sceneMgr.onShoot.emit(value);}else power(0);return true;}
+    window.addEventListener('blur',cancel);document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
+    const api={available,get mode(){return mode;},setMode(value){cancel();mode=value==='hold'?'hold':'meter';try{localStorage.setItem('plazr_pool_control',mode);}catch{}},down,up,tick,cancel,owns:id=>charge?.id===id};
+    if(available)window.SamiDevPoolControls=api;
+    return api;
+  })();
+
   const pendingPointerMoves = new Map();
   function deliverPointerMove(ev) {
     const pointerId=ev.pointerId ?? 0;
@@ -578,7 +609,7 @@
   function installInputBridge() {
     canvas.style.touchAction='none';
     canvas.style.userSelect='none';
-    canvas.addEventListener('pointerdown',ev=>{ ev.preventDefault(); try{canvas.setPointerCapture(ev.pointerId);}catch{}; emitTouch(0,ev); if(ev.pointerType!=='touch') emitMouse('down',ev); unlockAudio(); },{passive:false});
+    canvas.addEventListener('pointerdown',ev=>{ ev.preventDefault(); try{canvas.setPointerCapture(ev.pointerId);}catch{}; desktopPoolControls.down(ev);emitTouch(0,ev); if(ev.pointerType!=='touch') emitMouse('down',ev); unlockAudio(); },{passive:false});
     canvas.addEventListener('pointermove',ev=>{
       ev.preventDefault();
       // Mouse/pen hover is not a SamiDev touch MOVE. Only forward drag moves after DOWN.
@@ -588,12 +619,13 @@
       pendingPointerMoves.set(pointerId, {pointerId, pointerType:ev.pointerType, clientX:ev.clientX, clientY:ev.clientY,
         button:ev.button, buttons:ev.buttons, altKey:ev.altKey, ctrlKey:ev.ctrlKey, shiftKey:ev.shiftKey});
     },{passive:false});
-    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
-    canvas.addEventListener('pointercancel',ev=>{ ev.preventDefault(); pendingPointerMoves.delete(ev.pointerId??0); emitTouch(3,ev); if(ev.pointerType!=='touch') emitMouse('leave',ev);poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
+    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev);desktopPoolControls.up(ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
+    canvas.addEventListener('pointercancel',ev=>{ ev.preventDefault(); pendingPointerMoves.delete(ev.pointerId??0); desktopPoolControls.cancel(); emitTouch(3,ev); if(ev.pointerType!=='touch') emitMouse('leave',ev);poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
     canvas.addEventListener('pointerenter',ev=>{if(ev.pointerType!=='touch') emitMouse('enter',ev);});
     canvas.addEventListener('pointerleave',ev=>{if(ev.pointerType!=='touch') emitMouse('leave',ev);});
     canvas.addEventListener('lostpointercapture',ev=>{
       const id=ev.pointerId??0;
+      if(desktopPoolControls.owns(id))desktopPoolControls.cancel();
       if(state.activePointers.has(id)){pendingPointerMoves.delete(id);emitTouch(3,ev);}
       poolPresentation?.endPointer(id);
     });
@@ -1456,6 +1488,7 @@
       if(state.drawFrame && state.frameRequested){
         state.frameRequested=false;
         try {
+          desktopPoolControls.tick(performance.now());
           poolPresentation?.beforeFrame(state.gameLogic?.sceneMgr);
           state.drawFrame();
           state.performance.frames++;

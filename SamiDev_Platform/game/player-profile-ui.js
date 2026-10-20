@@ -13,9 +13,7 @@
   let lastGameOver = false;
   let ratingQueue = [];
   let ratingBusy = false;
-  let returnTimer = null;
-  let maxReturnTimer = null;
-  let returningToCommunity = false;
+  let ratingStartTimer = null;
 
   const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
   function wireSafeAvatarImages(root=document){
@@ -56,20 +54,6 @@
     const cid=currentCommunityId();
     return cid?`/platform/?community=${encodeURIComponent(cid)}`:'/platform/';
   }
-  async function returnToCommunity() {
-    if(returningToCommunity)return;
-    const cid=currentCommunityId();if(!cid)return;
-    returningToCommunity=true;
-    clearTimeout(returnTimer);clearTimeout(maxReturnTimer);
-    try{await net()?.leaveRoom?.({closeSocket:true});}catch(_){}
-    try{sessionStorage.removeItem('samidev_reconnect');sessionStorage.setItem('samidev_return_community',cid);}catch(_){}
-    if(window.__SAMIDEV_APP_HOST)await window.__SAMIDEV_APP_HOST.returnToPlatform();else location.replace(communityReturnUrl());
-  }
-  function scheduleCommunityReturn(delay=900) {
-    if(!currentCommunityId()||returningToCommunity)return;
-    clearTimeout(returnTimer);returnTimer=setTimeout(returnToCommunity,Math.max(100,Number(delay)||900));
-  }
-
   function currentRoster() { return Array.isArray(net()?.state?.roster) ? net().state.roster : []; }
   function localSeat() { const n=Number(net()?.state?.seat); return Number.isInteger(n)?n:-1; }
   function capacity() { return Math.max(0,Number(net()?.state?.capacity)||currentRoster().length||0); }
@@ -277,17 +261,18 @@
   function markRated(roomId,userId) {try{sessionStorage.setItem(`samidev-rated:${roomId}:${userId}`,'1');}catch(_){} }
 
   function startRatingFlow() {
-    if(ratingBusy)return;
+    if(ratingBusy||!gameUi()?.isGameOver?.())return;
+    if(window.__samidevGameState?.gameLogic?.sceneMgr?.shotOfTheGameShowing){ratingStartTimer=setTimeout(startRatingFlow,500);return;}
     const roomId=String(net()?.state?.roomId||'');if(!roomId)return;
     ratingQueue=opponentPlayers().filter(p=>!alreadyRated(roomId,p.accountId));
-    if(!ratingQueue.length){scheduleCommunityReturn(1800);return;}
+    if(!ratingQueue.length)return;
     ratingBusy=true;closeProfile();showNextRating();
   }
 
   async function showNextRating() {
     const roomId=String(net()?.state?.roomId||'');
     const player=ratingQueue.shift();
-    if(!player){ratingLayer.classList.remove('open');ratingBusy=false;scheduleCommunityReturn(700);return;}
+    if(!player){ratingLayer.classList.remove('open');ratingBusy=false;return;}
     let profile=null;
     try{profile=(await api(`/api/public-profile/${encodeURIComponent(player.accountId)}`)).user;}catch(_){profile={id:player.accountId,displayName:player.name,hasAvatar:true};}
     const avatar=`<img data-sd-avatar src="${player.accountId?'/api/avatar/'+encodeURIComponent(player.accountId):DEFAULT_AVATAR_URL}" alt="">`;
@@ -305,17 +290,36 @@
     ratingLayer.querySelector('.sdpp-rating-skip').onclick=()=>{ratingLayer.classList.remove('open');setTimeout(showNextRating,120);};
   }
 
+  let replayBar;
+  function updateReplayBar(over){
+    const g=window.__samidevGameState?.gameLogic,s=g?.sceneMgr;
+    if(!s?.showShotOfTheGame)return;
+    const eligible=over&&g.shotOfTheGame?.seat>=0&&(s.gameOverPopup?.visible||s.shotOfTheGameShowing);
+    if(!eligible){if(replayBar)replayBar.hidden=true;return;}
+    if(!replayBar){
+      replayBar=document.createElement('aside');replayBar.id='sd-match-replay';replayBar.dir='rtl';
+      replayBar.innerHTML='<div><strong>لقطة المباراة</strong><small>شاهد أجمل ضربة من جديد</small></div><button type="button">إعادة اللقطة <span aria-hidden="true">↻</span></button>';
+      replayBar.querySelector('button').onclick=()=>{const current=window.__samidevGameState?.gameLogic?.sceneMgr;if(current?.gameOverPopup?.visible&&!current.shotOfTheGameShowing)current.showShotOfTheGame();};
+      document.body.append(replayBar);
+      const style=document.createElement('style');style.textContent=`#sd-match-replay{position:fixed;z-index:15900;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:24px;max-width:calc(100vw - 32px);width:max-content;box-sizing:border-box;padding:14px 18px;border:1px solid #ffffff26;border-radius:20px;background:#111c22ed;color:#f0f7fa;box-shadow:0 12px 35px #0004;backdrop-filter:blur(14px);font:14px system-ui}#sd-match-replay[hidden]{display:none}#sd-match-replay strong,#sd-match-replay small{display:block}#sd-match-replay small{font-size:11px;color:#a9bbc4;margin-top:4px}#sd-match-replay button{border:1px solid #ffffff26;border-radius:12px;background:#237b8b;color:white;padding:11px 14px;font:600 13px system-ui;cursor:pointer;white-space:nowrap}@media(max-width:480px){#sd-match-replay{gap:12px;padding:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}#sd-match-replay small{max-width:145px}}`;
+      document.head.append(style);
+    }
+    replayBar.hidden=!!s.shotOfTheGameShowing;
+    // Replace the small canvas replay target with one accessible DOM action.
+    if(s.gameOverPopup?.bestShotButton)s.gameOverPopup.bestShotButton.visible=false;
+  }
+
   function pollGameOver() {
     const over=!!gameUi()?.isGameOver?.();
     if(over&&!lastGameOver){
-      setTimeout(startRatingFlow,850);
-      clearTimeout(maxReturnTimer);
-      if(currentCommunityId())maxReturnTimer=setTimeout(returnToCommunity,15000);
+      ratingStartTimer=setTimeout(startRatingFlow,850);
+      // Stay on the result after rating; replay and exit are explicit actions.
     }
+    updateReplayBar(over);
     lastGameOver=over;
   }
 
-  function resetRoomState() { lastGameOver=false;ratingQueue=[];ratingBusy=false;returningToCommunity=false;clearTimeout(returnTimer);clearTimeout(maxReturnTimer);ratingLayer?.classList.remove('open');closeProfile(); }
+  function resetRoomState() { clearTimeout(ratingStartTimer);if(replayBar)replayBar.hidden=true;lastGameOver=false;ratingQueue=[];ratingBusy=false;ratingLayer?.classList.remove('open');closeProfile(); }
 
   function build() {
     if(!canvas||layer)return;

@@ -37,11 +37,25 @@ try {
  // A resize toggles only presentation, including after a real placement and aim.
  const beforeResize=await page.evaluate(()=>window.__gameLogic.getPositionsToValidate());
  if(viewport.width>=900){await page.setViewportSize({width:600,height:900});await page.waitForFunction(()=>!window.__samidevPoolPresentation.enabled);await page.setViewportSize(viewport);await page.waitForFunction(()=>window.__samidevPoolPresentation.enabled);const afterResize=await page.evaluate(()=>window.__gameLogic.getPositionsToValidate());assert.deepEqual(afterResize,beforeResize,'resize preserves authoritative positions');}
+ if(viewport.width===1366){
+  await page.evaluate(()=>window.SamiDevPoolControls.setMode('hold'));
+  await page.mouse.move(aim.from.x,aim.from.y);await page.mouse.down();await page.waitForTimeout(900);
+  const rising=await page.evaluate(()=>window.__gameLogic.sceneMgr.powerMeter.getStrength());
+  if(!rising)console.log(await page.evaluate(()=>{const g=window.__gameLogic,s=g.sceneMgr;return {mode:window.SamiDevPoolControls.mode,started:g.started,paused:g.paused,turn:g.turn,seat:g.localSeat,sequence:g._sequence,moves:window.__samidevGameState.localHost.moves.slice(-5),width:s.table.width,height:s.table.height,scale:s.table.scaleX,center:[s.table.x,s.table.y],spin:s.spinPanel.visible,settings:s.settingsWidget.visible,shop:s.shopWidget.visible};}));
+  assert(rising>.25&&rising<.95,'holding charges through native power meter: '+rising);
+  await page.waitForTimeout(1600);
+  const falling=await page.evaluate(()=>window.__gameLogic.sceneMgr.powerMeter.getStrength());
+  assert(falling<.7,'charge descends after maximum: '+falling);
+  await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await page.mouse.up();
+  assert(!await page.evaluate(()=>window.__samidevGameState.localHost.moves.some(p=>(p.m||p).a===1)),'blur cancels without firing');
+  await page.mouse.down();await page.waitForTimeout(750);await page.mouse.up();
+ }else{
  const meter=await page.evaluate(()=>{const s=window.__gameLogic.sceneMgr,m=s.powerMeter,c=document.querySelector('canvas'),r=c.getBoundingClientRect(),factor=s.layoutInfo.logScale;const point=(x,y)=>({x:r.left+x/factor*r.width/c.width,y:r.top+y/factor*r.height/c.height});return {from:point(m.worldTransform[2]+m.width*.5,m.worldTransform[5]+m.height*.2),to:point(m.worldTransform[2]+m.width*.5,m.worldTransform[5]+m.height*.65)};});
  await page.mouse.move(meter.from.x,meter.from.y);await page.mouse.down();await page.mouse.move(meter.to.x,meter.to.y,{steps:12});await page.mouse.up();
+ }
  await page.waitForFunction(()=>window.__samidevGameState.localHost.moves.some(p=>(p.m||p).a===1),{},{timeout:5000});
  await page.waitForFunction(()=>window.__gameLogic.animator.isAnimatingWorld()||window.__gameLogic.preshooting,{},{timeout:5000});
  await page.waitForFunction(()=>!window.__gameLogic.animator.isAnimatingWorld()&&!window.__gameLogic.preshooting,{},{timeout:30000});assert.deepEqual(errors,[]);
- console.log(JSON.stringify({viewport,landscape:setup.enabled,drag:true,aim:true,powerShot:true,resizePreservesPhysics:true,physicsUnchanged:true}));await page.close();
+ console.log(JSON.stringify({viewport,landscape:setup.enabled,drag:true,aim:true,powerShot:true,holdCycleAndCancel:viewport.width===1366,resizePreservesPhysics:true,physicsUnchanged:true}));await page.close();
  }
 }finally{await browser?.close();server.kill();}

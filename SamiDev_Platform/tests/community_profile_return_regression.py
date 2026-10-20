@@ -33,7 +33,8 @@ assert "restoreCommunityFromLocation" in platform_js
 assert "communityId: null" in network_js
 assert "state.communityId = msg.communityId" in network_js
 assert "samidev_return_community" in network_js
-assert "returnToCommunity" in profile_js
+assert "scheduleCommunityReturn" not in profile_js
+assert "setTimeout(returnToCommunity" not in profile_js
 assert "/platform/?community=" in profile_js
 assert "platformReturnUrl" in room_menu
 assert "/platform/?community=" in room_menu
