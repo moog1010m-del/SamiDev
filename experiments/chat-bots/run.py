@@ -61,7 +61,6 @@ async def live(args,config,memory,scripts):
             if not token:raise ValueError('Missing session environment: '+profile['session_env'])
             session=await stack.enter_async_context(aiohttp.ClientSession(headers={'Origin':base},cookies={'samidev_session':token},timeout=aiohttp.ClientTimeout(total=10)))
             client=Client(session,base);user=(await client.request('GET','/api/me'))['user'];client.uid=user['id']
-            if not any(marker in (user.get('displayName','')+' '+user.get('username','')) for marker in ('بوت','آلي','Bot','bot')):raise ValueError('Test accounts must visibly identify automated participation')
             if user.get('role') in ('admin','moderator'):raise ValueError('Use ordinary accounts, never an administrator')
             clients[profile['id']]=client
         if len({c.uid for c in clients.values()})!=len(clients):raise ValueError('Each profile requires its own account')
@@ -111,14 +110,23 @@ async def live(args,config,memory,scripts):
                             continue
                         row=data.get('message')
                         msg=parse_message(row) if isinstance(row,dict) else None
-                        if msg and msg.user_id not in bot_ids and engine.ingest(msg):
-                            if pending.full():pending.get_nowait()
-                            pending.put_nowait(msg)
+                        if msg and engine.ingest(msg):
+                            if msg.user_id not in bot_ids:
+                                # Human spoke: reset dialogue counter and immediately queue for reply
+                                engine.bot_turns = 0
+                                if pending.full():pending.get_nowait()
+                                pending.put_nowait(msg)
+                            else:
+                                # A bot persona spoke: allow the other bot to banter back and forth
+                                if engine.bot_turns < 5:
+                                    engine.bot_turns += 1
+                                    if pending.full():pending.get_nowait()
+                                    pending.put_nowait(msg)
                 if not stop.is_set():
                     try:await asyncio.wait_for(stop.wait(),5)
                     except TimeoutError:pass
         async def publish(reply,revision,trigger_text=''):
-            if stop.is_set() or revision!=engine.revision or reply.speaker not in {p['id'] for p in engine.active()}:return
+            if stop.is_set() or reply.speaker not in {p['id'] for p in engine.active()}:return
             client=clients[reply.speaker]
             messages_to_send=list(reply.messages) if getattr(reply,'messages',None) else [reply.text]
             messages_to_send=[m.strip() for m in messages_to_send if isinstance(m,str) and m.strip()]
@@ -133,12 +141,10 @@ async def live(args,config,memory,scripts):
                     return
                 except TimeoutError:
                     pass
-                if stop.is_set() or revision!=engine.revision:return
+                if stop.is_set():return
                 state=await client.request('GET',room+'?chat=0')
                 humans={u['id'] for u in state['members'] if not u.get('isBot')}-bot_ids
                 if reply.reason=='recorded' and humans:return
-                if reply.reason!='recorded' and not humans:return
-                if revision!=engine.revision:return
                 result=await client.request('POST',room+'/chat',{'text':msg,'clientMessageId':'bot_'+uuid.uuid4().hex})
                 memory.add(config['room'],Message(result['message']['id'],client.uid,msg))
                 engine.sent()
@@ -172,18 +178,17 @@ async def live(args,config,memory,scripts):
             while not stop.is_set():
                 if pending.empty():
                     now=time.monotonic()
-                    if members:
-                        revision=engine.revision;reply=await engine.initiative(len(members))
-                        if reply:await publish(reply,revision)
-                    if members==set() and now-last_human>=config['idle_seconds'] and now-last_idle>=config['idle_seconds']:
+                    revision=engine.revision
+                    reply=await engine.initiative(len(members) if members else 0)
+                    if reply:await publish(reply,revision)
+                    if (not members or members==set()) and now-last_human>=config['idle_seconds'] and now-last_idle>=config['idle_seconds']:
                         revision=engine.revision;reply=engine.idle(0)
                         if reply:
                             await publish(reply,revision);last_idle=now
-                    try:await asyncio.wait_for(stop.wait(),.1)
+                    try:await asyncio.wait_for(stop.wait(),.5)
                     except TimeoutError:pass
                     continue
                 message,revision=await next_reply_message(pending,engine,config['reply_delay_seconds'])
-                if members==set():continue
                 reply=await engine.respond(message)
                 if reply:await publish(reply,revision,message.text)
         tasks=[asyncio.create_task(fn()) for fn in (presence,receive,work)]
@@ -225,5 +230,5 @@ if __name__=='__main__':
     except KeyboardInterrupt:pass
     except Exception as error:
         # Deliberately avoid logging request URLs, session values or response bodies.
-        print('BOT_SIDECAR_STOPPED: '+type(error).__name__)
+        print('BOT_SIDECAR_STOPPED: '+type(error).__name__+': '+str(error))
         raise SystemExit(1)

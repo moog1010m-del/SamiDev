@@ -291,7 +291,7 @@ def public_user(raw: dict[str, Any], *, relation: str | None = None, online: boo
     out = {
         "id": str(raw.get("id") or ""),
         "username": str(raw.get("username") or ""),
-        "displayName": str(raw.get("username") or "Player"),
+        "displayName": str(raw.get("displayName") or raw.get("username") or "Player"),
         "isBot": raw.get("managedBot")=="1",
         "bio": str(raw.get("bio") or ""),
         "role": str(raw.get("role") or "user"),
@@ -598,7 +598,7 @@ class PlatformService:
             raise PlatformError("USER_NOT_FOUND", "المستخدم غير موجود", 404)
         entry = {
             "id": secrets.token_urlsafe(8), "communityId": cid, "userId": uid,
-            "displayName": sanitize_plain_text(user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
+            "displayName": sanitize_plain_text(user.get("displayName") or user.get("username") or "Player", DISPLAY_MAX, empty_code="BAD_DISPLAY", empty_message="الاسم الظاهر غير صالح", too_long_code="BAD_DISPLAY"),
             **sticker, "username": str(user.get("username") or ""), "text": clean, "createdAt": now_ms(),
             "chatBubble": cosmetic_id(user.get("chatBubble"), "chat_bubble"),
             "nameBadgeAsset": public_user(user)["nameBadgeAsset"],
@@ -1183,7 +1183,7 @@ class PlatformService:
         payload = {
             "uid": str(user["id"]),
             "username": str(user["username"]),
-            "displayName": str(user["username"]),
+            "displayName": str(user.get("displayName") or user["username"]),
             "role": str(user.get("role") or "user"),
             "issuedAt": now_ms(),
             "sessionKey": self.token_key(session_token),

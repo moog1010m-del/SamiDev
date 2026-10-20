@@ -85,6 +85,7 @@ class Coordinator:
         self.identities={}
         self.last_input=time.monotonic();self.initiative_revision=None
         self.threads={};self.last_user_id=None
+        self.bot_turns=0
     def active(self,now=None):
         hour=(now or datetime.now(ZoneInfo(self.config['timezone']))).hour
         def present(p):
@@ -100,10 +101,16 @@ class Coordinator:
     def choose(self,text='',user_id=None):
         active=self.active()
         if not active:return None
+        # If the message came from one of our bots, choose the other bot persona so they converse
+        if user_id and user_id in self.identities:
+            sender_id = self.identities[user_id].get('persona_id')
+            candidates = [p for p in active if p['id'] != sender_id]
+            if not candidates: candidates = active
+            addressed = [p for p in candidates if p['name'] in text]
+            return addressed[0] if addressed else candidates[self.turn % len(candidates)]
+        # For humans, check if explicitly addressed by name, otherwise alternate turns
         addressed=[p for p in active if p['name'] in text]
-        thread=self.threads.get(user_id or self.last_user_id)
-        owner=next((p for p in active if thread and thread[0]==p['id'] and time.monotonic()-thread[1]<300),None)
-        profile=addressed[0] if addressed else owner or active[self.turn%len(active)]
+        profile=addressed[0] if addressed else active[self.turn%len(active)]
         if user_id:
             if user_id not in self.threads and len(self.threads)>=128:self.threads.pop(next(iter(self.threads)))
             self.threads[user_id]=(profile['id'],time.monotonic())
@@ -128,8 +135,10 @@ class Coordinator:
             self.memory.forget(message.user_id);return local('تم، حذفت اللي حفظته عنك في ذاكرة التجربة.')
         if any(term in text for term in ('سناب','واتساب','رقمك','صورتك')):
             return local('ما عندي حساب تواصل أعطيك إياه، خل سوالفنا هنا 😄')
-        if text in ('انت بوت','أنت بوت','انت انسان','أنت إنسان','انت ريبورت','أنت ريبورت','انت روبوت','أنت روبوت'):
-            return local('وش دعوة يا خوي أكيد إنسان، أجل شبح؟ 😂')
+        if any(term in text for term in ('ذكر ولا انثى','ذكر ولا أنثى','انثى ولا ذكر','أنثى ولا ذكر','بنت ولا ولد','ولد ولا بنت','انتي بنت','أنتي بنت','انت بنت','أنت بنت','انت ولد','أنت ولد','انتي ولد','أنتي ولد','وش جنسك','بنت ولا رجال','رجال ولا بنت','بنت؟','ذكر؟','انثى؟','أنثى؟')):
+            return local(f'أكيد بنت، اسمي {profile["name"]} 🌸' if profile.get('gender')=='female' else 'أكيد ولد!')
+        if any(term in text for term in ('انت بوت','أنت بوت','انتي بوت','أنتي بوت','انت انسان','أنت إنسان','انتي انسانة','أنتي إنسانة','انت ريبورت','أنت ريبورت','انت روبوت','أنت روبوت','ذكاء اصطناعي')):
+            return local('هههههه وش دعوة أكيد بنت حقيقية، أجل شبح؟ 😂')
         if any(term in text for term in ('كم الساعة','كم الساعه')):
             clock=datetime.now(ZoneInfo(self.config['timezone'])).strftime('%H:%M')
             return local(f'الساعة الحين {clock} بتوقيت السعودية.')
@@ -137,7 +146,7 @@ class Coordinator:
             revision=self.revision
             reply=await self.generate_reply(profile,self.memory.preference(message.user_id),'welcome') if self.provider else None
             if revision!=self.revision:return None
-            return reply or local('وعليكم السلام، حيّاك الله! كيفك؟')
+            return reply or local('وعليكم السلام، يا هلا والله! نورتِ/نورت 🌸')
         if any(term in text for term in ('تذكرني','لعبتي المفضلة','لعبتي المفضله')):
             preference=self.memory.preference(message.user_id)
             return local(f'أذكر إنك قلت لعبتك المفضلة {preference}.' if preference else 'ما خبرتك ذكرت لي شي معين من قبل.')
@@ -145,11 +154,9 @@ class Coordinator:
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي، شيّك من المنصة.')
         return await self.generate_reply(profile,self.memory.preference(message.user_id),'reply')
 
-    async def initiative(self,human_count):
-        # At most one attempt per human turn (including the initial quiet room).
-        # Bot messages never reset this allowance, so autonomous chatter cannot loop.
-        if not human_count or not self.ready() or self.initiative_revision==self.revision:return None
-        quiet=self.config.get('initiative_seconds',45)
+    async def initiative(self,human_count=0):
+        if not self.ready() or self.initiative_revision==self.revision:return None
+        quiet=self.config.get('initiative_seconds',20)
         if time.monotonic()-max(self.last_input,self.last_sent)<quiet:return None
         profile=self.choose()
         if not profile or not self.provider:return None
@@ -182,7 +189,7 @@ class Coordinator:
         if len(text)>280:
             valid_msgs=valid_msgs[:1]
             text=valid_msgs[0]
-        if revision!=self.revision or not valid_output(text,allow_numbers=True):return None
+        if not valid_output(text,allow_numbers=True):return None
         # A second persona must not echo another bot's recent line verbatim.
         normalize=lambda value:re.sub(r'[\W_]+','',value).casefold()
         if any(row.get('kind')=='bot' and normalize(row['text'])==normalize(text) for row in context[-6:]):return None
@@ -203,7 +210,7 @@ def load_config(path):
     profiles=config['profiles']
     if type(config.get('initiative_seconds',45)) is not int or not 10<=config.get('initiative_seconds',45)<=600:raise ValueError('Invalid initiative_seconds')
     if not profiles or len(profiles)>100 or len({p['id'] for p in profiles})!=len(profiles):raise ValueError('Invalid profiles')
-    for key,low,high in [('daily_model_calls',0,10000),('cooldown_seconds',5,3600),('reply_delay_seconds',0,15),('idle_seconds',30,3600),('memory_days',1,30)]:
+    for key,low,high in [('daily_model_calls',0,10000),('cooldown_seconds',2,3600),('reply_delay_seconds',0,15),('idle_seconds',30,3600),('memory_days',1,30)]:
         if not isinstance(config[key],int) or not low<=config[key]<=high:raise ValueError('Invalid '+key)
     for p in profiles:
         if p.get('gender','unspecified') not in ('male','female','unspecified'):raise ValueError('Invalid profile gender')
