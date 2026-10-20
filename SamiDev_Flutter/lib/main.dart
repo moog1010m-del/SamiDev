@@ -18,6 +18,7 @@ import 'ui/player_profile.dart';
 import 'ui/community_hub.dart';
 import 'ui/game_viewport.dart';
 import 'ui/chat_cosmetic.dart';
+import 'ui/direct_conversation.dart';
 import 'ui/chat_stickers.dart';
 import 'ui/sticker_art.dart';
 import 'ui/games_hub.dart';
@@ -122,22 +123,28 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     setState((){authenticated=true;gamesProfile=user;role=user['role']?.toString()??'user';webPage=null;selectedTab=0;});
     if(friendNotifications?.accountId!=user['id']){
       await friendNotifications?.stop();dismissFriendBanner();
-      final notifications=FriendNotifications(r.api,user['id'] as String,onMessage:showFriendBanner,onRequests:(){if(inGame)parkGame();setState(()=>selectedTab=1);pendingFriendId=null;pendingFriendRequests=true;unawaited(openPage('friends'));},onOpen:(id)=>unawaited(openFriendConversation(id)),onUpdate:(){if(mounted&&webPage=='friends')unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.refreshFriends();').catchError((_){ }));});
+      final notifications=FriendNotifications(r.api,user['id'] as String,onMessage:showFriendBanner,onGameOpen:(id){if(gameController!=null&&table.roomId==id){if(_conversationOpen)Navigator.of(context).pop();resumeGame();}else{notify('افتح قائمة طاولاتك للعودة إلى المباراة');}},onRequests:(){if(inGame)parkGame();setState(()=>selectedTab=1);pendingFriendId=null;pendingFriendRequests=true;unawaited(openPage('friends'));},onOpen:(id)=>unawaited(openFriendConversation(id)),onUpdate:(){if(mounted&&webPage=='friends')unawaited(controller?.runJavaScript('window.SamiDevMobilePlatform?.refreshFriends();').catchError((_){ }));});
       friendNotifications=notifications;unawaited(notifications.start());
     }
     unawaited(configurePlatform());
   }
   void dismissFriendBanner(){friendBanner?.remove();friendBanner=null;}
   void showFriendBanner(Map<String,dynamic> thread){
-    if(!mounted||_background||!authenticated||webPage=='friends')return;
+    if(!mounted||_background||!authenticated||webPage=='friends'||_conversationOpen)return;
     final user=Map<String,dynamic>.from(thread['user'] as Map),message=Map<String,dynamic>.from(thread['lastMessage'] as Map);
     dismissFriendBanner();
     friendBanner=OverlayEntry(builder:(_)=>FriendBanner(username:user['username']?.toString()??'صديق',text:message['text']?.toString()??'رسالة جديدة',onDismiss:dismissFriendBanner,onOpen:(){dismissFriendBanner();unawaited(openFriendConversation(user['id'] as String));}));
     Overlay.of(context).insert(friendBanner!);
   }
+  bool _conversationOpen=false;
   Future<void> openFriendConversation(String id) async {
     if(!mounted||runtime==null||!authenticated)return;
-    if(inGame)parkGame();pendingFriendRequests=false;pendingFriendId=id;setState(()=>selectedTab=1);await openPage('friends');
+    if(_conversationOpen||!RegExp(r'^[A-Za-z0-9_-]{12,32}$').hasMatch(id))return;
+    if(inGame)parkGame();
+    final accountId=gamesProfile?['id']?.toString()??friendNotifications?.accountId;
+    if(accountId==null)return;
+    _conversationOpen=true;dismissFriendBanner();
+    try{await Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>DirectConversation(api:runtime!.api,accountId:accountId,peerId:id)));}finally{_conversationOpen=false;}
   }
   Future<void> phoneNotifications(bool enable) async {
     if(changingPhoneNotifications)return;changingPhoneNotifications=true;
@@ -164,6 +171,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     await c.addJavaScriptChannel('SamiDevMobile',onMessageReceived:(message){
       if(!live()||page()==null||!r.owns(page()!)||message.message.length>5000)return;
       try{final data=jsonDecode(message.message) as Map;
+        if(!game&&data['type']=='open_direct_conversation'&&data['userId'] is String){unawaited(openFriendConversation(data['userId'] as String));}
         if(data['type']=='copy'&&data['text'] is String){unawaited(copyText(data['text'] as String));}
         if(game&&data['type']=='game_surface_ready'&&_gameSurfaceReady?.isCompleted==false){_entryFrameReady=true;completeGameEntry();}
         if(game&&data['type']=='game_surface_error'&&_gameSurfaceReady?.isCompleted==false){_entryFailure=data['code']=='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.';_gameSurfaceReady!.complete(false);}
@@ -323,7 +331,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   Future<void> configurePlatform() async {
     if(controller==null)return;
     try{
-      await controller!.runJavaScript('window.SamiDevMobilePlatform?.closeProfile(); window.SamiDevMobilePlatform?.setNativeActive(${nativeHome||inGame?'true':'false'});');
+      await controller!.runJavaScript('window.SamiDevNativeConversations=true; window.SamiDevMobilePlatform?.closeProfile(); window.SamiDevMobilePlatform?.setNativeActive(${nativeHome||inGame?'true':'false'});');
       if(!inGame&&webPage!=null)await controller!.runJavaScript('window.SamiDevMobilePlatform?.navigate(${jsonEncode(webPage)});');
       if(!inGame&&webPage=='friends'&&pendingFriendRequests){
         final ready=await controller!.runJavaScriptReturningResult('typeof window.SamiDevMobilePlatform?.openFriendRequests === "function"');

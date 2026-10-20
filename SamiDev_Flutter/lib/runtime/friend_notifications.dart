@@ -19,6 +19,7 @@ class FriendNotifications {
     required this.onOpen,
     this.onUpdate,
     this.onRequests,
+    this.onGameOpen,
   });
   final PlatformApi api;
   final String accountId;
@@ -26,6 +27,7 @@ class FriendNotifications {
   final void Function(String) onOpen;
   final void Function()? onUpdate;
   final void Function()? onRequests;
+  final void Function(String)? onGameOpen;
   StreamSubscription<Map<String, dynamic>>? _events;
   StreamSubscription<RemoteMessage>? _opened;
   StreamSubscription<String>? _tokens;
@@ -214,7 +216,7 @@ class FriendNotifications {
     _ready = true;
     final initial = await messaging.getInitialMessage();
     if (initial != null) openMessage(initial);
-    return 'تم تفعيل إشعارات الأصدقاء';
+    return 'تم تفعيل إشعارات الرسائل والمباريات';
   }
 
   Future<void> register(String? token) async {
@@ -231,7 +233,12 @@ class FriendNotifications {
     if (_closed ||
         !api.signedIn ||
         message.data['accountId'] != accountId ||
-        !{'direct', 'friend_request'}.contains(message.data['type'])) {
+        !{'direct', 'friend_request', 'game_started', 'game_turn'}.contains(message.data['type'])) {
+      return;
+    }
+    if ({'game_started', 'game_turn'}.contains(message.data['type'])) {
+      final room = message.data['roomId'];
+      if (room != null && RegExp(r'^[A-Za-z0-9_-]{4,32}$').hasMatch(room)) onGameOpen?.call(room);
       return;
     }
     if (message.data['type'] == 'friend_request') {

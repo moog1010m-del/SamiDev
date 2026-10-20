@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "43c6e3bb2c6f8d037b922563ea336be90132b255d10f81f53d86d5007761421b"
+      "sha256": "48aa09a061d686c7722a24d5f7030a036b4628262dd8d5e3621456dc53e7a519"
     },
     "browser-runtime.js": {
       "size": 88974,
@@ -2645,7 +2645,7 @@
     },
     "platform/build.json": {
       "size": 6935,
-      "sha256": "b99ef07d562484071be447e03c1cbe6022b58c3ddc68a4022001c6571faf6c7a"
+      "sha256": "d0ad609f3a7452b6882d897c545b3e83ef2438ec61171639772de988839d92fb"
     },
     "platform/children.html": {
       "size": 4695,
@@ -2676,8 +2676,8 @@
       "sha256": "ebee90979465e78e6bd2567ab7769083400bd6cee2e7560f716eb1645dd85d3e"
     },
     "platform/friends.js": {
-      "size": 16706,
-      "sha256": "9cf540bfd8b93a14daeb5a1412fc31bf80ee2095cdd2f189639628efa9b989ca"
+      "size": 16888,
+      "sha256": "d926cdd773dd99182f07825c0001e08a1dd998372d02f597ed98df815d22ebb1"
     },
     "platform/game-entry.js": {
       "size": 4437,
@@ -2693,7 +2693,7 @@
     },
     "platform/index.html": {
       "size": 55502,
-      "sha256": "9185928da382b81ed3c0461f66e261cbd7f96c87055f76410c0b0a1204e38087"
+      "sha256": "33edc3d978abf095d04806c95dc3d26fd6d1773108b6a6f0c12d8ff0eeb570b2"
     },
     "platform/legal-content.json": {
       "size": 32811,

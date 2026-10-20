@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-c323ae5493d76421",
+  "buildId": "samidev-v30-913035d9ec45b3dd",
   "games": [
     "carrom",
     "tablesoccer",
@@ -30,10 +30,10 @@
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
     "asset-worker.js": "62ade5df4e825b31478b9cc003961c70cdc13cd31838114e3e6ce12243e2e075",
-    "platform/index.html": "2efdc37bd8a2b6399ec44785cb80908d0b22ea946e27e6702282890050ff5175",
+    "platform/index.html": "33edc3d978abf095d04806c95dc3d26fd6d1773108b6a6f0c12d8ff0eeb570b2",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
-    "platform/friends.js": "9cf540bfd8b93a14daeb5a1412fc31bf80ee2095cdd2f189639628efa9b989ca",
+    "platform/friends.js": "d926cdd773dd99182f07825c0001e08a1dd998372d02f597ed98df815d22ebb1",
     "platform/friends.css": "ebee90979465e78e6bd2567ab7769083400bd6cee2e7560f716eb1645dd85d3e",
     "platform/admin-workspace.js": "3dea7dae7391d750668512895347e3374e03c5b4096cfd2bfabc5d90a60c53fe",
     "platform/admin-workspace.css": "90d3d45a48d902019291768dee77793a2cc6ee7687b9495c1c7c98bf5d1b0b0c",
