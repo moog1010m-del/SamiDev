@@ -18,7 +18,6 @@ class _GameViewportState extends State<GameViewport> {
     return Stack(fit:StackFit.expand,children:[
       AbsorbPointer(absorbing:widget.dim,child:ClipRect(child:OverflowBox(alignment:Alignment.topCenter,minHeight:height,maxHeight:height,
         child:SizedBox(height:height,width:box.maxWidth,child:widget.child)))),
-      if(widget.dim)const Positioned.fill(child:IgnorePointer(child:ColoredBox(color:Color(0x55000000)))),
       if(widget.overlay!=null)Positioned(bottom:0,left:0,right:0,child:widget.overlay!),
     ]);
   });

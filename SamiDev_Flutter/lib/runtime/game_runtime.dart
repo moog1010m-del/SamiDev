@@ -119,14 +119,16 @@ class GameRuntime {
     _connecting++;WebSocket? remote;WebSocket? local;
     try {
       final ticket=await api.request('POST','/api/game-ticket',body:utf8.encode(jsonEncode({'communityId':community})));
-      if(ticket.status!=200){request.response.statusCode=ticket.status;return false;}
+      if(ticket.status!=200){_emit({'type':'game_connection','connected':false});if(ticket.status==401)_emit({'type':'auth_expired'});request.response.statusCode=ticket.status;return false;}
       final uri=api.policy.upstream('/ws').replace(scheme:api.policy.backend.scheme=='https'?'wss':'ws',queryParameters:{'ticket':ticket.json['ticket'] as String});
       remote=await WebSocket.connect(uri.toString(),headers:api.headers,compression:CompressionOptions.compressionOff,customClient:api.client).timeout(const Duration(seconds:15));
       if(_closed||paused){await remote.close();request.response.statusCode=503;return false;}
       local=await WebSocketTransformer.upgrade(request,compression:CompressionOptions.compressionOff);
       final upstream=remote,downstream=local;
+      upstream.pingInterval=const Duration(seconds:10);
       _sockets.addAll([upstream,downstream]);
       void closePair([int? code]){final safeCode={1000,1001,1008,1009,1011,4001,4003}.contains(code)?code!:1001;_sockets.remove(upstream);_sockets.remove(downstream);unawaited(upstream.close(safeCode).catchError((_){ }));unawaited(downstream.close(safeCode).catchError((_){ }));}
+      _emit({'type':'game_connection','connected':true});
       downstream.listen((message){
         if(message is! String || utf8.encode(message).length>65536){closePair(1009);return;}
         if(message.contains('chat_send')){try{final packet=jsonDecode(message) as Map<String,dynamic>;if(packet['type']=='chat_send'&&packet['clientMessageId'] is String)_emit({...packet,'type':'chat_pending'});}catch(_){}}
@@ -144,9 +146,9 @@ class GameRuntime {
         if(RegExp(r'"type"\s*:\s*"(chat_message|chat_history|created|joined|watching|room_state|begin_match|left_room|invite_created|error)"').hasMatch(message.substring(0,min(120,message.length)))){
           try{_emit(jsonDecode(message) as Map<String,dynamic>);}catch(_){}
         }
-      },onDone:(){if(upstream.closeCode==4003)_emit({'type':'auth_expired'});closePair(upstream.closeCode);},onError:(_)=>closePair(1011));
+      },onDone:(){if(upstream.closeCode==4003)_emit({'type':'auth_expired'});closePair(upstream.closeCode);if(!paused&&_sockets.isEmpty)_emit({'type':'game_connection','connected':false});},onError:(_){closePair(1011);if(!paused&&_sockets.isEmpty)_emit({'type':'game_connection','connected':false});});
       return true;
-    } catch(_){await remote?.close();await local?.close();rethrow;}
+    } catch(_){await remote?.close();await local?.close();if(!paused)_emit({'type':'game_connection','connected':false});rethrow;}
     finally{_connecting--;}
   }
   // Read only the bounded authority metadata, not the full physics/reveal JSON.
