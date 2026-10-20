@@ -47,6 +47,7 @@ const resizeCtx = {
   state,
   devicePixelRatio: 1,
   mobileDevice: false,
+  isCarrom: false,
   runtimeDebug: false,
   console,
   performance: {now: () => now},

@@ -736,6 +736,7 @@
     const img=$('#community-profile-avatar-image'),fallback=$('#community-profile-avatar-fallback');fallback.textContent=initials(name);
     wireAvatarImage(img,fallback);img.src=user.id?'/api/avatar/'+encodeURIComponent(user.id)+'?v='+Date.now():DEFAULT_AVATAR_URL;
     const self=user.relation==='self'||String(user.id)===String(state.user?.id);
+    const friendshipStatus=$('#community-profile-friend-status');friendshipStatus.classList.remove('error');friendshipStatus.hidden=!['outgoing','friend'].includes(user.relation);friendshipStatus.textContent=user.relation==='outgoing'?'تم إرسال طلب صداقة':user.relation==='friend'?'أنتما أصدقاء الآن':'';
     const friend=$('#community-profile-friend');friend.querySelector('span:last-child').textContent=communityRelationLabel(user);friend.disabled=self||user.blocked||['friend','outgoing'].includes(user.relation);
     $('#community-profile-block').disabled=self;$('#community-profile-block').textContent=user.blocked?'إلغاء الحظر':'حظر المستخدم';
     const remaining=Math.max(0,Number(user.reputationDailyRemaining??5)||0);const rep=$('#community-profile-reputation-btn');rep.disabled=self||!!user.reputationGrantedToday||remaining<=0;rep.querySelector('span:nth-child(2)').textContent=user.reputationGrantedToday?'مُنحت اليوم':'منح سمعة';$('#community-profile-reputation-left').textContent=`${remaining}/5 اليوم`;
@@ -771,14 +772,28 @@
     try{const d=await api('/api/public-profile/'+encodeURIComponent(userId));renderCommunityPublicProfile(d.user);}
     catch(err){toast(err.message||'تعذر تحميل الملف',true);closeCommunityProfile();}
   }
+  function confirmFriendRequest(username,accept=false){
+    return new Promise(resolve=>{
+      const dialog=document.createElement('dialog');dialog.className='pf-dialog';dialog.setAttribute('aria-label','تأكيد طلب الصداقة');
+      const title=document.createElement('h3');title.textContent=accept?'قبول طلب الصداقة؟':'إرسال طلب صداقة؟';
+      const text=document.createElement('p');text.textContent=(accept?'هل أنت متأكد من قبول طلب صداقة ':'هل أنت متأكد من إرسال طلب صداقة إلى ')+username+'؟';
+      const yes=document.createElement('button'),no=document.createElement('button');yes.type=no.type='button';yes.className='pf-button primary';no.className='pf-button';yes.textContent=accept?'قبول الصداقة':'إرسال الطلب';no.textContent='إلغاء';
+      let finished=false;const finish=value=>{if(finished)return;finished=true;dialog.close();dialog.remove();resolve(value);};yes.onclick=()=>finish(true);no.onclick=()=>finish(false);dialog.addEventListener('cancel',e=>{e.preventDefault();finish(false);});dialog.addEventListener('close',()=>{if(!finished){finished=true;dialog.remove();resolve(false);}});
+      dialog.append(title,text,yes,no);document.body.append(dialog);dialog.showModal();no.focus();
+    });
+  }
   async function communityProfileFriendAction(){
-    const u=activePublicProfile;if(!u||u.relation==='self')return;
+    const u=activePublicProfile;if(!u||u.blocked||['self','friend','outgoing'].includes(u.relation))return;
     const btn=$('#community-profile-friend');btn.disabled=true;
     try{
-      if(u.relation==='incoming'){await api('/api/friends/respond',{method:'POST',body:JSON.stringify({userId:u.id,accept:true})});u.relation='friend';toast('تمت إضافة الصديق');}
-      else{await api('/api/friends/request',{method:'POST',body:JSON.stringify({username:u.username})});u.relation='outgoing';toast('تم إرسال طلب الصداقة');}
-      renderCommunityPublicProfile(u);loadFriends();
-    }catch(err){btn.disabled=false;toast(err.message||'تعذر تنفيذ طلب الصداقة',true);}
+      if(!await confirmFriendRequest(u.username,u.relation==='incoming'))return;
+      if(activePublicProfile?.id!==u.id)return;
+      btn.querySelector('span:last-child').textContent='جارٍ الإرسال…';
+      if(u.relation==='incoming'){await api('/api/friends/respond',{method:'POST',body:JSON.stringify({userId:u.id,accept:true})});u.relation='friend';}
+      else{const d=await api('/api/friends/request',{method:'POST',body:JSON.stringify({username:u.username})});u.relation=d.status==='accepted'?'friend':'outgoing';}
+      if(activePublicProfile?.id===u.id)renderCommunityPublicProfile(u);loadFriends();
+    }catch(err){if(activePublicProfile?.id===u.id){const status=$('#community-profile-friend-status');status.hidden=false;status.textContent=err.message||'تعذر إرسال الطلب؛ حاول مجددًا';status.classList.add('error');}toast(err.message||'تعذر تنفيذ طلب الصداقة',true);}
+    finally{if(activePublicProfile?.id===u.id){btn.disabled=u.blocked||['self','friend','outgoing'].includes(u.relation);btn.querySelector('span:last-child').textContent=communityRelationLabel(u);}}
   }
   async function communityProfileReputationAction(){
     const u=activePublicProfile;if(!u)return;const btn=$('#community-profile-reputation-btn');btn.disabled=true;
@@ -978,6 +993,6 @@
     closeProfile(){window.__sdNativePublicProfile=false;closeCommunityProfile();},
     openProfile(id){if(!/^[A-Za-z0-9_-]{1,64}$/.test(id))return;window.__sdNativePublicProfile=true;openCommunityProfile(id);},
   };
-  const friendsWorkspace=window.PlazrFriends({api,state,navigate,toast,avatarNode});
+  const friendsWorkspace=window.PlazrFriends({api,state,navigate,toast,avatarNode,confirmFriendRequest});
   boot();
 })();

@@ -33,6 +33,8 @@
     disposed:false,
     performance: {mobile:mobileDevice, pixelRatio:1, frames:0, coalescedMoves:0},
   };
+  const poolPresentation=isPool?window.SamiDevPoolPresentation?.create({canvas,mobileDevice,native:!!window.SamiDevMobile,portrait:runtimeQuery.get('poolLayout')==='portrait'}):null;
+  if(poolPresentation)window.__samidevPoolPresentation=poolPresentation;
   window.__samidevGameState = state;
   if(isPool) window.SamiDevPoolCosmetics = {
     themeForSeat(seat) { return state.network.cosmetics?.[String(seat)]?.pool_theme === 'pool_emerald' ? 'pool_emerald' : 'pool_midnight'; },
@@ -274,7 +276,7 @@
   window.GL = GL;
 
   // Audio bridge for browser playback. Browsers may require the first user gesture before audio can start.
-  const audios = new Map(); let audioId=1;
+  const audios = new Map(),audioPaths=new Map(); let audioId=1,lastPoolBallSound=-Infinity;
   const effectUri = uri => { const path=norm(uri); return path + (path.includes('?') ? '&' : '?') + 'v=audio37'; };
 
   window.AudioController = { musicVolume: 1 };
@@ -282,11 +284,16 @@
 
 
   window.audio = {
-    load(uri){ const id=audioId++; const a=new Audio(effectUri(uri)); audios.set(id,a); return id; },
-    unload(id){ const a=audios.get(id); if(a){a.pause();audios.delete(id);} },
+    load(uri){ const id=audioId++; const a=new Audio(effectUri(uri)); audios.set(id,a);audioPaths.set(id,norm(uri)); return id; },
+    unload(id){ const a=audios.get(id); if(a){a.pause();audios.delete(id);audioPaths.delete(id);} },
     suspend(){ window.__SAMIDEV_AUDIO_SUSPENDED=true; for(const a of audios.values())a.pause(); window.__music?.pause(); },
     resume(){ window.__SAMIDEV_AUDIO_SUSPENDED=false; },
-    play(id,volume=1){ if(window.__SAMIDEV_AUDIO_SUSPENDED||hostBridge.game_preferences?.mute)return; const a=audios.get(id); if(a){a.volume=Math.max(0,Math.min(1,volume));a.currentTime=0;a.play().catch(()=>{});} },
+    play(id,volume=1){ if(window.__SAMIDEV_AUDIO_SUSPENDED||hostBridge.game_preferences?.mute)return; const a=audios.get(id); if(a){let gain=Math.max(0,Math.min(1,Number(volume)||0));const path=audioPaths.get(id)||'';
+      if(isPool&&/\/sounds\/ball(?:_soft)?[123]\.m4a$/.test(path)){
+        const now=performance.now();if(gain<.08||(path.includes('ball_soft')&&gain<.42)||now-lastPoolBallSound<45)return;
+        lastPoolBallSound=now;gain*=path.includes('ball_soft') ? .20 : .40;
+      }
+      a.volume=gain;a.currentTime=0;a.play().catch(()=>{});} },
     playMusic(uri,volume=1){ if(window.__SAMIDEV_AUDIO_SUSPENDED||hostBridge.game_preferences?.mute)return; const a=new Audio(norm(uri)); a.loop=true;a.volume=volume;a.play().catch(()=>{}); window.__music=a; },
     stopMusic(){ window.__music?.pause(); }
   };
@@ -525,7 +532,8 @@
 
   function eventPoint(ev) {
     const r=canvas.getBoundingClientRect();
-    return {id:ev.pointerId ?? 0, x:(ev.clientX-r.left)*(canvas.width/Math.max(1,r.width)), y:(ev.clientY-r.top)*(canvas.height/Math.max(1,r.height))};
+    const point={id:ev.pointerId ?? 0, x:(ev.clientX-r.left)*(canvas.width/Math.max(1,r.width)), y:(ev.clientY-r.top)*(canvas.height/Math.max(1,r.height))};
+    return poolPresentation?.mapPointer(point,{begin:ev.type==='pointerdown'})??point;
   }
 
   // SamiDev touch input uses a bottom-left physical origin. main.js InputManager
@@ -580,13 +588,14 @@
       pendingPointerMoves.set(pointerId, {pointerId, pointerType:ev.pointerType, clientX:ev.clientX, clientY:ev.clientY,
         button:ev.button, buttons:ev.buttons, altKey:ev.altKey, ctrlKey:ev.ctrlKey, shiftKey:ev.shiftKey});
     },{passive:false});
-    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; },{passive:false});
-    canvas.addEventListener('pointercancel',ev=>{ ev.preventDefault(); pendingPointerMoves.delete(ev.pointerId??0); emitTouch(3,ev); if(ev.pointerType!=='touch') emitMouse('leave',ev); },{passive:false});
+    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
+    canvas.addEventListener('pointercancel',ev=>{ ev.preventDefault(); pendingPointerMoves.delete(ev.pointerId??0); emitTouch(3,ev); if(ev.pointerType!=='touch') emitMouse('leave',ev);poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
     canvas.addEventListener('pointerenter',ev=>{if(ev.pointerType!=='touch') emitMouse('enter',ev);});
     canvas.addEventListener('pointerleave',ev=>{if(ev.pointerType!=='touch') emitMouse('leave',ev);});
     canvas.addEventListener('lostpointercapture',ev=>{
       const id=ev.pointerId??0;
       if(state.activePointers.has(id)){pendingPointerMoves.delete(id);emitTouch(3,ev);}
+      poolPresentation?.endPointer(id);
     });
     canvas.addEventListener('contextmenu',ev=>ev.preventDefault());
   }
@@ -1428,7 +1437,7 @@
     for(const id of Array.from(timers.keys()))clearHostTimer(id);
     for(const alarm of state.localHost.alarms.values())clearTimeout(alarm);state.localHost.alarms.clear();
     if(state.network.authorityCheckTimer)clearTimeout(state.network.authorityCheckTimer);
-    window.audio.suspend();window.audio.stopMusic();for(const audio of audios.values()){audio.pause();audio.removeAttribute('src');audio.load();}audios.clear();
+    window.audio.suspend();window.audio.stopMusic();for(const audio of audios.values()){audio.pause();audio.removeAttribute('src');audio.load();}audios.clear();audioPaths.clear();
     gl.getExtension('WEBGL_lose_context')?.loseContext();
     state.images.clear();
   }};
@@ -1447,6 +1456,7 @@
       if(state.drawFrame && state.frameRequested){
         state.frameRequested=false;
         try {
+          poolPresentation?.beforeFrame(state.gameLogic?.sceneMgr);
           state.drawFrame();
           state.performance.frames++;
           if(state.performance.frames===1){startupMark('firstFrame');window.__SAMIDEV_APP_HOST?.surfaceReady?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_ready'}));}
