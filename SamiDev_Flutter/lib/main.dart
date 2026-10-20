@@ -96,7 +96,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       dismissFriendBanner();await friendNotifications?.stop();friendNotifications=null;
       await discardGame();await subscription?.cancel();await runtime?.close();
       final r=widget.runtimeFactory?.call()??GameRuntime(PlatformApi(
-        RuntimePolicy(const String.fromEnvironment('SAMIDEV_SERVER_URL'),allowLocalDevelopment:const bool.fromEnvironment('SAMIDEV_LOCAL_DEV')),SecureSessionVault()));runtime=r;
+        RuntimePolicy(const String.fromEnvironment('SAMIDEV_SERVER_URL', defaultValue: 'https://plazr.net'),allowLocalDevelopment:const bool.fromEnvironment('SAMIDEV_LOCAL_DEV')),SecureSessionVault()));runtime=r;
       await r.start();if(!mounted)return;
       subscription=r.events.stream.listen(onEvent);
       await NativeAuth(r.api).prepare();
