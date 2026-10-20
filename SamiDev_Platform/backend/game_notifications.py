@@ -11,6 +11,7 @@ class GameNotifications:
         self.queue = asyncio.Queue(maxsize=128)
         self.task = None
         self.memory = {}
+        self.prefix = getattr(store, "prefix", "sd")
 
     async def observe(self, rid, turn=None, started=False, finished=False):
         if os.getenv('SAMIDEV_PUSH_ENABLED') != '1': return
@@ -18,7 +19,7 @@ class GameNotifications:
             room = await self.store.get_room_state(rid)
             if finished or room.get('finished') or not room.get('begun'): return
             value = 'started' if started else ','.join(map(str, sorted(set(turn or []))))
-            key = f'sd:game-push:{"begin" if started else "turn"}:{rid}'
+            key = f'{self.prefix}:game-push:{"begin" if started else "turn"}:{rid}'
             redis = getattr(self.store, 'r', None)
             if redis is not None:
                 if started: changed = await redis.set(key, value, nx=True, ex=86400)
@@ -53,7 +54,7 @@ class GameNotifications:
         if room.get('finished') or not room.get('begun') or not any(p.get('accountId') == uid and p.get('seat') == seat for p in room.get('roster', [])): return
         if not started:
             redis = getattr(self.store, 'r', None)
-            key = f'sd:game-push:turn:{rid}'
+            key = f'{self.prefix}:game-push:turn:{rid}'
             current = await redis.get(key) if redis is not None else self.memory.get(key)
             if isinstance(current, bytes): current = current.decode()
             if str(seat) not in (current or '').split(','): return
