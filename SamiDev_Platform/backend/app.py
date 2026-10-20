@@ -23,6 +23,7 @@ from social_platform import PlatformService, PlatformHttp, PlatformError, cosmet
 from games import GAMES, game_id
 from game_views import client_state
 from quick_play import QuickPlay
+from game_notifications import GameNotifications
 
 ROOT = Path(__file__).resolve().parent.parent
 GAME_ROOT = Path(os.getenv("SAMIDEV_GAME_DIR") or ROOT / "game").resolve()
@@ -126,6 +127,7 @@ class SamiDevRealtime:
         self.platform_http = PlatformHttp(self.platform, self.store, trust_proxy=TRUST_PROXY, trust_forwarded_https=TRUST_FORWARDED_HTTPS)
         self.room_policy=self.platform.room_policy
         self.quick_play = QuickPlay(self.store)
+        self.game_notifications = GameNotifications(self.platform, self.store)
         self.gamehost = GameHostClient()
         self.metrics = Metrics()
         self.connections: dict[str, Conn] = {}
@@ -185,6 +187,7 @@ class SamiDevRealtime:
         await self.gamehost.close()
         await self.platform.live.close()
         await self.platform.direct.close()
+        await self.game_notifications.close()
         if PLATFORM_STORE == "postgres": await self.platform.close()
         if getattr(self.store, "r", None) is not None: await self.store.r.aclose()
 
@@ -506,6 +509,7 @@ class SamiDevRealtime:
                 # A timeout can end a game with no later player move to repair a
                 # paused replica. Push the final seat-filtered checkpoint now.
                 await self.fanout_finished_checkpoint(rid, room, event, move_count)
+            await self.game_notifications.observe(rid, turn=event.get("turn") or [], finished=bool(event.get("gameOver")))
             # Gameplay/terminal state is delivered before SQL rewards. A wallet
             # transaction must not hide a turn/result from the other player.
             await self._award_profile_wins(rid, event)
@@ -1034,6 +1038,7 @@ class SamiDevRealtime:
                     "type": "begin_match", "roomId": c.room_id,
                     "authority": {"server": True, "mainJsSha256": authority.get("mainJsSha256")},
                 })
+                await self.game_notifications.observe(c.room_id, started=True)
             return
 
         if kind == "move":
@@ -1140,6 +1145,7 @@ class SamiDevRealtime:
             else:
                 await self.fanout(c.room_id, payload)
             self.observe('fanout_move', fanout_began)
+            await self.game_notifications.observe(c.room_id, turn=authority.get('turn') or [], finished=bool(authority.get('gameOver')))
             await self._award_profile_wins(c.room_id, authority)
             await self._award_daily_match_rewards(c.room_id, authority)
             return
@@ -1380,7 +1386,10 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
     if request.path.startswith("/api/"):
         # Keep SSE untransformed through proxies; generic API headers must not
         # erase the stream endpoint's no-transform directive.
-        response.headers["Cache-Control"] = "private, no-store" + (", no-transform" if response.content_type == "text/event-stream" else "")
+        # Only image bytes may be retained privately and revalidated by ETag.
+        avatar_cache = request.path.startswith('/api/avatar/') and response.status in {200, 304} and 'ETag' in response.headers
+        if not avatar_cache:
+            response.headers["Cache-Control"] = "private, no-store" + (", no-transform" if response.content_type == "text/event-stream" else "")
         response.headers["Vary"] = "Cookie, Origin"
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"

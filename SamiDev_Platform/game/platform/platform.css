@@ -826,3 +826,10 @@ html[data-sd-native] .lobby-profile{display:none!important}
 
 .platform-legal-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 16px;padding:16px 10px;font-size:12px;line-height:1.8}
 .platform-legal-links a{color:var(--muted);text-underline-offset:3px}.platform-legal-links small{width:100%;text-align:center;color:var(--muted);font-size:11px}
+
+/* Keep visual design while giving assistive navigation one application heading. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+html[data-theme="light"]{--muted:#596d77}
+html[data-theme="light"] .empty{color:#5e707a}
+html[data-theme="light"] .profile-showcase .profile-stat small{color:#596e70!important}
+html[data-theme="light"] .community-mobile-tabs button[aria-selected="true"]{color:#0867ac}

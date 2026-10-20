@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:samidev/runtime/api.dart';
 import 'package:samidev/runtime/policy.dart';
 import 'package:samidev/runtime/friend_notifications.dart';
@@ -46,6 +47,20 @@ class NotificationApi extends PlatformApi {
 }
 
 void main() {
+  test('table push taps are restricted to the active account and valid room', () async {
+    final api = NotificationApi(), opened = <String>[];
+    final service = FriendNotifications(api, 'owner', onMessage: (_) {}, onOpen: (_) {}, onGameOpen: opened.add);
+    service.openMessage(const RemoteMessage(data: {'type':'game_turn','accountId':'other','roomId':'ABC123'}));
+    service.openMessage(const RemoteMessage(data: {'type':'game_started','accountId':'owner','roomId':'../bad'}));
+    expect(opened, isEmpty);
+    service.openMessage(const RemoteMessage(data: {'type':'game_started','accountId':'owner','roomId':'ABC123'}));
+    service.openMessage(const RemoteMessage(data: {'type':'game_turn','accountId':'owner','roomId':'ABC123'}));
+    expect(opened, ['ABC123','ABC123']);
+    await service.stop();
+    service.openMessage(const RemoteMessage(data: {'type':'game_turn','accountId':'owner','roomId':'ABC123'}));
+    expect(opened.length, 2);
+    await api.updates.close(); api.close();
+  });
   test('foreground notifications suppress history, duplicates, muted and stopped accounts', () async {
     final api = NotificationApi(), seen = <String>[];
     Map<String, dynamic> thread(String id, {bool muted = false}) => {

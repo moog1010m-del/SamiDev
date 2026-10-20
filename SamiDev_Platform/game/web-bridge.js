@@ -3,9 +3,9 @@
 
   function haptic(type='selection') {
     try {
-      if (!navigator.vibrate) return;
       const pattern = type === 'warning' ? [35, 35, 35] : type === 'success' ? [20, 25, 45] : [18];
-      navigator.vibrate(pattern);
+      if(window.SamiDevGameHaptics){window.SamiDevGameHaptics.pattern(pattern.map((_,i)=>i%2?0:.6),pattern);return;}
+      navigator.vibrate?.(pattern);
     } catch (_) {}
   }
 

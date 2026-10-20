@@ -287,7 +287,7 @@
   window.audio = {
     load(uri){ const id=audioId++; const a=new Audio(effectUri(uri)); audios.set(id,a);audioPaths.set(id,norm(uri)); return id; },
     unload(id){ const a=audios.get(id); if(a){a.pause();audios.delete(id);audioPaths.delete(id);} },
-    suspend(){ window.__SAMIDEV_AUDIO_SUSPENDED=true; for(const a of audios.values())a.pause(); window.__music?.pause(); },
+    suspend(){ window.__SAMIDEV_AUDIO_SUSPENDED=true; window.SamiDevGameHaptics?.cancel(); for(const a of audios.values())a.pause(); window.__music?.pause(); },
     resume(){ window.__SAMIDEV_AUDIO_SUSPENDED=false; },
     play(id,volume=1){ if(window.__SAMIDEV_AUDIO_SUSPENDED||hostBridge.game_preferences?.mute)return; const a=audios.get(id); if(a){let gain=Math.max(0,Math.min(1,Number(volume)||0));const path=audioPaths.get(id)||'';
       if(isPool&&/\/sounds\/ball(?:_soft)?[123]\.m4a$/.test(path)){
@@ -354,17 +354,59 @@
     poolAngleAdapters.add(logic);
   }
 
+  // Native games pass amplitude + milliseconds, not the browser vibration API.
+  const gameHaptics = (() => {
+    let lastPulse=-Infinity;
+    const native=()=>typeof window.SamiDevMobile?.postMessage==='function';
+    const supported=()=>native()||typeof navigator.vibrate==='function';
+    const enabled=()=>!state.disposed&&!document.hidden&&!window.__SAMIDEV_AUDIO_SUSPENDED&&hostBridge.game_preferences?.['@SamiDev/haptic']?.enabled!==false&&hostBridge.game_preferences?.['@SamiDev/haptic']?.intensity!==0;
+    function cancel(){try{if(native())window.SamiDevMobile.postMessage(JSON.stringify({type:'game_haptic',action:'cancel'}));else navigator.vibrate?.(0);}catch(_){}}
+    function pattern(amplitudes,durations){
+      if(!supported()||!enabled()||!Array.isArray(amplitudes)||!Array.isArray(durations)||!amplitudes.length||amplitudes.length!==durations.length||amplitudes.length>16)return;
+      const a=[],d=[];let total=0;
+      for(let i=0;i<amplitudes.length;i++){
+        const amp=amplitudes[i],ms=durations[i];
+        if(typeof amp!=='number'||typeof ms!=='number'||!Number.isFinite(amp)||!Number.isFinite(ms)||amp<0||ms<0)return;
+        a.push(Math.min(1,amp));d.push(Math.min(500,Math.round(ms)));total+=d[i];
+      }
+      if(total>2000||!a.some((v,i)=>v>0&&d[i]>0)||performance.now()-lastPulse<45)return;
+      lastPulse=performance.now();
+      try{
+        if(native()){window.SamiDevMobile.postMessage(JSON.stringify({type:'game_haptic',amplitudes:a,durations:d}));return;}
+        // Web vibration has durations only: preserve silence and merge equal phases.
+        const times=[];let phase=true;
+        for(let i=0;i<a.length;i++){
+          const on=a[i]>0;
+          if(!times.length){if(!on)times.push(0);times.push(d[i]);phase=on;}
+          else if(on===phase)times[times.length-1]+=d[i];
+          else{times.push(d[i]);phase=on;}
+        }
+        navigator.vibrate(times.length===1?times[0]:times);
+      }catch(_){}
+    }
+    function pulse(amplitude=20,duration){
+      // Retain the old single-duration call for independent interface callers.
+      if(duration===undefined){duration=amplitude;amplitude=1;}
+      if(duration===0){cancel();return;}
+      pattern([amplitude],[duration]);
+    }
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
+    window.addEventListener?.('pagehide',cancel);
+    return {supported,pulse,pattern,cancel};
+  })();
+  window.SamiDevGameHaptics=gameHaptics;
+
   const hostBridge = {
     // Keep production consoles quiet. Append ?debug=1 when Trace/Debug logs are needed.
     globals:{}, is_server:false, is_develop:runtimeDebug, mobileUI:mobileDevice, version:30, dpi:96, language:'en', os:'web', isRTL:()=>false,
     ownerSeat:()=>0, saved_local_state:loadJsonStorage(`samidev.${currentGame.id}.saved_local_state`,{}), game_preferences:loadJsonStorage(`samidev.${currentGame.id}.game_preferences`,isPool?{"@SamiDev/sound":{enabled:true,volume:1,music:false}}:{}),
     log:(m,l)=>{ const level=Number(l); if(runtimeDebug) console.log('[game]',m); else if(Number.isFinite(level) && level>=4) console.error('[game]',m); else if(Number.isFinite(level) && level>=3) console.warn('[game]',m); }, hrtime:()=>performance.now()*1e6,
     translate, loadFileAsString:syncText,
-    saveLocalState:(x)=>{ hostBridge.saved_local_state=x||{}; saveJsonStorage(`samidev.${currentGame.id}.saved_local_state`,hostBridge.saved_local_state); }, saveGamePreferences:(x)=>{hostBridge.game_preferences=x||{}; saveJsonStorage(`samidev.${currentGame.id}.game_preferences`,hostBridge.game_preferences);},
+    saveLocalState:(x)=>{ hostBridge.saved_local_state=x||{}; saveJsonStorage(`samidev.${currentGame.id}.saved_local_state`,hostBridge.saved_local_state); }, saveGamePreferences:(x)=>{hostBridge.game_preferences=x||{}; saveJsonStorage(`samidev.${currentGame.id}.game_preferences`,hostBridge.game_preferences);if(x?.['@SamiDev/haptic']?.enabled===false||x?.['@SamiDev/haptic']?.intensity===0)gameHaptics.cancel();},
     setTimer:setHostTimer, clearTimer:clearHostTimer, requestRender:()=>{state.frameRequested=true;},
     addMenuButton:(id,label)=>{ (state.menuButtons||(state.menuButtons=[])).push({id,label}); }, requestKeyboard:()=>{}, showGameOver:()=>console.log('[web-host] Game over'), showItemPurchase:()=>{}, showProfile:(seat)=>{ try { const player=(window.SamiDevNetwork?.state?.roster||[]).find(p=>p&&Number(p.seat)===Number(seat)); if(window.SamiDevMobile?.postMessage&&player?.accountId){window.SamiDevMobile.postMessage(JSON.stringify({type:'open_player_profile',userId:player.accountId}));}else{window.SamiDevPlayerProfileUI?.openSeat?.(seat);} } catch (e) { console.warn('[SamiDev Profile] native profile open failed', e); } }, track:()=>{},
     getInventory:()=>[], [HOST_PLAYER_ID_METHOD]:(seat)=> { const r=state.network.roster?.find?.(x=>x&&x.seat===seat); return Number.isInteger(seat)&&seat>=0?(r?.name||(state.network.waiting?null:`Player ${seat+1}`)):null; },
-    haptic:{isVibrationSupported:()=>typeof navigator!=='undefined'&&typeof navigator.vibrate==='function',vibrate:(ms=20)=>{try{navigator.vibrate?.(ms);}catch(_){}},vibratePattern:(p)=>{try{navigator.vibrate?.(p);}catch(_){}}},
+    haptic:{isVibrationSupported:gameHaptics.supported,vibrate:gameHaptics.pulse,vibratePattern:gameHaptics.pattern},
     shop:{getCatalog:()=>Promise.resolve([])},
     net:{sendMessage:()=>{}, onMessage:()=>{}},
     setOnSurfaceCreatedListener:(f)=>state.surfaceCreated=f,
@@ -1465,7 +1507,7 @@
   };
 
   window.SamiDevGameRuntime={preloadResources:prepareResources,dispose(){
-    if(state.disposed)return;state.disposed=true;
+    if(state.disposed)return;gameHaptics.cancel();state.disposed=true;
     const net=window.SamiDevNetwork;if(net){net.state.intentionalClose=true;net.state.ws?.close(1000,'game view closed');}
     for(const id of Array.from(timers.keys()))clearHostTimer(id);
     for(const alarm of state.localHost.alarms.values())clearTimeout(alarm);state.localHost.alarms.clear();

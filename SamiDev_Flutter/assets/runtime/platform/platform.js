@@ -73,7 +73,8 @@
     if(!image||!fallback)return;
     fallback.textContent=initials(name);
     wireAvatarImage(image,fallback);
-    image.src=avatarData||DEFAULT_AVATAR_URL;
+    const source=avatarData||DEFAULT_AVATAR_URL;
+    if(image.getAttribute('src')!==source)image.src=source;
   }
   function setUser(user){
     state.user=user;
@@ -197,7 +198,7 @@
     bind();
     const authControls=$$('.auth-form input,.auth-form button,.auth-tab');authControls.forEach(node=>node.disabled=true);
     try{await window.SamiDevFirebaseAuth.mount({api,currentUser:()=>state.user,onAuthenticated:user=>{setUser(user);showApp();}});authControls.forEach(node=>node.disabled=false);}catch(err){toast('تعذر تحميل إعدادات تسجيل الدخول. أعد تحميل الصفحة.',true);return;}
-    try{let d;try{d=await api('/api/me');}catch(error){if(error.status!==401)throw error;d=await api('/api/auth/guest',{method:'POST',body:'{}'});}setUser(d.user);showApp();}catch(error){toast(error.message,true);}
+    try{const d=await api('/api/auth/guest',{method:'POST',body:'{}'});setUser(d.user);showApp();}catch(error){toast(error.message,true);}
   }
   function selectCreateGame(gameId){
     const pool=gameId==='pool';
@@ -553,9 +554,22 @@
   }
   function renderCommunities(){
     const box=$('#community-grid');if(!box)return;
-    if(!state.communities.length){box.innerHTML='<div class="empty">لا توجد مساحات متاحة الآن.</div>';return;}
-    box.innerHTML=state.communities.map(c=>`<button class="community-card" type="button" data-community="${escapeHtml(c.id)}" style="--community-accent:${escapeHtml(c.accent||'#d5a34c')}"><div class="community-card-copy"><small class="eyebrow">مساحة اجتماعية</small><h3 dir="auto">${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||'')}</p></div><span class="community-card-mark">${communityFlag(c)}</span><div class="community-card-meta"><span><b>${Number(c.onlineCount)||0}</b> متصل</span><span><b>${Number(c.gameRoomCount)||0}</b> مباراة</span><span class="community-card-enter">دخول ‹</span></div></button>`).join('');
-    $$('.community-card',box).forEach(card=>card.onclick=()=>enterCommunity(card.dataset.community));
+    const previous=new Map([...box.children].map(node=>[node.dataset.community,node])),update=stableList(box);
+    if(!state.communities.length){if(!update.reuse('empty',null))update.add(emptyBlock('لا توجد مساحات متاحة الآن.'));update.finish();return;}
+    for(const c of state.communities){
+      const key=String(c.id),signature=[c.id,c.name,c.description,c.countryCode,c.mark,c.accent];
+      let card=previous.get(key);
+      if(!update.reuse(key,signature)){
+        card=document.createElement('button');card.className='community-card';card.type='button';card.dataset.community=key;
+        card.style.setProperty('--community-accent',c.accent||'#d5a34c');
+        card.innerHTML=`<div class="community-card-copy"><small class="eyebrow">مساحة اجتماعية</small><h3 dir="auto">${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||'')}</p></div><span class="community-card-mark">${communityFlag(c)}</span><div class="community-card-meta"><span><b data-community-online>0</b> متصل</span><span><b data-community-games>0</b> مباراة</span><span class="community-card-enter">دخول ‹</span></div>`;
+        card.onclick=()=>enterCommunity(card.dataset.community);update.add(card);
+      }
+      for(const [selector,value] of [['[data-community-online]',c.onlineCount],['[data-community-games]',c.gameRoomCount]]){
+        const counter=card.querySelector(selector),text=String(Number(value)||0);if(counter.textContent!==text)counter.textContent=text;
+      }
+    }
+    update.finish();
   }
   function communityLocationId(){
     try{return new URLSearchParams(location.search).get('community')||sessionStorage.getItem('samidev_return_community')||'';}catch(_){return '';}

@@ -16,6 +16,9 @@ class MainActivity : FlutterActivity() {
                     val channel = NotificationChannel("plazr_friends", "رسائل الأصدقاء", NotificationManager.IMPORTANCE_HIGH)
                     channel.description = "إشعارات الرسائل الخاصة في Plazr"
                     getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+                    val games = NotificationChannel("plazr_games", "المباريات والأدوار", NotificationManager.IMPORTANCE_HIGH)
+                    games.description = "بدء المباراة ووصول دورك في الطاولة"
+                    getSystemService(NotificationManager::class.java).createNotificationChannel(games)
                 }
                 result.success(null)
             } else if (call.method == "configuration") {
