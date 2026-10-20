@@ -11,6 +11,8 @@ from reply_queue import next_reply_message
 BASE=Path(__file__).resolve().parent
 
 def read_scripts(path,config):
+    if not path or not Path(path).exists():
+        return []
     scripts=json.loads(Path(path).read_text(encoding='utf-8'))
     ids={p['id'] for p in config['profiles']}
     if not isinstance(scripts,list):raise ValueError('Scripts must be an array')
