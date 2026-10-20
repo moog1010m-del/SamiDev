@@ -67,7 +67,7 @@ async def live(args,config,memory,scripts):
             session=await stack.enter_async_context(aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)))
             model=Gemini(session,os.environ.get('GEMINI_API_KEY',''),os.environ.get('GEMINI_MODEL',''))
         engine=Coordinator(config,memory,scripts,model);pending=asyncio.Queue(maxsize=1)
-        engine.identities={clients[p['id']].uid:{'name':p['name'],'kind':'bot','persona_id':p['id'],'gender':p.get('gender','female'),'real_name':p.get('real_name','')} for p in config['profiles']}
+        engine.identities={clients[p['id']].uid:{'name':p['name'],'kind':'bot','persona_id':p['id'],'gender':p.get('gender','female')} for p in config['profiles']}
         print(json.dumps({'event':'behavior_ready','version':'central-brain-multi-persona-v3','model':model.model if model else None,'initiativeSeconds':config.get('initiative_seconds',25)}),flush=True)
         bot_ids={c.uid for c in clients.values()};members=None;joined=set();last_human=time.monotonic();last_idle=0
         room='/api/communities/'+config['room']

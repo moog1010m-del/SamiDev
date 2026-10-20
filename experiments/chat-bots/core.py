@@ -175,9 +175,9 @@ class Coordinator:
             candidates = [p for p in active if p['id'] != self.last_speaker_id]
             if not candidates: candidates = active
 
-        # If addressed by handle or real name
+        # If addressed by handle in chat
         if text:
-            addressed = [p for p in candidates if p['id'] in text or p.get('username','') in text or p.get('real_name','') in text or p['name'] in text]
+            addressed = [p for p in candidates if p['id'] in text or p.get('username','') in text or p['name'] in text]
             if addressed:
                 return addressed[0]
 
@@ -233,10 +233,10 @@ class Coordinator:
         active_ids = [p['id'] for p in self.active() if p['id'] != host['id']]
         random.shuffle(active_ids)
 
-        idle1_id = active_ids[0] if len(active_ids) > 0 else 'z8q'
-        idle2_id = active_ids[1] if len(active_ids) > 1 else 'k5l'
-        solver_id = active_ids[2] if len(active_ids) > 2 else 'd7w'
-        tease_id = active_ids[3] if len(active_ids) > 3 else 'r9k'
+        idle1_id = active_ids[0] if len(active_ids) > 0 else 'z8qx'
+        idle2_id = active_ids[1] if len(active_ids) > 1 else 'k5lp'
+        solver_id = active_ids[2] if len(active_ids) > 2 else 'd7wsx'
+        tease_id = active_ids[3] if len(active_ids) > 3 else 'r9kx'
 
         mode = self.riddle_index % 3
 
@@ -272,12 +272,7 @@ class Coordinator:
         mode = cr['mode']
         ans = cr['answer']
         wrong = cr['wrong_options']
-        profiles_by_id = {p['id']: p for p in self.active()}
         host = cr['host']
-
-        def get_name(pid):
-            p = profiles_by_id.get(pid, {})
-            return p.get('real_name', p.get('name', pid))
 
         opt1 = wrong[0] if wrong else 'الخيار الأول'
         opt2 = wrong[1] if len(wrong) > 1 else (wrong[0] if wrong else 'الخيار الثاني')
@@ -308,10 +303,10 @@ class Coordinator:
             elif stage == 2:
                 cr['stage'] = 3
                 cr['next_stage_time'] = now + 8.0
-                name2 = get_name(cr['idle2_id'])
+                id2 = cr['idle2_id']
                 templates = [
-                    f'هههههه وش جاب {opt2} للغز يا {name2}؟ ركزي شوي بس! 😭',
-                    f'لا مستحيل هههههه ضحكتيني والله، فكروا زين! 😂',
+                    f'هههههه وش جاب {opt2} للغز يا {id2}؟ ركزي شوي بس! 😭',
+                    f'لا مستحيل يا {id2} هههههه ضحكتيني والله، فكروا زين! 😂',
                     f'شكلنا جبنا العيد بالتخمينات 😂 مين ينقذنا؟'
                 ]
                 return Reply(cr['tease_id'], random.choice(templates), 'riddle_tease')
@@ -319,21 +314,22 @@ class Coordinator:
             elif stage == 3:
                 cr['stage'] = 4
                 cr['next_stage_time'] = now + 5.0
+                host_id = host['id']
                 templates = [
                     f'خلاص وضحت عندي! أكيد {ans} صح؟ 🔥',
                     f'عرفتهاااا خلاص! أكيد {ans} ما يبيلها كلام 😎',
-                    f'لقيتها! الجواب هو {ans} صح يا {host.get("real_name", "نورة")}؟ 👏'
+                    f'لقيتها! الجواب هو {ans} صح يا {host_id}؟ 👏'
                 ]
                 return Reply(cr['solver_id'], random.choice(templates), 'riddle_solve')
 
             elif stage == 4:
                 cr['stage'] = 5
                 cr['next_stage_time'] = now + 5.5
-                solver_name = get_name(cr['solver_id'])
+                solver_id = cr['solver_id']
                 templates = [
-                    f'كفووو يا {solver_name}! صح عليك وربي الجواب هو {ans} 👏🔥',
-                    f'صح عليك يا {solver_name}! جبتيها وربي، الجواب {ans} ✨',
-                    f'كفو والله يا {solver_name}! أهنيك الجواب الصح {ans} 👏'
+                    f'كفووو يا {solver_id}! صح عليك وربي الجواب هو {ans} 👏🔥',
+                    f'صح عليك يا {solver_id}! جبتيها وربي، الجواب {ans} ✨',
+                    f'كفو والله يا {solver_id}! أهنيك الجواب الصح {ans} 👏'
                 ]
                 return Reply(host['id'], random.choice(templates), 'riddle_confirm')
 
@@ -341,9 +337,9 @@ class Coordinator:
                 cr['solved'] = True
                 self.current_riddle = None
                 self.last_riddle_end = time.monotonic()
-                solver_name = get_name(cr['solver_id'])
+                solver_id = cr['solver_id']
                 templates = [
-                    f'ما شاء الله عليك يا {solver_name} لقطتيها قبلي 😂👏',
+                    f'ما شاء الله عليك يا {solver_id} لقطتيها قبلي 😂👏',
                     f'كنت بكتبها والله وسبقتيني قهر 😭💔',
                     f'كفووو يا ذيبة تستاهلين الفوز 🔥'
                 ]
@@ -359,8 +355,8 @@ class Coordinator:
             elif stage == 1:
                 cr['stage'] = 2
                 cr['next_stage_time'] = now + 7.5
-                name1 = get_name(cr['idle1_id'])
-                return Reply(cr['tease_id'], f'هههههه من جدك يا {name1}؟ مستحيل {opt1} عاد 🤣', 'riddle_tease')
+                id1 = cr['idle1_id']
+                return Reply(cr['tease_id'], f'هههههه من جدك يا {id1}؟ مستحيل {opt1} عاد 🤣', 'riddle_tease')
 
             elif stage == 2:
                 cr['stage'] = 3
@@ -376,8 +372,8 @@ class Coordinator:
                 cr['solved'] = True
                 self.current_riddle = None
                 self.last_riddle_end = time.monotonic()
-                solver_name = get_name(cr['solver_id'])
-                return Reply(host['id'], f'كفووو يا {solver_name}! صح عليك وربي، الجواب هو {ans} 👏✨', 'riddle_confirm')
+                solver_id = cr['solver_id']
+                return Reply(host['id'], f'كفووو يا {solver_id}! صح عليك وربي، الجواب هو {ans} 👏✨', 'riddle_confirm')
 
         # MODE 2: Idle1 wrong -> Idle2 wrong -> Solver solves -> Host confirms -> Tease
         else:
@@ -399,8 +395,8 @@ class Coordinator:
             elif stage == 3:
                 cr['stage'] = 4
                 cr['next_stage_time'] = now + 5.5
-                solver_name = get_name(cr['solver_id'])
-                return Reply(host['id'], f'وربي كفو يا {solver_name}! جبتيها بالملي، الجواب هو {ans} 👏', 'riddle_confirm')
+                solver_id = cr['solver_id']
+                return Reply(host['id'], f'وربي كفو يا {solver_id}! جبتيها بالملي، الجواب هو {ans} 👏', 'riddle_confirm')
 
             elif stage == 4:
                 cr['solved'] = True
@@ -449,13 +445,13 @@ class Coordinator:
         # 2. General Queries & Identity
         profile = self.choose(message.text, message.user_id)
         if not profile: return None
-        real_name = profile.get('real_name', profile.get('name'))
         def local(value): return Reply(profile['id'], value, 'local')
 
         if any(term in text for term in ('وش اسمك', 'وش اساميكم', 'وش اسماؤكم', 'وش اسمائكم', 'مين انتم', 'مين انتو', 'من انتم', 'من انتو', 'وش اسمك الحقيقي', 'وش اساميكم الحقيقية', 'اسمك ايش', 'اسمك ايه')):
-            return local(f'اسمي {real_name} واليوزر اختصار لي 🌸')
+            my_handle = profile['id']
+            return local(f'اسمي {my_handle} 🌸')
         if any(term in text for term in ('ذكر ولا انثى', 'ذكر ولا أنثى', 'انثى ولا ذكر', 'أنثى ولا ذكر', 'بنت ولا ولد', 'ولد ولا بنت', 'انتي بنت', 'أنتي بنت', 'انت بنت', 'أنت بنت', 'انت ولد', 'أنت ولد', 'انتي ولد', 'أنتي ولد', 'وش جنسك', 'بنت ولا رجال', 'رجال ولا بنت', 'بنت؟', 'ذكر؟', 'انثى؟', 'أنثى؟', 'انتم بنات', 'انتو بنات')):
-            return local(f'أكيد بنت، اسمي {real_name} 🌸')
+            return local('أكيد بنت طبعاً! 🌸')
         if any(term in text for term in ('انت بوت', 'أنت بوت', 'انتي بوت', 'أنتي بوت', 'انت انسان', 'أنت إنسان', 'انتي انسانة', 'أنتي إنسانة', 'انت ريبورت', 'أنت ريبورت', 'انت روبوت', 'أنت روبوت', 'ذكاء اصطناعي')):
             return local('هههههه وش دعوة أكيد بنت حقيقية، أجل شبح؟ 😂')
         if any(term in text for term in ('سناب', 'واتساب', 'رقمك', 'صورتك')):
