@@ -21,6 +21,10 @@ android {
     compileSdk = maxOf(36, flutter.compileSdkVersion)
     ndkVersion = flutter.ndkVersion
 
+    buildFeatures {
+        resValues = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -36,16 +40,19 @@ android {
         // Public Firebase application configuration, never service-account keys.
         // Native resources let FCM receive notifications after process death.
         // Registration remains opt-in via firebase_messaging_auto_init_enabled=false.
-        val pushApp = System.getenv("SAMIDEV_FIREBASE_ANDROID_APP_ID")?.trim().orEmpty()
-        val pushProject = System.getenv("SAMIDEV_FIREBASE_PROJECT_ID")?.trim().orEmpty()
-        val pushKey = System.getenv("SAMIDEV_FIREBASE_API_KEY")?.trim().orEmpty()
-        val pushSender = System.getenv("SAMIDEV_FIREBASE_MESSAGING_SENDER_ID")?.trim().orEmpty()
-        if (listOf(pushApp, pushProject, pushKey, pushSender).all { it.isNotEmpty() }) {
-            resValue("string", "google_app_id", pushApp)
-            resValue("string", "google_api_key", pushKey)
-            resValue("string", "gcm_defaultSenderId", pushSender)
-            resValue("string", "project_id", pushProject)
-        }
+        val pushApp = System.getenv("SAMIDEV_FIREBASE_ANDROID_APP_ID")?.trim().takeIf { !it.isNullOrEmpty() }
+            ?: "1:865538421915:android:f74ea9274d747ea9a2023e"
+        val pushProject = System.getenv("SAMIDEV_FIREBASE_PROJECT_ID")?.trim().takeIf { !it.isNullOrEmpty() }
+            ?: "samidev-app-092494"
+        val pushKey = System.getenv("SAMIDEV_FIREBASE_API_KEY")?.trim().takeIf { !it.isNullOrEmpty() }
+            ?: "AIzaSyBPasEuPngaKZ1l-_TgpSkkK03hXQq_dG0"
+        val pushSender = System.getenv("SAMIDEV_FIREBASE_MESSAGING_SENDER_ID")?.trim().takeIf { !it.isNullOrEmpty() }
+            ?: "865538421915"
+
+        resValue("string", "google_app_id", pushApp)
+        resValue("string", "google_api_key", pushKey)
+        resValue("string", "gcm_defaultSenderId", pushSender)
+        resValue("string", "project_id", pushProject)
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
         // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
         // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`
