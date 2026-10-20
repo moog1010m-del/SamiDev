@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "aeb0f40529d60291dee0d70e558b6822e1a49da1e2f31373140cc22385468085"
+      "sha256": "347b98cad2684883e9d2bb6e332d1c854cdfeea9ec6dc672585f9eec849ebb8e"
     },
     "browser-runtime.js": {
       "size": 88974,
@@ -2645,15 +2645,15 @@
     },
     "platform/build.json": {
       "size": 6935,
-      "sha256": "6ba2cecc9c1f3d70350bca8863591cd5660ce3ab7062084de3c51da12c407723"
+      "sha256": "8dc553bf0ba5ece3d66b5adb68e769c8dd79b822d67578a8917dc05211c6de89"
     },
     "platform/children.html": {
-      "size": 5341,
-      "sha256": "dbfddb9f3e469ed27e6fc7faf04aac7831eda43ddcdd47760b1b10a91ce43f24"
+      "size": 5211,
+      "sha256": "1f7a85a86f66ce11a1078f2c0121c02274e48eafe636520134681f23fb8c5d88"
     },
     "platform/community-guidelines.html": {
-      "size": 4607,
-      "sha256": "d3f3aa1c3470eb05164317b5cc2ff26f7d0a0accbf8f2df94972679eef11f6d6"
+      "size": 4477,
+      "sha256": "24ff8d2cd676c8bbf41afd992c5a00066d81c84d821a4b4e4fb469680b3528d4"
     },
     "platform/community-live.js": {
       "size": 6867,
@@ -2696,8 +2696,8 @@
       "sha256": "33edc3d978abf095d04806c95dc3d26fd6d1773108b6a6f0c12d8ff0eeb570b2"
     },
     "platform/legal-content.json": {
-      "size": 35215,
-      "sha256": "beb7067ab4cdfd094f7115aeeace5fc74bcfc8b1fcf936fe14246910e3c49e89"
+      "size": 34695,
+      "sha256": "a06d0839355c31fa0d5d5de3f76175f79a95b3d3ffebd0e70b2ceb6f863037df"
     },
     "platform/legal.css": {
       "size": 2275,
@@ -2712,8 +2712,8 @@
       "sha256": "28f6b3166d05f7b7682f017dc3ef95251014cae9525117b33e994b0f11dab6f2"
     },
     "platform/privacy.html": {
-      "size": 17009,
-      "sha256": "352cd36734f544a2bc0b2d69736a90b973eb51eec1db614a8bad0e9de2f10045"
+      "size": 16879,
+      "sha256": "d8eb3dc3ef3af69e560f7054d645f77155de91da51c8c3cb979e978d049f1253"
     },
     "platform/profile-identity.css": {
       "size": 17368,
@@ -2732,8 +2732,8 @@
       "sha256": "b79219a4a27e0f9c61220de9929e3051d99ec00017f9454247421a23ce171f46"
     },
     "platform/terms.html": {
-      "size": 7839,
-      "sha256": "439096c0a86bb7cbb9b3873986f925fb9b2796496b5e0df07b6d3c7811b4f86c"
+      "size": 7709,
+      "sha256": "4ac3f9868ef99262d637604ff4270e3c8a5b4fba20e2aa70c2b4115ee391d8bb"
     },
     "platform/vendor/google-auth.js": {
       "size": 130955,

@@ -14,5 +14,6 @@
   "supportMailboxVerificationSource": "Operator confirmed support team receives messages on 2026-10-19",
   "mobileChildrenExperience": "local-only-no-account",
   "androidMinimumAge": 18,
-  "androidChildrenExperience": "not-offered"
+  "androidChildrenExperience": "not-offered",
+  "androidAgeScreen": "none"
 }

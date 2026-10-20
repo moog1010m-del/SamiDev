@@ -12,7 +12,8 @@
   "realDeviceTestsPassed": false,
   "preLaunchReportReviewed": false,
   "chatAiEnabled": null,
-  "notes": "Android audience changed by owner to adults 18+ on 2026-10-20. Android blocks under-18 before any session, no children mode. Web and other platform audience behavior unchanged. Play Console declarations, signed AAB and real-device evidence remain pending.",
+  "notes": "Android targets adults 18+; owner requested direct entry without date-of-birth or local age screening on 2026-10-20. No Android children mode. Web and iOS unchanged. Play Console declarations and submission evidence remain pending.",
   "childrenExperience": "not-offered-android",
-  "minimumAge": 18
+  "minimumAge": 18,
+  "ageScreen": "none"
 }
