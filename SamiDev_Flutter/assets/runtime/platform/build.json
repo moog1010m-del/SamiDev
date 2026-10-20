@@ -1,6 +1,6 @@
 {
   "release": "V30",
-  "buildId": "samidev-v30-297e1427177af9f7",
+  "buildId": "samidev-v30-9dd3e70cd59ac194",
   "games": [
     "carrom",
     "tablesoccer",
@@ -30,7 +30,7 @@
     "platform/assets/brand/mark-gradient.svg": "7535b15fe0f9b38f5c41cd41b14512cd5e9d65f6bbefd821879d34f3a7d5bb1c",
     "platform/assets/brand/apple-touch-icon.png": "0e1713fb6dbb92844df4596fc4974f864a5950937e0839459392137e29fc1aab",
     "asset-worker.js": "7c0094a66e9c887d596700c72e37fb1ed8b8d57792ac05d85f85efa0339e9c8b",
-    "platform/index.html": "8431e9aafacb8066946bda9c326a60e6d41751021ed64d251afc8d2ad296f861",
+    "platform/index.html": "4e481140f9994234255737da8fa9231b4d08cfb7061f1ceb9857d3605f3fb1c8",
     "platform/account-deletion.html": "42eef21efbf67857e3e3c91a963aab717ce619524284cce11c700a6fe3f27843",
     "platform/account-deletion.js": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687",
     "platform/friends.js": "9cf540bfd8b93a14daeb5a1412fc31bf80ee2095cdd2f189639628efa9b989ca",
@@ -50,7 +50,7 @@
     "platform/store.css": "b79219a4a27e0f9c61220de9929e3051d99ec00017f9454247421a23ce171f46",
     "sticker-art.js": "96bfc5a927cc671176f3ccb23d5a9979bdb59a5b775fb83ff03c694397a5b88c",
     "platform/platform.css": "979fe96d7c96eb70234fbb8fc2c4274bdb7e7cfee85c278875e7c87d8e1fb9a3",
-    "platform/profile-identity.css": "ad3e0ab062c76a4453d5e3e94f5de2ae051da27d8e4c0c1a28f72efa8e57affc",
+    "platform/profile-identity.css": "b61684b6079ca16b4a753addca5aa8a0c68c4addf5ad7ccf8fe52a56043e5f2a",
     "platform/platform.js": "e1d14e449df3c2dbda83b857d8f4dcf9dda0c9a68650497e1768f9092fffdd97",
     "platform/community-live.js": "35f58b17490cf2e5f2844a9eaf246955e96f6582e0760b9434e56ac892f563f0",
     "platform/game-host.js": "55b26344352ea8dae21ceb4a6115344d77446384c3b3ea1ba7110579136e0974",

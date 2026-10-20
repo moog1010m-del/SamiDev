@@ -72,3 +72,28 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 .profile-showcase .profile-name-row .profile-sticker{order:-1;margin:0!important}
 
 .friend-request-status{margin:12px 0 0;padding:12px 14px;border-radius:12px;text-align:center;font-size:12px;line-height:1.7;color:#248c7b;background:#36b49c12;border:1px solid #36b49c30}.friend-request-status[hidden]{display:none!important}.friend-request-status.error{color:#cb5662;background:#cb566210;border-color:#cb566230}
+
+/* Crisp interface controls and one quiet star across cards and profiles. */
+.profile-showcase .profile-stars .profile-sprite,.profile-sprite-star,.community-public-profile-star,.community-member-star{
+ background-image:none!important;background-color:#cda66c!important;
+ -webkit-mask:url('/platform/assets/profile/star.svg') center/contain no-repeat;
+ mask:url('/platform/assets/profile/star.svg') center/contain no-repeat;
+ filter:none!important;box-shadow:none!important;
+}
+.profile-showcase .profile-stars{gap:2px!important;align-items:center}
+.profile-showcase .profile-stars .profile-sprite{width:17px!important;height:17px!important;flex:0 0 17px}
+.community-public-profile-actions .community-public-action{background:var(--identity-panel)!important;color:var(--identity-ink)!important;border:1px solid var(--identity-line)!important;box-shadow:none;transition:background-color .15s,border-color .15s}
+.community-public-profile-actions .community-public-action:hover:not(:disabled){background:color-mix(in srgb,var(--identity-panel) 85%,var(--identity-muted))!important}
+.community-public-profile-actions .community-public-action.friend{color:#238892!important;border-color:#23889240!important}
+.community-public-profile-actions .community-public-action.report{color:#b65a63!important}
+.community-public-profile-actions .community-public-action .sd-art,
+.community-public-profile-actions .community-public-action .profile-sprite-reputation{
+ background-image:none!important;background-color:currentColor!important;
+ width:21px!important;height:21px!important;max-width:21px;max-height:21px;flex:0 0 21px;
+ -webkit-mask:var(--action-icon) center/contain no-repeat;mask:var(--action-icon) center/contain no-repeat;
+ filter:none!important;image-rendering:auto;
+}
+.community-public-action.friend{--action-icon:url('/platform/assets/profile/friend-soft.svg')}
+.community-public-action.collection{--action-icon:url('/platform/assets/profile/collection-soft.svg')}
+.community-public-action.report{--action-icon:url('/platform/assets/profile/report-soft.svg')}
+.community-public-action.reputation{--action-icon:url('/platform/assets/profile/reputation-soft.svg')}

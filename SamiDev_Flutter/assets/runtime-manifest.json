@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "457b2e0178a916050be85ed5c6b2813b3036a4909d8defa3046a068671f78fca"
+      "sha256": "fb9a586f26c4a2b663e0a3ce307cf12229f109acec78b9c008e8a5bed401703a"
     },
     "browser-runtime.js": {
       "size": 82160,
@@ -1647,9 +1647,17 @@
       "size": 652,
       "sha256": "d941bfbb5daa0f26dba0cb19f6ac2003ace7cf46afabb834315fb8b19a6bbdd0"
     },
+    "platform/assets/profile/collection-soft.svg": {
+      "size": 280,
+      "sha256": "1f25af3e4402ab533764de826232261df19d79ec924d2c82c87c2663e94bf63d"
+    },
     "platform/assets/profile/edit.svg": {
       "size": 226,
       "sha256": "f89a6cb63d6aa398af37215885bc2b6bce281359de8f88bfd03202a89684f098"
+    },
+    "platform/assets/profile/friend-soft.svg": {
+      "size": 241,
+      "sha256": "136d0e0aeebaa9b79c01047e44ef7ed49d694ca2d965fc009a8ed49ee531b04c"
     },
     "platform/assets/profile/identity/atlas.json": {
       "size": 349,
@@ -1686,6 +1694,14 @@
     "platform/assets/profile/raster/trophy.webp": {
       "size": 6338,
       "sha256": "0ff578c7993148ebfed01534b182e09e60d87278f38fb7c53dd526d5d3824f02"
+    },
+    "platform/assets/profile/report-soft.svg": {
+      "size": 213,
+      "sha256": "c00651280b48dd6401e299a2d388667a89ef9425efc975bdc03f0d28bbac1bff"
+    },
+    "platform/assets/profile/reputation-soft.svg": {
+      "size": 264,
+      "sha256": "3ce100b07526a3b591cc5a23af35e196301a3d42b4728a626e663e4c8f28b78f"
     },
     "platform/assets/profile/reputation.svg": {
       "size": 863,
@@ -2629,7 +2645,7 @@
     },
     "platform/build.json": {
       "size": 6839,
-      "sha256": "587ecfa99e35537cef2779e7b02dcccd0f642be277195097dd8e0d874edbed3b"
+      "sha256": "c9f925c5450cd685cba64bab9094632c6f5b2047d3c02d3e519354f9f9ab40d4"
     },
     "platform/children.html": {
       "size": 4695,
@@ -2677,7 +2693,7 @@
     },
     "platform/index.html": {
       "size": 55142,
-      "sha256": "8431e9aafacb8066946bda9c326a60e6d41751021ed64d251afc8d2ad296f861"
+      "sha256": "4e481140f9994234255737da8fa9231b4d08cfb7061f1ceb9857d3605f3fb1c8"
     },
     "platform/legal-content.json": {
       "size": 32811,
@@ -2700,8 +2716,8 @@
       "sha256": "1fec0f207b3761a8afea6ad61dd4ea335486a61020ab7f8f100a1bf5d861cf32"
     },
     "platform/profile-identity.css": {
-      "size": 13756,
-      "sha256": "ad3e0ab062c76a4453d5e3e94f5de2ae051da27d8e4c0c1a28f72efa8e57affc"
+      "size": 15920,
+      "sha256": "b61684b6079ca16b4a753addca5aa8a0c68c4addf5ad7ccf8fe52a56043e5f2a"
     },
     "platform/ranks.html": {
       "size": 8381,
