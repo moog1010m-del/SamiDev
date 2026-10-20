@@ -1733,16 +1733,20 @@ class PlatformHttp:
         return response
 
     async def guest(self, request: web.Request) -> web.Response:
+        # One idempotent bootstrap serves both fresh guests and valid saved accounts.
         user = await self._optional_user(request)
+        token = None
         if user is None:
             if not await self.platform.allow_rate(f"guest:{self._peer(request)}", 8, 300):
                 raise PlatformError('RATE_LIMIT','محاولات كثيرة؛ حاول لاحقًا',429)
             user = await self.platform.accounts.guest()
             token = await self.platform.create_session(str(user['id']), metadata=self._device(request))
-            response = web.json_response({'ok':True,'user':public_user(user,include_avatar=True)})
+        profile = await self.platform.public_profile(str(user['id']), str(user['id']))
+        profile['avatarData'] = str(user.get('avatarData') or '')
+        response = web.json_response({'ok': True, 'user': profile}, headers={'Cache-Control': 'private, no-store'})
+        if token is not None:
             response.set_cookie(SESSION_COOKIE,token,max_age=SESSION_TTL,httponly=True,secure=self._secure(request),samesite='Lax',path='/')
-            return response
-        return web.json_response({'ok':True,'user':public_user(user,include_avatar=True)})
+        return response
 
     async def register(self, request: web.Request) -> web.Response:
         if self.platform.firebase.enabled:
@@ -1841,11 +1845,11 @@ class PlatformHttp:
         except Exception:
             return web.Response(status=204, headers={"Cache-Control": "no-store", "Cross-Origin-Resource-Policy": "same-origin"})
         mime = match.group(1).lower()
-        return web.Response(
-            body=raw,
-            content_type=f"image/{mime}",
-            headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Cross-Origin-Resource-Policy": "same-origin", "X-Robots-Tag": "noindex, nofollow"},
-        )
+        etag = '"' + hashlib.sha256(mime.encode() + b'\0' + raw).hexdigest() + '"'
+        headers = {"Cache-Control": "private, no-cache", "ETag": etag, "X-Content-Type-Options": "nosniff", "Cross-Origin-Resource-Policy": "same-origin", "X-Robots-Tag": "noindex, nofollow"}
+        if any(tag.strip().removeprefix('W/') in {etag, '*'} for tag in request.headers.get('If-None-Match', '').split(',')):
+            return web.Response(status=304, headers=headers)
+        return web.Response(body=raw, content_type=f"image/{mime}", headers=headers)
 
     async def profile_update(self, request: web.Request) -> web.Response:
         user = await self._user(request)

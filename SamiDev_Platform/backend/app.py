@@ -1380,7 +1380,10 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
     if request.path.startswith("/api/"):
         # Keep SSE untransformed through proxies; generic API headers must not
         # erase the stream endpoint's no-transform directive.
-        response.headers["Cache-Control"] = "private, no-store" + (", no-transform" if response.content_type == "text/event-stream" else "")
+        # Only image bytes may be retained privately and revalidated by ETag.
+        avatar_cache = request.path.startswith('/api/avatar/') and response.status in {200, 304} and 'ETag' in response.headers
+        if not avatar_cache:
+            response.headers["Cache-Control"] = "private, no-store" + (", no-transform" if response.content_type == "text/event-stream" else "")
         response.headers["Vary"] = "Cookie, Origin"
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"

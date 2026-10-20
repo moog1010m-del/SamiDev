@@ -18,7 +18,7 @@
   <meta property="og:image" content="https://plazr.net/platform/assets/brand/apple-touch-icon.png">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/profile-details.css?v=cf54832112138972">
-  <link rel="stylesheet" href="/platform/platform.css?v=979fe96d7c96eb70">
+  <link rel="stylesheet" href="/platform/platform.css?v=b68b7253ca69dfb7">
   <link rel="stylesheet" href="/platform/profile-identity.css?v=7cf484de5dc720ba">
 <link rel="stylesheet" href="/platform/store.css?v=b79219a4a27e0f9c"><link rel="stylesheet" href="/cosmetic-ui.css?v=b3d75983b026bdd2"><script src="/cosmetic-ui.js?v=a2854338c7e2a537"></script><link rel="stylesheet" href="/platform/desktop-layout.css?v=f71d78338e94f708"><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=31cb90b972fe1d89"></script><link rel="stylesheet" href="/platform/bot-admin.css?v=0f87fa2ef10067d4">  <link rel="stylesheet" href="/platform/admin-workspace.css?v=90d3d45a48d90201">
 <link rel="stylesheet" href="/platform/friends.css?v=ebee90979465e78e">
@@ -70,7 +70,7 @@
 
     <aside class="desktop-tools" aria-label="أدوات المنصة">
       <span class="desktop-tools-caption">أدواتك</span>
-      <button id="desktop-settings" class="desktop-tool" type="button" aria-label="إعدادات المنصة" title="إعدادات المنصة"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1v4l-2 1 2 2v4l3 1 1 3h5l1-3 3-1v-4l2-2-2-1V7l-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg><span>الإعدادات</span></button>
+      <button id="desktop-settings" class="desktop-tool" type="button" aria-label="الإعدادات — إعدادات المنصة" title="إعدادات المنصة"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1v4l-2 1 2 2v4l3 1 1 3h5l1-3 3-1v-4l2-2-2-1V7l-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg><span>الإعدادات</span></button>
       <button id="desktop-notifications" class="desktop-tool" type="button" aria-label="الإشعارات" title="الإشعارات"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span>الإشعارات</span></button>
       <span class="desktop-tools-divider" aria-hidden="true"></span>
       <button id="desktop-theme" class="desktop-tool" type="button" aria-label="تغيير المظهر" title="تغيير المظهر"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 13a9 9 0 0 1-9.7-9.7A9 9 0 1 0 20.7 13Z"/></svg><span>المظهر</span></button>
@@ -100,6 +100,7 @@
       <form id="delete-account-form"><h2 id="delete-account-title">حذف الحساب نهائيًا</h2><p>سيُحذف ملفك وصورتك ومقتنياتك وتقدمك وروابط الصداقة ورسائلك المخزنة في المساحات. ستنتهي جلساتك على جميع الأجهزة. لا يمكن التراجع عن الحذف.</p><p id="delete-reauth-note"></p><label id="delete-current-password">كلمة المرور الحالية<input id="delete-password" type="password" autocomplete="current-password" maxlength="128"></label><p id="delete-account-error" role="alert"></p><div class="account-delete-actions"><button id="delete-cancel" type="button" class="ghost">إلغاء</button><button id="delete-confirm" type="submit" class="danger-btn">تأكيد الحذف النهائي</button></div></form>
     </dialog>
     <main class="main">
+      <h1 class="sr-only">Plazr بلازر — الألعاب والمساحات</h1>
 <section id="page-lobby" class="page active lobby-page">
         <div id="community-home" class="community-home">
           <section class="community-browser">
@@ -211,7 +212,7 @@
                 <span class="profile-sprite profile-sprite-edit" aria-hidden="true"></span>
               </button>
               <strong>الملف الشخصي</strong>
-              <button id="profile-settings-btn" class="profile-card-action" type="button" aria-label="إعدادات المنصة" title="إعدادات المنصة"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1v4l-2 1 2 2v4l3 1 1 3h5l1-3 3-1v-4l2-2-2-1V7l-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg></button>
+              <button id="profile-settings-btn" class="profile-card-action" type="button" aria-label="الإعدادات — إعدادات المنصة" title="إعدادات المنصة"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1v4l-2 1 2 2v4l3 1 1 3h5l1-3 3-1v-4l2-2-2-1V7l-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg></button>
             </div>
             <div class="profile-cover" aria-hidden="true">
               <span class="profile-cover-emblem">P</span>
@@ -232,14 +233,14 @@
               <div class="profile-name-row">
                 <span class="profile-sprite profile-sprite-emblem profile-sticker" hidden role="img" aria-label="ملصق النخلة والسيفين" title="ملصق النخلة والسيفين"></span>
                 <h3 id="profile-name">Player</h3>
-              <div class="profile-stars" aria-label="خمس نجوم">
+              <div class="profile-stars" role="img" aria-label="خمس نجوم">
                 <span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span><span class="profile-sprite profile-sprite-star"></span>
               </div></div>
 
 
 
               <div id="profile-identity-handle" class="community-public-profile-handle">player</div>
-              <div class="profile-stats" aria-label="إحصاءات الملف الشخصي">
+              <div class="profile-stats" role="group" aria-label="إحصاءات الملف الشخصي">
                 <div class="profile-stat profile-stat-since">
                   <small>لاعب منذ</small>
                   <div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="profile-since-value">0 يوم</strong></div>
@@ -351,12 +352,12 @@
           <div class="profile-name-row">
             <span class="profile-sprite profile-sprite-emblem profile-sticker" hidden role="img" aria-label="ملصق النخلة والسيفين"></span>
             <h3 id="community-profile-name">Player</h3>
-          <div class="profile-stars" aria-label="خمس نجوم">
+          <div class="profile-stars" role="img" aria-label="خمس نجوم">
             <span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span><span class="profile-sprite community-public-profile-star"></span>
           </div></div>
           <div id="community-profile-handle" class="community-public-profile-handle">player</div>
 
-          <div class="profile-stats" aria-label="إحصاءات اللاعب">
+          <div class="profile-stats" role="group" aria-label="إحصاءات اللاعب">
             <div class="profile-stat profile-stat-since"><small>لاعب منذ</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-calendar" aria-hidden="true"></span><strong id="community-profile-since">0 يوم</strong></div></div>
             <div class="profile-stat profile-stat-wins"><small>الفوز</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-trophy" aria-hidden="true"></span><strong id="community-profile-wins">0</strong></div></div>
             <div class="profile-stat profile-stat-reputation"><small>السمعة</small><div class="profile-stat-value"><span class="profile-sprite profile-sprite-reputation" aria-hidden="true"></span><strong id="community-profile-reputation">0</strong></div></div>
@@ -413,7 +414,7 @@
   </div>
 
   <script src="/platform/game-preload.js?v=9ef797ab811ce927"></script>
-  <script src="/samidev-games.js?v=487759056cfa0c5f"></script><script src="/sticker-art.js?v=96bfc5a927cc6711"></script><script src="/profile-details.js?v=6452258e6f78ab77"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/game-entry.js?v=a1fd36c0a200137a"></script><script src="/platform/game-host.js?v=55b26344352ea8da"></script><script src="/platform/community-live.js?v=35f58b17490cf2e5"></script><script src="/platform/friends.js?v=9cf540bfd8b93a14"></script><script src="/platform/platform.js?v=e14116348e8e1eb3"></script>
+  <script src="/samidev-games.js?v=487759056cfa0c5f"></script><script src="/sticker-art.js?v=96bfc5a927cc6711"></script><script src="/profile-details.js?v=6452258e6f78ab77"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/game-entry.js?v=a1fd36c0a200137a"></script><script src="/platform/game-host.js?v=55b26344352ea8da"></script><script src="/platform/community-live.js?v=35f58b17490cf2e5"></script><script src="/platform/friends.js?v=9cf540bfd8b93a14"></script><script src="/platform/platform.js?v=28f6b3166d05f7b7"></script>
 <noscript><p>بلازر Plazr منصة بلياردو وكيرم وألعاب أونلاين. اللعب يحتاج JavaScript. <a href="/discover/index.html">تعرّف على الألعاب</a></p></noscript>
 <script src="/platform/bot-admin.js?v=bf4553ca952bddc9"></script>
 <script src="/platform/admin-workspace.js?v=3dea7dae7391d750"></script>
