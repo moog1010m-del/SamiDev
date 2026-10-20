@@ -10,6 +10,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'runtime/api.dart';
 import 'runtime/game_runtime.dart';
+import 'runtime/game_haptics.dart';
 import 'runtime/policy.dart';
 import 'runtime/failures.dart';
 import 'runtime/retained_table.dart';
@@ -63,6 +64,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   bool pendingFriendRequests=false,changingPhoneNotifications=false;
   WebViewController? controller,gameController;
   final table=RetainedTable();
+  final gameHaptics=GameHaptics();
   Uri? gameCurrent;
   int gameProgress=0;
   bool _openingGame=false,_profileOpen=false,_returnToGames=false,_awaitingGameSurface=false;
@@ -165,6 +167,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
         if(data['type']=='copy'&&data['text'] is String){unawaited(copyText(data['text'] as String));}
         if(game&&data['type']=='game_surface_ready'&&_gameSurfaceReady?.isCompleted==false){_entryFrameReady=true;completeGameEntry();}
         if(game&&data['type']=='game_surface_error'&&_gameSurfaceReady?.isCompleted==false){_entryFailure=data['code']=='MATCH_COOLDOWN'?'حاول بعد دقيقة':'تعذر فتح الطاولة. حاول مجددًا.';_gameSurfaceReady!.complete(false);}
+        if(game&&data['type']=='game_haptic'){if(data['action']=='cancel'){gameHaptics.cancel();}else if(!_background&&inGame){gameHaptics.play(data);}}
         if(game&&data['type']=='room_background'){parkGame();}
         if(game&&data['type']=='game_runtime_ready'){
           final suspend=_background||!inGame?' window.audio?.suspend?.();':'';
@@ -223,6 +226,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(message),duration:const Duration(seconds:5),action:!inGame?SnackBarAction(label:'العودة للمباراة',onPressed:resumeGame):null));
   }
   void parkGame(){
+    gameHaptics.cancel();
     if(!mounted||gameController==null)return;
     chatFocus.unfocus();
     setState((){inGame=false;showChat=false;webPage=_returnToGames?'games':null;selectedTab=_returnToGames?2:0;});
@@ -237,6 +241,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     setState(()=>inGame=true);unawaited(gameController!.runJavaScript('window.audio?.resume?.();').catchError((_){ }));unawaited(configurePlatform());
   }
   Future<void> discardGame() async {
+    gameHaptics.cancel();
     final old=gameController;
     if(_gameSurfaceReady?.isCompleted==false)_gameSurfaceReady!.complete(false);
     _awaitingGameSurface=false;
@@ -398,6 +403,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
     try{var token=value;if(!RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token)){final uri=Uri.parse(value);if(!uri.hasAuthority||uri.origin!=runtime!.api.policy.backend.origin||uri.path!='/platform/')throw const FormatException();token=uri.queryParameters['invite']??'';}if(!RegExp(r'^[A-Za-z0-9_-]{20,64}$').hasMatch(token))throw const FormatException();await controller!.loadRequest(runtime!.origin.replace(path:'/platform/',queryParameters:{'invite':token}));}catch(_){notify('رابط الدعوة غير صالح');}
   }
   @override void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state!=AppLifecycleState.resumed)gameHaptics.cancel();
     final r=runtime;if(r==null||controller==null)return;
     if(state==AppLifecycleState.paused||state==AppLifecycleState.hidden){
       setState(()=>_background=true);dismissFriendBanner();unawaited(friendNotifications?.background(true));
@@ -409,7 +415,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       unawaited(gameController?.reload());if(!nativeHome&&!inGame)unawaited(controller?.reload());
     }
   }
-  @override void dispose(){unawaited(friendNotifications?.stop());dismissFriendBanner();for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
+  @override void dispose(){gameHaptics.dispose();unawaited(friendNotifications?.stop());dismissFriendBanner();for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
   Widget chatHistory(){
     final colors=Theme.of(context).colorScheme;
     return ConstrainedBox(constraints:BoxConstraints(maxHeight:min(230,MediaQuery.sizeOf(context).height*.28)),child:Material(color:colors.surface.withValues(alpha:.97),elevation:6,child:messages.isEmpty?

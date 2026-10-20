@@ -3,7 +3,7 @@
   "algorithm": "sha256",
   "signed": false,
   "files": {
-    "browser-runtime.js": "bb835b286f5ded5e050f50a3ca298b82d9035849e6d4882c2099e962e970d29f",
+    "browser-runtime.js": "a83366fc59a9a0d9da24e216c0892fdae49cebfe233f5c44ea6f888e7085a2cb",
     "carrom-themes.js": "8743ebd5c5f0665940fb7aade2755acbc218bf61cd18e743d3a3eacd3420eb0d",
     "chat-polish.css": "b896168b59ec99f672f9c4e804480c9a78e6f4ab1388e23e38bd7b4d20744939",
     "chat-ui.js": "4d850e25fde12b994a36b6ad632777f5c17759659a6547d01a4114c8836308f9",
@@ -35,7 +35,7 @@
     "imported/m7sv9ojmunv3q.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "imported/m7sv9srtb23tn.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "imported/n72nbifpyp661.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "index.html": "ed0c3a9bad741c4b89944188082cb91ae440a07f8be83852e02cb1b9944911e5",
+    "index.html": "5de825e5c9139c0b8c9f9437467e989876652882a1612830cdfffeed0e5c5a5f",
     "inventory-ui.css": "3fd364b75c609c2765dacb711369e868a222c519dc0f5dc28f09216193adb653",
     "inventory-ui.js": "773429c7d8cae8e5940f012d0bb0dbc4f29790a9653c0dcde79a89ba09084b33",
     "launcher.js": "564733a3467c675465252833b179e9f62e94d63cf133e730d580e337b4717bc2",
@@ -261,7 +261,7 @@
     "platform/assets/ranks/level-100.svg": "75ec898ebafe2d86f6ad4e1074125bd5d9c780d490e80bc86cdb68b5faab7207",
     "platform/assets/stickers/atlas.json": "1e58ba7ea7151de7ae94af1764d0bb9a57e7bb3e5126e8352df5ec7946915cd1",
     "platform/assets/stickers/samidev-stickers.png": "d8fd2e6d4bd94a8cd48fae28c97339faf282654c899fa1a21e150addf75112ea",
-    "platform/build.json": "08528e29d155a2d3d13ed94ad3cf8e977cb78828ef0a9e191ab1f208d3254214",
+    "platform/build.json": "74d2a719e50b6f300d8326d85627dd36a061e12a87707372b1e911bfdc4097f7",
     "platform/index.html": "183e589d0688cada8c4971fca2d70577558dc4db791d72976d06f51ca90bd0a4",
     "platform/platform.css": "979fe96d7c96eb70234fbb8fc2c4274bdb7e7cfee85c278875e7c87d8e1fb9a3",
     "platform/platform.js": "e14116348e8e1eb317cc1d6cfcee95fbce0d7a340330d0b5bf253d0d3d8b0940",
@@ -333,7 +333,7 @@
     "sounds/woosh1.m4a": "f91dd4d72b881cd9078547ef2187370d0dbb8f8265824e6d8b58e214bf142c97",
     "sounds/woosh2.m4a": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b",
     "sticker-art.js": "96bfc5a927cc671176f3ccb23d5a9979bdb59a5b775fb83ff03c694397a5b88c",
-    "web-bridge.js": "b78634d59f954d9b97091b4696a37d86503fd822bb3ac7dfd77a66ffb65facab",
+    "web-bridge.js": "dcb54c14ccdafefaf3515b7927883f7acdd29f421f1fbdc71f2e9b320e9e9a7f",
     "platform/firebase-auth.js": "31cb90b972fe1d899e28c4fa0a674619a68148b707c5187d0e611b9f83bd4ae5"
   }
 }

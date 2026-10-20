@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import '../runtime/child_runtime.dart';
+import '../runtime/game_haptics.dart';
 import 'legal_page.dart';
 
 class ChildrenHome extends StatelessWidget {
@@ -39,12 +41,15 @@ class ChildGameScreen extends StatefulWidget {
   @override State<ChildGameScreen> createState() => _ChildGameScreenState();
 }
 class _ChildGameScreenState extends State<ChildGameScreen> with WidgetsBindingObserver {
+  final gameHaptics=GameHaptics();
+  bool _background=false;
   ChildRuntime? runtime;
   WebViewController? controller;
   bool loading = true;
   String? error;
   @override void initState() { super.initState(); WidgetsBinding.instance.addObserver(this); unawaited(start()); }
   Future<void> start() async {
+    gameHaptics.cancel();
     final old = runtime;
     await old?.close();
     final r = ChildRuntime(widget.game); runtime = r;
@@ -64,7 +69,9 @@ class _ChildGameScreenState extends State<ChildGameScreen> with WidgetsBindingOb
       }
       await c.addJavaScriptChannel('SamiDevMobile', onMessageReceived: (message) {
         if (!mounted || runtime != r) return;
-        // No profile, copy, invite, navigation or API bridge exists here.
+        if(message.message.length>5000)return;
+        try{final data=jsonDecode(message.message);if(data is Map&&data['type']=='game_haptic'){if(data['action']=='cancel'){gameHaptics.cancel();}else if(!_background){gameHaptics.play(data);}return;}}catch(_){}
+        // Only local haptics: no profile, copy, invite, navigation or API bridge.
         if (message.message == '{"type":"game_surface_ready"}') setState(() => loading = false);
         if (message.message == '{"type":"game_surface_error"}') setState(() { loading = false; error = 'تعذر تشغيل اللعبة محليًا. حاول مجددًا.'; });
       });
@@ -81,10 +88,12 @@ class _ChildGameScreenState extends State<ChildGameScreen> with WidgetsBindingOb
     } catch (_) { if (mounted && runtime == r) setState(() { loading = false; error = 'تعذر تشغيل اللعبة. حاول مجددًا.'; }); }
   }
   @override void didChangeAppLifecycleState(AppLifecycleState state) {
+    _background=state!=AppLifecycleState.resumed;if(_background)gameHaptics.cancel();
     final c = controller;
     if (c != null) unawaited(c.runJavaScript(state == AppLifecycleState.resumed ? 'window.audio?.resume?.();' : 'window.audio?.suspend?.();').catchError((_) {}));
   }
   @override void dispose() {
+    gameHaptics.dispose();
     WidgetsBinding.instance.removeObserver(this);
     final c = controller, r = runtime;
     unawaited(() async { try { await c?.clearLocalStorage(); } catch (_) {} finally { await r?.close(); } }());
