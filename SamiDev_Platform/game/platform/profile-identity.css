@@ -70,3 +70,5 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 
 .profile-showcase .profile-name-row{gap:3px}
 .profile-showcase .profile-name-row .profile-sticker{order:-1;margin:0!important}
+
+.friend-request-status{margin:12px 0 0;padding:12px 14px;border-radius:12px;text-align:center;font-size:12px;line-height:1.7;color:#248c7b;background:#36b49c12;border:1px solid #36b49c30}.friend-request-status[hidden]{display:none!important}.friend-request-status.error{color:#cb5662;background:#cb566210;border-color:#cb566230}
