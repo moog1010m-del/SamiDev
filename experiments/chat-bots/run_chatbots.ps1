@@ -1,3 +1,4 @@
+Set-Location $PSScriptRoot
 $g = Get-Content "C:\Users\Dev\.samidev\secrets\gemini.json" | ConvertFrom-Json
 $b = Get-Content "C:\Users\Dev\.samidev\secrets\bot_sessions.json" | ConvertFrom-Json
 

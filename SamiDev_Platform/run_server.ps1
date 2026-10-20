@@ -1,3 +1,4 @@
+Set-Location $PSScriptRoot
 $env:PYTHONIOENCODING = "utf-8"
 $env:PYTHONUTF8 = "1"
 $env:SAMIDEV_TRUST_PROXY = "1"
