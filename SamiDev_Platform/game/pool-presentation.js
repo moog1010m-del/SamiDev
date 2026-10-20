@@ -23,8 +23,8 @@
       };
       const g = geometry;
       return {
-        x: g.cx - g.scale * (p.y - g.sy),
-        y: g.cy + g.scale * (p.x - g.sx)
+        x: g.cx + g.scale * (p.y - g.sy),
+        y: g.cy - g.scale * (p.x - g.sx)
       };
     }
     function inverse(p) {
@@ -33,15 +33,15 @@
       };
       const g = geometry;
       return {
-        x: g.sx + (p.y - g.cy) / g.scale,
-        y: g.sy - (p.x - g.cx) / g.scale
+        x: g.sx - (p.y - g.cy) / g.scale,
+        y: g.sy + (p.x - g.cx) / g.scale
       };
     }
     function matrix(m, out = new Float32Array(9)) {
-      const g = geometry, s = g.scale, tx = g.cx + s * g.sy, ty = g.cy - s * g.sx;
+      const g = geometry, s = g.scale, tx = g.cx - s * g.sy, ty = g.cy + s * g.sx;
       for (let c = 0; c < 3; c++) {
-        out[c] = -s * m[3 + c] + tx * m[6 + c];
-        out[3 + c] = s * m[c] + ty * m[6 + c];
+        out[c] = s * m[3 + c] + tx * m[6 + c];
+        out[3 + c] = -s * m[c] + ty * m[6 + c];
         out[6 + c] = m[6 + c];
       }
       return out;

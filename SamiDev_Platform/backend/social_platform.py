@@ -360,6 +360,7 @@ class PlatformService:
         self.mem_reports: list[dict[str, Any]] = []
         self.mem_community_chat: dict[str, list[dict[str, Any]]] = {cid: [] for cid in COMMUNITIES}
         self.mem_active_community: dict[str, tuple[str, float]] = {}
+        self.mem_community_joined: dict[str, int] = {}
         from account_lifecycle import AccountLifecycle
         self.accounts = AccountLifecycle(self)
         from account_security import AccountSecurity
@@ -483,9 +484,18 @@ class PlatformService:
                 p.srem(self.k_community_members(str(old)), uid)
             p.set(active_key, cid, ex=COMMUNITY_PRESENCE_TTL)
             p.sadd(self.k_community_members(cid), uid)
+            joined_key = self.k_community_members(cid) + ":joined:" + uid
+            if str(old or "") != cid:
+                p.set(joined_key, time.time_ns(), ex=COMMUNITY_PRESENCE_TTL)
+            else:
+                p.set(joined_key, time.time_ns(), nx=True, ex=COMMUNITY_PRESENCE_TTL)
+                p.expire(joined_key, COMMUNITY_PRESENCE_TTL)
             await p.execute()
             return cid
         async with self.lock:
+            previous = self.mem_active_community.get(uid)
+            if not previous or previous[0] != cid or previous[1] <= time.monotonic():
+                self.mem_community_joined[uid] = time.time_ns()
             self.mem_active_community[uid] = (cid, time.monotonic() + COMMUNITY_PRESENCE_TTL)
         return cid
 
@@ -509,6 +519,7 @@ class PlatformService:
             active_id = active[0] if active else None
             target = requested or active_id
             self.mem_active_community.pop(uid, None)
+            self.mem_community_joined.pop(uid, None)
             return target
 
     async def community_members(self, community_id: str, limit: int = 120) -> list[dict[str, Any]]:
@@ -525,26 +536,29 @@ class PlatformService:
                     continue
                 user = await self.get_user(uid)
                 if user:
-                    out.append(public_user(user, online=True))
-                    if len(out) >= limit:
-                        break
+                    row = public_user(user, online=True)
+                    row["communityJoinedAt"] = int(await self.r.get(self.k_community_members(cid) + ":joined:" + uid) or 0) / 1_000_000
+                    out.append(row)
             if stale:
                 await self.r.srem(self.k_community_members(cid), *stale)
-            out.sort(key=lambda x: (str(x.get("displayName") or "").lower(), str(x.get("id") or "")))
-            return out
+            out.sort(key=lambda x: (-x.get("communityJoinedAt", 0), str(x.get("id") or "")))
+            return out[:limit]
         now = time.monotonic()
         out: list[dict[str, Any]] = []
         async with self.lock:
             stale = [uid for uid, (_, exp) in self.mem_active_community.items() if exp <= now]
             for uid in stale:
                 self.mem_active_community.pop(uid, None)
+                self.mem_community_joined.pop(uid, None)
             ids = [uid for uid, (active, exp) in self.mem_active_community.items() if active == cid and exp > now]
-            for uid in ids[:limit]:
+            for uid in ids:
                 user = self.mem_users.get(uid)
                 if user:
-                    out.append(public_user(user, online=True))
-        out.sort(key=lambda x: (str(x.get("displayName") or "").lower(), str(x.get("id") or "")))
-        return out
+                    row = public_user(user, online=True)
+                    row["communityJoinedAt"] = self.mem_community_joined.get(uid, 0) / 1_000_000
+                    out.append(row)
+        out.sort(key=lambda x: (-x.get("communityJoinedAt", 0), str(x.get("id") or "")))
+        return out[:limit]
 
     async def community_chat_history(self, community_id: str, limit: int = 80) -> list[dict[str, Any]]:
         cid = normalize_community_id(community_id)

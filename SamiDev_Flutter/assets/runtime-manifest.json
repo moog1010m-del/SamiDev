@@ -13,15 +13,15 @@
     },
     "asset-worker.js": {
       "size": 66603,
-      "sha256": "81b259449259ab1184921eaf44f937925f455000a47a52016c29d64dca2ef795"
+      "sha256": "ac2fdc60f53e57a452437877c75f334d17bbcd0c5dbf90adeb3e6d75f4edae10"
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "282ad1f2f300bd3b680ea28a7b3625fb9cac0492d8c8e3ef541c541812026246"
+      "sha256": "e6cfff194f6fa9235ddf50284ba491c8a901f1696e3869101b674c8f3ab700fc"
     },
     "browser-runtime.js": {
-      "size": 83168,
-      "sha256": "24f750d29e6fa3ffa2bd882b431e780931dda7a5987dbdbeedfe59eee57c79bc"
+      "size": 86354,
+      "sha256": "4db8ea54a78042790ffef3db3fcd36ba69fa223e0426faec1afaef0c003dfb26"
     },
     "carrom-themes.js": {
       "size": 1695,
@@ -149,7 +149,7 @@
     },
     "games/crazy8/attestation.json": {
       "size": 6484,
-      "sha256": "72157283bfc99d96d12b8895ae238ab1b843355247409cb4dfcabb5caf9eb3e7"
+      "sha256": "9eb89628af0a2aad038695b09820d2cbc57cf3aef55c45847c6ea84b3b995380"
     },
     "games/crazy8/dictionary.json": {
       "size": 28417,
@@ -185,7 +185,7 @@
     },
     "games/crazy8/index.html": {
       "size": 7823,
-      "sha256": "1b8cc42e514ada082998f212e2089ac6f97f2516bdbc212230e790504ee37014"
+      "sha256": "e774dcae24a4ced8cdc08a6ddebf85406336ac0191e099ae3ba7dfdf3b13190d"
     },
     "games/crazy8/main.js": {
       "size": 783040,
@@ -353,7 +353,7 @@
     },
     "games/pool/attestation.json": {
       "size": 18360,
-      "sha256": "8d51351af7becb2ae4f35ed99da61016ea0e508b30f9444aa366753fbe57047f"
+      "sha256": "953ae504236f92bedc3ecc33ec229393d22aab528c01b6332548f7f51f5de17e"
     },
     "games/pool/images/imported/themes/th_basic_background.webp": {
       "size": 290,
@@ -837,7 +837,7 @@
     },
     "games/pool/index.html": {
       "size": 7271,
-      "sha256": "f3dbc01799b25fe2e7f6175adabef7d4f57554d0c605948b1639dd41b08501c1"
+      "sha256": "b366c9a2e3ae3f4ed6d02a1c097cb3848e34e351be32ebdd985366e239bf35ce"
     },
     "games/pool/main.js": {
       "size": 991187,
@@ -1065,7 +1065,7 @@
     },
     "games/tablesoccer/attestation.json": {
       "size": 8030,
-      "sha256": "617dc8a64f2b7efae7052271796b6eb8484947799eb7b06a1fb3b993629e87ef"
+      "sha256": "cad73cb59b6e7277aff894c0b61aca7fdb0bcae61c3c5733d274dcc304e5abf7"
     },
     "games/tablesoccer/dictionary.json": {
       "size": 82289,
@@ -1165,7 +1165,7 @@
     },
     "games/tablesoccer/index.html": {
       "size": 8035,
-      "sha256": "4bec99611500b18753115efb6502d47737420b695b29f9bb505909df76ffc95b"
+      "sha256": "38dcbf345bf5138a4c69185cae06b777926ec9bd596637cc82ec5343bf691f3b"
     },
     "games/tablesoccer/main.js": {
       "size": 967301,
@@ -1481,7 +1481,7 @@
     },
     "index.html": {
       "size": 7891,
-      "sha256": "7addbbec7422c70095dd40c9fa5949169786cb0cf982e24969b69378ac2ea2e3"
+      "sha256": "d63784ca41467d63e638d9343f8f9569f1c21ffa0383c0ab0cb1d4c00170050d"
     },
     "inventory-ui.css": {
       "size": 3954,
@@ -2645,7 +2645,7 @@
     },
     "platform/build.json": {
       "size": 6935,
-      "sha256": "f234d839a0933c360bf285399334e1780572b8bf7e94140ffbcd620695046fab"
+      "sha256": "8c7cd731d3a53edff590b53b274f48a1bdfca7838edc2ff91a382b03534d4e14"
     },
     "platform/children.html": {
       "size": 4695,
@@ -2744,12 +2744,12 @@
       "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
     },
     "player-profile-ui.js": {
-      "size": 33898,
-      "sha256": "86c8b048e4b5b6e7c7468fca5b39b21fa197b2b4f60818a2cf2e3248148b6d38"
+      "size": 35334,
+      "sha256": "18144f00870974e8ee2343c9910812fc4afb98f7e982db386d125493a2d490e0"
     },
     "pool-presentation.js": {
       "size": 8417,
-      "sha256": "6b441b911d343622c4ddcf214d1af386e44e859d453fb92d22764dc57fcb4eab"
+      "sha256": "b2ac24884a89236c01a5bf4e97827d36e8a3ffcaebd50265a5c2abc88753ed2d"
     },
     "profile-details.css": {
       "size": 12488,
@@ -2764,8 +2764,8 @@
       "sha256": "d6a9ee6dfa1290a42b626c945f546071cb7ce5dadc758fb84978fc08ed84bf03"
     },
     "room-menu.js": {
-      "size": 19946,
-      "sha256": "eb34a70a3e6e9d4fc60f0c1ef3afe9198b4deeb876db2b070d0cd6b3e527fb01"
+      "size": 21041,
+      "sha256": "b817ad7b27502814c1fc4b5da33ce323d4ebd6640937ef731d498607429be3e2"
     },
     "room-sprites/cards.png": {
       "size": 74876,
@@ -2797,7 +2797,7 @@
     },
     "runtime-games.json": {
       "size": 25355,
-      "sha256": "d54d876bc392a3436be219bc2d342028fd905e249da1ea3607fb3223e6b95e95"
+      "sha256": "6508b7098ece1ae8fdb72965757323789e3ab159ce9b8cb1ed42e3de7dc6438a"
     },
     "samidev-games.js": {
       "size": 2872,
