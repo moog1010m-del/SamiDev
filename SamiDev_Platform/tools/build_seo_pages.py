@@ -53,7 +53,7 @@ def build():
  paths=[]
  for slug,title,description,heading,sections in PAGES:
   path='/' if slug=='index' else '/discover/'+slug+'.html';paths.append(path);en=slug=='english';lang='en' if en else 'ar';url=ORIGIN+path
-  nav=''.join(f'<a href="/discover/{s}.html">{esc('مقارنة المنصات' if s=='alternatives' else h)}</a>' for s,t,d,h,parts in PAGES if s!=slug)
+  nav=''.join(f'<a href="{'/' if s=='index' else '/discover/'+s+'.html'}">{esc('مقارنة المنصات' if s=='alternatives' else h)}</a>' for s,t,d,h,parts in PAGES if s!=slug)
   schema={'@context':'https://schema.org','@type':'WebPage','name':title,'description':description,'url':url,'inLanguage':lang,'isPartOf':{'@type':'WebSite','@id':ORIGIN+'/#website','name':'Plazr','alternateName':'بلازر','url':ORIGIN+'/'}}
   if slug=='index':
    schema={'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':ORIGIN+'/#organization','name':'Plazr','alternateName':'بلازر','url':ORIGIN+'/','logo':ORIGIN+'/platform/assets/brand/apple-touch-icon.png','email':SITE['supportEmail']},{'@type':'WebSite','@id':ORIGIN+'/#website','url':ORIGIN+'/','name':'Plazr','alternateName':'بلازر','inLanguage':['ar','en'],'publisher':{'@id':ORIGIN+'/#organization'}},{'@type':'WebPage','@id':ORIGIN+'/#webpage','url':url,'name':title,'description':description,'inLanguage':'ar','isPartOf':{'@id':ORIGIN+'/#website'}}]}

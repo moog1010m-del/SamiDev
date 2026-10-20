@@ -17,7 +17,7 @@
     },
     "attestation.json": {
       "size": 36143,
-      "sha256": "827fce75bfd947a4ea9495233289e0487647edad0cb288dee052f9687348966e"
+      "sha256": "7df3363ade798a76c46b8ad31d1206654eb1fa4a22fe4fad43ea085587ec2789"
     },
     "browser-runtime.js": {
       "size": 86459,
@@ -48,36 +48,36 @@
       "sha256": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180"
     },
     "discover/alternatives.html": {
-      "size": 4350,
-      "sha256": "71e9755a566bb2ba156bd505ab252d8ee5be8218c881ddc6cf2c458246966fd4"
+      "size": 4331,
+      "sha256": "cdfab7e4b6d30b42cc2507d992a5f9253c2d771f8286811804d10821a8487c8c"
     },
     "discover/billiards.html": {
-      "size": 4346,
-      "sha256": "ccca681c4c81f7b7504e045115292d2c22840fd911692874bea89dfdffb6775b"
+      "size": 4327,
+      "sha256": "6dcfad37310b34b9b4edc6cf2cab16e2bcb6cc173e0c036bc5cad2dfeaa5ca2a"
     },
     "discover/carrom.html": {
-      "size": 4031,
-      "sha256": "ebcab938330ab1afb3cddb59f742a363afdec7837e6cb692bab0d79e62ad80bc"
+      "size": 4012,
+      "sha256": "43cb99abcc81da657aed19488a0ef50cc4017b63b883316a0064bcb2037da83d"
     },
     "discover/crazy8.html": {
-      "size": 3683,
-      "sha256": "2784b68bbb479d573628385b96e02e9cb81c64d0dcd6fcdf64e350c1a524671e"
+      "size": 3664,
+      "sha256": "a56c8241ad477570f624ded21aa2179243601883901c8e66ee0454a295eef8d7"
     },
     "discover/discover.css": {
       "size": 4051,
       "sha256": "050efe12c2bd0c9c332093a53288feeac2849bfb3ee510d601a12ded4f9c04a9"
     },
     "discover/english.html": {
-      "size": 3677,
-      "sha256": "5ee146f683f17dbfa4a7c6b7d32420db2cbe41dc396bb36a5da13cd5ca4ab194"
+      "size": 3658,
+      "sha256": "061376d93854cb7f02f16f87e1f9881dc00d4b4335f4f296c73daecae3298bf3"
     },
     "discover/index.html": {
       "size": 6708,
       "sha256": "fe31ca137905db83379ee71b9771363931ff7adb317dca0f30b4469825431742"
     },
     "discover/table-soccer.html": {
-      "size": 3767,
-      "sha256": "5dde031c08daded159dd31794db54d247da2b94a2500c880f19c12b70b6305f8"
+      "size": 3748,
+      "sha256": "1e534d5df735042a76401e85b6e0181b02623145ba9a61c3b23123cbd3870623"
     },
     "game-bootstrap.js": {
       "size": 3785,
@@ -2645,7 +2645,7 @@
     },
     "platform/build.json": {
       "size": 6935,
-      "sha256": "d65f9677e138de36d66f302b31c109bfa3093401db2599a438f884b2eebc0a87"
+      "sha256": "08528e29d155a2d3d13ed94ad3cf8e977cb78828ef0a9e191ab1f208d3254214"
     },
     "platform/children.html": {
       "size": 4695,
