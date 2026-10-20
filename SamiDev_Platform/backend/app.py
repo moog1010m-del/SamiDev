@@ -1394,10 +1394,13 @@ async def security_headers(request: web.Request, response: web.StreamResponse):
     script = "'self'" if request.path.startswith("/platform") or request.path == "/" else "'self' 'unsafe-inline'"
     connect = "'self'"
     frame = "'self'"
+    if request.path.startswith("/platform") or request.path == "/":
+        script += " https://static.cloudflareinsights.com"
+        connect += " https://cloudflareinsights.com"
     if SERVICE.platform.firebase.enabled and request.path.startswith("/platform"):
         connect += " https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://apis.google.com"
-        script += " https://apis.google.com"
-        frame += " https://" + SERVICE.platform.firebase.project + ".firebaseapp.com"
+        script += " https://apis.google.com https://www.gstatic.com"
+        frame += " https://" + SERVICE.platform.firebase.project + ".firebaseapp.com https://accounts.google.com"
     response.headers["Content-Security-Policy"] = "default-src 'self'; script-src " + script + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src " + connect + "; frame-src " + frame + "; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
     if PRODUCTION_MODE and SERVICE.platform_http._secure(request):
         response.headers["Strict-Transport-Security"] = "max-age=31536000"
