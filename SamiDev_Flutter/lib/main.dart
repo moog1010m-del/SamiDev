@@ -50,7 +50,7 @@ class SamiDevApp extends StatelessWidget {
   }
   @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,__)=>MaterialApp(
     debugShowCheckedModeBanner:false,title:'Plazr',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
-    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const AudienceGate(child:ParticipationGate(child:PlatformScreen()))));
+    builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:AudienceGate(adultsOnly:defaultTargetPlatform==TargetPlatform.android,child:const ParticipationGate(child:PlatformScreen()))));
 }
 class PlatformScreen extends StatefulWidget {
   const PlatformScreen({super.key,this.runtimeFactory});

@@ -57,8 +57,13 @@ def readiness(root=ROOT,stage="submission"):
             url=urlsplit(release.get(field) or '')
             if url.scheme!='https' or not url.hostname or url.username or url.password or url.fragment:raise ValueError()
         except ValueError:errors.append('Invalid public '+field)
-    if release.get('audienceMode') not in ('mixed-with-children','13-plus'):errors.append('Target audience decision and implementation are pending')
-    if operator.get('audienceIncludesUnder13'):
+    if release.get('audienceMode') not in ('mixed-with-children','13-plus','18-plus'):errors.append('Target audience decision and implementation are pending')
+    if release.get('audienceMode') == '18-plus':
+        if release.get('minimumAge') != 18 or operator.get('androidMinimumAge') != 18:
+            errors.append('Android 18-plus audience requires matching minimumAge=18')
+        if release.get('childrenExperience') != 'not-offered-android' or operator.get('androidChildrenExperience') != 'not-offered':
+            errors.append('Android 18-plus must not offer a children experience')
+    elif operator.get('audienceIncludesUnder13'):
         if release.get('audienceMode')!='mixed-with-children' or release.get('childrenExperience')!='offline-local-v1':errors.append('Under-13 audience requires the implemented isolated local-only mobile experience')
         if operator.get('childrenSafeguardsReviewed') is not True:errors.append('Under-13 local-only experience is implemented but documented Families/market compliance review remains unverified; no online parental-consent flow is enabled')
     elif release.get('audienceMode')!='13-plus':errors.append('Target audience disagrees with operator.json')
