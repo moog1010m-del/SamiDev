@@ -763,7 +763,7 @@
     const modal=$('#community-profile-modal');modal.classList.toggle('sd-profile-expanded',full);
     const extra=$('#sd-public-extra');if(extra)extra.hidden=!full;
     $('#community-profile-full').textContent=full?'العودة إلى البطاقة المختصرة':'الملف الكامل والمقتنيات والإحصاءات';
-    const close=$('#community-profile-close');close.textContent=full?'‹':'×';close.setAttribute('aria-label',full?'العودة إلى البطاقة المختصرة':'إغلاق');
+    const close=$('#community-profile-close');close.innerHTML=full?'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';close.setAttribute('aria-label',full?'العودة إلى البطاقة المختصرة':'إغلاق');
     const title=$('#community-profile-modal .profile-card-bar strong');if(title)title.textContent=full?'الملف الشخصي':'بطاقة اللاعب';
   }
   async function openCommunityProfile(userId){

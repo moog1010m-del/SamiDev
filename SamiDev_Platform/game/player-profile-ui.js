@@ -25,6 +25,7 @@
   }
 
   function icon(name, extra='') {
+    if(name==='close')return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
     return `<span class="sdpp-icon sdpp-icon-${name} ${extra}" aria-hidden="true"></span>`;
   }
 
@@ -167,7 +168,7 @@
     profileFull=full;card.classList.toggle("sd-profile-expanded",full);
     const details=card.querySelector("[data-profile-details]");if(details)details.hidden=!full;
     const button=card.querySelector("[data-action=full]");if(button)button.hidden=full;
-    const close=card.querySelector(".sdpp-close");if(close){close.textContent=full?"‹":"×";close.setAttribute("aria-label",full?"العودة إلى البطاقة المختصرة":"إغلاق");}
+    const close=card.querySelector(".sdpp-close");if(close){close.innerHTML=full?'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg>':icon('close');close.setAttribute("aria-label",full?"العودة إلى البطاقة المختصرة":"إغلاق");}
   }
 
   function renderGuestProfile(player) {
