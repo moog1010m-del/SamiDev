@@ -294,6 +294,40 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(captured_profiles[0]['social_context']['speaker_name'], 'KSA')
         self.assertEqual(captured_profiles[0]['social_context']['intent'], 'inappropriate_or_rude')
 
+    async def test_social_relationship_graph_evolution_and_zero_token_scenes(self):
+        # 1. Verify initial relationship seeding: x7v (نورة) & r9kx (سارة) are close_friends, while x7v & d7wsx (غادة) are strangers
+        rel_close = self.mem.get_relationship('x7v', 'r9kx')
+        self.assertEqual(rel_close['level'], 'close_friend')
+        self.assertEqual(rel_close['knows_name'], 1)
+
+        rel_stranger = self.mem.get_relationship('x7v', 'd7wsx')
+        self.assertEqual(rel_stranger['level'], 'stranger')
+        self.assertEqual(rel_stranger['knows_name'], 0)
+        self.assertEqual(self.engine.natural_address('x7v', 'd7wsx'), 'يا بنت')
+
+        # 2. Evolve relationship progressively: stranger -> acquaintance -> close_friend
+        self.mem.evolve_relationship('x7v', 'd7wsx', 'تعارف')
+        self.mem.evolve_relationship('x7v', 'd7wsx', 'سوالف')
+        rel_acq = self.mem.get_relationship('x7v', 'd7wsx')
+        self.assertEqual(rel_acq['level'], 'acquaintance')
+        self.assertEqual(rel_acq['knows_name'], 1)
+        self.assertIn(self.engine.natural_address('x7v', 'd7wsx'), ('يا غادة', 'يا غدو'))
+
+        # 3. Addressing by Arabic Social Name ('سارة') routes directly to 'r9kx'
+        msg = Message('soc-1', 'user-1', 'يا سارة وش رايك؟', 'أحمد')
+        self.engine.ingest(msg)
+        reply = await self.engine.respond(msg)
+        self.assertEqual(reply.speaker, 'r9kx')
+
+        # 4. Zero-token social scene runs multi-turn banter with 0 Gemini calls
+        calls_before = self.provider.calls
+        scene_start = self.engine.start_social_scene()
+        self.assertIsNotNone(scene_start)
+        self.assertEqual(self.provider.calls, calls_before)
+        # Never contains technical handles like x7v or r9kx in social banter text
+        for handle in ('x7v', 'r9kx', 'z8qx', 'f9xr', 'b4yqz'):
+            self.assertNotIn(handle, scene_start.text)
+
 
 if __name__ == '__main__':
     unittest.main()

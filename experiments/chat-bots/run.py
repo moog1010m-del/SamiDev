@@ -181,11 +181,6 @@ async def live(args, config, memory, scripts):
                                 if pending.full():
                                     pending.get_nowait()
                                 pending.put_nowait(msg)
-                            else:
-                                # Bot spoke: ONLY enqueue for banter if NO human message is waiting and NO riddle is active
-                                if not human_queued and pending.empty() and not engine.current_riddle and engine.bot_turns < 2:
-                                    engine.bot_turns += 1
-                                    pending.put_nowait(msg)
                 if not stop.is_set():
                     try:
                         await asyncio.wait_for(stop.wait(), 5)

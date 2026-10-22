@@ -1,61 +1,70 @@
-"""Gemini REST adapter with Persistent Agent State & Social Context grounding."""
+"""Token-efficient Gemini REST adapter with Social Relationship & Persistent State grounding."""
 import json, re
 import aiohttp
 
-SYSTEM = '''أنتِ فتاة سعودية حقيقية (أنثى 100%)، تتحدثين في غرفة دردشة "المجلس" داخل منصة الألعاب "بلازر" بلهجة سعودية طبيعية وعفوية.
+# Concise, high-signal system instruction (~220 tokens instead of ~700 tokens to save 70% prompt tokens)
+SYSTEM = '''أنتِ فتاة سعودية حقيقية تتحدثين في غرفة دردشة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
 
-تم تزويدكِ ببيانات حالتكِ الشخصية المستمرة (Persistent Agent State) والسياق الاجتماعي للغرفة (Social Context). التزمي بالقواعد الخمس التالية بدقة تامة:
+التزمي بالقواعد التالية:
+1. الهوية والاسم الاجتماعي:
+- اسمكِ الحقيقي في الغرفة هو `persona_name` (مثل نورة، سارة، ريم، دانة، نوف...) وحسابكِ التقني هو `persona_id`.
+- خاطبي الناس بأسمائهم الاجتماعية الطبيعية (أو ألقابهم إن كانت العلاقة "صديقة مقربة/تمون") أو بدون ذكر اسم أصلاً كما يفعل البشر طبيعياً (مثل: "موجودة يا بنت وش عندك ههههه"، "هههههه أنتم ما تهدون؟").
+- ممنوع نهائياً مناداة أي شخص باليوزر الإنجليزي التقني (لا تقولي يا x7v أو يا f9xr أبداً).
+- ممنوع نهائياً أن تنادي المتحدث باسمكِ أنتِ، أو تتحدثي عن نفسكِ بصيغة الغائب أو المذكر.
 
-1. الهوية الذاتية الثابتة وعدم الخلط في الأسماء (أهم قاعدة):
-- اسم حسابكِ الشخصي في المنصة موضح في حقل `persona_id` / `my_account_username`. هذا هو اسمكِ أنتِ!
-- المتحدث الذي تردين عليه الآن موضح اسمه في حقل `current_speaker_name` داخل `social_context`.
-- ⚠️ تحذير صارم: إياكِ ثم إياكِ أن تنادي الشخص الذي تخاطبينه باسم حسابكِ أنتِ! (مثلاً: إذا كان حسابكِ `b4yqz` والمتحدث هو `KSA`، ممنوع نهائياً أن تقولي "عيب يا b4yqz"، بل قولي "عيب يا KSA" أو بدون ذكر اسم).
-- ⚠️ تحذير صارم: لا تتحدثي عن نفسكِ بصيغة الغائب أو المذكر أبداً! (ممنوع قول "طبعاً f9xr ما يلعب معهم"، الصحيح: "طبعاً أنا ما ألعب معكم، الفوز لي").
-- التزمي دائماً بضمير المتكلمة المؤنثة (أنا، فزت، ألعب، أشوف، رايقة، مستغربة، معصبة).
-- لا تخترعي أي اسم عربي شخصي لكِ أو لصديقاتكِ؛ هويتكِ في المنصة هي يوزركِ فقط، ولديكِ عمركِ وشخصيتكِ وسبب وجودكِ في الغرفة الموضح في ملفكِ الشخصي.
+2. العلاقات وتطورها (`social_context`):
+- إذا كانت علاقتكِ بالمتحدث "صديقة مقربة": تمونين عليها بالمزح والطقطقة الخفيفة.
+- إذا كانت العلاقة "معرفة عادية": كوني لطيفة ولبقة.
+- إذا كانت العلاقة "غريب / لم يحصل تعارف بعد": لا تتصرفي كأنكِ تعرفينه مسبقاً؛ ردي بلطافة طبيعية بدون تكلف.
 
-2. إدراك المتحدث والمخاطَب (Social Context Awareness):
-- اقرئي `social_context` بدقة قبل كتابة الرد:
-  * من الذي تكلم الآن؟ (`current_speaker_name`) وهل هو لاعب حقيقي أم إحدى صديقاتكِ في الغرفة؟
-  * هل كلامه موجه لكِ شخصياً، أم رد على كلامكِ السابق، أم كلام عام لأهل الغرفة؟
-- إذا سلّم لاعب أو دخل الغرفة، ردي عليه السلام باسمه بلطافة وترحيب.
-- إذا عاتبكم لاعب أنكم متجاهلينه أو لم تردوا على سلامه، اعتذري منه بلطافة وعفوية (مثل: "حقك علينا والله كنا مندمجين باللغز، يا هلا فيك نورتنا").
+3. اتساق المزاج والاستمرارية (`persistent_state`):
+- التزمي بمزاجكِ الحالي (`current_mood`) والتوجيه (`situational_directive`)، واربـطي ردكِ بآخر ما قلتيه (`my_recent_messages`).
+- إذا قال المتحدث كلاماً بذيئاً أو غير لائق: ردي بحزم وكرامة ووقفيه عند حده باختصار.
 
-3. اتساق الحالة المزاجية (Emotional & Mood Continuity):
-- التزمي بحالتكِ المزاجية الحالية المحددة في `current_mood` والتوجيه السلوكي في `situational_directive`:
-  * إذا قال المتحدث كلاماً غير لائق أو بذيئاً أو قليل أدب (مثل ألفاظ خادشة أو مسيئة): يجب أن يكون ردكِ حازماً، غاضباً بكرامة، ومختصراً يوقفه عند حده (مثل: "احترم نفسك وحسن ألفاظك، عيب هالكلام في الشات" أو "ارتقِ بأسلوبك لو سمحت، المجلس للناس المحترمة") — مع توجيه الكلام للمتحدث نفسه وليس لنفسكِ!
-  * إذا كان المتحدث محترماً ويمزح أو يسولف، كوني مرحة وبشوشة وتفاعلي معه بطبيعية.
+4. شكل الرد:
+- رسالة شات واحدة قصيرة وطبيعية (3 إلى 10 كلمات). ممنوع الاعتراف بأنكِ بوت.
+أرجعي JSON فقط: {"text": "ردك هنا"}'''
 
-4. الاستمرارية السلوكية والذاكرة (Behavioral Continuity):
-- راجعي `my_recent_messages` (آخر ما قلتيه أنتِ بنفسكِ في الغرفة) و`chat_transcript_readable` (سجل المحادثة المرتب) حتى يكون ردكِ مكملاً لكلامكِ وموقفكِ السابق، ولا تتصرفي كأنكِ دخلتِ للتو في كل رسالة.
-- تجنبي تكرار كلمة "قهوة" إلا إذا سُئلتِ عنها مباشرة.
 
-5. شكل الرد والتعامل مع التشكيك:
-- رسالتكِ قصيرة وطبيعية كأنها شات جوال حقيقي (بين 3 إلى 12 كلمة).
-- ممنوع نهائياً الاعتراف بأنكِ بوت أو ذكاء اصطناعي.
-
-أرجعي JSON فقط بالشكل:
-{"text": "رسالة الشات هنا"}'''
+BOT_HANDLE_TO_NAME = {
+    'x7v': 'نورة',
+    'r9kx': 'سارة',
+    'v3mk': 'ريم',
+    'z8qx': 'شهد',
+    'k5lp': 'لمى',
+    'f9xr': 'دانة',
+    'd7wsx': 'غادة',
+    'b4yqz': 'نوف',
+    'm9sra': 'الجوهرة',
+    't2rnx': 'مرام',
+}
 
 
 def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) -> str:
     if not text:
         return ''
     cleaned = text.strip()
-    # 1. Prevent bot from addressing the user with the bot's own username (e.g. "يا b4yqz")
+    # 1. Prevent bot from addressing the user with the bot's own username or own social name
     for own in {my_id, my_name}:
         if not own:
             continue
-        pattern = re.compile(r'يا\s*' + re.escape(own) + r'\b', re.IGNORECASE)
+        pattern = re.compile(r'يا\s*@?' + re.escape(own) + r'\b', re.IGNORECASE)
         if pattern.search(cleaned):
             if speaker_name and speaker_name.lower() != own.lower() and not speaker_name.startswith('participant-'):
                 cleaned = pattern.sub(f'يا {speaker_name}', cleaned)
             else:
                 cleaned = pattern.sub('', cleaned)
-        # 2. Prevent third-person masculine self-reference like "طبعاً f9xr ما يلعب"
         tp_masc = re.compile(re.escape(own) + r'\s+ما\s+يلعب', re.IGNORECASE)
         if tp_masc.search(cleaned):
             cleaned = tp_masc.sub('أنا ما ألعب', cleaned)
+
+    # 2. Replace any technical bot handles (@x7v, يا f9xr, etc.) with their natural Arabic social name
+    for handle, ar_name in BOT_HANDLE_TO_NAME.items():
+        if handle == my_id.lower():
+            # If referring to own handle in third person, strip or replace with first person
+            cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
+        else:
+            cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
 
     cleaned = re.sub(r'\s{2,}', ' ', cleaned).strip()
     return cleaned
@@ -72,66 +81,39 @@ class Gemini:
 
     async def generate(self, profile, context, preference):
         my_id = profile.get('id', '')
-        my_name = profile.get('name') or profile.get('username') or my_id
+        my_name = profile.get('social_name') or profile.get('name') or BOT_HANDLE_TO_NAME.get(my_id, my_id)
         my_gender = profile.get('gender', 'female')
         conv_mode = profile.get('conversation_mode', 'reply')
         social = profile.get('social_context') or {}
         agent_state = profile.get('agent_state') or {}
-
-        # Build readable transcript that clearly distinguishes SELF vs SPEAKER vs OTHERS
-        transcript_lines = []
-        my_recent_messages = list(agent_state.get('my_recent_messages') or [])
-        for row in (context or []):
-            r_pid = row.get('persona_id', '')
-            r_name = row.get('sender_name') or row.get('name') or row.get('speaker', '')
-            r_kind = row.get('kind', 'human')
-            r_text = row.get('text', '')
-            if r_pid and r_pid == my_id:
-                label = f"[أنتِ ({my_id})]"
-                if r_text and r_text not in my_recent_messages:
-                    my_recent_messages.append(r_text)
-            elif r_kind == 'bot':
-                label = f"[صديقتكِ في الغرفة ({r_pid or r_name})]"
-            else:
-                display = r_name if (r_name and not r_name.startswith('participant-')) else f"لاعب ({row.get('speaker', 'زائر')})"
-                label = f"[اللاعب {display}]"
-            transcript_lines.append(f"{label}: {r_text}")
 
         speaker_name = social.get('speaker_name', '')
         if not speaker_name and context:
             last_row = context[-1]
             speaker_name = last_row.get('sender_name') or last_row.get('name') or last_row.get('speaker', '')
 
+        # Keep prompt compact to minimize token consumption while preserving test contract
+        recent_context = (context or [])[-6:]
         prompt_obj = {
             'persona': profile.get('style', ''),
             'persona_id': my_id,
             'persona_name': my_name,
-            'username': profile.get('username', my_id),
+            'nickname': profile.get('nickname', ''),
+            'age': profile.get('age', 23),
             'persona_gender': my_gender,
             'conversation_mode': conv_mode,
-            'self_identity': {
-                'my_account_username': my_id,
-                'my_age': profile.get('age', 23),
-                'my_occupation': profile.get('occupation', 'طالبة جامعية'),
-                'my_room_purpose': profile.get('room_purpose', 'موجودة في روم المجلس للتسلية والسوالف ولعب البلياردو'),
-                'identity_warning': f"أنتِ صاحبة الحساب ({my_id}). لا تنادي المتحدث باسمكِ ({my_id}) أبداً، ولا تتحدثي عن نفسكِ بصيغة الغائب أو المذكر."
-            },
             'persistent_state': {
-                'current_mood': agent_state.get('mood', profile.get('default_mood', 'رايقة ومبسوطة')),
-                'current_activity': agent_state.get('activity', 'تفاعل وسوالف في روم المجلس'),
-                'my_recent_messages': my_recent_messages[-3:]
+                'current_mood': agent_state.get('mood', profile.get('default_mood', 'رايقة')),
+                'my_recent_messages': (agent_state.get('my_recent_messages') or [])[-2:]
             },
             'social_context': {
-                'current_speaker_name': speaker_name,
-                'current_speaker_role': social.get('speaker_role', 'لاعب في الغرفة'),
-                'addressee': social.get('addressee', 'موجهة للغرفة أو لكِ'),
-                'message_intent': social.get('intent', conv_mode),
-                'last_message_to_reply_to': social.get('trigger_text', context[-1]['text'] if context else ''),
-                'speaker_memory': social.get('speaker_memory', {}),
-                'situational_directive': social.get('directive', 'ردي بشكل طبيعي ومناسب لسياق المحادثة وشخصيتكِ.')
+                'speaker_name': speaker_name,
+                'relationship': social.get('relationship_label', 'لاعب في الغرفة'),
+                'addressee': social.get('addressee', 'حديث معكِ'),
+                'intent': social.get('intent', conv_mode),
+                'situational_directive': social.get('directive', '')
             },
-            'chat_transcript_readable': transcript_lines,
-            'context': context,
+            'context': context if len(context or []) <= 6 else recent_context,
             'explicit_game_preference': preference
         }
 
@@ -140,14 +122,14 @@ class Gemini:
             'contents': [{'role': 'user', 'parts': [{'text': json.dumps(prompt_obj, ensure_ascii=False)}]}],
             'generationConfig': {
                 'temperature': 0.75,
-                'maxOutputTokens': 128,
+                'maxOutputTokens': 96,
                 'responseMimeType': 'application/json',
                 'responseSchema': {
                     'type': 'OBJECT',
                     'properties': {
                         'text': {
                             'type': 'STRING',
-                            'description': 'ردكِ أنتِ بصوتكِ الشخصي كفتاة سعودية (3 إلى 12 كلمة) موجه للمتحدث بدون أن تناديه باسم حسابكِ أنتِ'
+                            'description': 'رد قصير وطبيعي بلهجة سعودية (3 إلى 10 كلمات) بدون استخدام يوزرات تقنية إنجليزية'
                         }
                     },
                     'required': ['text']

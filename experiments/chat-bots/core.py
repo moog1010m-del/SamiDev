@@ -1,4 +1,4 @@
-"""Isolated orchestration, Persistent Agent State, and Social Context memory."""
+"""Isolated orchestration, Social Relationship Graph, Persistent Agent State, and Zero-Token Social Scenes."""
 from __future__ import annotations
 import json, random, re, sqlite3, time
 from dataclasses import dataclass
@@ -78,18 +78,89 @@ class Memory:
         CREATE TABLE IF NOT EXISTS social_profiles(
             uid TEXT PRIMARY KEY,
             display_name TEXT,
+            social_name TEXT DEFAULT '',
             attitude TEXT,
             last_message TEXT,
             interactions INTEGER DEFAULT 0,
             ts REAL
         );
+        CREATE TABLE IF NOT EXISTS relationships(
+            observer_id TEXT,
+            target_id TEXT,
+            level TEXT DEFAULT 'stranger',
+            knows_name INTEGER DEFAULT 0,
+            interactions INTEGER DEFAULT 0,
+            last_topic TEXT DEFAULT '',
+            ts REAL,
+            PRIMARY KEY(observer_id, target_id)
+        );
         ''')
-        # Ensure sender_name column exists on older SQLite databases
-        cols = {row[1] for row in self.db.execute("PRAGMA table_info(messages)").fetchall()}
-        if 'sender_name' not in cols:
+        msg_cols = {row[1] for row in self.db.execute("PRAGMA table_info(messages)").fetchall()}
+        if 'sender_name' not in msg_cols:
             with self.db:
                 self.db.execute("ALTER TABLE messages ADD COLUMN sender_name TEXT DEFAULT ''")
+        sp_cols = {row[1] for row in self.db.execute("PRAGMA table_info(social_profiles)").fetchall()}
+        if 'social_name' not in sp_cols:
+            with self.db:
+                self.db.execute("ALTER TABLE social_profiles ADD COLUMN social_name TEXT DEFAULT ''")
         self.purge()
+
+    def seed_relationships(self, profiles: list[dict]):
+        now = time.time()
+        with self.db:
+            for p in profiles:
+                oid = p['id']
+                for tid in p.get('close_friends', []):
+                    self.db.execute(
+                        'INSERT OR IGNORE INTO relationships(observer_id, target_id, level, knows_name, interactions, last_topic, ts) VALUES(?,?,?,?,?,?,?)',
+                        (oid, tid, 'close_friend', 1, 8, 'سوالف وميانة يومية', now)
+                    )
+                for tid in p.get('acquaintances', []):
+                    self.db.execute(
+                        'INSERT OR IGNORE INTO relationships(observer_id, target_id, level, knows_name, interactions, last_topic, ts) VALUES(?,?,?,?,?,?,?)',
+                        (oid, tid, 'acquaintance', 1, 3, 'ألغاز وسوالف في المجلس', now)
+                    )
+
+    def get_relationship(self, observer_id: str, target_id: str) -> dict:
+        if not observer_id or not target_id or observer_id == target_id:
+            return {'level': 'self', 'knows_name': 1, 'interactions': 99, 'last_topic': ''}
+        row = self.db.execute(
+            'SELECT level, knows_name, interactions, last_topic FROM relationships WHERE observer_id=? AND target_id=?',
+            (observer_id, target_id)
+        ).fetchone()
+        if not row:
+            return {'level': 'stranger', 'knows_name': 0, 'interactions': 0, 'last_topic': ''}
+        return {
+            'level': row[0] or 'stranger',
+            'knows_name': int(row[1] or 0),
+            'interactions': int(row[2] or 0),
+            'last_topic': row[3] or ''
+        }
+
+    def evolve_relationship(self, observer_id: str, target_id: str, topic: str = '', learned_name: bool = False):
+        if not observer_id or not target_id or observer_id == target_id:
+            return
+        cur = self.get_relationship(observer_id, target_id)
+        count = cur['interactions'] + 1
+        knows = 1 if (learned_name or cur['knows_name'] or count >= 2) else 0
+        level = cur['level']
+        if count >= 6:
+            level = 'close_friend'
+        elif count >= 2 and level == 'stranger':
+            level = 'acquaintance'
+        now = time.time()
+        with self.db:
+            self.db.execute(
+                '''INSERT INTO relationships(observer_id, target_id, level, knows_name, interactions, last_topic, ts)
+                   VALUES(?,?,?,?,?,?,?)
+                   ON CONFLICT(observer_id, target_id) DO UPDATE SET
+                   level=excluded.level,
+                   knows_name=excluded.knows_name,
+                   interactions=excluded.interactions,
+                   last_topic=excluded.last_topic,
+                   ts=excluded.ts''',
+                (observer_id, target_id, level, knows, count, (topic or cur['last_topic'])[:120], now)
+            )
 
     def purge(self):
         cutoff = time.time() - self.days * 86400
@@ -125,28 +196,36 @@ class Memory:
         if not uid:
             return
         now = time.time()
-        row = self.db.execute('SELECT display_name, attitude, interactions FROM social_profiles WHERE uid=?', (uid,)).fetchone()
+        row = self.db.execute('SELECT display_name, social_name, attitude, interactions FROM social_profiles WHERE uid=?', (uid,)).fetchone()
         cur_name = (display_name or (row[0] if row else '') or '').strip()[:64]
-        cur_att = attitude or (row[1] if row else 'محترم وطبيعي')
-        count = (row[2] if row else 0) + 1
+        cur_social = (row[1] if row else '') or ''
+        # Check if human introduced their personal name (e.g., "اسمي محمد" or "أنا سامي")
+        name_match = re.search(r'(?:اسمي|انا اسمي|أنا اسمي|نادوني)\s+([\u0600-\u06ff]{2,15})', text)
+        if name_match:
+            candidate = name_match.group(1).strip()
+            if candidate not in ('بوت', 'بنت', 'ولد', 'هنا', 'معكم', 'تمام', 'بخير'):
+                cur_social = candidate
+        cur_att = attitude or (row[2] if row else 'محترم وطبيعي')
+        count = (row[3] if row else 0) + 1
         with self.db:
             self.db.execute(
-                '''INSERT INTO social_profiles(uid, display_name, attitude, last_message, interactions, ts)
-                   VALUES(?,?,?,?,?,?)
+                '''INSERT INTO social_profiles(uid, display_name, social_name, attitude, last_message, interactions, ts)
+                   VALUES(?,?,?,?,?,?,?)
                    ON CONFLICT(uid) DO UPDATE SET
                    display_name=excluded.display_name,
+                   social_name=excluded.social_name,
                    attitude=excluded.attitude,
                    last_message=excluded.last_message,
                    interactions=excluded.interactions,
                    ts=excluded.ts''',
-                (uid, cur_name, cur_att, safe_text(text)[:200], count, now)
+                (uid, cur_name, cur_social, cur_att, safe_text(text)[:200], count, now)
             )
 
     def get_social_profile(self, uid: str) -> dict:
         if not uid:
             return {}
         row = self.db.execute(
-            'SELECT display_name, attitude, last_message, interactions FROM social_profiles WHERE uid=?',
+            'SELECT display_name, social_name, attitude, last_message, interactions FROM social_profiles WHERE uid=?',
             (uid,)
         ).fetchone()
         pref = self.preference(uid)
@@ -154,9 +233,10 @@ class Memory:
             return {'preference': pref} if pref else {}
         return {
             'display_name': row[0] or '',
-            'attitude': row[1] or 'طبيعي',
-            'last_message': row[2] or '',
-            'interactions': row[3] or 0,
+            'social_name': row[1] or '',
+            'attitude': row[2] or 'طبيعي',
+            'last_message': row[3] or '',
+            'interactions': row[4] or 0,
             'preference': pref
         }
 
@@ -174,7 +254,6 @@ class Memory:
                 'last_target_name': ''
             }
         mood, activity, last_reply, last_uid, last_name, ts = row
-        # Decay temporary annoyance after 5 minutes of calm
         if time.time() - (ts or 0) > 300:
             mood = default_mood
         return {
@@ -279,10 +358,13 @@ class Coordinator:
         self.last_user_id = None
         self.bot_turns = 0
 
-        # Multi-persona orchestration
         self.last_speaker_id = None
         self.recent_speakers = []
         self.turn_queue = []
+
+        # Map bot IDs to profiles & social names
+        self.profile_map = {p['id']: p for p in config['profiles']}
+        self.memory.seed_relationships(config['profiles'])
 
         # 10,000+ Arabic Riddles & Trivia Encyclopedia
         self.riddles = []
@@ -305,6 +387,32 @@ class Coordinator:
         self.current_riddle = None
         self.last_riddle_end = -1e9
         self.riddle_index = 0
+        self.social_scene_index = 0
+
+    def social_name_of(self, bot_id: str) -> str:
+        p = self.profile_map.get(bot_id)
+        if not p:
+            return bot_id
+        return p.get('social_name') or p.get('name') or bot_id
+
+    def nickname_of(self, bot_id: str) -> str:
+        p = self.profile_map.get(bot_id)
+        if not p:
+            return bot_id
+        return p.get('nickname') or self.social_name_of(bot_id)
+
+    def natural_address(self, speaker_id: str, target_id: str, use_ya: bool = True) -> str:
+        """Return natural Arabic address based on relationship level in SQLite (NEVER technical username)."""
+        rel = self.memory.get_relationship(speaker_id, target_id)
+        sname = self.social_name_of(target_id)
+        nick = self.nickname_of(target_id)
+        if rel['knows_name']:
+            if rel['level'] == 'close_friend' and random.random() < 0.35:
+                chosen = nick
+            else:
+                chosen = sname
+            return f"يا {chosen}" if use_ya else chosen
+        return "يا بنت" if use_ya else ""
 
     def active(self, now=None):
         hour = (now or datetime.now(ZoneInfo(self.config['timezone']))).hour
@@ -325,12 +433,13 @@ class Coordinator:
             if message.user_id in self.identities:
                 bot_pid = self.identities[message.user_id].get('persona_id')
                 if bot_pid:
+                    if self.last_speaker_id and self.last_speaker_id != bot_pid:
+                        self.memory.evolve_relationship(bot_pid, self.last_speaker_id, message.text[:60])
                     self.last_speaker_id = bot_pid
                     self.recent_speakers.append(bot_pid)
                     if len(self.recent_speakers) > 10:
                         self.recent_speakers.pop(0)
             else:
-                # Track human speaker profile in social memory
                 norm_txt = norm_ar(message.text)
                 attitude = None
                 if any(norm_ar(w) in norm_txt for w in RUDE_TERMS):
@@ -346,22 +455,28 @@ class Coordinator:
             return None
         exclude = set(exclude_ids or [])
 
-        # 1. Explicit mention by username/name in chat ALWAYS wins (even if last_speaker_id)
+        # 1. Explicit mention by social_name, nickname, or account handle ALWAYS wins
         if text:
             text_lower = text.casefold()
+            text_norm = norm_ar(text)
             for p in active:
                 if p['id'] in exclude:
                     continue
+                sname = norm_ar(p.get('social_name', ''))
+                nick = norm_ar(p.get('nickname', ''))
+                pname = norm_ar(p.get('name', ''))
                 if (
                     p['id'].casefold() in text_lower
-                    or p.get('username', '').casefold() in text_lower and p.get('username')
-                    or p['name'].casefold() in text_lower
+                    or (p.get('username') and p['username'].casefold() in text_lower)
+                    or (sname and sname in text_norm.split())
+                    or (nick and nick in text_norm.split())
+                    or (pname and pname in text_norm.split())
                 ):
                     if user_id and user_id not in self.identities:
                         self.threads[user_id] = (p['id'], time.monotonic())
                     return p
 
-        # 2. If human is in an active conversation thread, maintain persona continuity!
+        # 2. Active conversation thread with human -> maintain same persona
         is_human = bool(user_id and user_id not in self.identities)
         if is_human and user_id in self.threads:
             threaded_id, ts = self.threads[user_id]
@@ -371,7 +486,7 @@ class Coordinator:
                     self.threads[user_id] = (matched['id'], time.monotonic())
                     return matched
 
-        # 3. Otherwise rotate among active personas (avoiding same bot talking to itself)
+        # 3. Rotate among active personas
         if self.last_speaker_id:
             exclude.add(self.last_speaker_id)
 
@@ -414,6 +529,97 @@ class Coordinator:
             self.script_index += 1
         return Reply(line['speaker'], line['text'], 'recorded')
 
+    def start_social_scene(self) -> Reply | None:
+        """Zero-token natural multi-turn social dialogue between friends or progressive introductions."""
+        active = self.active()
+        if len(active) < 3:
+            return None
+        active_ids = {p['id'] for p in active}
+
+        # Check if there is a 'stranger' pair among active bots to run a natural introduction scene
+        stranger_pair = None
+        for p1 in active:
+            for p2 in active:
+                if p1['id'] != p2['id']:
+                    rel = self.memory.get_relationship(p1['id'], p2['id'])
+                    if not rel['knows_name']:
+                        stranger_pair = (p1, p2)
+                        break
+            if stranger_pair:
+                break
+
+        self.social_scene_index += 1
+        now = time.monotonic()
+
+        # Every 3rd scene, if two bots don't know each other yet, let them get introduced naturally!
+        if stranger_pair and (self.social_scene_index % 3 == 0):
+            p1, p2 = stranger_pair
+            n1 = self.social_name_of(p1['id'])
+            n2 = self.social_name_of(p2['id'])
+            self.memory.evolve_relationship(p1['id'], p2['id'], 'تعارف في المجلس', learned_name=True)
+            self.memory.evolve_relationship(p2['id'], p1['id'], 'تعارف في المجلس', learned_name=True)
+            self.current_riddle = {
+                'type': 'social_scene',
+                'steps': [
+                    (p2['id'], f'يا هلا فيك يا عسل، أنا {n2} وأنتي وش نناديك؟ 🌸', 6.5),
+                    (p1['id'], f'عاشت الأسامي يا {n2}، أنا {n1} تشرفنا والله ✨', 6.5),
+                    (p2['id'], f'الشرف لي يا {n1}، نورتي الشات والله 💕', 6.0),
+                ],
+                'stage': 0,
+                'next_stage_time': now + 6.5,
+                'solved': False
+            }
+            return Reply(p1['id'], 'دايم أشوفك معنا بالمجلس بس ما عرفت اسمك للحين ههههه 🌸', 'social_intro')
+
+        # Otherwise run a Close-Friends Social Banter scene (0 tokens!)
+        scenes = [
+            # Scene 1: نورة (x7v), سارة (r9kx), شهد (z8qx) - exact natural friendship dynamic
+            ('x7v', 'r9kx', 'z8qx',
+             'سارة وينك مختفية اليوم ما لك حس؟',
+             [
+                 ('r9kx', 'موجودة يا بنت بس انشغلت شوي وش عندك ههههه', 6.0),
+                 ('z8qx', 'هههههه أنتم الثنتين ما تهدون أبد؟', 6.0),
+                 ('x7v', 'شهد محد كلمك اسكتي بس ههههه 😂', 5.5),
+             ]),
+            # Scene 2: دانة (f9xr), نوف (b4yqz), مرام (t2rnx)
+            ('b4yqz', 'f9xr', 't2rnx',
+             'دانة للحين صاملة تلعبين بلياردو ولا استسلمتي؟ 😎',
+             [
+                 ('f9xr', 'أستسلم لمين يا نوف؟ تعالي طاولة وتشوفين الفوز لمين ههههه', 6.5),
+                 ('t2rnx', 'بدينا الهياط ههههه كل مرة تقولون كذا وتتعادلون 😂', 6.0),
+                 ('b4yqz', 'مرام لا تخربين الحماس خليني أفوز عليها أول ههههه', 5.5),
+             ]),
+            # Scene 3: لمى (k5lp), غادة (d7wsx), شهد (z8qx)
+            ('k5lp', 'd7wsx', 'z8qx',
+             'غدو خلصتي مذاكرة ولا باقي حايسة؟',
+             [
+                 ('d7wsx', 'خلاص قفلت الكتب يا لمى راسي صدع قلت أجي أروق معكم 😭', 6.5),
+                 ('z8qx', 'أحسن قرار والله المذاكرة ما تخلص ههههه', 6.0),
+                 ('k5lp', 'شهد جاهزة للتحريض على السحبة دايم ههههه 😂', 5.5),
+             ]),
+            # Scene 4: ريم (v3mk), الجوهرة (m9sra), نورة (x7v)
+            ('v3mk', 'm9sra', 'x7v',
+             'الجوهرة كيف كان دوامك اليوم عسى مو زحمة؟',
+             [
+                 ('m9sra', 'والله زحمة الشوارع اليوم شي مو طبيعي يا ريم بس الحمد لله عدت', 6.5),
+                 ('x7v', 'أهم شي وصلتي بالسلامة يلا الحين وقت الروقان واللعب ✨', 6.0),
+             ]),
+        ]
+        valid_scenes = [s for s in scenes if s[0] in active_ids and s[1] in active_ids and s[2] in active_ids]
+        if not valid_scenes:
+            return None
+        b1, b2, b3, opener, steps = valid_scenes[self.social_scene_index % len(valid_scenes)]
+        self.memory.evolve_relationship(b1, b2, opener[:50], learned_name=True)
+        self.memory.evolve_relationship(b2, b1, opener[:50], learned_name=True)
+        self.current_riddle = {
+            'type': 'social_scene',
+            'steps': steps,
+            'stage': 0,
+            'next_stage_time': now + 6.5,
+            'solved': False
+        }
+        return Reply(b1, opener, 'social_banter')
+
     def start_riddle(self):
         if not self.riddles or self.current_riddle:
             return None
@@ -440,6 +646,7 @@ class Coordinator:
         mode = self.riddle_index % 3
 
         self.current_riddle = {
+            'type': 'riddle',
             'riddle': riddle,
             'host': host,
             'answer': raw_ans,
@@ -467,6 +674,24 @@ class Coordinator:
         now = time.monotonic()
         if now < cr['next_stage_time'] or not self.ready():
             return None
+
+        # Handle multi-turn social scenes (0 tokens!)
+        if cr.get('type') == 'social_scene':
+            steps = cr['steps']
+            stage = cr['stage']
+            if stage >= len(steps):
+                cr['solved'] = True
+                self.current_riddle = None
+                self.last_riddle_end = now
+                return None
+            speaker_id, text, delay = steps[stage]
+            cr['stage'] = stage + 1
+            cr['next_stage_time'] = now + delay
+            if cr['stage'] >= len(steps):
+                cr['solved'] = True
+                self.current_riddle = None
+                self.last_riddle_end = now
+            return Reply(speaker_id, text, 'social_banter')
 
         stage = cr['stage']
         mode = cr['mode']
@@ -502,10 +727,11 @@ class Coordinator:
             elif stage == 2:
                 cr['stage'] = 3
                 cr['next_stage_time'] = now + 8.0
-                id2 = cr['idle2_id']
+                addr = self.natural_address(cr['tease_id'], cr['idle2_id'])
+                self.memory.evolve_relationship(cr['tease_id'], cr['idle2_id'], 'مزح في اللغز')
                 templates = [
-                    f'هههههه وش جاب {opt2} للغز يا {id2}؟ ركزي شوي بس! 😭',
-                    f'لا مستحيل يا {id2} هههههه ضحكتيني والله، فكروا زين! 😂',
+                    f'هههههه وش جاب {opt2} للغز {addr}؟ ركزي شوي بس! 😭',
+                    f'لا مستحيل {addr} هههههه ضحكتيني والله، فكروا زين! 😂',
                     f'شكلنا جبنا العيد بالتخمينات 😂 مين ينقذنا؟'
                 ]
                 return Reply(cr['tease_id'], random.choice(templates), 'riddle_tease')
@@ -513,22 +739,23 @@ class Coordinator:
             elif stage == 3:
                 cr['stage'] = 4
                 cr['next_stage_time'] = now + 5.0
-                host_id = host['id']
+                addr_host = self.natural_address(cr['solver_id'], host['id'])
                 templates = [
                     f'خلاص وضحت عندي! أكيد {ans} صح؟ 🔥',
                     f'عرفتهاااا خلاص! أكيد {ans} ما يبيلها كلام 😎',
-                    f'لقيتها! الجواب هو {ans} صح يا {host_id}؟ 👏'
+                    f'لقيتها! الجواب هو {ans} صح {addr_host}؟ 👏'
                 ]
                 return Reply(cr['solver_id'], random.choice(templates), 'riddle_solve')
 
             elif stage == 4:
                 cr['stage'] = 5
                 cr['next_stage_time'] = now + 5.5
-                solver_id = cr['solver_id']
+                addr_solver = self.natural_address(host['id'], cr['solver_id'])
+                self.memory.evolve_relationship(host['id'], cr['solver_id'], f'حلت لغز {ans}')
                 templates = [
-                    f'كفووو يا {solver_id}! صح عليك وربي الجواب هو {ans} 👏🔥',
-                    f'صح عليك يا {solver_id}! جبتيها وربي، الجواب {ans} ✨',
-                    f'كفو والله يا {solver_id}! أهنيك الجواب الصح {ans} 👏'
+                    f'كفووو {addr_solver}! صح عليك وربي الجواب هو {ans} 👏🔥',
+                    f'صح عليك {addr_solver}! جبتيها وربي، الجواب {ans} ✨',
+                    f'كفو والله {addr_solver}! أهنيك الجواب الصح {ans} 👏'
                 ]
                 return Reply(host['id'], random.choice(templates), 'riddle_confirm')
 
@@ -536,9 +763,9 @@ class Coordinator:
                 cr['solved'] = True
                 self.current_riddle = None
                 self.last_riddle_end = time.monotonic()
-                solver_id = cr['solver_id']
+                addr_solver = self.natural_address(cr['idle1_id'], cr['solver_id'])
                 templates = [
-                    f'ما شاء الله عليك يا {solver_id} لقطتيها قبلي 😂👏',
+                    f'ما شاء الله عليك {addr_solver} لقطتيها قبلي 😂👏',
                     f'كنت بكتبها والله وسبقتيني قهر 😭💔',
                     f'كفووو يا ذيبة تستاهلين الفوز 🔥'
                 ]
@@ -553,8 +780,8 @@ class Coordinator:
             elif stage == 1:
                 cr['stage'] = 2
                 cr['next_stage_time'] = now + 7.5
-                id1 = cr['idle1_id']
-                return Reply(cr['tease_id'], f'هههههه من جدك يا {id1}؟ مستحيل {opt1} عاد 🤣', 'riddle_tease')
+                addr = self.natural_address(cr['tease_id'], cr['idle1_id'])
+                return Reply(cr['tease_id'], f'هههههه من جدك {addr}؟ مستحيل {opt1} عاد 🤣', 'riddle_tease')
 
             elif stage == 2:
                 cr['stage'] = 3
@@ -570,8 +797,8 @@ class Coordinator:
                 cr['solved'] = True
                 self.current_riddle = None
                 self.last_riddle_end = time.monotonic()
-                solver_id = cr['solver_id']
-                return Reply(host['id'], f'كفووو يا {solver_id}! صح عليك وربي، الجواب هو {ans} 👏✨', 'riddle_confirm')
+                addr_solver = self.natural_address(host['id'], cr['solver_id'])
+                return Reply(host['id'], f'كفووو {addr_solver}! صح عليك وربي، الجواب هو {ans} 👏✨', 'riddle_confirm')
 
         else:
             if stage == 0:
@@ -592,8 +819,8 @@ class Coordinator:
             elif stage == 3:
                 cr['stage'] = 4
                 cr['next_stage_time'] = now + 5.5
-                solver_id = cr['solver_id']
-                return Reply(host['id'], f'وربي كفو يا {solver_id}! جبتيها بالملي، الجواب هو {ans} 👏', 'riddle_confirm')
+                addr_solver = self.natural_address(host['id'], cr['solver_id'])
+                return Reply(host['id'], f'وربي كفو {addr_solver}! جبتيها بالملي، الجواب هو {ans} 👏', 'riddle_confirm')
 
             elif stage == 4:
                 cr['solved'] = True
@@ -605,90 +832,93 @@ class Coordinator:
 
     def _build_social_and_agent_state(self, profile: dict, message: Message | None, mode: str) -> tuple[dict, dict]:
         my_id = profile['id']
+        my_social_name = self.social_name_of(my_id)
         default_mood = profile.get('default_mood', 'رايقة ومبسوطة')
         agent_state = self.memory.get_agent_state(my_id, default_mood)
 
-        # Find bot's own UID to fetch her recent statements
         bot_uid = next((uid for uid, info in self.identities.items() if info.get('persona_id') == my_id), '')
-        my_recent = self.memory.recent_bot_messages(self.room, bot_uid, limit=3)
+        my_recent = self.memory.recent_bot_messages(self.room, bot_uid, limit=2)
         if agent_state.get('last_reply') and agent_state['last_reply'] not in my_recent:
             my_recent.append(agent_state['last_reply'])
-        agent_state['my_recent_messages'] = my_recent[-3:]
+        agent_state['my_recent_messages'] = my_recent[-2:]
 
         if not message:
             return agent_state, {
                 'speaker_name': '',
-                'speaker_role': 'مبادرة ذاتية منكِ في الغرفة',
-                'addressee': 'أهل الغرفة بشكل عام',
+                'relationship_label': 'مبادرة عامة لأهل الغرفة',
+                'addressee': 'أهل الغرفة',
                 'intent': mode,
                 'trigger_text': '',
                 'speaker_memory': {},
-                'directive': 'افتحي سالفة سعودية عفوية أو علقي بخفة دم بصوتكِ الشخصي كمؤنث.'
+                'directive': f'أنتِ {my_social_name}. افتحي سالفة سعودية قصيرة وعفوية.'
             }
 
         is_bot_speaker = message.user_id in self.identities
         if is_bot_speaker:
             bot_info = self.identities[message.user_id]
-            speaker_name = bot_info.get('persona_id') or bot_info.get('name') or 'صديقتك'
-            speaker_role = f"صديقتكِ في الغرفة ({speaker_name})"
-            speaker_memory = {'relationship': 'صديقتكِ وزميلتكِ في روم المجلس'}
+            other_id = bot_info.get('persona_id', '')
+            rel = self.memory.get_relationship(my_id, other_id)
+            speaker_name = self.social_name_of(other_id) if rel['knows_name'] else 'إحدى البنات'
+            if rel['level'] == 'close_friend':
+                rel_label = f"صديقتكِ المقربة التي تمونين عليها ({speaker_name})"
+            elif rel['knows_name']:
+                rel_label = f"معرفة لطيفة في الغرفة ({speaker_name})"
+            else:
+                rel_label = "بنت في الغرفة لم تتعرفي على اسمها بعد"
+            speaker_memory = rel
         else:
             speaker_memory = self.memory.get_social_profile(message.user_id)
-            speaker_name = (message.sender_name or speaker_memory.get('display_name') or '').strip()
-            speaker_role = f"لاعب حقيقي في الغرفة اسمه ({speaker_name})" if speaker_name else "لاعب حقيقي في الغرفة"
+            rel = self.memory.get_relationship(my_id, message.user_id)
+            self.memory.evolve_relationship(my_id, message.user_id, message.text[:60], learned_name=bool(speaker_memory.get('social_name')))
+            speaker_name = (speaker_memory.get('social_name') or message.sender_name or speaker_memory.get('display_name') or '').strip()
+            if rel['level'] == 'close_friend':
+                rel_label = f"لاعب تعرفينه زين وتمونين عليه ({speaker_name})"
+            elif rel['level'] == 'acquaintance':
+                rel_label = f"لاعب مألوف في الغرفة ({speaker_name})"
+            else:
+                rel_label = f"لاعب في الغرفة ({speaker_name or 'زائر'})"
 
         text = message.text.strip()
         clean_txt = norm_ar(text)
 
-        # Determine addressee
         text_lower = text.casefold()
-        if my_id.casefold() in text_lower or profile['name'].casefold() in text_lower:
-            addressee = f"موجهة لكِ أنتِ بالاسم ({my_id})"
-        elif any(p['id'].casefold() in text_lower for p in self.config['profiles'] if p['id'] != my_id):
-            other_id = next(p['id'] for p in self.config['profiles'] if p['id'] != my_id and p['id'].casefold() in text_lower)
-            addressee = f"موجهة لصديقتكِ ({other_id}) وأنتِ تشاركين في الرد"
+        if my_id.casefold() in text_lower or norm_ar(my_social_name) in clean_txt.split():
+            addressee = f"موجهة لكِ أنتِ بالاسم ({my_social_name})"
         elif not is_bot_speaker and message.user_id in self.threads and self.threads[message.user_id][0] == my_id:
-            addressee = f"المتحدث ({speaker_name or 'اللاعب'}) يكمل حواره المباشر معكِ أنتِ ({my_id})"
+            addressee = f"يكمل حواره المباشر معكِ ({my_social_name})"
         else:
-            addressee = "حديث موجه للغرفة وأنتِ تردين عليه"
+            addressee = "حديث عام في الغرفة"
 
-        # Determine intent, update mood & directive
         disp = speaker_name if speaker_name else 'اللاعب'
         if any(norm_ar(w) in clean_txt for w in RUDE_TERMS):
             intent = 'inappropriate_or_rude'
             mood = 'منزعجة وحازمة (ترفض قلة الأدب وترد بكرامة)'
             activity = f'ترد بحزم على تجاوز من {disp}'
             directive = (
-                f"المتحدث ({disp}) كتب كلاماً غير لائق وعيب ({text}). "
-                f"ردي عليه أنتِ بصفتكِ ({my_id}) بحزم وكرامة ووقفيه عند حده (مثال: عيب هالكلام يا {disp} احترم نفسك والموجودين). "
-                f"تحذير: اسمكِ أنتِ هو {my_id}، فلا تقولي (يا {my_id}) نهائياً، بل خاطبي ({disp})!"
+                f"المتحدث ({disp}) قال كلاماً غير لائق وعيب ({text}). "
+                f"أنتِ {my_social_name}؛ ردي عليه بحزم وكرامة ووقفيه عند حده (مثل: عيب هالكلام يا {disp} احترم الموجودين). "
+                f"لا تناديه باسمكِ ({my_social_name} أو {my_id}) أبداً!"
             )
         elif any(norm_ar(w) in clean_txt for w in IGNORED_TERMS):
             intent = 'feeling_ignored'
             mood = 'لطيفة ومرحبة وتعتذر بذوق'
-            activity = f'ترحب باللاعب {disp} وتعتذر عن الانشغال'
-            directive = (
-                f"اللاعب ({disp}) يعاتبكم ويظن أنكم متجاهلينه. "
-                f"اعتذري منه بلطافة وذوق (مثلاً كنا مندمجين باللغز أو السوالف) ورحبي فيه باسمه ({disp})."
-            )
+            activity = f'ترحب بـ {disp} وتعتذر عن الانشغال'
+            directive = f"({disp}) يعاتبكم لأنكم انشغلتم عنه. اعتذري منه بلطافة وعفوية ورحبي فيه."
         elif any(norm_ar(w) in clean_txt for w in APOLOGY_TERMS):
             intent = 'apology'
             mood = 'هادية ومتقبلة للاعتذار'
-            activity = f'تتقبل اعتذار {disp} وتلطف الجو'
-            directive = f"المتحدث ({disp}) يعتذر أو يوضح أنه يمزح. تقبلي كلامه بذوق ولطفي الأجواء."
+            activity = f'تتقبل اعتذار {disp}'
+            directive = f"({disp}) يعتذر أو يمزح. تقبلي كلامه بذوق ولطفي الجو."
         elif mode == 'welcome' or any(w in clean_txt for w in ('سلام عليكم', 'السلام عليكم', 'مساء الخير', 'صباح الخير')):
             intent = 'welcome'
             mood = 'مرحبة وبشوشة'
-            activity = f'ترحب بدخول {disp} للغرفة'
-            directive = f"المتحدث ({disp}) يلقي التحية على الغرفة. ردي عليه السلام بحفاوة باسمه ({disp}) واسأليه عن حاله (كيفك؟)."
+            activity = f'ترحب بـ {disp}'
+            directive = f"({disp}) يلقي التحية. ردي عليه السلام بحفاوة واسأليه عن حاله (كيفك؟)."
         else:
             intent = mode
             mood = agent_state.get('mood', default_mood)
-            activity = f'تسولف مع {disp} في المجلس'
-            directive = (
-                f"ردي على رسالة ({disp}): \"{text}\" بشكل طبيعي ومباشر كفتاة سعودية حسابها ({my_id}). "
-                f"تحدثي بصيغة المتكلمة المؤنثة (أنا) ولا تنادي ({disp}) باسمكِ ({my_id}) أبداً."
-            )
+            activity = f'تسولف مع {disp}'
+            directive = f"أنتِ {my_social_name}. ردي على ({disp}) بطبيعية وعفوية (ممكن تنادينه باسمه أو بدون ذكر اسم كما في الحوار الطبيعي)."
 
         self.memory.set_agent_state(my_id, mood=mood, activity=activity, last_target_uid=message.user_id, last_target_name=speaker_name)
         agent_state['mood'] = mood
@@ -696,7 +926,8 @@ class Coordinator:
 
         social_context = {
             'speaker_name': speaker_name,
-            'speaker_role': speaker_role,
+            'speaker_role': rel_label,
+            'relationship_label': rel_label,
             'addressee': addressee,
             'intent': intent,
             'trigger_text': text,
@@ -711,13 +942,13 @@ class Coordinator:
         text = message.text.strip()
         clean_text = norm_ar(text)
         is_human = (message.user_id not in self.identities)
-        human_name = (message.sender_name or self.memory.get_social_profile(message.user_id).get('display_name') or '').strip()
+        sp = self.memory.get_social_profile(message.user_id)
+        human_name = (sp.get('social_name') or message.sender_name or sp.get('display_name') or '').strip()
 
-        # 1. Human participation in Active Riddle (ONLY if not rude and not complaining)
         is_rude = any(norm_ar(w) in clean_text for w in RUDE_TERMS)
         is_complaining = any(norm_ar(w) in clean_text for w in IGNORED_TERMS)
 
-        if is_human and self.current_riddle and not self.current_riddle['solved'] and not is_rude and not is_complaining:
+        if is_human and self.current_riddle and not self.current_riddle['solved'] and self.current_riddle.get('type') == 'riddle' and not is_rude and not is_complaining:
             cr = self.current_riddle
             raw_ans = cr['answer']
             norm_ans = cr['norm_ans']
@@ -726,7 +957,6 @@ class Coordinator:
             host = cr['host']
             disp_name = human_name or 'يا بطل'
 
-            # A) Correct answer by human player
             if is_correct:
                 cr['solved'] = True
                 self.current_riddle = None
@@ -736,19 +966,16 @@ class Coordinator:
                     self.turn_queue.append(Reply(praise_bot['id'], f'ما شاء الله عليك يا {disp_name} جبتها وحنا من الصبح نحوس 😂👏', 'riddle_praise'))
                 return Reply(host['id'], f'كفووووو يا {disp_name}! جبتها صح وربي 🔥👏 الجواب هو {raw_ans}', 'riddle_solve_human')
 
-            # B) Human greeted or asked what's going on during a riddle
             if any(w in clean_text for w in ('سلام', 'صباح', 'مساء', 'هلا', 'وش تسوون', 'وش السالفه', 'وش فيه', 'علموني', 'ايش تسوون')):
                 helper = self.choose(exclude_ids=[host['id']]) or host
                 q = cr['riddle']['question']
                 greet_prefix = f'وعليكم السلام يا هلا والله {human_name}! ' if 'سلام' in clean_text and human_name else (f'يا هلا والله {human_name}! ' if human_name else 'وعليكم السلام يا هلا والله! ')
                 return Reply(helper['id'], f'{greet_prefix}نورت المجلس 🌸 تعال ساعدنا قاعدين نحل هاللغز: ({q})، وش تتوقع؟ 🤔', 'riddle_invite')
 
-            # C) Short direct riddle guess (1-3 words, not a personal question)
             word_count = len(clean_text.split())
             if 1 <= word_count <= 3 and len(text) <= 25 and not any(term in text for term in ('اسمك', 'بنت', 'ولد', 'بوت', 'عمرك', 'وين', 'ليش', 'كيف')):
                 return Reply(host['id'], f'مالك لواء يا {disp_name} 😂 قربت بس مو هي، فكر فيها شوي!', 'riddle_wrong_guess')
 
-        # 2. General Queries & Identity
         profile = self.choose(message.text, message.user_id)
         if not profile:
             return None
@@ -758,11 +985,16 @@ class Coordinator:
             return Reply(profile['id'], value, 'local', messages=(value,))
 
         if any(term in text for term in ('وش اسمك', 'وش اساميكم', 'وش اسماؤكم', 'وش اسمائكم', 'مين انتم', 'مين انتو', 'من انتم', 'من انتو', 'وش اسمك الحقيقي', 'وش اساميكم الحقيقية', 'اسمك ايش', 'اسمك ايه')):
-            my_handle = profile['id']
+            sname = self.social_name_of(profile['id'])
+            nick = self.nickname_of(profile['id'])
             age = profile.get('age', 23)
-            return local(f'حسابي {my_handle} وعمري {age} سنة 🌸')
+            self.memory.evolve_relationship(profile['id'], message.user_id, 'تعارف بالأسماء', learned_name=True)
+            if nick and nick != sname:
+                return local(f'أنا {sname} وينادوني {nick}، وعمري {age} سنة 🌸 وأنت وش نناديك؟')
+            return local(f'اسمي {sname} وعمري {age} سنة 🌸 وأنت وش اسمك؟')
         if any(term in text for term in ('ذكر ولا انثى', 'ذكر ولا أنثى', 'انثى ولا ذكر', 'أنثى ولا ذكر', 'بنت ولا ولد', 'ولد ولا بنت', 'انتي بنت', 'أنتي بنت', 'انت بنت', 'أنت بنت', 'انت ولد', 'أنت ولد', 'انتي ولد', 'أنتي ولد', 'وش جنسك', 'بنت ولا رجال', 'رجال ولا بنت', 'بنت؟', 'ذكر؟', 'انثى؟', 'أنثى؟', 'انتم بنات', 'انتو بنات')):
-            return local('أكيد بنت طبعاً! 🌸')
+            sname = self.social_name_of(profile['id'])
+            return local(f'أكيد بنت طبعاً! أنا {sname} 🌸')
         if any(term in text for term in ('انت بوت', 'أنت بوت', 'انتي بوت', 'أنتي بوت', 'انت انسان', 'أنت إنسان', 'انتي انسانة', 'أنتي إنسانة', 'انت ريبورت', 'أنت ريبورت', 'انت روبوت', 'أنت روبوت', 'ذكاء اصطناعي')):
             return local('هههههه وش دعوة أكيد بنت حقيقية، أجل شبح؟ 😂')
         if any(term in text for term in ('سناب', 'واتساب', 'رقمك', 'صورتك')):
@@ -779,7 +1011,6 @@ class Coordinator:
         if any(term in text for term in ('رصيدي', 'كم فوز', 'كم عمري', 'نتيجة', 'نتيجه', 'سعر', 'عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي، شيّك من المنصة.')
 
-        # 3. Greeting ('السلام عليكم') -> Try model with 'welcome' mode, fallback to local greeting with user's name
         if text in ('السلام عليكم', 'سلام عليكم', 'السلام عليكم ورحمة الله', 'السلام عليكم ورحمة الله وبركاته'):
             reply = await self.generate_reply(profile, self.memory.preference(message.user_id), 'welcome', trigger_message=message)
             if reply:
@@ -788,7 +1019,6 @@ class Coordinator:
                 return local(f'وعليكم السلام يا {human_name}، يا هلا والله! كيفك؟ 🌸')
             return local('وعليكم السلام، يا هلا! كيفك؟')
 
-        # 4. Model Response (Gemini) with full Persistent State & Social Context
         return await self.generate_reply(profile, self.memory.preference(message.user_id), 'reply', trigger_message=message)
 
     async def initiative(self, human_count=0):
@@ -805,11 +1035,19 @@ class Coordinator:
         self.initiative_revision = self.revision
         now = time.monotonic()
 
-        # Launch Riddle only when allow_empty_room_riddles is enabled (live majlis)
-        if allow_empty_riddles and self.riddles and not self.current_riddle and (now - self.last_riddle_end >= 50):
-            reply = self.start_riddle()
-            if reply:
-                return reply
+        # TOKEN SAVING: In live room mode, alternate between 0-token Social Banter Scenes and 0-token Riddles!
+        if allow_empty_riddles and not self.current_riddle and (now - self.last_riddle_end >= 40):
+            if (self.riddle_index + self.social_scene_index) % 2 == 0:
+                scene_reply = self.start_social_scene()
+                if scene_reply:
+                    return scene_reply
+            riddle_reply = self.start_riddle()
+            if riddle_reply:
+                return riddle_reply
+
+        # Only call Gemini for initiative if a human is actually present AND no local scene launched
+        if not human_count:
+            return None
 
         profile = self.choose()
         if not profile or not self.provider:
@@ -833,7 +1071,6 @@ class Coordinator:
         except Exception:
             return None
 
-        # Discard stale reply if new messages arrived while awaiting the model
         if self.revision != before:
             return None
 
@@ -854,12 +1091,12 @@ class Coordinator:
         if not text:
             return None
 
-        # Safety check: never let a bot address someone using the bot's own username
         speaker_name = social_context.get('speaker_name', '')
         my_id = profile['id']
-        for own in {my_id, profile.get('name', '')}:
+        my_sname = self.social_name_of(my_id)
+        for own in {my_id, profile.get('name', ''), my_sname}:
             if own:
-                pat = re.compile(r'يا\s*' + re.escape(own) + r'\b', re.IGNORECASE)
+                pat = re.compile(r'يا\s*@?' + re.escape(own) + r'\b', re.IGNORECASE)
                 if pat.search(text):
                     if speaker_name and speaker_name.lower() != own.lower():
                         text = pat.sub(f'يا {speaker_name}', text)
