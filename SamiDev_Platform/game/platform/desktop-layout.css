@@ -21,12 +21,12 @@
  body.community-mode .main{padding-left:118px}
 }
 @media(min-width:1101px){
- .community-home{grid-template-columns:minmax(0,1fr) clamp(330px,26vw,380px);grid-template-areas:"browser profile";gap:28px}
+ .community-home{grid-template-columns:minmax(0,1fr) clamp(410px,32vw,480px);grid-template-areas:"browser profile";gap:28px}
  #home-profile{max-width:none}.community-browser{min-width:0}.community-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(min-width:821px) and (max-width:1100px){
  .platform-topbar{padding-inline:22px;grid-template-columns:auto 1fr auto;gap:12px}.topbar-nav .nav-btn{padding-inline:12px}.main{padding-right:22px;padding-left:104px}.desktop-tools{left:14px;width:66px}
- .community-home{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:"browser profile";gap:18px}#home-profile{max-width:none}.community-grid{grid-template-columns:minmax(0,1fr)}.community-card{min-height:170px;padding:18px}.community-card-mark{width:46px;height:46px;font-size:20px}
+ .community-home{grid-template-columns:minmax(0,1fr) 350px;grid-template-areas:"browser profile";gap:18px}#home-profile{max-width:none}.community-grid{grid-template-columns:minmax(0,1fr)}.community-card{min-height:170px;padding:18px}.community-card-mark{width:46px;height:46px;font-size:20px}
 }
 @media(max-width:820px){.desktop-tools{display:none!important}#profile-settings-btn{visibility:visible;pointer-events:auto}.topbar-nav .nav-btn svg{width:20px;height:20px}}
 html[data-sd-native] .desktop-tools{display:none!important}

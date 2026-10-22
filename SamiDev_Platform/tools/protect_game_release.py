@@ -10,7 +10,7 @@ SOURCE = ROOT / 'game'
 ENGINES = {'carrom': 'main.js', 'pool': 'games/pool/main.js',
            'crazy8': 'games/crazy8/main.js', 'tablesoccer': 'games/tablesoccer/main.js'}
 
-def build(output, seed=None):
+def build(output, seed=None, realtime=False):
     seed = seed if seed is not None else secrets.token_hex(16)
     if not re.fullmatch(r'[0-9a-f]{32}', seed):
         raise ValueError('Seed must be 32 lowercase hexadecimal characters')
@@ -46,9 +46,14 @@ def build(output, seed=None):
     report = {'tool': 'terser@5.44.1 + javascript-obfuscator@4.1.1', 'profile': 'layered-release-v4', 'layers': ['terser-local-mangling', 'audited-internal-properties', 'seeded-identifier-obfuscation', 'rc4-string-array-75-percent', 'string-splitting', 'numeric-expressions', 'selective-control-flow-6-percent', 'no-source-maps'],
               'releaseSeed': seed,
               'propertyProfile': profile['version'], 'properties': profile['properties'], 'engines': {}}
+    if realtime:
+        report['profile'] = 'realtime-release-v1'
+        report['layers'] = ['terser-local-mangling', 'audited-internal-properties',
+                            'seeded-identifier-obfuscation', 'no-source-maps']
     for game, relative in ENGINES.items():
         path = output/relative
-        subprocess.run(['node', str(ROOT/'tools/js-protection/protect.cjs'), str(path), seed], check=True)
+        subprocess.run(['node', str(ROOT/'tools/js-protection/protect.cjs'), str(path), seed]
+                       + (['--realtime'] if realtime else []), check=True)
         subprocess.run(['node', '--check', str(path)], check=True, capture_output=True)
         report['engines'][game] = {'sourceSha256': digest(SOURCE/relative), 'sha256': digest(path),
                                  'sourceBytes': (SOURCE/relative).stat().st_size, 'bytes': path.stat().st_size}

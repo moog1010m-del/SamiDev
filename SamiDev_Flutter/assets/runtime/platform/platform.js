@@ -379,7 +379,7 @@
     if(item.consumable)return `<div class="store-name-preview">↻ <strong>تغيير الاسم</strong></div>`;
     if(item.slot==='chat_bubble')return `<div class="store-chat-sample ${escapeHtml(className)}"><div class="store-chat-preview-meta"><strong>${escapeHtml(state.user?.displayName||state.user?.username||'لاعب')}</strong><small>الآن</small></div><div class="store-chat-preview" data-chat-cosmetic="${escapeHtml(item.id)}"><span>مرحبًا</span></div></div>`;
     if(item.slot==='profile_banner'&&!item.asset)return '<span class="store-item-visual store-banner-art" role="img" aria-label="الغلاف الافتراضي الأسود" style="display:block;background:#000"></span>';
-    return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
+    return window.SamiDevStickerArt.productMarkup(item,className+(item.slot==='profile_banner'?' store-banner-art':''));
   }
   function applyCosmeticPreviews(root){root.querySelectorAll('[data-chat-cosmetic]').forEach(el=>window.SamiDevCosmetics?.bubble(el,el.dataset.chatCosmetic));}
   let coinCheckoutBusy=false;
@@ -445,6 +445,7 @@
     const owned=$('#store-owned-count');if(owned)owned.textContent=`${inventory.length} مملوك`;
 
     const filteredCatalog=catalog.filter(item=>{
+      if(item.default)return false;
       if(selectedCat==='all')return true;
       if(selectedCat==='profile')return item.category==='profile';
       if(selectedCat==='chat'||selectedCat==='banners')return item.category===selectedCat;
@@ -498,6 +499,7 @@
     const isStar=item.slot==='profile_stars',stars=Math.max(0,Math.min(5,Number(state.store?.starsCount??state.user?.starsCount??0)));
     const owned=item.consumable?false:isStar?stars>=5:(item.owned||item.availableToAll||item.default);
     const active=!isStar&&state.store?.equipped?.[item.slot]===item.id;
+    const resetItem=(state.store?.catalog||[]).find(row=>row.slot===item.slot&&row.default);
     const availability=item.availability||{},forSale=availability.purchasable!==false&&!item.retired;
     if(!owned&&!forSale)confirming=false;
     const preview=item.slot==='name_badge'?window.SamiDevStickerArt.markup(item.asset,'store-name-sticker'):isStar?`<span class="store-preview-stars">${'★'.repeat(Math.min(5,stars+1))}</span>`:'';
@@ -509,14 +511,14 @@
       ${isStar?`<small class="store-star-count">تملك ${stars} من 5 نجوم. ${stars<5?'هذه العملية تضيف نجمة واحدة.':''}</small>`:''}
       </div><p class="store-product-error" role="alert" hidden></p>
       ${confirming?`<div class="store-purchase-confirm"><h4>تأكيد الشراء</h4><p>شراء ${escapeHtml(item.name)} مقابل <b>${formatProfileStat(price)} كوينز</b>؟</p><small>رصيدك بعد الشراء: ${formatProfileStat(coins-price)} كوينز</small><div><button type="button" class="ghost" data-product-back>رجوع</button><button type="button" class="primary" data-product-confirm>تأكيد الشراء</button></div></div>`:
-      `<footer><strong>${owned?'العدد: '+formatProfileStat(isStar?stars:1):forSale?(price?formatProfileStat(price)+' كوينز':'مجاني'):''}</strong>${availability.label?`<p class="store-product-availability" data-kind="${escapeHtml(availability.kind||'')}">${escapeHtml(availability.label)}</p>`:''}${owned||forSale?`<button type="button" class="primary" data-product-action ${active||(isStar&&stars>=5)?'disabled':''}>${active?'مفعّل الآن':isStar&&stars>=5?'اكتملت النجوم':owned?'استخدام':'شراء'}</button>`:''}</footer>`}
+      `<footer><strong>${owned?'العدد: '+formatProfileStat(isStar?stars:1):forSale?(price?formatProfileStat(price)+' كوينز':'مجاني'):''}</strong>${availability.label?`<p class="store-product-availability" data-kind="${escapeHtml(availability.kind||'')}">${escapeHtml(availability.label)}</p>`:''}${owned||forSale?`<button type="button" class="primary" data-product-action ${(isStar&&stars>=5)||(active&&!resetItem)?'disabled':''}>${active?(resetItem?'إزالة':'مفعّل الآن'):isStar&&stars>=5?'اكتملت النجوم':owned?'استخدام':'شراء'}</button>`:''}</footer>`}
     </section>`;
     applyCosmeticPreviews(modal);
     $('[data-product-close]',modal).onclick=closeStoreProduct;
     $('[data-product-back]',modal)?.addEventListener('click',()=>renderStoreProduct(false));
     $('[data-product-confirm]',modal)?.addEventListener('click',()=>buyStoreItem(item.id));
     $('[data-product-action]',modal)?.addEventListener('click',async event=>{
-      if(owned){await equipStoreItem(item.id,event.currentTarget);renderStoreProduct(false);return;}
+      if(owned){const targetId=active?resetItem?.id:item.id;if(!targetId){toast('تعذر تحديد الإعداد الافتراضي',true);return;}await equipStoreItem(targetId,event.currentTarget);renderStoreProduct(false);return;}
       if(coins<price){const error=$('.store-product-error',modal);error.hidden=false;error.textContent='رصيدك لا يكفي لشراء هذا العنصر.';return;}
       renderStoreProduct(true);
     });
@@ -723,10 +725,11 @@
         stars.append(star);
       }
       const meta=document.createElement('div');meta.className='community-member-meta';
-      const wins=document.createElement('span');wins.className='community-member-wins';wins.append(profileSprite('profile-sprite-trophy community-member-trophy'),document.createTextNode(`فوز ${formatProfileStat(u.wins)}`));
+      const wins=document.createElement('span');wins.className='community-member-wins';wins.setAttribute('aria-label',`الفوز ${formatProfileStat(u.wins)}`);wins.append(profileSprite('profile-sprite-trophy community-member-trophy'),document.createTextNode(formatProfileStat(u.wins)));
       const reputation=document.createElement('span');reputation.className='community-member-reputation';
       reputation.innerHTML=window.SamiDevProfileDetails.flameMarkup(u.reputation);
-      reputation.append(document.createTextNode(`سمعة ${formatProfileStat(u.reputation)}`));
+      reputation.setAttribute('aria-label',`السمعة ${formatProfileStat(u.reputation)}`);
+      reputation.append(document.createTextNode(formatProfileStat(u.reputation)));
       meta.append(wins,reputation);
       if(blocked){title.replaceChildren(strong);copy.append(title);}else copy.append(title,stars,meta);
       if(!window.SamiDevMobile){

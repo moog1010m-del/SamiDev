@@ -23,5 +23,11 @@ const input = `globalThis.publicResult = (() => {
   assert.ok(!source.includes(a));
  }
  await assert.rejects(protectSource(input, 'invalid'), /seed/);
+ const realtime = await protectSource(input, a, true);
+ const realtimeContext = {}; vm.runInNewContext(realtime, realtimeContext);
+ assert.deepEqual(JSON.parse(JSON.stringify(realtimeContext.publicResult)), [7, 7, 'Ball']);
+ assert.equal(realtime, await protectSource(input, a, true));
+ assert.ok(!realtime.includes('getRank'));
+ assert.ok(realtime.includes('private-layer-regression-sentinel-long-message'), 'Realtime profile must avoid runtime string decoders');
  console.log('Terser + obfuscator: stable replay, different releases, public bridge and behavior passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });

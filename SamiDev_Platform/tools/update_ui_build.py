@@ -29,10 +29,12 @@ def build() -> dict:
     for entry in ["index.html", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]:
         shell = GAME / entry
         text = shell.read_text(encoding="utf-8")
-        for rel in ["browser-runtime.js", "samidev-network.js", "profile-details.js", "profile-details.css", "player-profile-ui.js", "cosmetic-ui.js", "cosmetic-ui.css", "sticker-art.js", "chat-ui.js", "room-menu.js", "web-bridge.js", "samidev-games.js", "launcher.js"]:
+        for rel in ["browser-runtime.js", "samidev-network.js", "profile-details.js", "profile-details.css", "player-profile-ui.js", "cosmetic-ui.js", "cosmetic-ui.css", "sticker-art.js", "inventory-ui.js", "inventory-ui.css", "chat-ui.js", "room-menu.js", "web-bridge.js", "samidev-games.js", "launcher.js"]:
             version = hashlib.sha256((GAME / rel).read_bytes()).hexdigest()[:16]
             text, count = re.subn(r'(["\'])(/?)' + re.escape(rel) + r'(?:\?[^"\']*)?(["\'])',
                                  lambda m: m[1] + m[2] + rel + "?v=" + version + m[3], text)
+            if count == 0 and rel in {"inventory-ui.js", "inventory-ui.css"}:
+                continue
             if count != 1:
                 raise RuntimeError(f"Expected one {rel} reference in {entry}; got {count}")
         shell.write_text(text, encoding="utf-8")

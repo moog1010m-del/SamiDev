@@ -8,6 +8,10 @@ class ContractTests(unittest.TestCase):
   path=ROOT/'game/asset-worker.js';before=path.read_bytes();build();self.assertEqual(path.read_bytes(),before)
   text=before.decode();data=json.loads(re.search(r'const CONTRACT=(.*);\r?\n',text)[1])
   self.assertEqual(set(data['groups']),{'pool','carrom','crazy8','tablesoccer'})
+  optional='/games/pool/imported/8munos3yqj791.atlas'
+  self.assertIn(optional,data['files'])
+  self.assertNotIn(optional,data['groups']['pool'])
+  self.assertIn('/images/effects/plazr-water.webp',data['groups']['pool'])
   for url,digest in data['files'].items():
    self.assertFalse(url.startswith(('/api/','/ws/','/platform/')))
    self.assertNotEqual(url,'/client-config.js');self.assertFalse(url.endswith('.html'))

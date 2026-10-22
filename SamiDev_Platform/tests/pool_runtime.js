@@ -2,7 +2,8 @@
 process.env.SAMIDEV_POOL_DIAGNOSTIC_FRAMES='1';
 const assert=require('node:assert/strict'),path=require('node:path');
 const {GameRuntimeFactory}=require('../gamehost/runtime');
-const f=new GameRuntimeFactory(path.join(__dirname,'../game/games/pool'),{gameId:'pool',expectedSha256:require('../game/samidev-integrity.json').games.pool.sha256});
+const root=path.resolve(process.env.SAMIDEV_GAME_DIR||path.join(__dirname,'../game'));
+const f=new GameRuntimeFactory(path.join(root,'games/pool'),{gameId:'pool',expectedSha256:require(path.join(root,'samidev-integrity.json')).games.pool.sha256});
 const settings={gameType:0,break:0,live:1,trickShots:0};let checks=0;
 const check=(v,m)=>{assert.ok(v,m);checks++;};
 const move=(r,s,m)=>f.processMove(r,s,{i:'test-'+checks,n:r.logic._sequence[s],m});

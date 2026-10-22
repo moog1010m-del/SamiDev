@@ -1281,7 +1281,9 @@
         const response=await fetch(norm('__assets.json'), {credentials:'same-origin'});
         if(!response.ok) return;
         const index=await response.json();
-        const paths=Object.keys(index).map(norm).filter(path=>/\.(json|atlas|txt|glsl)$/.test(path));
+        // Imported pool cosmetics are optional. Keep their index entries, but let
+        // the native file API load them only if an equipped cosmetic requests one.
+        const paths=Object.keys(index).map(norm).filter(path=>/\.(json|atlas|txt|glsl)$/.test(path) && !(isPool && /(?:^|\/)imported\//.test(path)));
         window.__textAssets=window.__textAssets||{};
         window.__textAssets[norm("__assets.json")]=JSON.stringify(index);
         let next=0;

@@ -11,7 +11,7 @@
   const header=node('div','sd-inventory-header'), heading=node('h2',null,'مقتنياتي');heading.id='sd-inventory-title';
   const close=node('button',null,'×');close.setAttribute('aria-label','إغلاق المقتنيات');header.append(heading,close);
   const tabs=node('div','sd-inventory-tabs'),status=node('p','sd-inventory-status');status.setAttribute('role','status');
-  const body=node('div','sd-inventory-body'),note=node('div','sd-inventory-note','ثيم البلياردو والمضرب ومؤثر الجيب تظهر للجميع في دور صاحبها. بقية المقتنيات تُطبّق عند دخول اللعبة من جديد.');
+  const body=node('div','sd-inventory-body'),note=node('div','sd-inventory-note','هنا مقتنيات اللعبة الحالية فقط. ثيم البلياردو والمضرب ومؤثر الجيب تظهر للجميع في دور صاحبها.');
   // The active room owns the inventory context; never expose other games' items.
   const activeGame = () => window.SamiDevGames.current().id;
   current = activeGame();
@@ -21,13 +21,13 @@
   async function request(path, options={}) {const response=await fetch(path,{credentials:'same-origin',cache:'no-store',...options});const data=await response.json();if(!response.ok || data.ok===false)throw Error(data.message||'تعذر تحميل المقتنيات');return data;}
   function render(){
     syncGame();for(const b of tabs.children)b.setAttribute('aria-pressed',String(b.dataset.game===current));body.replaceChildren();
-    if(!state)return;const items=(Array.isArray(state.catalog)?state.catalog:[]).filter(x=>x && (x.gameId===current||(!x.gameId&&['chat_bubble','profile_banner','name_badge'].includes(x.slot))) && (x.owned===true||x.availableToAll===true));
+    if(!state)return;const items=(Array.isArray(state.catalog)?state.catalog:[]).filter(x=>x && x.gameId===current && !x.default && (x.owned===true||x.availableToAll===true));
     if(!items.length){body.append(node('p',null,'لا توجد مقتنيات متاحة لهذه اللعبة حاليًا.'));return;}
     const grid=node('div','sd-inventory-grid');
-    for(const item of items){const card=node('article','sd-inventory-card');if(previews.has(item.asset)){const img=node('img');img.src=item.asset.replace('/images/cues/classic-preview.webp','/images/cues/classic.webp').replace('/images/cues/moon-preview.webp','/images/cues/moon.webp');img.alt='';img.loading='lazy';card.append(img);}
+    for(const item of items){const card=node('article','sd-inventory-card');if(window.SamiDevStickerArt?.productMarkup){const preview=document.createElement('template');preview.innerHTML=window.SamiDevStickerArt.productMarkup(item);card.append(preview.content.cloneNode(true));}else if(previews.has(item.asset)){const img=node('img');img.src=item.asset;img.alt=item.name;img.loading='lazy';card.append(img);}
       const info=node('div'),title=node('h3',null,item.name),desc=node('p',null,item.description);
-      const equipped=state.equipped?.[item.slot]===item.id;card.classList.toggle('is-equipped',equipped);const button=node('button',equipped?'':'sd-inventory-equip',equipped?'مستخدم الآن':'استخدام');button.disabled=pending||equipped;
-      button.onclick=async()=>{const gameAtClick=activeGame();if(pending||overlay.hidden||(item.gameId&&item.gameId!==gameAtClick))return;const epoch=++requestEpoch;pending=true;render();status.textContent='جارٍ حفظ اختيارك…';try{await request('/api/store/equip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({itemId:item.id,gameId:item.gameId||''})});const fresh=await request('/api/store');if(epoch!==requestEpoch||overlay.hidden||activeGame()!==gameAtClick)return;state=fresh;if(gameAtClick==='pool')window.SamiDevNetwork?.send({type:'refresh_cosmetics'});status.textContent=item.gameId==='pool'?'تم الحفظ؛ تظهر مقتنياتك في دورك.':'تم حفظ اختيارك للمرة القادمة.';}catch(e){if(epoch===requestEpoch&&!overlay.hidden)status.textContent=e.message;}finally{if(epoch===requestEpoch){pending=false;if(!overlay.hidden)render();}}};
+      const equipped=state.equipped?.[item.slot]===item.id;card.classList.toggle('is-equipped',equipped);const button=node('button',equipped?'':'sd-inventory-equip',equipped?'إزالة':'استخدام');button.disabled=pending;
+      button.onclick=async()=>{const gameAtClick=activeGame();if(pending||overlay.hidden||(item.gameId&&item.gameId!==gameAtClick))return;const targetId=equipped?(state.catalog||[]).find(x=>x.slot===item.slot&&x.default)?.id:item.id;if(!targetId){status.textContent='تعذر تحديد الإعداد الافتراضي';return;}const epoch=++requestEpoch;pending=true;render();status.textContent='جارٍ حفظ اختيارك…';try{await request('/api/store/equip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({itemId:targetId,gameId:item.gameId||''})});const fresh=await request('/api/store');if(epoch!==requestEpoch||overlay.hidden||activeGame()!==gameAtClick)return;state=fresh;if(gameAtClick==='pool')window.SamiDevNetwork?.send({type:'refresh_cosmetics'});status.textContent=item.gameId==='pool'?'تم الحفظ؛ تظهر مقتنياتك في دورك.':'تم حفظ اختيارك للمرة القادمة.';}catch(e){if(epoch===requestEpoch&&!overlay.hidden)status.textContent=e.message;}finally{if(epoch===requestEpoch){pending=false;if(!overlay.hidden)render();}}};
       info.append(title,desc,button);card.append(info);grid.append(card);
     }body.append(grid);
   }

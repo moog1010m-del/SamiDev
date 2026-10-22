@@ -30,6 +30,9 @@ def build():
                 add(paths,'/'+asset.relative_to(GAME).as_posix())
             for path in ['/images/effects/plazr-water.webp','/images/effects/plazr-water-preview.webp','/sounds/plazr-water-wave.wav','/images/themes/plazr-engraving.webp']:
                 add(paths,path)
+            # Keep optional cosmetics in the integrity/cache-on-demand contract,
+            # but do not download every imported effect while warming the lobby.
+            paths={path for path in paths if not path.startswith('/games/pool/imported/')}
         groups[key]=sorted(paths)
     config={'files':files,'groups':groups}
     version=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()[:20]

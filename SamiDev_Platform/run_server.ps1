@@ -28,4 +28,8 @@ if (Test-Path -LiteralPath $xsollaEnvPath) {
     Remove-Variable xsollaLine, xsollaValue, xsollaName -ErrorAction SilentlyContinue
 }
 
-python -u start_dev.py --port 56648 --storage persistent --public-origin "https://plazr.net" --no-browser
+while ($true) {
+    python -u start_dev.py --port 56648 --storage persistent --public-origin "https://plazr.net" --no-browser
+    Write-Host "Platform server exited. Restarting in 3 seconds..."
+    Start-Sleep -Seconds 3
+}

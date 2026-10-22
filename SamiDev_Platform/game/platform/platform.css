@@ -810,7 +810,7 @@ html[data-sd-native] .lobby-profile{display:none!important}
 .community-member-title{direction:rtl;gap:3px}
 .community-members .community-member{display:grid;grid-template-columns:66px minmax(0,1fr) 7px;gap:11px;min-height:88px;padding:8px 5px;box-sizing:border-box;border:0;border-bottom:1px solid var(--line,#294248);border-radius:0;background:none;transform:none}
 .community-members .community-member:last-child{border-bottom:0}
-.community-members .community-member-avatar{width:64px;height:64px;border:1.5px solid #b89137;border-radius:5px;overflow:hidden;padding:2px;box-shadow:none;box-sizing:border-box;flex-shrink:0}
+.community-members .community-member-avatar{width:64px;height:64px;border:1.5px solid #3a5059;border-radius:5px;overflow:hidden;padding:2px;box-shadow:none;box-sizing:border-box;flex-shrink:0}
 .community-members .community-member-avatar img{border-radius:2px;object-fit:cover}
 .community-members .community-member-copy{display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:0}
 .community-members .community-member-title{display:flex;flex:initial;gap:3px;min-width:0}
@@ -835,16 +835,19 @@ html[data-theme="light"] .profile-showcase .profile-stat small{color:#596e70!imp
 html[data-theme="light"] .community-mobile-tabs button[aria-selected="true"]{color:#0867ac}
 
 /* Member rows follow left-to-right visual order; Arabic text remains readable. */
-.community-members{direction:ltr;scrollbar-width:none;-ms-overflow-style:none}
-.community-members-panel{scrollbar-width:none;-ms-overflow-style:none}
-.community-members::-webkit-scrollbar,.community-members-panel::-webkit-scrollbar{display:none;width:0;height:0}
+.community-members{direction:ltr;scrollbar-width:thin;scrollbar-color:#7f999d transparent;scrollbar-gutter:stable}
+.community-members-panel{scrollbar-width:thin;scrollbar-color:#7f999d transparent}
+.community-members::-webkit-scrollbar,.community-members-panel::-webkit-scrollbar{display:block;width:8px;height:8px}
+.community-members::-webkit-scrollbar-thumb,.community-members-panel::-webkit-scrollbar-thumb{background:#7f999d;border-radius:8px}
 .community-members .community-member{direction:ltr;text-align:left}
 .community-members .community-member-copy{text-align:left}
 .community-members .community-member-title{direction:ltr}
 .community-members .community-member-title strong{text-align:left;unicode-bidi:plaintext}
 .community-members .community-member-stars{justify-content:flex-start}
 .community-members .community-member-meta{direction:ltr;justify-content:flex-start;text-align:left}
-.community-members .community-member-meta>span{direction:rtl}
+.community-members .community-member-meta>span{direction:ltr}
+.community-members .community-member-reputation .sd-reputation-flame{flex:0 0 20px;width:20px;height:22px;line-height:1}
+.community-members .community-member-meta>span{gap:3px;line-height:22px;align-items:center}
 
 /* Plazr table lobby: existing room actions and game rules remain unchanged. */
 .community-create-table{display:flex;align-items:center;gap:12px;width:100%;padding:14px 18px;margin:4px 0 24px;border:1px solid #b99a58;border-radius:12px;background:linear-gradient(120deg,#173a40,#102a32);color:#f2d899;text-align:start;cursor:pointer}
