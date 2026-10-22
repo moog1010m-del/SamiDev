@@ -52,6 +52,31 @@ void main(){
    }
   }finally{client.close(force:true);await runtime.close();await backend.close(force:true);}
  });
+ test('table connection reports disconnect and reconnect without destroying bundled host',()async{
+  final hashes={for(final id in ['carrom','crazy8','pool','tablesoccer'])id:'testhash-$id'};
+  final web=utf8.encode('<html>Platform</html>');
+  final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode({'engines':hashes,'files':{'platform/index.html':{'size':web.length,'sha256':sha256.convert(web).toString()}}})),'assets/runtime/platform/index.html':web}));
+  final backend=await HttpServer.bind(InternetAddress.loopbackIPv4,0);
+  WebSocket? serverSocket;
+  backend.listen((request)async{
+   if(request.uri.path=='/ws'){serverSocket=await WebSocketTransformer.upgrade(request);serverSocket!.listen((_){ });return;}
+   request.response.headers.contentType=ContentType.json;
+   request.response.write(jsonEncode(request.uri.path=='/api/game-ticket'?{'ticket':'test-ticket'}:{'games':[for(final e in hashes.entries){'id':e.key,'mainJsSha256':e.value}]}));await request.response.close();
+  });
+  final runtime=GameRuntime(PlatformApi(RuntimePolicy('http://127.0.0.1:${backend.port}',allowLocalDevelopment:true),MemoryVault()),assets:assets);
+  final client=HttpClient();final changes=<bool>[];
+  final sub=runtime.events.stream.listen((event){if(event['type']=='game_connection')changes.add(event['connected']==true);});
+  WebSocket? local;
+  try{
+   await runtime.start();
+   final bootstrap=await client.getUrl(runtime.launch);bootstrap.followRedirects=false;final response=await bootstrap.close();final cookie=response.cookies.single;await response.drain<void>();
+   Future<WebSocket> connect()=>WebSocket.connect(runtime.origin.replace(scheme:'ws',path:'/ws').toString(),headers:{'Cookie':'${cookie.name}=${cookie.value}','Origin':runtime.origin.origin});
+   local=await connect();await Future<void>.delayed(const Duration(milliseconds:30));expect(changes.last,isTrue);
+   await serverSocket!.close(1001);await local.drain<void>();await Future<void>.delayed(const Duration(milliseconds:30));expect(changes.last,isFalse);
+   local=await connect();await Future<void>.delayed(const Duration(milliseconds:30));expect(changes,[true,false,true]);
+   final asset=await client.getUrl(runtime.origin.replace(path:'/platform/'));asset.cookies.add(cookie);expect((await asset.close()).statusCode,200);
+  }finally{await local?.close();await sub.cancel();await runtime.close();client.close(force:true);await backend.close(force:true);}
+ });
  test('modified asset bytes fail closed',()async{
   for(final key in ['main.js','game-host.html']){
    final assets=RuntimeAssets(bundle:TestBundle({'assets/runtime-manifest.json':utf8.encode(jsonEncode({'files':{key:{'size':3,'sha256':'wrong'}}})),'assets/runtime/$key':[1,2,3]}));

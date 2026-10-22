@@ -11,5 +11,8 @@
   "publicationStatus": "draft",
   "revision": "2026-10-21",
   "supportMailboxVerificationSource": "Operator confirmed support team receives messages on 2026-10-19",
-  "mobileChildrenExperience": "local-only-no-account"
+  "mobileChildrenExperience": "local-only-no-account",
+  "androidMinimumAge": 18,
+  "androidChildrenExperience": "not-offered",
+  "androidAgeScreen": "none"
 }
