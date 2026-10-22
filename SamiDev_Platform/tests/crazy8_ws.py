@@ -1,4 +1,4 @@
-"""Authenticated Crazy 8 integration using real HTTP/WebSockets and Node GameHost."""
+"""Authenticated Plazr Uno integration using real HTTP/WebSockets and Node GameHost."""
 import asyncio, json, os, subprocess
 import aiohttp
 from aiohttp import web

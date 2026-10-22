@@ -91,35 +91,35 @@
     "file": "game/games/tablesoccer/sounds/whistle1.m4a"
   },
   {
-    "group": "كريزي 8",
+    "group": "بلازر أونو",
     "label": "سحب ورقة",
     "startSeconds": 12.428,
     "durationSeconds": 0.163,
     "file": "game/games/crazy8/sounds/card-draw.m4a"
   },
   {
-    "group": "كريزي 8",
+    "group": "بلازر أونو",
     "label": "وضع ورقة",
     "startSeconds": 13.09,
     "durationSeconds": 0.302,
     "file": "game/games/crazy8/sounds/card-place.m4a"
   },
   {
-    "group": "كريزي 8",
+    "group": "بلازر أونو",
     "label": "ورقة خاصة",
     "startSeconds": 13.892,
     "durationSeconds": 0.302,
     "file": "game/games/crazy8/sounds/card-special.m4a"
   },
   {
-    "group": "كريزي 8",
+    "group": "بلازر أونو",
     "label": "خلط الأوراق",
     "startSeconds": 14.694,
     "durationSeconds": 0.813,
     "file": "game/games/crazy8/sounds/card-shuffle.m4a"
   },
   {
-    "group": "كريزي 8",
+    "group": "بلازر أونو",
     "label": "تنبيه الحماية",
     "startSeconds": 16.007,
     "durationSeconds": 0.372,

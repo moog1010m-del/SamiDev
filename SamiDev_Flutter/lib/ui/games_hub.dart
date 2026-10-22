@@ -24,7 +24,7 @@ const supportedGames=<GameCardData>[
   GameCardData('carrom','الكيرم','carrom',Color(0xff8f5b35),'خشب دافئ وضربات دقيقة',[
     QuickMode('carrom-classic','كلاسيك','لاعبان · قواعد الكيرم الأساسية',{'players':'0','gamemode':'0','live':'1'}),
   ]),
-  GameCardData('crazy8','أونو','cards',Color(0xff745190),'ألوان، بطاقات وتحدٍ جديد',[
+  GameCardData('crazy8','بلازر أونو','cards',Color(0xff745190),'ألوان، بطاقات وتحدٍ جديد',[
     QuickMode('uno-two','مباراة ثنائية','لاعبان · البطاقات الأساسية',{'seats':'0','special':'0','live':'1'}),
   ]),
   GameCardData('tablesoccer','كرة الطاولة','football',Color(0xff305f91),'مرّر، سدّد ونافس',[

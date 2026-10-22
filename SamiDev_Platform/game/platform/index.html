@@ -9,18 +9,18 @@
   <meta name="samidev-release" content="V30">
   <title>Plazr بلازر | بلياردو وكيرم وألعاب أونلاين في المتصفح</title>
   <meta name="robots" content="noindex,follow">
-  <meta name="description" content="العب مع أصدقائك على بلازر Plazr: بلياردو وكيرم وكرة قدم الطاولة وكريزي 8 أونلاين، ومساحات اجتماعية في متصفح الهاتف والكمبيوتر.">
+  <meta name="description" content="العب مع أصدقائك على بلازر Plazr: بلياردو وكيرم وكرة قدم الطاولة وبلازر أونو أونلاين، ومساحات اجتماعية في متصفح الهاتف والكمبيوتر.">
   <link rel="canonical" href="https://plazr.net/platform/">
   <meta property="og:title" content="Plazr بلازر — ألعاب ومساحات تجمعكم">
-  <meta property="og:description" content="بلياردو وكيرم وكرة قدم الطاولة وكريزي 8 في متصفحك.">
+  <meta property="og:description" content="بلياردو وكيرم وكرة قدم الطاولة وبلازر أونو في متصفحك.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://plazr.net/platform/">
   <meta property="og:image" content="https://plazr.net/platform/assets/brand/apple-touch-icon.png">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/profile-details.css?v=cf54832112138972">
-  <link rel="stylesheet" href="/platform/platform.css?v=b68b7253ca69dfb7">
-  <link rel="stylesheet" href="/platform/profile-identity.css?v=7cf484de5dc720ba">
-<link rel="stylesheet" href="/platform/store.css?v=b79219a4a27e0f9c"><link rel="stylesheet" href="/cosmetic-ui.css?v=b3d75983b026bdd2"><script src="/cosmetic-ui.js?v=a2854338c7e2a537"></script><link rel="stylesheet" href="/platform/desktop-layout.css?v=f71d78338e94f708"><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=31cb90b972fe1d89"></script><link rel="stylesheet" href="/platform/bot-admin.css?v=0f87fa2ef10067d4">  <link rel="stylesheet" href="/platform/admin-workspace.css?v=90d3d45a48d90201">
+  <link rel="stylesheet" href="/platform/platform.css?v=50ad2e6f4ff8d2e3">
+  <link rel="stylesheet" href="/platform/profile-identity.css?v=0ae6119465cd9212">
+<link rel="stylesheet" href="/platform/store.css?v=dd81e8e71dd2ce0e"><link rel="stylesheet" href="/cosmetic-ui.css?v=821b2d02501edb2b"><script src="/cosmetic-ui.js?v=a2854338c7e2a537"></script><link rel="stylesheet" href="/platform/desktop-layout.css?v=f71d78338e94f708"><link rel="stylesheet" href="/platform/settings.css?v=272603f78cf1b56e"><script src="/platform/firebase-auth.js?v=31cb90b972fe1d89"></script><link rel="stylesheet" href="/platform/bot-admin.css?v=0f87fa2ef10067d4">  <link rel="stylesheet" href="/platform/admin-workspace.css?v=90d3d45a48d90201">
 <link rel="stylesheet" href="/platform/friends.css?v=ebee90979465e78e">
 </head>
 <body>
@@ -148,12 +148,7 @@
 
             <section id="community-panel-games" aria-labelledby="community-tab-games" class="community-games-panel community-column">
               <div class="column-head games-head"><div><small>داخل المساحة</small><h3>غرف اللعب</h3></div><button id="refresh-rooms" class="ghost compact">تحديث</button></div>
-              <div class="quick-games" aria-label="إنشاء مباراة جديدة">
-                <button id="quick-create-carrom" type="button" data-quick-game="carrom"><strong>الكيرم</strong><small>إنشاء مباراة</small></button>
-                <button id="quick-create-crazy8" type="button" data-quick-game="crazy8"><strong>أونو</strong><small>إنشاء مباراة</small></button>
-                <button id="quick-create-pool" type="button" data-quick-game="pool"><strong>البلياردو</strong><small>إنشاء مباراة</small></button>
-                <button id="quick-create-tablesoccer" type="button" data-quick-game="tablesoccer"><strong>كرة الطاولة</strong><small>إنشاء مباراة</small></button>
-              </div>
+              <button id="community-create-table" class="community-create-table" type="button"><span aria-hidden="true">＋</span><strong>طاولة جديدة</strong><small>اختر لعبتك وابدأ مباراة</small></button>
               <div id="rooms" class="rooms community-game-rooms"><div class="empty">لا توجد مباريات بعد.</div></div>
             </section>
 
@@ -173,12 +168,27 @@
       <section id="page-store" class="page store-page">
         <div class="page-head store-page-head">
           <div><span class="eyebrow">متجر Plazr</span><h2>متجر التصاميم</h2><p>تصاميم للألعاب وشارات لملفك. اختر ما يناسبك واحتفظ به في مقتنياتك.</p></div>
-          <button id="store-refresh" class="ghost" type="button">تحديث</button>
+          <div class="store-head-actions"><button id="store-wallet-open" class="ghost store-wallet-icon" type="button" aria-label="المحفظة وسجل العمليات وشراء الكوينز" title="المحفظة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7H5a2 2 0 0 1 0-4h13v4M4 5v14a2 2 0 0 0 2 2h14V7M20 11h-5v6h5M16 14h.01"/></svg></button><button id="store-refresh" class="ghost" type="button">تحديث</button></div>
         </div>
         <div class="store-dashboard">
           <article class="store-wallet-card panel">
             <div class="store-wallet-main"><span class="coin-mark" aria-hidden="true">C</span><div><small>رصيد الكوينز</small><strong id="store-balance">0</strong><span>Coin</span></div></div>
             <div class="store-wallet-security"><span class="store-lock-mark" aria-hidden="true"></span><div><strong>محفظتك محفوظة</strong><small>رصيدك واختياراتك معك عند تسجيل الدخول من أي جهاز.</small></div></div>
+            <section class="coin-topup" aria-labelledby="coin-topup-title">
+              <div class="coin-topup-heading"><div><span class="coin-topup-eyebrow">كوينز أكثر، اختيارات أكثر</span><h3 id="coin-topup-title">اختر باقتك</h3></div><span class="coin-topup-rate">١٠٠٠ كوين <b>= $1</b></span></div>
+              <div id="coin-topup-packs" class="coin-topup-packs"></div>
+              <p id="coin-topup-status" role="status">جارٍ تحميل باقات الشحن...</p>
+              <div class="coin-payment-methods" aria-label="وسائل الدفع عبر Xsolla">
+                <span class="coin-payment-label">الدفع عبر <b dir="ltr">Xsolla</b></span>
+                <div class="coin-payment-badges" dir="ltr">
+                  <span class="coin-payment-badge payment-visa" aria-label="Visa">VISA</span>
+                  <span class="coin-payment-badge payment-mastercard" aria-label="Mastercard"><span class="mastercard-mark" aria-hidden="true"></span><span>mastercard</span></span>
+                  <span class="coin-payment-badge payment-apple" aria-label="Apple Pay">Apple Pay</span>
+                </div>
+              </div>
+              <small class="coin-payment-availability">تظهر الوسائل المتاحة لبلدك وجهازك عند إتمام الدفع.</small>
+              <small>تظهر أي ضرائب أو رسوم إضافية في صفحة الدفع قبل التأكيد.</small>
+            </section>
           </article>
           <section class="store-catalog-panel panel">
             <div class="store-section-head"><div><small>المتجر والمقتنيات</small><h3>العناصر والتصاميم</h3></div><span id="store-owned-count" class="count-pill">0 مملوك</span></div>
@@ -390,15 +400,16 @@
       <fieldset class="create-game-picker">
         <legend>اختر اللعبة</legend>
         <div class="create-game-options">
-          <button id="choose-carrom" type="button" data-create-game="carrom" class="selected" aria-pressed="true"><strong>الكيرم</strong><small>Carrom</small></button>
-          <button id="choose-crazy8" type="button" data-create-game="crazy8" aria-pressed="false"><strong>أونو</strong><small>Uno</small></button>
-          <button id="choose-pool" type="button" data-create-game="pool" aria-pressed="false"><strong>البلياردو</strong><small>إيت بول، ناين بول، قيم بول</small></button>
-          <button id="choose-tablesoccer" type="button" data-create-game="tablesoccer" aria-pressed="false"><strong>كرة الطاولة</strong><small>Table Soccer</small></button>
+          <button id="choose-carrom" type="button" data-create-game="carrom" class="selected" aria-pressed="true"><img class="create-game-art" src="/room-sprites/carrom.png?v=36" alt="" width="72" height="72"><strong>الكيرم</strong><small>Carrom</small></button>
+          <button id="choose-crazy8" type="button" data-create-game="crazy8" aria-pressed="false"><img class="create-game-art" src="/room-sprites/cards.png?v=36" alt="" width="72" height="72"><strong>بلازر أونو</strong><small>Plazr Uno</small></button>
+          <button id="choose-pool" type="button" data-create-game="pool" aria-pressed="false"><img class="create-game-art" src="/room-sprites/pool.png?v=36" alt="" width="72" height="72"><strong>البلياردو</strong><small>إيت بول، ناين بول، قيم بول</small></button>
+          <button id="choose-tablesoccer" type="button" data-create-game="tablesoccer" aria-pressed="false"><img class="create-game-art" src="/room-sprites/football.png?v=36" alt="" width="72" height="72"><strong>كرة الطاولة</strong><small>Table Soccer</small></button>
         </div>
         <input id="create-game" type="hidden" value="carrom">
       </fieldset>
       <p id="create-game-description">الكيرم الكلاسيكي وأنماط النقاط.</p>
       <div class="setting pool-setting hidden"><label for="create-pool-mode">نوع البلياردو</label><select id="create-pool-mode"><option value="0">إيت بول · لاعبان</option><option value="1">إيت بول · فريقان بالتناوب</option><option value="2">إيت بول · فريقان</option><option value="3">ناين بول · لاعبان</option><option value="4">ناين بول · فريقان بالتناوب</option><option value="5">ناين بول · فريقان</option><option value="6">ثلاثي · ٣ لاعبين</option><option value="7">قيم بول · أول من يسجل ٨ كرات</option></select><small>قيم بول: أي ٨ كرات، والسوداء عادية.</small></div>
+<div class="setting pool-setting hidden"><label for="create-pool-table">الطاولة</label><select id="create-pool-table"><option value="0">الأصلية</option><option value="1">الطاولة الكبيرة</option></select></div>
 <div class="setting crazy8-setting hidden"><label for="create-card-seats">عدد اللاعبين</label><select id="create-card-seats"><option value="0">لاعبان</option><option value="1">3 لاعبين</option><option value="2" selected>4 لاعبين</option><option value="3">6 لاعبين</option><option value="4">فريقان 2 ضد 2</option></select></div>
 <div class="setting crazy8-setting hidden"><label for="create-card-special">الأوراق الخاصة</label><select id="create-card-special"><option value="0">أساسية</option><option value="1">جميع الأوراق الخاصة</option><option value="2">الدرع</option><option value="3">كشف الأوراق</option><option value="4">الأحمر</option><option value="5">الأزرق</option></select></div>
 <div class="setting crazy8-setting hidden"><label for="create-card-live">نوع المباراة</label><select id="create-card-live"><option value="1">مباشر</option><option value="0">تناوب الأدوار</option></select></div>
@@ -414,7 +425,7 @@
   </div>
 
   <script src="/platform/game-preload.js?v=9ef797ab811ce927"></script>
-  <script src="/samidev-games.js?v=487759056cfa0c5f"></script><script src="/sticker-art.js?v=96bfc5a927cc6711"></script><script src="/profile-details.js?v=6452258e6f78ab77"></script><script src="/platform/account-settings.js?v=5a2a657d36c5bc42"></script><script src="/platform/game-entry.js?v=a1fd36c0a200137a"></script><script src="/platform/game-host.js?v=55b26344352ea8da"></script><script src="/platform/community-live.js?v=35f58b17490cf2e5"></script><script src="/platform/friends.js?v=d926cdd773dd9918"></script><script src="/platform/platform.js?v=28f6b3166d05f7b7"></script>
+  <script src="/samidev-games.js?v=5022ecc4dbc539e7"></script><script src="/sticker-art.js?v=96bfc5a927cc6711"></script><script src="/profile-details.js?v=d98363f49dc5759d"></script><script src="/platform/account-settings.js?v=b28b95fc50969cbd"></script><script src="/platform/game-entry.js?v=42146ed6d0dc842f"></script><script src="/platform/game-host.js?v=55b26344352ea8da"></script><script src="/platform/community-live.js?v=35f58b17490cf2e5"></script><script src="/platform/friends.js?v=d926cdd773dd9918"></script><script src="/platform/platform.js?v=22d00945a55062f2"></script>
 <noscript><p>بلازر Plazr منصة بلياردو وكيرم وألعاب أونلاين. اللعب يحتاج JavaScript. <a href="/discover/index.html">تعرّف على الألعاب</a></p></noscript>
 <script src="/platform/bot-admin.js?v=bf4553ca952bddc9"></script>
 <script src="/platform/admin-workspace.js?v=3dea7dae7391d750"></script>

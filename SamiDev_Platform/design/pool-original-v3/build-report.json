@@ -1,0 +1,15 @@
+{
+  "sprites": 46,
+  "atlas": {
+    "width": 1343,
+    "height": 625
+  },
+  "quarter": {
+    "width": 433,
+    "height": 773
+  },
+  "svgUsed": false,
+  "oldArtworkRead": false,
+  "uiSha256": "95322d82192fb411b51d7ef9e8b30a2607bfa73d782c3ae98e211c82105c9260",
+  "tableSha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe"
+}

@@ -1,7 +1,7 @@
 (() => {
  'use strict';
  let current=null;
- const names={pool:'البلياردو',carrom:'الكيرم',crazy8:'أونو',tablesoccer:'كرة الطاولة'};
+ const names={pool:'البلياردو',carrom:'الكيرم',crazy8:'بلازر أونو',tablesoccer:'كرة الطاولة'};
  const artwork={pool:'pool',carrom:'carrom',crazy8:'cards',tablesoccer:'football'};
  function finish(){
   if(!current)return;

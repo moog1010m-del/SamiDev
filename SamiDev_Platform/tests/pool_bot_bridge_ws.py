@@ -66,7 +66,7 @@ async def main():
   after=(await app.SERVICE.gamehost.state(control))['pool'];assert after==before
   state=(await app.SERVICE.gamehost.state(target))['pool'];assert state['balls']!=start['snapshot']['pool']['balls']
   # Stop only the external process. Main server/physics are left running.
-  worker.terminate();await asyncio.wait_for(worker.wait(),15);assert worker.returncode==0
+  worker.terminate();await asyncio.wait_for(worker.wait(),15);assert worker.returncode in ((0,1) if os.name=='nt' else (0,))
   await humans[1].send_json({'type':'move','packet':{'i':'human-ready','n':0,'m':{'__ready':1}}});assert (await receive(humans[1],'move'))['type']=='move';await receive(humans[2],'move')
   await humans[1].send_json({'type':'move','packet':{'i':'human-shot','n':1,'m':{'a':1,'st':.8,'an':-1.5707963267948966,'sp':[0,0]}}})
   event=await receive(humans[1],'move');assert event['type']=='move',event;assert (await receive(humans[2],'move'))['type']=='move'

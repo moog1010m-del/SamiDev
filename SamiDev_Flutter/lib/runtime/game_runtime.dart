@@ -20,7 +20,7 @@ class GameRuntime {
   bool _bootstrapUsed=false, _closed=false, paused=false;
   int _connecting=0;
   String community='majlis';
-  Map<String,dynamic> _catalog={};
+  final Map<String,dynamic> _catalog={};
   Uri get launch => origin.replace(path:'/_launch/$_secret');
   bool owns(Uri uri) => _server!=null && uri.scheme=='http' && uri.host=='127.0.0.1' && uri.port==origin.port && uri.userInfo.isEmpty;
   bool allowsNavigation(Uri uri) => owns(uri) && (RuntimePolicy.entries.contains(uri.path) || (!_bootstrapUsed&&uri.path==launch.path));

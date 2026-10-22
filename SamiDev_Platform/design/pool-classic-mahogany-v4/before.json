@@ -1,0 +1,17 @@
+{
+  "immutable": {
+    "game/main.js": "643370132da109c64fcff5976ef3be49b3220d97be419c5432e3c741239cbc44",
+    "game/games/pool/main.js": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50",
+    "game/games/crazy8/main.js": "7471c04023d89c6f56aac110a0b4a92ca2aef6cb8d1912983b1b0161b53d5a39",
+    "game/games/tablesoccer/main.js": "94a2ed141ec0fe64a5f58d547bf78c9650a5c572d1963c3c17825e3cf6ae1dce",
+    "game/games/pool/images/ui/ui.webp": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+    "game/pool-presentation.js": "2e0fcc9c90895288fee65b0eefa055565ef7103e6898fbd13606ec4e670739eb",
+    "game/pool-result-card.js": "dac9662e84e4f2e6762db48b58365e671c07b35962e81810e9ba4f8f1a8aa6bf"
+  },
+  "replaced": {
+    "game/games/pool/images/imported/themes/th_basic_table.webp": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+    "game/games/pool/images/imported/themes/th_basic_preview.webp": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+    "game/images/themes/pool-midnight.webp": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
+    "game/images/themes/pool-midnight-preview.webp": "1690730118f1af8559e64ba57d4708405c19c4893e8ebf934b9e2739f564db36"
+  }
+}

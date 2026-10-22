@@ -1,0 +1,82 @@
+{
+  "width": 433,
+  "height": 773,
+  "format": "lossless WebP",
+  "construction": "Native quarter sprite mirrored four times; no engine or UI-atlas edits",
+  "source": {
+    "width": 938,
+    "height": 1677
+  },
+  "alphaMaskUnchanged": true,
+  "sha256": "e3f9330df346c43c915326d118749ef3c0628cedc3645f76b2d208270c945580",
+  "sourceMapping": {
+    "x": [
+      [
+        0,
+        0
+      ],
+      [
+        16,
+        30
+      ],
+      [
+        60,
+        137
+      ],
+      [
+        75,
+        158
+      ],
+      [
+        83,
+        182
+      ],
+      [
+        91,
+        199
+      ],
+      [
+        131,
+        280
+      ],
+      [
+        433,
+        938
+      ]
+    ],
+    "y": [
+      [
+        0,
+        0
+      ],
+      [
+        16,
+        28
+      ],
+      [
+        75,
+        155
+      ],
+      [
+        84,
+        182
+      ],
+      [
+        91,
+        199
+      ],
+      [
+        131,
+        285
+      ],
+      [
+        725,
+        1517
+      ],
+      [
+        773,
+        1607
+      ]
+    ]
+  }
+}

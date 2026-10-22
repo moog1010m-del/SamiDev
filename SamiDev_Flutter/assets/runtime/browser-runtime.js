@@ -13,7 +13,9 @@
   const isPool = currentGame.id === 'pool';
   const isCrazy8 = currentGame.id === 'crazy8';
   const isCarrom = currentGame.id === 'carrom';
-  const mobileDevice = Number(navigator.maxTouchPoints || 0) > 0 || !!window.matchMedia?.('(pointer: coarse)').matches;
+  const touchDevice = Number(navigator.maxTouchPoints || 0) > 0 || !!window.matchMedia?.('(pointer: coarse)').matches;
+  const phoneSized = Math.min(window.screen?.width || window.innerWidth, window.screen?.height || window.innerHeight) <= 600;
+  const mobileDevice = touchDevice && (!isPool || !!window.SamiDevMobile || phoneSized);
   const HOST_GLOBAL = 'SamiDev';
   const HOST_PLAYER_ID_METHOD = 'getSamiDevID';
   // Pool's native pocket animation clips sinking balls with STENCIL_TEST.
@@ -35,7 +37,17 @@
     performance: {mobile:mobileDevice, pixelRatio:1, frames:0, coalescedMoves:0},
   };
   const poolPresentation=isPool?window.SamiDevPoolPresentation?.create({canvas,mobileDevice,native:!!window.SamiDevMobile,portrait:runtimeQuery.get('poolLayout')==='portrait'}):null;
+  const poolTableMode=isPool?window.PlazrPoolTableMode.create({online:runtimeQuery.get('online')==='1',settings:window.SamiDevGames.settings(runtimeQuery),presentation:poolPresentation}):null;
+  const poolBrandMark=isPool?window.PlazrPoolBrandMark?.create({canvas,getLargeTable:()=>poolTableMode.large,onInvalidate:()=>{state.frameRequested=true;}}):null;
   if(poolPresentation)window.__samidevPoolPresentation=poolPresentation;
+  let chatTableBoundsKey='';
+  let poolWaterSound=null;
+  const poolPocketEffects=isPool?window.PlazrPocketEffects?.create({canvas,getCosmetics:()=>state.network.cosmetics,onInvalidate:()=>{state.frameRequested=true;},onSound:()=>{
+    if(poolWaterSound===null)poolWaterSound=window.audio.load('/sounds/plazr-water-wave.wav');
+    window.audio.play(poolWaterSound,.65);
+  },onDispose:()=>{if(poolWaterSound!==null)window.audio.unload(poolWaterSound);}}):null;
+  const poolResultCard=isPool?window.PlazrPoolResult?.create({canvas,getLogic:()=>state.gameLogic,getRoster:()=>state.network.roster,onInvalidate:()=>{state.frameRequested=true;}}):null;
+  const poolAimPresentation=isPool?window.PlazrPoolAimPresentation?.create():null;
   window.__samidevGameState = state;
   if(isPool) window.SamiDevPoolCosmetics = {
     themeForSeat(seat) { return state.network.cosmetics?.[String(seat)]?.pool_theme === 'pool_emerald' ? 'pool_emerald' : 'pool_midnight'; },
@@ -170,7 +182,7 @@
           const uploaded = await fetchImage(`/api/avatar/${encodeURIComponent(id)}`);
           if (uploaded) return uploaded;
         }
-        return await fetchImage('/images/default-avatar.png');
+        return await fetchImage('/images/default-avatar-v2.png');
       } catch (e) {
         if (runtimeDebug) console.warn('[SamiDev Avatar] load failed', id || 'default', e);
         return null;
@@ -302,6 +314,7 @@
   function translate(args) {
     if (!Array.isArray(args)) args=[args];
     const key=String(args[0] ?? '');
+    if(key==='_scene_avatars_your_turn')return 'دورك';
     if(isPool && key==='sl_free_pool_turn'){
       const seat=Number(args[1]),name=seat===state.gameLogic?.localSeat?'دورك':state.network.roster.find(player=>player.seat===seat)?.name||`اللاعب ${seat+1}`;
       return `${name} · قيم بول · ${args[2]}/${args[3]}`;
@@ -608,10 +621,10 @@
 
   // Desktop option stays outside the engine and uses its normal shooting signal.
   const desktopPoolControls = (() => {
-    const available=isPool&&!mobileDevice&&!window.SamiDevMobile;
-    let mode='meter',charge=null,lastSent=0;
+    const available=isPool&&!mobileDevice&&!window.SamiDevMobile&&(!touchDevice||!!window.matchMedia?.('(any-pointer: fine)').matches);
+    let mode='hold',charge=null,lastSent=0,hiddenMeter=null;
     const observed=new WeakSet();
-    try{if(localStorage.getItem('plazr_pool_control')==='hold')mode='hold';}catch{}
+    try{if(localStorage.getItem('plazr_pool_control')==='meter')mode='meter';}catch{}
     const logic=()=>state.gameLogic;
     const blocked=()=>!!document.querySelector('#sd-room-ui.open,.sd-modal.open,.sd-inventory:not([hidden]),#sdpp-layer.open,#sdpp-rating-layer.open');
     function legal(){const g=logic(),s=g?.sceneMgr;return available&&!!g?.started&&!g.gameOver&&!g.paused&&!g.preshooting&&g.localSeat>=0&&g.turn?.includes(g.localSeat)&&!g.animator?.isAnimatingWorld?.()&&!s?.shotOfTheGameShowing&&!s?.spinPanel?.visible&&!s?.shopWidget?.visible&&!s?.settingsWidget?.visible&&!blocked();}
@@ -619,7 +632,7 @@
     function cancel(){if(!charge)return;charge=null;power(0);}
     function strength(now){const phase=((now-charge.start)/1600)%2;return Math.max(.01,phase<=1?phase:2-phase);}
     function down(ev){
-      if(mode!=='hold'||ev.pointerType!=='mouse'||ev.button!==0||charge||!legal())return false;
+      if(mode!=='hold'||ev.pointerType!=='mouse'||ev.button!==2||charge||!legal())return false;
       const g=logic(),s=g.sceneMgr,p=eventPoint(ev),factor=s.layoutInfo.logScale;
       const x=p.x*factor,y=p.y*factor,t=s.table;
       if(Math.abs(x-t.x)>t.width*t.scaleX*.45||Math.abs(y-t.y)>t.height*t.scaleY*.45)return false;
@@ -629,10 +642,12 @@
       charge={id:ev.pointerId,start:performance.now(),turn:JSON.stringify(g.turn)};
       power(.01);return true;
     }
-    function tick(now){if(!charge)return;if(!legal()||document.hidden||JSON.stringify(logic().turn)!==charge.turn){cancel();return;}power(strength(now));}
+    function syncMeter(){const meter=logic()?.sceneMgr?.powerMeter;if(!meter)return;if(available&&mode==='hold'){if(!hiddenMeter||hiddenMeter.node!==meter)hiddenMeter={node:meter,visible:meter.visible};meter.visible=false;}else if(hiddenMeter){hiddenMeter.node.visible=hiddenMeter.visible;hiddenMeter=null;}}
+    function hover(ev){if(mode!=='hold'||ev.pointerType!=='mouse'||charge||!legal()||Number(ev.buttons||0)!==0)return false;const g=logic(),s=g.sceneMgr,p=eventPoint(ev),factor=s.layoutInfo.logScale;const x=p.x*factor,y=p.y*factor,t=s.table;if(Math.abs(x-t.x)>t.width*t.scaleX*.5||Math.abs(y-t.y)>t.height*t.scaleY*.5)return false;const angle=Math.atan2(y-t.getCueBallWorldY(),x-t.getCueBallWorldX());s.cueStick.setRotation(angle);g.requestStickRotation(angle);state.frameRequested=true;return true;}
+    function tick(now){syncMeter();if(!charge)return;if(!legal()||document.hidden||JSON.stringify(logic().turn)!==charge.turn){cancel();return;}power(strength(now));}
     function up(ev){if(!charge||charge.id!==ev.pointerId)return false;const ok=legal()&&JSON.stringify(logic().turn)===charge.turn,value=strength(performance.now());charge=null;if(ok){logic().sceneMgr.powerMeter.setStrength(value);logic().sceneMgr.onShoot.emit(value);}else power(0);return true;}
     window.addEventListener('blur',cancel);document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
-    const api={available,get mode(){return mode;},setMode(value){cancel();mode=value==='hold'?'hold':'meter';try{localStorage.setItem('plazr_pool_control',mode);}catch{}},down,up,tick,cancel,owns:id=>charge?.id===id};
+    const api={available,get mode(){return mode;},setMode(value){cancel();mode=value==='hold'?'hold':'meter';try{localStorage.setItem('plazr_pool_control',mode);}catch{}syncMeter();state.frameRequested=true;},down,up,tick,cancel,hover,owns:id=>charge?.id===id};
     if(available)window.SamiDevPoolControls=api;
     return api;
   })();
@@ -641,7 +656,8 @@
   function deliverPointerMove(ev) {
     const pointerId=ev.pointerId ?? 0;
     const dragging=state.activePointers.has(pointerId) || Number(ev.buttons||0)>0;
-    if(dragging) emitTouch(2,ev);
+    if(!dragging)desktopPoolControls.hover(ev);
+    if(dragging&&!desktopPoolControls.owns(pointerId)) emitTouch(2,ev);
     if(ev.pointerType!=='touch') emitMouse('move',ev);
   }
   function flushPointerMoves() {
@@ -652,7 +668,7 @@
   function installInputBridge() {
     canvas.style.touchAction='none';
     canvas.style.userSelect='none';
-    canvas.addEventListener('pointerdown',ev=>{ ev.preventDefault(); try{canvas.setPointerCapture(ev.pointerId);}catch{}; desktopPoolControls.down(ev);emitTouch(0,ev); if(ev.pointerType!=='touch') emitMouse('down',ev); unlockAudio(); },{passive:false});
+    canvas.addEventListener('pointerdown',ev=>{ ev.preventDefault(); try{canvas.setPointerCapture(ev.pointerId);}catch{}; if(desktopPoolControls.down(ev)){unlockAudio();return;}emitTouch(0,ev); if(ev.pointerType!=='touch') emitMouse('down',ev); unlockAudio(); },{passive:false});
     canvas.addEventListener('pointermove',ev=>{
       ev.preventDefault();
       // Mouse/pen hover is not a SamiDev touch MOVE. Only forward drag moves after DOWN.
@@ -662,7 +678,7 @@
       pendingPointerMoves.set(pointerId, {pointerId, pointerType:ev.pointerType, clientX:ev.clientX, clientY:ev.clientY,
         button:ev.button, buttons:ev.buttons, altKey:ev.altKey, ctrlKey:ev.ctrlKey, shiftKey:ev.shiftKey});
     },{passive:false});
-    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev);desktopPoolControls.up(ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
+    canvas.addEventListener('pointerup',ev=>{ ev.preventDefault(); flushPointerMoves(); if(desktopPoolControls.owns(ev.pointerId)){desktopPoolControls.up(ev);try{canvas.releasePointerCapture(ev.pointerId);}catch{}poolPresentation?.endPointer(ev.pointerId??0);return;} emitTouch(1,ev); if(ev.pointerType!=='touch') emitMouse('up',ev);desktopPoolControls.up(ev); try{canvas.releasePointerCapture(ev.pointerId);}catch{}; poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
     canvas.addEventListener('pointercancel',ev=>{ ev.preventDefault(); pendingPointerMoves.delete(ev.pointerId??0); desktopPoolControls.cancel(); emitTouch(3,ev); if(ev.pointerType!=='touch') emitMouse('leave',ev);poolPresentation?.endPointer(ev.pointerId??0); },{passive:false});
     canvas.addEventListener('pointerenter',ev=>{if(ev.pointerType!=='touch') emitMouse('enter',ev);});
     canvas.addEventListener('pointerleave',ev=>{if(ev.pointerType!=='touch') emitMouse('leave',ev);});
@@ -1278,6 +1294,7 @@
         }));
       }catch(e){if(runtimeDebug) console.warn('[SamiDev] text preload fallback',e);}
     })();
+    if(poolTableMode)await poolTableMode.ready;
     await Promise.all([textPreload,...list.map(path=>new Promise(resolve=>{
       const img=new Image(); img.crossOrigin='anonymous';
       img.decoding='async';
@@ -1298,15 +1315,6 @@
             texture=atlas;state.carromBoardArtwork='samidev-walnut';
           }catch(error){if(runtimeDebug)console.warn('[SamiDev] wood artwork fallback',error);}
         }
-        if(isPool && path==='images/ui/ui.webp'){
-          try{
-            const icons=await Promise.all(['aim-path-off','aim-path-on'].map(name=>new Promise((accept,reject)=>{const icon=new Image();icon.onload=()=>accept(icon);icon.onerror=reject;icon.src='/images/controls/'+name+'.svg';})));
-            const atlas=document.createElement('canvas');atlas.width=img.width;atlas.height=img.height;
-            const context=atlas.getContext('2d');context.drawImage(img,0,0);
-            [[1244,219],[1237,291]].forEach(([x,y],i)=>{context.clearRect(x,y,64,64);context.drawImage(icons[i],x,y,64,64);});
-            texture=atlas;
-          }catch(error){if(runtimeDebug)console.warn('[SamiDev] aim icon fallback',error);}
-        }
         state.images.set(norm(path),texture);resolve();
       };
       img.onerror=()=>{
@@ -1318,8 +1326,11 @@
       };
       const source=(isCrazy8 && path==='images/table-background.webp') ? '/games/crazy8/images/samidev-uno-felt.png' : ((window.__assetImageData && window.__assetImageData[path]) || (themeAtlas ? selectedTheme.atlas : path));
       const refreshedAsset = ['images/table-background.webp','images/ui/ui.webp','images/imported/themes/th_basic_background.webp'].includes(path);
-      const safeSource = /^data:image\/(?:png|jpeg|webp);base64,[a-z0-9+/=\s]+$/i.test(source) ? source : norm(source);
-      img.src=refreshedAsset && !safeSource.startsWith('data:') ? safeSource+(safeSource.includes('?')?'&':'?')+'v=36' : safeSource;
+      const modeSource=poolTableMode?.source(path,source)??source;
+      const safeSource = /^data:image\/(?:png|jpeg|webp);base64,[a-z0-9+/=\s]+$/i.test(modeSource) ? modeSource : norm(modeSource);
+      // Version the complete pool artwork set, including equipped shared themes.
+      const artworkVersion = isPool ? 'plazr-table-v9-final-20261022' : (refreshedAsset ? '36' : '');
+      img.src=artworkVersion && !safeSource.startsWith('data:') ? safeSource+(safeSource.includes('?')?'&':'?')+'v='+artworkVersion : safeSource;
     }))]);
     startupMark('assetsReady');
     return mainSource;
@@ -1349,6 +1360,7 @@
   function ensureRenderLoop(){if(!renderLoopStarted){renderLoopStarted=true;requestAnimationFrame(loop);}}
   async function prepareRoomScene(message){
     startupMark('roomAssigned');
+    poolTableMode?.configure(message.settings||window.SamiDevNetwork.state.settings);
     const logic=await prepareAssetsAndLogic();
     const network=window.SamiDevNetwork.state;
     state.network.roomId=network.roomId;
@@ -1356,7 +1368,7 @@
     state.network.roster=network.roster||message.roster||[];
     state.network.capacity=Number(network.capacity)||message.capacity;
     applyCosmetics(message);
-    const nativeSettings=cloneMove(message.settings||network.settings);delete nativeSettings.gameId;
+    const nativeSettings=cloneMove(message.settings||network.settings);delete nativeSettings.gameId;delete nativeSettings.largeTable;
     const seats=logic.initialize(nativeSettings,state.network.seat);
     installLocalHost(logic,true);
     logic._initialSync=true;
@@ -1419,6 +1431,7 @@
         settings=window.SamiDevGames.settings(qs);
       }
 
+      poolTableMode?.configure(settings);
       const logic=await prepareAssetsAndLogic();
       window.SamiDevCardAudio?.setSyncing(true);
       if(isPool) logic.isMusicMuted=()=>true; // No ambient music recording exists in the supplied bundle.
@@ -1444,7 +1457,7 @@
           this.resume(); this.sendReady();
         };
       }
-      const nativeSettings=cloneMove(settings); delete nativeSettings.gameId;
+      const nativeSettings=cloneMove(settings); delete nativeSettings.gameId;delete nativeSettings.largeTable;
       if(roomScene && JSON.stringify(roomScene.settings)!==JSON.stringify(nativeSettings))throw new Error('تغيّرت إعدادات الغرفة أثناء التهيئة');
       const seats=roomScene?roomScene.seats:logic.initialize(nativeSettings,localSeat);
       configureNativeWaitingSlots(logic,false);
@@ -1507,7 +1520,7 @@
   };
 
   window.SamiDevGameRuntime={preloadResources:prepareResources,dispose(){
-    if(state.disposed)return;gameHaptics.cancel();state.disposed=true;
+    if(state.disposed)return;gameHaptics.cancel();poolPocketEffects?.dispose();poolResultCard?.dispose();poolAimPresentation?.dispose();poolBrandMark?.dispose();window.SamiDevAvatarHUDState?.canvas?.remove();state.disposed=true;
     const net=window.SamiDevNetwork;if(net){net.state.intentionalClose=true;net.state.ws?.close(1000,'game view closed');}
     for(const id of Array.from(timers.keys()))clearHostTimer(id);
     for(const alarm of state.localHost.alarms.values())clearTimeout(alarm);state.localHost.alarms.clear();
@@ -1533,7 +1546,19 @@
         try {
           desktopPoolControls.tick(performance.now());
           poolPresentation?.beforeFrame(state.gameLogic?.sceneMgr);
+          if(isPool){
+            window.SamiDevAvatarLayout?.poolBalls(state.gameLogic?.sceneMgr);
+            const bounds=poolPresentation?.tableBounds?.();
+            if(bounds){const top=Math.max(8,Math.round(bounds.top)),height=Math.max(170,Math.min(Math.round(bounds.height),window.innerHeight-top-8)),key=top+':'+height;
+              if(chatTableBoundsKey!==key){chatTableBoundsKey=key;document.documentElement.style.setProperty('--sd-chat-table-top',top+'px');document.documentElement.style.setProperty('--sd-chat-table-height',height+'px');}
+            }
+          }
+          poolResultCard?.frame();
+          poolAimPresentation?.frame(state.gameLogic?.sceneMgr);
           state.drawFrame();
+          if(window.SamiDevAvatarLayout?.frame(canvas,performance.now(),isPool?state.gameLogic?.sceneMgr:null))state.frameRequested=true;
+          poolPocketEffects?.frame(state.gameLogic,poolPresentation);
+          poolBrandMark?.frame(state.gameLogic);
           state.performance.frames++;
           if(state.performance.frames===1){startupMark('firstFrame');window.__SAMIDEV_APP_HOST?.surfaceReady?.();window.SamiDevMobile?.postMessage(JSON.stringify({type:'game_surface_ready'}));}
           renderFailureRetries=0;

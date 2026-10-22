@@ -4,6 +4,7 @@ const {protectSource} = require('./protect.cjs');
 const input = `globalThis.publicResult = (() => {
  class Ball { getRank() { return 7; } }
  const ball = new Ball();
+ const message = 'private-layer-regression-sentinel-long-message';
  return [ball.getRank(), ball['getRank'](), Ball.name];
 })();`;
 (async () => {
@@ -16,6 +17,8 @@ const input = `globalThis.publicResult = (() => {
   const context = {}; vm.runInNewContext(source, context);
   assert.deepEqual(JSON.parse(JSON.stringify(context.publicResult)), [7, 7, 'Ball']);
   assert.ok(!source.includes('getRank'));
+  assert.ok(!source.includes('private-layer-regression-sentinel-long-message'));
+  assert.ok(source.length < 100000, 'Small inputs must not cause unbounded growth');
   assert.ok(!source.includes('sourceMappingURL'));
   assert.ok(!source.includes(a));
  }

@@ -1,0 +1,33 @@
+{
+  "game\\games\\pool\\images\\imported\\themes\\th_basic_table.webp": {
+    "source": "design\\pool-classic-mahogany-v4\\backup\\th_basic_table.webp",
+    "sha256": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+    "dimensions": [
+      433,
+      773
+    ],
+    "byteForByte": true
+  },
+  "game\\games\\pool\\images\\imported\\themes\\th_basic_preview.webp": {
+    "source": "design\\pool-classic-mahogany-v4\\backup\\th_basic_preview.webp",
+    "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+    "dimensions": [
+      512,
+      326
+    ],
+    "byteForByte": true
+  },
+  "game\\images\\themes\\pool-midnight.webp": {
+    "source": "game\\games\\pool\\images\\imported\\themes\\th_basic_table.webp",
+    "sha256": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+    "byteForByte": true
+  },
+  "game\\images\\themes\\pool-midnight-preview.webp": {
+    "source": "Restored table; catalog thumbnail only",
+    "dimensions": [
+      224,
+      400
+    ],
+    "sha256": "31e0adc1d8c816132ccba53f69f9b9d8c57fa63f18dd0f5282f458816a1d4f2d"
+  }
+}

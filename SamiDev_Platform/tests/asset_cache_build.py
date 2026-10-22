@@ -6,7 +6,7 @@ from build_asset_cache import build
 class ContractTests(unittest.TestCase):
  def test_reproducible_public_contract(self):
   path=ROOT/'game/asset-worker.js';before=path.read_bytes();build();self.assertEqual(path.read_bytes(),before)
-  text=before.decode();data=json.loads(re.search(r'const CONTRACT=(.*);\n',text)[1])
+  text=before.decode();data=json.loads(re.search(r'const CONTRACT=(.*);\r?\n',text)[1])
   self.assertEqual(set(data['groups']),{'pool','carrom','crazy8','tablesoccer'})
   for url,digest in data['files'].items():
    self.assertFalse(url.startswith(('/api/','/ws/','/platform/')))

@@ -14,7 +14,7 @@ class MemberApi extends LiveApi{
 }
 void main(){testWidgets('members show one username, no bio and earned reputation',(tester)async{
  final api=MemberApi();addTearDown(api.close);addTearDown(api.stream.close);
- await tester.pumpWidget(MaterialApp(home:MediaQuery(data:const MediaQueryData(disableAnimations:true),child:Scaffold(body:CommunityHub(api:api,active:true,initialCommunity:'majlis',onGame:(_,__)async{},onProfile:(_){},onTheme:(){},onInvite:(){},onNavigationChanged:(){},onUnauthorized:(){})))));
+ await tester.pumpWidget(MaterialApp(home:MediaQuery(data:const MediaQueryData(disableAnimations:true),child:Scaffold(body:CommunityHub(api:api,active:true,initialCommunity:'majlis',onGame:(_,_)async{},onProfile:(_){},onTheme:(){},onInvite:(){},onNavigationChanged:(){},onUnauthorized:(){})))));
  await tester.pumpAndSettle();await tester.tap(find.text('متصل (2)'));await tester.pumpAndSettle();
  expect(find.text('Dev'),findsOneWidget);expect(find.text('Guest_123'),findsOneWidget);expect(find.text('BIO MUST STAY HIDDEN'),findsNothing);
  final flames=tester.widgetList<ReputationFlame>(find.byType(ReputationFlame)).map((w)=>w.score).toList();expect(flames,[50004,3]);

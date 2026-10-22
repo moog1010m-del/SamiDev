@@ -59,3 +59,7 @@ html[data-theme="dark"] .sd-chat-sticker-picker{background:#17272e;color:#e6eeee
 .sd-sticker-grid button{min-width:0;min-height:84px;border:0;background:transparent;display:grid;place-items:center;padding:4px}
 .sd-sticker-grid p{grid-column:1/-1}
 html[data-theme="dark"] .sd-chat-sticker-picker{background:#121c21;color:#e3ecef}
+
+/* The match chat lives at z=15000; its picker must be above that layer. */
+.sd-chat-sticker-picker{z-index:20050}
+#sd-chat-shell>.sd-sticker-panel-mobile{position:absolute;left:8px;right:8px;bottom:64px;width:auto;max-height:min(300px,50dvh);z-index:20050}

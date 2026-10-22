@@ -1,0 +1,34 @@
+{
+  "game/games/pool/images/imported/themes/th_basic_table.webp": {
+    "savedAs": "game\\images\\pool-large\\table.webp",
+    "sha256": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2"
+  },
+  "game/games/pool/images/imported/themes/th_basic_background.webp": {
+    "savedAs": "game\\images\\pool-large\\background.webp",
+    "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1"
+  },
+  "game/games/pool/images/imported/themes/th_basic_preview.webp": {
+    "savedAs": "game\\images\\pool-large\\preview.webp",
+    "sha256": "24d1d3578a37a7adddab4a3115ab301e7083cc4e6f16e9f95439619542a1a916"
+  },
+  "game/games/pool/images/imported/themes/th_basic_head_line.webp": {
+    "savedAs": "game\\images\\pool-large\\head-line.webp",
+    "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0"
+  },
+  "game/games/pool/images/ui/ui.webp": {
+    "savedAs": "game\\images\\pool-large\\ui.webp",
+    "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a"
+  },
+  "game/images/themes/pool-emerald.webp": {
+    "savedAs": "game\\images\\pool-large\\emerald.webp",
+    "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+  },
+  "game/images/themes/pool-emerald-preview.webp": {
+    "savedAs": "game\\images\\pool-large\\emerald-preview.webp",
+    "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+  },
+  "game/images/cues/moon.webp": {
+    "savedAs": "game\\images\\pool-large\\moon.webp",
+    "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94"
+  }
+}

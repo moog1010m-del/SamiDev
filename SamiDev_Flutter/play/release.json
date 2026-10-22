@@ -1,17 +1,21 @@
 {
   "applicationId": "com.samidev.platform",
-  "apiOrigin": null,
+  "apiOrigin": "https://plazr.net",
   "privacyUrl": "https://plazr.net/platform/privacy.html",
   "deletionUrl": "https://plazr.net/platform/account-deletion.html",
   "audienceMode": "mixed-with-children",
-  "policyReviewDate": null,
+  "policyReviewDate": "2026-10-21",
   "reviewerAccessVerified": false,
   "dataSafetyReviewed": false,
-  "contentRatingCompleted": false,
+  "contentRatingCompleted": true,
   "contentRightsEvidenceReviewed": false,
   "realDeviceTestsPassed": false,
   "preLaunchReportReviewed": false,
-  "chatAiEnabled": null,
-  "notes": "Mixed audience confirmed. Under-13 mobile path is local-only without accounts or social services. Documented Families compliance review, actual operator identity, deployment and Console evidence remain pending.",
-  "childrenExperience": "offline-local-v1"
+  "chatAiEnabled": true,
+  "notes": "Initial Google Play release has no cash purchases or external checkout. Mobile coin top-up UI removed; native checkout and external payment navigation denied. Mixed audience with isolated under-13 local experience. Console and device evidence still pending.",
+  "childrenExperience": "offline-local-v1",
+  "monetizationMode": "no-cash-purchases",
+  "chatAiVerificationSource": "2026-10-21: running chat sidecar run.py has --enable-live and --use-gemini. External AI disclosure and data lifecycle require review.",
+  "deviceTestingOwnerReport": "2026-10-21: owner reports application tested many times; device, version and signed release test results not yet recorded.",
+  "contentRatingEvidence": "IARC questionnaire saved in Google Play Console on 2026-10-21. Generic12+, ESRB Teen, PEGI parental guidance. Pending submission for review."
 }

@@ -1,0 +1,14 @@
+{
+  "applicationId": "com.samidev.platform",
+  "consoleAppId": "4972632765725036730",
+  "developerAccount": "SnDev",
+  "track": "internal",
+  "versionName": "1.0.5",
+  "versionCode": 6,
+  "artifactSha256": "2a76bdd2d7dc9a5235ed51249ed070f7d46465d717b4bcb79870fcac993f2b79",
+  "bytes": 101230222,
+  "status": "published-internal-testing",
+  "publicProductionRelease": false,
+  "consoleStatus": "Available to internal testers; not reviewed",
+  "testersConfigured": false
+}

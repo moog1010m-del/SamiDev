@@ -80,8 +80,8 @@ android {
         }
     }
     lint {
-        checkReleaseBuilds = false
-        abortOnError = false
+        checkReleaseBuilds = true
+        abortOnError = true
     }
 }
 
@@ -108,4 +108,13 @@ val verifyRuntimeAssets by tasks.registering {
 }
 tasks.matching { it.name == "preBuild" || it.name.startsWith("compileFlutterBuild") }.configureEach {
     dependsOn(verifyRuntimeAssets)
+}
+
+// A release must never silently ship a plain debug runtime bundle.
+val verifyProtectedRuntimeAssets by tasks.registering(Exec::class) {
+    workingDir(rootProject.projectDir.parentFile)
+    commandLine("python", "tool/verify_release_protection.py")
+}
+tasks.matching { it.name.startsWith("compileFlutterBuild") && it.name.endsWith("Release") }.configureEach {
+    dependsOn(verifyProtectedRuntimeAssets)
 }

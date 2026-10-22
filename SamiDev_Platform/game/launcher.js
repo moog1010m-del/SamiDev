@@ -130,6 +130,7 @@
       wrap.querySelector('input[name="break"][value="2"]')?.closest('label')?.remove();
       wrap.querySelector('input[name="gamemode"]').closest('.section').outerHTML=`<div class="section"><span class="label">نوع البلياردو</span><div class="choices">${window.SamiDevGames.poolModes.map((label,i)=>choice('gameType',i,label,i===0)).join('')}</div></div>`;
       for(const name of ['players','live'])wrap.querySelector(`input[name="${name}"]`)?.closest('.section')?.classList.add('hidden');
+      wrap.querySelector('#settings-block').insertAdjacentHTML('beforeend',`<div class="section"><span class="label">الطاولة</span><div class="choices">${choice('largeTable','0','الأصلية',true)}${choice('largeTable','1','الطاولة الكبيرة')}</div></div>`);
     }
     if(cards){
       wrap.querySelector('[data-tab="local"]').classList.add('hidden');
@@ -151,7 +152,7 @@
     }));
 
     const val=n=>wrap.querySelector(`input[name="${n}"]:checked`).value;
-    const gameParams=()=>pool?{game:currentGame.id,gameType:val('gameType'),break:val('break'),live:'1'}:cards?{game:currentGame.id,seats:val('seats'),special:val('special'),live:val('live')}:({game:currentGame.id,...(soccer?{goalsToWin:val('goalsToWin'),passes:val('passes')} : {}),players:val('players'),gamemode:val('gamemode'),live:val('live'),break:val('break')});
+    const gameParams=()=>pool?{game:currentGame.id,gameType:val('gameType'),break:val('break'),live:'1',largeTable:val('largeTable')}:cards?{game:currentGame.id,seats:val('seats'),special:val('special'),live:val('live')}:({game:currentGame.id,...(soccer?{goalsToWin:val('goalsToWin'),passes:val('passes')} : {}),players:val('players'),gamemode:val('gamemode'),live:val('live'),break:val('break')});
     const go=params=>{
       const p=new URLSearchParams(params);
       location.search=p.toString();

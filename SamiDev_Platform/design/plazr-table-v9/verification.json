@@ -1,0 +1,48 @@
+{
+  "buildId": "samidev-v37-d78bad85a4e01ee5",
+  "originHealth": "passed",
+  "servedBuildMatches": true,
+  "servedAndFlutterFiles": {
+    "browser-runtime.js": "9139944c0f6a779383fb43ee24ec319634b5c88461610c211984e267f3f5e0cc",
+    "pool-brand-mark.js": "f8da0ba5ac7d0af097c761512f84db2cb201800e9bea908295ce94ee214a60ae",
+    "pool-table-mode.js": "c867e47f3f152caecf957921d2defdbced81b8875aa037a32527b88f7502052b",
+    "games/pool/index.html": "6d6aecc3e4a416df1bb6c45313e32de30855270f8569cc40cb07d0f912d4624f",
+    "games/pool/images/imported/themes/th_basic_table.webp": "943502cb0da23f4ecf17d7e76ec8032eaa4479a7461bba4d1dc839073a713d7e",
+    "games/pool/images/imported/themes/th_basic_background.webp": "db437dd48b67181654fa213c1616d922a0af5242c0faa7308b4dced816aae7f6",
+    "games/pool/images/imported/themes/th_basic_preview.webp": "78053dd7ddae39f01224afe11d80039a46b06b3f0cc9fd6a41b8e0a924796c7f",
+    "images/themes/plazr-engraving.webp": "9faba3f96f1e416c9052db16f34356ace99f13bee5fba552e5909bec4ab6e6d4",
+    "images/themes/pool-midnight.webp": "943502cb0da23f4ecf17d7e76ec8032eaa4479a7461bba4d1dc839073a713d7e",
+    "images/themes/pool-midnight-preview.webp": "cf3166d3cc72adefc585b939b2e0c6baa6584e3136f4f04a0bd1e55cbd695dc5",
+    "images/pool-large/table.webp": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2",
+    "platform/build.json": "813ebeb4fc06d4ac2f29e24cdd71f22d7cf9ca89c21a1e5f2b76779ab465babf"
+  },
+  "generatedSourcesOnly": true,
+  "sourcePrompts": "prompts.json",
+  "nativeEngineAndUiAtlasUnchanged": true,
+  "allEightLargeModeAssetsUnchanged": true,
+  "tests": {
+    "brandInlayChecks": 8,
+    "tableModeChecks": 11,
+    "nativePoolRuntimeChecks": 39,
+    "assetCacheContract": "passed",
+    "flutterBundleFiles": 771,
+    "flutterSecurityScanFiles": 772,
+    "flutterFindings": []
+  },
+  "visualReview": {
+    "proofs": [
+      "desktop.png",
+      "phone.png",
+      "large-mode-preserved.png"
+    ],
+    "phoneViewport": "390x844",
+    "desktopViewport": "1612x1139",
+    "engravingReadableAndBoundToFrame": true,
+    "backgroundDoesNotTileGradient": true,
+    "largeModeHasNoNewBrandOverlay": true,
+    "consoleErrors": [],
+    "phoneEmulationCleared": true
+  },
+  "scope": "New default table artwork and decorative inlay only. Native physics, ball sizes, input, atlas mirroring and native sinking animation retained.",
+  "deploymentNote": "Verified against the running local origin and synchronized Flutter source bundle; no Google Play binary uploaded."
+}

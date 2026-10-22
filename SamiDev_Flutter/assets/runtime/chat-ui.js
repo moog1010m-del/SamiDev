@@ -24,7 +24,7 @@
     return (parts.slice(0, 2).map(x => x[0] || '').join('') || 'P').toUpperCase();
   }
 
-  const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
+  const DEFAULT_AVATAR_URL = '/images/default-avatar-v2.png';
   function avatarFor(player) {
     const wrap = document.createElement('div');
     wrap.className = 'sd-chat-avatar';
@@ -154,6 +154,8 @@
     try { input.focus({preventScroll:true}); } catch (_) { input.focus(); }
   }
 
+  let keyboardWasOpen = false;
+  let closedViewportHeight = window.visualViewport?.height || window.innerHeight;
   function updateViewport() {
     if (!root) return;
     const vv = window.visualViewport;
@@ -161,11 +163,17 @@
     if (vv && isMobileLayout()) {
       offset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
     }
+    if (!mobileOpen) closedViewportHeight = vv?.height || window.innerHeight;
+    const keyboardOpen = offset > 100 || (closedViewportHeight - (vv?.height || window.innerHeight)) > 100;
+    if (mobileOpen && keyboardWasOpen && !keyboardOpen) { keyboardWasOpen=false; closeMobileChat(); return; }
+    keyboardWasOpen = mobileOpen && keyboardOpen;
     document.documentElement.style.setProperty('--sd-chat-keyboard-offset', `${offset}px`);
   }
 
   function openMobileChat({focus = true} = {}) {
     if (!visible || !isMobileLayout()) return;
+    const boardHeight=document.getElementById('game')?.getBoundingClientRect().height || window.innerHeight;
+    document.documentElement.style.setProperty('--sd-chat-board-height', `${boardHeight}px`);
     mobileOpen = true;
     unread = 0;
     updateUnread();
@@ -175,15 +183,15 @@
     render();
     platform()?.haptic?.('selection');
     if (focus) {
-      requestAnimationFrame(() => {
-        try { input?.focus({preventScroll:true}); } catch (_) { input?.focus(); }
-      });
+      // Keep focus in the tap gesture so iOS opens its software keyboard.
+      try { input?.focus({preventScroll:true}); } catch (_) { input?.focus(); }
     }
   }
 
   function closeMobileChat() {
     if (!mobileOpen) return;
     mobileOpen = false;
+    keyboardWasOpen = false;
     root?.classList.remove('mobile-open', 'focused');
     document.body.classList.remove('sd-chat-mobile-open');
     try { input?.blur(); } catch (_) {}
@@ -257,6 +265,7 @@
           max-width:none!important;max-height:none!important;
           display:block!important;
         }
+        body.sd-chat-mobile-open #game{height:var(--sd-chat-board-height)!important}
         #sd-chat-ui{
           display:none;position:fixed;z-index:15000;top:0;right:0;bottom:0;
           width:var(--sd-chat-desktop-width);box-sizing:border-box;
@@ -281,6 +290,7 @@
           width:100vw!important;height:100vh!important;height:100dvh!important;
           max-width:none!important;max-height:none!important;display:block!important;
         }
+        body.sd-chat-mobile-open #game{height:var(--sd-chat-board-height)!important}
         #sd-chat-ui{
           display:none;position:fixed;z-index:15000;inset:0 0 var(--sd-chat-keyboard-offset) 0;
           color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
@@ -288,18 +298,18 @@
         }
         #sd-chat-ui.room-active.mobile-open{display:flex;flex-direction:column;justify-content:flex-end}
         #sd-chat-backdrop{
-          position:absolute;inset:0;background:rgba(2,6,10,.25);pointer-events:auto;
+          position:absolute;inset:0;background:transparent;pointer-events:auto;
           -webkit-tap-highlight-color:transparent;
         }
         #sd-chat-shell{
           position:relative;z-index:1;display:flex;flex-direction:column;
-          width:100%;height:min(62vh,520px);max-height:calc(100vh - var(--sd-chat-keyboard-offset));min-height:0;
-          background:linear-gradient(180deg,rgba(7,11,16,.30),rgba(7,11,16,.64) 48%,rgba(7,11,16,.88));
+          width:100%;height:min(32vh,250px);max-height:calc(100vh - var(--sd-chat-keyboard-offset));min-height:0;
+          background:transparent;
           border-top:1px solid rgba(255,255,255,.13);
-          box-shadow:0 -14px 36px rgba(0,0,0,.18);
+          box-shadow:none;
           pointer-events:auto;
         }
-        #sd-chat-header{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-sizing:border-box;direction:rtl;background:rgba(8,12,17,.32)}
+        #sd-chat-header{height:30px;flex:0 0 30px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-sizing:border-box;direction:rtl;background:rgba(8,12,17,.32)}
         #sd-chat-title{font-size:14px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.75)}
         #sd-chat-close{width:34px;height:34px;border:0;border-radius:50%;background:rgba(0,0,0,.28);color:#fff;font-size:23px;line-height:1;display:grid;place-items:center;cursor:pointer}
         #sd-chat-messages{
@@ -312,7 +322,7 @@
           flex:0 0 auto;display:flex;direction:ltr;align-items:center;gap:7px;
           padding:8px 8px calc(8px + var(--sd-chat-safe-bottom));
           background:rgba(8,12,17,.72);border-top:1px solid rgba(255,255,255,.11);
-          backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+          backdrop-filter:none;-webkit-backdrop-filter:none;
         }
         #sd-chat-launcher{
           display:none;position:fixed;z-index:14950;right:14px;
@@ -379,7 +389,7 @@
 
     list = root.querySelector('#sd-chat-messages');
     form = root.querySelector('#sd-chat-form');
-    root.querySelector('#sd-chat-stickers').onclick=async()=>{try{const response=await fetch('/api/store',{credentials:'same-origin'});if(!response.ok)throw Error();window.SamiDevCosmetics.pickStickers(await response.json(),item=>net().sendSticker(item.id,item.asset));}catch{showError('تعذر تحميل الملصقات');}};
+    root.querySelector('#sd-chat-stickers').onclick=async()=>{try{const response=await fetch('/api/store',{credentials:'same-origin'});if(!response.ok)throw Error();window.SamiDevCosmetics.pickStickers(await response.json(),item=>net().sendSticker(item.id,item.asset),{anchor:root.querySelector('#sd-chat-stickers'),host:root.querySelector('#sd-chat-shell')});}catch{showError('تعذر تحميل الملصقات');}};
     input = root.querySelector('#sd-chat-input');
     errorBox = root.querySelector('#sd-chat-error');
     closeBtn = root.querySelector('#sd-chat-close');

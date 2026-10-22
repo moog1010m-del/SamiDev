@@ -17,7 +17,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     'pool': 'البلياردو',
     'carrom': 'الكيرم',
     'tablesoccer': 'كرة الطاولة',
-    'crazy8': 'أونو',
+    'crazy8': 'بلازر أونو',
   };
   int number(dynamic value) =>
       (value is num ? value.toInt() : int.tryParse('$value') ?? 0)
@@ -28,14 +28,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     if (!RegExp(
           r'^/(images|games|platform/assets|room-sprites)/[A-Za-z0-9_./-]+$',
         ).hasMatch(path) ||
-        path.contains('..'))
+        path.contains('..')) {
       return null;
+    }
     return 'assets/runtime$path';
   }
 
   Widget picture(dynamic value, {double height = 65}) {
-    if (StickerArtwork.cell('$value') != null)
+    if (StickerArtwork.cell('$value') != null) {
       return StickerArtwork(asset: '$value', size: height);
+    }
     final path = asset(value);
     return path == null
         ? Icon(Icons.auto_awesome, size: height / 2)

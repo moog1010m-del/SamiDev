@@ -1,0 +1,47 @@
+{
+  "applicationId": "com.samidev.platform",
+  "appId": "4972632765725036730",
+  "saved": {
+    "type": "app",
+    "category": "social",
+    "privacyUrl": "https://plazr.net/platform/privacy.html",
+    "supportEmail": "support@plazr.cc",
+    "website": "https://plazr.net",
+    "ads": false,
+    "government": false,
+    "healthFeatures": false,
+    "financialServices": false,
+    "reviewerInstructions": "Automatic guest session after age and participation gates; optional account linking."
+  },
+  "listingDraft": {
+    "name": "Plazr بلازر",
+    "shortDescription": "مساحات للدردشة مع الأصدقاء وألعاب خفيفة في مكان واحد",
+    "icon": "play/assets/icon-512.png",
+    "screenshotsUploaded": false,
+    "featureGraphicUploaded": false
+  },
+  "iarc": {
+    "status": "saved-pending-public-review",
+    "category": "social/communication",
+    "generic": "12+",
+    "ESRB": "Teen",
+    "PEGI": "Parental Guidance",
+    "USK": "12+",
+    "ClassInd": "12+",
+    "answers": {
+      "social": true,
+      "dating": false,
+      "publicNudityAllowed": false,
+      "graphicRealViolenceAllowed": false,
+      "preciseLocationShared": false,
+      "cashDigitalPurchases": false,
+      "blocking": true,
+      "reporting": true,
+      "chatModeration": true,
+      "restrictAllInteractionsToInvitedFriends": false
+    }
+  },
+  "dataSafetySubmitted": false,
+  "targetAudienceSubmitted": false,
+  "sentForPublicReview": false
+}

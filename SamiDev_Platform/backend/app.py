@@ -634,13 +634,16 @@ class SamiDevRealtime:
         for seat, uid in accounts.items():
             theme = "pool_midnight"
             cue = "pool_cue_classic"
+            effect = "pool_pocket_default"
             if uid:
                 owned = await self.platform.store_snapshot(str(uid))
                 if owned["equipped"].get("pool_theme") == "pool_emerald":
                     theme = "pool_emerald"
                 if owned["equipped"].get("pool_cue") == "pool_cue_moon":
                     cue = "pool_cue_moon"
-            result[str(seat)] = {"pool_theme": theme, "pool_cue": cue}
+                if owned["equipped"].get("pool_pocket_effect") == "pool_pocket_water":
+                    effect = "pool_pocket_water"
+            result[str(seat)] = {"pool_theme": theme, "pool_cue": cue, "pool_pocket_effect": effect}
         return result
 
     async def fanout_finished_checkpoint(self, rid: str, room: dict, authority: dict, move_count: int) -> None:
@@ -773,6 +776,8 @@ class SamiDevRealtime:
 
     async def handle(self, c: Conn, msg: dict[str, Any]) -> None:
         kind = msg.get("type")
+        if kind=='join_room':
+            await self.platform_http.web_challenges.allowed(str(msg.get('roomId') or ''), c.account_id)
         if c.account_id and kind in {'quick_play','create_room','join_room','watch_room','join_invite'}:
             cid = c.community_id
             if kind in {'join_room','watch_room'}:
@@ -784,7 +789,9 @@ class SamiDevRealtime:
                     rid=await self.store.r.get(self.store.kinvite(token))
                 else:
                     entry=self.store.invites.get(token);rid=entry[0] if entry else None
-                if rid: cid=(await self.store.get_room_state(rid)).get('communityId') or 'majlis'
+                if rid:
+                    await self.platform_http.web_challenges.allowed(rid,c.account_id)
+                    cid=(await self.store.get_room_state(rid)).get('communityId') or 'majlis'
             reconnect=kind=='join_room' and bool(msg.get('token')) and room.get('begun') and any(p.get('accountId')==c.account_id for p in room.get('roster',[]))
             await self.platform.community_rules.access(c.account_id,cid,allow_disabled=bool(reconnect))
         if c.account_id and kind=='chat_send':
@@ -1362,7 +1369,7 @@ async def platform_origin_middleware(request: web.Request, handler):
     community_socket = request.path.startswith('/ws/community/')
     if PRODUCTION_MODE and (request.path.startswith("/api/") or request.path == "/ws" or community_socket) and not SERVICE.platform_http._secure(request):
         return web.json_response({"ok":False,"error":"HTTPS_REQUIRED"},status=426)
-    if community_socket or (request.path.startswith("/api/") and request.method.upper() in {"POST", "PUT", "PATCH", "DELETE"}):
+    if community_socket or (request.path.startswith("/api/") and request.path != '/api/payments/xsolla/webhook' and request.method.upper() in {"POST", "PUT", "PATCH", "DELETE"}):
         origin = request.headers.get("Origin")
         fetch_site = (request.headers.get("Sec-Fetch-Site") or "").lower()
         if fetch_site == "cross-site" or not _origin_allowed(origin):
@@ -1427,8 +1434,14 @@ def make_app() -> web.Application:
     app.router.add_get("/api/store", api.store_state)
     app.router.add_post("/api/store/equip", api.store_equip)
     app.router.add_post("/api/store/buy", api.store_buy)
+    app.router.add_post('/api/payments/xsolla/checkout', api.payments.checkout)
+    app.router.add_post('/api/payments/xsolla/webhook', api.payments.webhook)
     app.router.add_patch("/api/profile", api.profile_update)
     app.router.add_get("/api/avatar/{user_id}", api.avatar_image)
+    from web_challenges import WebChallenges
+    api.web_challenges = WebChallenges(api)
+    app.router.add_get("/api/web-challenges", api.web_challenges.request)
+    app.router.add_post("/api/web-challenges", api.web_challenges.request)
     app.router.add_post("/api/heartbeat", api.heartbeat)
     app.router.add_get("/api/communities", api.communities)
     app.router.add_get("/api/communities/{community_id}", api.community_state)

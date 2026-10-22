@@ -23,7 +23,7 @@
     try{
       const data=await api('/api/account');if(version!==loading||user.id!==currentUser()?.id)return;
       account=data;
-      const summary=$('#account-summary');const avatar=document.createElement('img');avatar.className='settings-account-avatar';avatar.alt='';avatar.src=user.avatarData||'/images/default-avatar.png';
+      const summary=$('#account-summary');const avatar=document.createElement('img');avatar.className='settings-account-avatar';avatar.alt='';avatar.src=user.avatarData||'/images/default-avatar-v2.png';
       summary.replaceChildren(avatar,node('strong',user.username),node('p',data.email||'حساب محلي','account-email'));
       $('#settings-username-value').textContent=user.username;$('#settings-rename-credit').textContent=user.freeRenameAvailable?'تغيير الاسم مجاني مرة واحدة. اختر اسمك عندما تكون مستعدًا.':'بطاقات تغيير الاسم: '+(user.renameCredits||0);
       const providers=(data.providers||[]).map(p=>({'google.com':'Google','password':'البريد وكلمة المرور','apple.com':'Apple'})[p]||p);

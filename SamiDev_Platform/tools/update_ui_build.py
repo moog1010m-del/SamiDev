@@ -40,13 +40,23 @@ def build() -> dict:
     pool_html=pool_shell.read_text(encoding='utf-8')
     pool_version=hashlib.sha256((GAME/'pool-presentation.js').read_bytes()).hexdigest()[:16]
     pool_html=re.sub(r'/pool-presentation\.js(?:\?[^"\']*)?', '/pool-presentation.js?v='+pool_version, pool_html)
+    result_version=hashlib.sha256((GAME/'pool-result-card.js').read_bytes()).hexdigest()[:16]
+    pool_html=re.sub(r'/pool-result-card\.js(?:\?[^"\']*)?', '/pool-result-card.js?v='+result_version, pool_html)
+    effect_version=hashlib.sha256((GAME/'pool-pocket-effects.js').read_bytes()).hexdigest()[:16]
+    pool_html=re.sub(r'/pool-pocket-effects\.js(?:\?[^"\']*)?', '/pool-pocket-effects.js?v='+effect_version, pool_html)
+    aim_version=hashlib.sha256((GAME/'pool-aim-presentation.js').read_bytes()).hexdigest()[:16]
+    pool_html=re.sub(r'/pool-aim-presentation\.js(?:\?[^"\']*)?', '/pool-aim-presentation.js?v='+aim_version, pool_html)
+    mode_version=hashlib.sha256((GAME/'pool-table-mode.js').read_bytes()).hexdigest()[:16]
+    pool_html=re.sub(r'/pool-table-mode\.js(?:\?[^"\']*)?', '/pool-table-mode.js?v='+mode_version, pool_html)
+    brand_version=hashlib.sha256((GAME/'pool-brand-mark.js').read_bytes()).hexdigest()[:16]
+    pool_html=re.sub(r'/pool-brand-mark\.js(?:\?[^"\']*)?', '/pool-brand-mark.js?v='+brand_version, pool_html)
     pool_shell.write_text(pool_html,encoding='utf-8')
     from build_game_bootstrap import build as build_game_bootstrap
     build_game_bootstrap()
     from build_asset_cache import build as build_asset_cache
     build_asset_cache()
     files = {rel: hashlib.sha256((GAME / rel).read_bytes()).hexdigest()
-             for rel in [*seo_files, "platform/legal.css", "platform/legal-content.json", *["platform/"+p["id"]+".html" for p in legal["pages"]], "platform/assets/brand/app-icon.svg", "platform/assets/brand/mark-gradient.svg", "platform/assets/brand/apple-touch-icon.png", "asset-worker.js", "platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js", "pool-presentation.js", "game-bootstrap.js", "game-host.html", "runtime-games.json", "web-bridge.js", "room-menu.js", "launcher.js", "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
+             for rel in [*seo_files, "platform/legal.css", "platform/legal-content.json", *["platform/"+p["id"]+".html" for p in legal["pages"]], "platform/assets/brand/app-icon.svg", "platform/assets/brand/mark-gradient.svg", "platform/assets/brand/apple-touch-icon.png", "asset-worker.js", "platform/index.html", "platform/account-deletion.html", "platform/account-deletion.js", *ASSETS, "index.html", "browser-runtime.js", "pool-presentation.js", "pool-pocket-effects.js", "pool-result-card.js", "pool-aim-presentation.js", "pool-table-mode.js", "pool-brand-mark.js", "game-bootstrap.js", "game-host.html", "runtime-games.json", "web-bridge.js", "room-menu.js", "launcher.js", "match-reward-ui.js", "chat-ui.js", "chat-polish.css", "games/crazy8/uno-table.css", "samidev-network.js", "player-profile-ui.js", "crazy8-audio.js", "game-touch.css", "game-touch.js", "games/tablesoccer/index.html", "games/crazy8/index.html", "games/pool/index.html"]}
     digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()[:16]
     manifest = {"release": "V37", "buildId": "samidev-v37-" + digest,
                 "games": ["carrom", "tablesoccer", "crazy8", "pool"], "files": files}

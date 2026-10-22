@@ -15,7 +15,7 @@
   let ratingBusy = false;
   let ratingStartTimer = null;
 
-  const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
+  const DEFAULT_AVATAR_URL = '/images/default-avatar-v2.png';
   function wireSafeAvatarImages(root=document){
     root.querySelectorAll?.('img[data-sd-avatar]').forEach(img=>{
       if(img.dataset.avatarWired==='1')return;
@@ -113,7 +113,7 @@
   function showcaseMarkup(user){
     const best=(user.gameStatistics||[]).filter(row=>Number(row.played)>0).sort((a,b)=>Number(b.wins)-Number(a.wins))[0];
     const marks={pool:'pool',carrom:'carrom',tablesoccer:'football',crazy8:'cards'};
-    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'أونو'};
+    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'بلازر أونو'};
     const featured=best&&marks[best.gameId]?`<div class="sd-featured-rank"><img src="/room-sprites/${marks[best.gameId]}.png" alt=""><div><strong>${names[best.gameId]}</strong><small>${esc(best.rankName)} · المستوى ${numberText(best.level)}</small></div></div>`:'';
     return featured+'<button class="sd-open-full" data-action="full" type="button">الملف الكامل والمقتنيات والإحصاءات</button><section data-profile-details hidden></section>';
   }

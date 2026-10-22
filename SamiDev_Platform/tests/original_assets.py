@@ -10,9 +10,9 @@ listed = {item['path']: item for item in manifest['assets']}
 assert len(listed) == manifest['mediaCount']
 media_suffixes = {'.png', '.webp', '.jpg', '.jpeg', '.svg', '.m4a', '.ogg', '.wav', '.mp3', '.woff', '.woff2', '.ttf'}
 actual = {
-    str(p.relative_to(ROOT)) for p in GAME.rglob('*')
+    p.relative_to(ROOT).as_posix() for p in GAME.rglob('*')
     if p.is_file() and p.suffix in media_suffixes
-    and ('platform/' not in str(p.relative_to(GAME)) or 'platform/assets/profile/' in str(p.relative_to(GAME)))
+    and ('platform/' not in p.relative_to(GAME).as_posix() or 'platform/assets/profile/' in p.relative_to(GAME).as_posix())
 }
 assert actual == set(listed), {'untracked': sorted(actual - set(listed)), 'missing': sorted(set(listed) - actual)}
 old_hashes = {item['sha256'] for item in manifest['previousMediaHashes']}

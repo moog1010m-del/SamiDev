@@ -29,7 +29,7 @@ void main(){
     await tester.tap(find.text('قيم بول · أول من يسجل ٨ كرات').last);await tester.pumpAndSettle();
     expect(find.text('قيم بول · أول من يسجل ٨ كرات'),findsOneWidget);
     await tester.tap(find.byType(DropdownButtonFormField<String>).first);await tester.pumpAndSettle();
-    await tester.tap(find.text('أونو').last);await tester.pumpAndSettle();
+    await tester.tap(find.text('بلازر أونو').last);await tester.pumpAndSettle();
     expect(find.text('البطاقات'),findsOneWidget);expect(find.text('اللاعبون'),findsOneWidget);
     expect(find.text('غولف'),findsNothing);expect(find.text('إنشاء المباراة'),findsOneWidget);
   });

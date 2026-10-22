@@ -2,15 +2,14 @@
   "brand": "Plazr",
   "supportEmail": "support@plazr.cc",
   "publicDomain": "plazr.net",
-  "operatorLegalName": null,
-  "operatingCountry": null,
+  "operatorLegalName": "سامي العنزي",
+  "operatingCountry": "Saudi Arabia",
   "audienceIncludesUnder13": true,
   "childrenSafeguardsReviewed": false,
   "infrastructureRetentionReviewed": false,
   "supportMailboxVerified": true,
   "publicationStatus": "draft",
-  "revision": "2026-10-19",
-  "operatingCountryCandidate": "Saudi Arabia — unconfirmed; not a published jurisdiction",
+  "revision": "2026-10-21",
   "supportMailboxVerificationSource": "Operator confirmed support team receives messages on 2026-10-19",
   "mobileChildrenExperience": "local-only-no-account"
 }

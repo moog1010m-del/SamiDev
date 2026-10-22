@@ -1,8 +1,8 @@
-/* Desktop-only presentation. Physics bodies and network packets keep native axes. */
+/* Optional large-table presentation. Physics and packets keep native axes. */
 (() => {
   "use strict";
   function create({canvas: canvas, mobileDevice: mobileDevice, native: native = false, portrait: portrait = false}) {
-    let scene = null, context = null, enabled = false, geometry = null, backgroundDirty = true;
+    let scene = null, context = null, enabled = false, largeTable = false, geometry = null, backgroundDirty = true;
     const routes = new Map, wrapped = new WeakSet;
     const api = {
       get enabled() {
@@ -10,6 +10,15 @@
       },
       get geometry() {
         return geometry;
+      },
+      setLargeTable(value) { largeTable = value === true; },
+      tableBounds() {
+        if(!scene?.table||!scene.layoutInfo)return null;
+        const rect=canvas.getBoundingClientRect(),unit=rect.width/canvas.width/scene.layoutInfo.logScale;
+        const cy=enabled?geometry.cy:scene.table.y;
+        const height=enabled?geometry.height:scene.table.height*scene.table.scaleY;
+        const inset=height*.018;
+        return {top:rect.top+(cy-height/2+inset)*unit,height:(height-inset*2)*unit};
       },
       forward: forward,
       inverse: inverse,
@@ -162,8 +171,11 @@
     function beforeFrame(s) {
       if (!s?.table || !s.bgnd) return;
       const rect = canvas.getBoundingClientRect(), layout = s.layoutInfo;
-      const next = !portrait && !mobileDevice && !native && rect.width >= 900 && rect.height >= 500 && rect.width >= rect.height * 1.05;
-      // Leave the phone/native scene completely untouched until a desktop layout is needed.
+      // A narrow phone keeps native portrait input/layout with the selected skin;
+      // rotating the phone gives it the same wide presentation as a computer.
+      const wide = !(mobileDevice || native) || layout.logW > layout.logH;
+      const next = largeTable && !portrait && wide;
+      // Keep the original layout untouched unless the match selected the large table.
       if (!next && !enabled) return;
       if (scene !== s) install(s);
       const sx = s.table.x, sy = s.table.y, w = s.table.width * s.table.scaleX, h = s.table.height * s.table.scaleY;

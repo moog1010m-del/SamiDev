@@ -33,9 +33,14 @@ async function protectSource(input, releaseSeed) {
     target: 'browser', seed, compact: true, identifierNamesGenerator: 'hexadecimal',
     renameGlobals: false, renameProperties: false, ignoreImports: true,
     reservedNames: reflectedNames(minified.code),
-    controlFlowFlattening: false, deadCodeInjection: false, debugProtection: false,
-    disableConsoleOutput: false, selfDefending: false, stringArray: false,
-    numbersToExpressions: false, simplify: false, splitStrings: false,
+    controlFlowFlattening: true, controlFlowFlatteningThreshold: 0.06,
+    deadCodeInjection: false, debugProtection: false,
+    disableConsoleOutput: false, selfDefending: false,
+    stringArray: true, stringArrayEncoding: ['rc4'], stringArrayThreshold: 0.75,
+    stringArrayRotate: true, stringArrayShuffle: true, stringArrayIndexShift: true,
+    stringArrayWrappersCount: 1, stringArrayCallsTransform: true,
+    stringArrayCallsTransformThreshold: 0.25,
+    numbersToExpressions: true, simplify: false, splitStrings: true, splitStringsChunkLength: 10,
     transformObjectKeys: false, unicodeEscapeSequence: false, sourceMap: false,
   }).getObfuscatedCode() + '\n';
 }

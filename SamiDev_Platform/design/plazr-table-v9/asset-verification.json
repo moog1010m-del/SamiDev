@@ -1,0 +1,60 @@
+{
+  "quarter": {
+    "width": 433,
+    "height": 773,
+    "sha256": "943502cb0da23f4ecf17d7e76ec8032eaa4479a7461bba4d1dc839073a713d7e"
+  },
+  "generatedSourcesOnly": true,
+  "generatedAlphaResampled": true,
+  "nativeSilhouetteAuthored": true,
+  "oldTablePixelsRead": false,
+  "engravingMirrored": false,
+  "nativeMarkRect": {
+    "x": 193,
+    "y": 16,
+    "width": 480,
+    "height": 44
+  },
+  "fingerprints": {
+    "game/games/pool/images/ui/ui.webp": {
+      "before": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+      "after": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a"
+    },
+    "game/games/pool/main.js": {
+      "before": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50",
+      "after": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50"
+    },
+    "game/images/pool-large/background.webp": {
+      "before": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
+      "after": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1"
+    },
+    "game/images/pool-large/emerald-preview.webp": {
+      "before": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613",
+      "after": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+    },
+    "game/images/pool-large/emerald.webp": {
+      "before": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be",
+      "after": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+    },
+    "game/images/pool-large/head-line.webp": {
+      "before": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0",
+      "after": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0"
+    },
+    "game/images/pool-large/moon.webp": {
+      "before": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94",
+      "after": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94"
+    },
+    "game/images/pool-large/preview.webp": {
+      "before": "24d1d3578a37a7adddab4a3115ab301e7083cc4e6f16e9f95439619542a1a916",
+      "after": "24d1d3578a37a7adddab4a3115ab301e7083cc4e6f16e9f95439619542a1a916"
+    },
+    "game/images/pool-large/table.webp": {
+      "before": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2",
+      "after": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2"
+    },
+    "game/images/pool-large/ui.webp": {
+      "before": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+      "after": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a"
+    }
+  }
+}

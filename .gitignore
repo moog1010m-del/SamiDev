@@ -72,3 +72,8 @@ SamiDev_Platform/recordings/
 *firebase-admin*.json
 *google-services*.json
 secrets/
+
+# Temporary screenshots & audit captures
+/*.png
+/*.jpg
+SamiDev_Flutter/play/*.png

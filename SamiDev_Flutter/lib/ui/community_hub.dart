@@ -35,14 +35,14 @@ class CommunityHubState extends State<CommunityHub> {
   bool canModerate=false;
   String? error;
   int tab=0,generation=0;
-  static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'أونو','tablesoccer':'كرة الطاولة'};
+  static const games={'pool':'البلياردو','carrom':'الكيرم','crazy8':'بلازر أونو','tablesoccer':'كرة الطاولة'};
   List<Map<String,dynamic>> rows(dynamic data)=>(data as List? ?? []).whereType<Map>().map((e)=>Map<String,dynamic>.from(e)).toList();
   Future<Map<String,dynamic>> request(String path,{String method='GET',String? query,Map<String,dynamic>? body}) async {
     final r=await widget.api.request(method,path,query:query,body:body==null?null:utf8.encode(jsonEncode(body)));
     final data=r.json;if(r.status==403&&{'COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'}.contains(data['error'])){final denied=path.split('/').length>3?path.split('/')[3]:null;WidgetsBinding.instance.addPostFrameCallback((_){if(mounted&&community?['id']==denied)unawaited(back());});}if(r.status==401)widget.onUnauthorized();if(r.status!=200||data['ok']==false)throw StateError(data['message']?.toString()??'تعذر إكمال الطلب');return data;
   }
   @override void initState(){super.initState();final cid=widget.initialCommunity;if(RuntimePolicy.isCommunityId(cid))community={'id':cid};WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)widget.onNavigationChanged();});restart();}
-  @override void didUpdateWidget(covariant CommunityHub old){super.didUpdateWidget(old);if(old.active!=widget.active||old.user?['id']!=widget.user?['id']||old.user?['isGuest']!=widget.user?['isGuest']){stopLive();restart();}}
+  @override void didUpdateWidget(covariant CommunityHub oldWidget){super.didUpdateWidget(oldWidget);if(oldWidget.active!=widget.active||oldWidget.user?['id']!=widget.user?['id']||oldWidget.user?['isGuest']!=widget.user?['isGuest']){stopLive();restart();}}
   void stopLive(){liveRetry?.cancel();unawaited(live?.cancel());live=null;liveCid=null;}
   void mergeMessages(List<Map<String,dynamic>> incoming){
     final all={for(final row in messages)row['id']:row};
@@ -62,7 +62,7 @@ class CommunityHubState extends State<CommunityHub> {
     },onError:(Object error){retry();},onDone:retry,cancelOnError:true);
   }
   void restart(){timer?.cancel();if(widget.active){unawaited(refresh());timer=Timer.periodic(const Duration(seconds:3),(_)=>refresh());}else{stopLive();}}
-  void report(Object e){if(mounted)setState(()=>error=e is StateError?e.message.toString():'تعذر الاتصال. اسحب للتحديث.');}
+  void report(Object e){if(mounted){final msg=e is StateError?e.message.toString():'تعذر الاتصال. اسحب للتحديث.';ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(msg),behavior:SnackBarBehavior.floating,duration:const Duration(seconds:3)));setState(()=>error=msg);}}
   Future<void> refresh() async {
     if(busy||!widget.active)return;busy=true;final version=generation,cid=community?['id'];
     try{
@@ -214,9 +214,9 @@ class CommunityHubState extends State<CommunityHub> {
       if(community!=null)Row(children:List.generate(3,(i)=>Expanded(child:InkWell(onTap:()=>setState((){tab=i;if(i==1){scrollToEnd();}else{FocusScope.of(context).unfocus();}}),child:Container(height:49,alignment:Alignment.center,decoration:BoxDecoration(border:Border(bottom:BorderSide(color:tab==i?colors.primary:colors.outlineVariant,width:tab==i?3:.5))),child:Text(['الألعاب (${rooms.length})','الدردشة','متصل (${members.length})'][i],style:TextStyle(color:tab==i?colors.primary:colors.onSurfaceVariant,fontWeight:tab==i?FontWeight.w700:FontWeight.normal,fontSize:14))))))),
       if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:refresh,child:const Text('إعادة المحاولة'))]),
       Expanded(child:RefreshIndicator(onRefresh:refresh,child:community==null?
-        (spaces.isEmpty?empty(busy?'تحميل المساحات…':'لا توجد مساحات متاحة'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.all(8),itemCount:spaces.length,separatorBuilder:(_,__)=>const SizedBox(height:8),itemBuilder:(_,i){final c=spaces[i];return ListTile(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12)),tileColor:colors.surfaceContainerLow,contentPadding:const EdgeInsets.all(18),leading:CircleAvatar(backgroundColor:Colors.transparent,child:communityFlag(c)),title:Text(c['name'].toString(),style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${c['onlineCount']??0} متصل · ${c['gameRoomCount']??0} مباراة\n${c['description']??''}'),trailing:const Icon(Icons.chevron_left),onTap:()=>enter(c));})):
-        tab==0?(rooms.isEmpty?empty('لا توجد مباريات حاليًا. أنشئ أول مباراة.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:rooms.length,itemBuilder:(_,i)=>roomRow(rooms[i]),separatorBuilder:(_,__)=>const Divider(height:1,indent:16,endIndent:16))):
-        tab==2?(members.isEmpty?empty('لا يوجد أعضاء متصلون الآن.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:members.length,itemBuilder:(_,i)=>memberRow(members[i]),separatorBuilder:(_,__)=>const Divider(height:1,indent:16,endIndent:16))):
+        (spaces.isEmpty?empty(busy?'تحميل المساحات…':'لا توجد مساحات متاحة'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.all(8),itemCount:spaces.length,separatorBuilder:(_,_)=>const SizedBox(height:8),itemBuilder:(_,i){final c=spaces[i];return ListTile(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12)),tileColor:colors.surfaceContainerLow,contentPadding:const EdgeInsets.all(18),leading:CircleAvatar(backgroundColor:Colors.transparent,child:communityFlag(c)),title:Text(c['name'].toString(),style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${c['onlineCount']??0} متصل · ${c['gameRoomCount']??0} مباراة\n${c['description']??''}'),trailing:const Icon(Icons.chevron_left),onTap:()=>enter(c));})):
+        tab==0?(rooms.isEmpty?empty('لا توجد مباريات حاليًا. أنشئ أول مباراة.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:rooms.length,itemBuilder:(_,i)=>roomRow(rooms[i]),separatorBuilder:(_,_)=>const Divider(height:1,indent:16,endIndent:16))):
+        tab==2?(members.isEmpty?empty('لا يوجد أعضاء متصلون الآن.'):ListView.separated(physics:const AlwaysScrollableScrollPhysics(),itemCount:members.length,itemBuilder:(_,i)=>memberRow(members[i]),separatorBuilder:(_,_)=>const Divider(height:1,indent:16,endIndent:16))):
         messages.isEmpty?empty('قل مرحبًا وابدأ المحادثة.'):ListView.builder(controller:scroll,physics:const AlwaysScrollableScrollPhysics(),padding:const EdgeInsets.symmetric(vertical:12),itemCount:messages.length,itemBuilder:(_,i)=>messageRow(messages[i])),
       )),
       if(community!=null&&tab==1)ChatComposer(controller:input,sending:sending,onSend:send,onStickers:sendSticker,maxLength:280),
@@ -269,6 +269,7 @@ class _CreateMatchSheetState extends State<CreateMatchSheet> {
         select('live','نوع المباراة',game=='tablesoccer'?['تناوب الأدوار','متزامن']:['تناوب الأدوار','مباشر'],initial:game=='tablesoccer'?'0':'1'),
       ]else...[
         select('gameType','نوع البلياردو',['إيت بول · لاعبان','إيت بول · فريقان بالتناوب','إيت بول · فريقان','ناين بول · لاعبان','ناين بول · فريقان بالتناوب','ناين بول · فريقان','ثلاثي · ٣ لاعبين','قيم بول · أول من يسجل ٨ كرات']),
+        select('largeTable','الطاولة',['الأصلية','الطاولة الكبيرة']),
         Padding(padding:const EdgeInsets.all(14),child:Text('قيم بول: أي ٨ كرات، والسوداء عادية. البيضاء لا تُحسب.')),
       ],
     ])),const SizedBox(height:12),

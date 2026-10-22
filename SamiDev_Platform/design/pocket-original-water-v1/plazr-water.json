@@ -1,0 +1,134 @@
+{
+  "format": "plazr-sprite-effect-v1",
+  "texture": "plazr-water.webp",
+  "frames": {
+    "splash_00": {
+      "x": 64,
+      "y": 64,
+      "w": 384,
+      "h": 384
+    },
+    "splash_01": {
+      "x": 576,
+      "y": 64,
+      "w": 384,
+      "h": 384
+    },
+    "splash_02": {
+      "x": 1088,
+      "y": 64,
+      "w": 384,
+      "h": 384
+    },
+    "splash_03": {
+      "x": 1600,
+      "y": 64,
+      "w": 384,
+      "h": 384
+    },
+    "splash_04": {
+      "x": 64,
+      "y": 576,
+      "w": 384,
+      "h": 384
+    },
+    "splash_05": {
+      "x": 576,
+      "y": 576,
+      "w": 384,
+      "h": 384
+    },
+    "splash_06": {
+      "x": 1088,
+      "y": 576,
+      "w": 384,
+      "h": 384
+    },
+    "splash_07": {
+      "x": 1600,
+      "y": 576,
+      "w": 384,
+      "h": 384
+    },
+    "droplet": {
+      "x": 64,
+      "y": 1088,
+      "w": 384,
+      "h": 384
+    },
+    "ribbon": {
+      "x": 576,
+      "y": 1088,
+      "w": 384,
+      "h": 384
+    },
+    "spray": {
+      "x": 1088,
+      "y": 1088,
+      "w": 384,
+      "h": 384
+    },
+    "glint": {
+      "x": 1600,
+      "y": 1088,
+      "w": 384,
+      "h": 384
+    },
+    "ripple_00": {
+      "x": 64,
+      "y": 1600,
+      "w": 384,
+      "h": 384
+    },
+    "ripple_01": {
+      "x": 576,
+      "y": 1600,
+      "w": 384,
+      "h": 384
+    },
+    "foam": {
+      "x": 1088,
+      "y": 1600,
+      "w": 384,
+      "h": 384
+    },
+    "mist": {
+      "x": 1600,
+      "y": 1600,
+      "w": 384,
+      "h": 384
+    }
+  },
+  "animation": {
+    "duration": 0.9,
+    "splash": [
+      "splash_00",
+      "splash_01",
+      "splash_02",
+      "splash_03",
+      "splash_04",
+      "splash_05",
+      "splash_06",
+      "splash_07"
+    ],
+    "ripple": [
+      "ripple_00",
+      "ripple_01"
+    ],
+    "particles": [
+      "droplet",
+      "spray",
+      "glint"
+    ],
+    "anchor": [
+      0.5,
+      0.5
+    ]
+  },
+  "provenance": {
+    "generatedFromText": true,
+    "referenceImagesUsed": false,
+    "thirdPartyPixelsCopied": false,
+    "spineSkeleton": false
+  }
+}

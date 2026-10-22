@@ -4,7 +4,7 @@
   const number = v => Math.max(0, Math.floor(Number(v) || 0));
   const count = v => number(v).toLocaleString('ar-SA');
   const asset = v => window.SamiDevStickerArt?.cell(v)!==null && window.SamiDevStickerArt?.cell(v)!==undefined ? String(v) : /^\/(?:images|games|platform\/assets|room-sprites)\/[A-Za-z0-9_./-]+$/.test(String(v)) && !String(v).includes('..') ? String(v) : '';
-  const games = [['pool','البلياردو','pool'],['carrom','الكيرم','carrom'],['tablesoccer','كرة الطاولة','football'],['crazy8','أونو','cards']];
+  const games = [['pool','البلياردو','pool'],['carrom','الكيرم','carrom'],['tablesoccer','كرة الطاولة','football'],['crazy8','بلازر أونو','cards']];
   let activePreview=null;
   function openItem(item,user,{own=false,onUse=null}={},origin=null){
     activePreview?.close();

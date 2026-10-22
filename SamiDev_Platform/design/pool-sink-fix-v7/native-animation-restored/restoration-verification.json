@@ -1,0 +1,14 @@
+{
+  "nativeAnimationRestored": true,
+  "fixedDurationShrinkRemoved": true,
+  "webAndMobileWrapperRemoved": true,
+  "cornerAndAimFixRetained": true,
+  "nativeEngineAndAtlasHashesUnchanged": true,
+  "poolRuntimeChecks": 39,
+  "nativeAimCases": 3,
+  "assetCacheTest": "passed",
+  "flutterFiles": 760,
+  "browserCapturedFrames": 54,
+  "browserEvidence": "verified/native-fall.gif",
+  "note": "Restores the original renderer and original internal sink path. No claim that the original sink reversal itself was changed."
+}

@@ -11,4 +11,8 @@ $env:PYTHONUNBUFFERED = "1"
 $env:PYTHONIOENCODING = "utf-8"
 $env:PYTHONUTF8 = "1"
 
-python -u run.py live --enable-live --use-gemini --config config.json --base-url http://127.0.0.1:56648
+while ($true) {
+    python -u run.py live --enable-live --use-gemini --config config.json --base-url http://127.0.0.1:56648
+    Write-Host "[*] Chatbot daemon restarted automatically. Waiting 3s..."
+    Start-Sleep -Seconds 3
+}

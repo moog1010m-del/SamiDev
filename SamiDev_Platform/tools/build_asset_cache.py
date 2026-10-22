@@ -25,6 +25,11 @@ def build():
         # Shared themes and the branded Uno felt used by the runtime.
         for path in ['/images/themes/pool-emerald.webp','/images/cues/moon.webp','/games/crazy8/images/samidev-uno-felt.png']:
             add(paths,path)
+        if key=='pool':
+            for asset in (GAME/'images/pool-large').glob('*.webp'):
+                add(paths,'/'+asset.relative_to(GAME).as_posix())
+            for path in ['/images/effects/plazr-water.webp','/images/effects/plazr-water-preview.webp','/sounds/plazr-water-wave.wav','/images/themes/plazr-engraving.webp']:
+                add(paths,path)
         groups[key]=sorted(paths)
     config={'files':files,'groups':groups}
     version=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()[:20]

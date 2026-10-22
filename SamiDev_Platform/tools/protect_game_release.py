@@ -43,7 +43,7 @@ def build(output, seed=None):
     shutil.copytree(SOURCE, output, ignore=shutil.ignore_patterns('*.map', '.*'))
     marker.touch()
     digest = lambda p, algorithm='sha256': hashlib.new(algorithm, p.read_bytes()).hexdigest()
-    report = {'tool': 'terser@5.44.1 + javascript-obfuscator@4.1.1', 'profile': 'local-identifiers-v3',
+    report = {'tool': 'terser@5.44.1 + javascript-obfuscator@4.1.1', 'profile': 'layered-release-v4', 'layers': ['terser-local-mangling', 'audited-internal-properties', 'seeded-identifier-obfuscation', 'rc4-string-array-75-percent', 'string-splitting', 'numeric-expressions', 'selective-control-flow-6-percent', 'no-source-maps'],
               'releaseSeed': seed,
               'propertyProfile': profile['version'], 'properties': profile['properties'], 'engines': {}}
     for game, relative in ENGINES.items():

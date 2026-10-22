@@ -41,7 +41,7 @@ class PlayerAvatar extends StatelessWidget {
       decoration:BoxDecoration(shape:BoxShape.circle,border:framed?Border.all(color:const Color(0xffb89137),width:1.5):null),
       child:ClipOval(child:id is String&&RegExp(r'^[A-Za-z0-9_-]{1,64}$').hasMatch(id)&&user['hasAvatar']!=false
         ? Image.network(api.policy.upstream('/api/avatar/$id').toString(),width:radius*2,height:radius*2,fit:BoxFit.cover,
-          loadingBuilder:(_,child,progress)=>progress==null?child:fallback(),errorBuilder:(_,__,___)=>fallback()) : fallback()));
+          loadingBuilder:(_,child,progress)=>progress==null?child:fallback(),errorBuilder:(_,_,_)=>fallback()) : fallback()));
   }
 }
 

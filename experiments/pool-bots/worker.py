@@ -1,5 +1,7 @@
 """Optional pool player process. All play goes through the normal authenticated /ws."""
 import argparse,asyncio,json,os,signal,time,uuid
+from pathlib import Path
+import shutil
 from urllib.parse import urlsplit
 import aiohttp
 from planner import plan
@@ -19,6 +21,7 @@ def eligible_room(room,join_after,now=None):
 
 class Player:
     def __init__(self,session,base,bot,room,scale=1,create=False,on_room=None):
+        self.game_id=getattr(self,'game_id','pool');self.snapshot=None
         self.session=session;self.base=base;self.bot=bot;self.room=room;self.scale=scale;self.create=create;self.on_room=on_room
         self.ws=None;self.seat=None;self.view=None;self.begun=asyncio.Event();self.sync=asyncio.Event();self.pending={};self.done=False;self.settle=0;self.level=1;self.shots=0
     async def receive(self):
@@ -30,7 +33,8 @@ class Player:
                     self.room=data['roomId'];self.seat=data['seat']
                     if self.on_room:self.on_room(self.room)
                 if kind in ('start','resync_state'):
-                    view=(data.get('snapshot') or {}).get('pool')
+                    self.snapshot=data.get('snapshot')
+                    view=(self.snapshot or {}).get('pool')
                     if view:self.view=view
                     if kind=='start':await self.ws.send_json({'type':'runtime_ready'})
                     self.sync.set()
@@ -104,7 +108,7 @@ class Player:
             async with self.session.ws_connect(self.base+'/ws?ticket='+ticket['ticket'],heartbeat=20,max_msg_size=2**20) as socket:
                 self.ws=socket
                 reader=asyncio.create_task(self.receive())
-                await socket.send_json({'type':'create_room','settings':{'gameId':'pool','players':1,'gameType':0,'live':1},'name':self.bot['displayName'],'communityId':self.bot['room']} if self.create else {'type':'join_room','roomId':self.room,'name':self.bot['displayName']})
+                await socket.send_json({'type':'create_room','settings':{'gameId':self.game_id,'players':0,'gameType':0,'live':1},'name':self.bot['displayName'],'communityId':self.bot['room']} if self.create else {'type':'join_room','roomId':self.room,'name':self.bot['displayName']})
                 heartbeat=asyncio.create_task(self.heartbeat());actor=asyncio.create_task(self.play())
                 done,_=await asyncio.wait([reader,heartbeat,actor],return_when=asyncio.FIRST_COMPLETED)
                 for task in done:task.result()
@@ -117,12 +121,48 @@ class Player:
                 if task:task.cancel()
             await asyncio.gather(*(t for t in (reader,heartbeat,actor) if t),return_exceptions=True)
 
+class StrategyPlayer(Player):
+    def __init__(self,*args,game_id,**kwargs):
+        self.game_id=game_id
+        super().__init__(*args,**kwargs)
+    async def decision(self):
+        node=os.environ.get('PLAZR_NODE_BIN') or shutil.which('node')
+        if not node:raise BridgeError('NODE_UNAVAILABLE')
+        proc=await asyncio.create_subprocess_exec(node,str(Path(__file__).with_name('native_planner.cjs')),stdin=asyncio.subprocess.PIPE,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.DEVNULL)
+        try:
+            out,_=await asyncio.wait_for(proc.communicate((json.dumps({'gameId':self.game_id,'snapshot':self.snapshot,'seat':self.seat,'skill':self.bot['skill']})+'\n').encode()),15)
+        except BaseException:
+            if proc.returncode is None:proc.kill();await proc.wait()
+            raise
+        try:result=json.loads(out.decode().strip().splitlines()[-1])
+        except Exception:raise BridgeError('PLANNER_FAILED')
+        if not result.get('ok'):raise BridgeError('PLANNER_REJECTED')
+        self.view=result
+        return result
+    async def play(self):
+        await asyncio.wait_for(self.begun.wait(),90)
+        while not self.done:
+            await self.resync()
+            if not self.snapshot:await asyncio.sleep(.3);continue
+            chosen=await self.decision()
+            if chosen['gameOver']:break
+            if self.seat not in chosen['turn'] or not chosen['move']:
+                await asyncio.sleep(.6);continue
+            await asyncio.sleep((1.2 if self.game_id=='crazy8' else 2.0)*self.scale)
+            await self.resync()
+            chosen=await self.decision()
+            if chosen['gameOver'] or self.seat not in chosen['turn'] or not chosen['move']:continue
+            await request(self.session,self.base,'POST','/api/bot-play/heartbeat',{})
+            await self.move(chosen['move']);self.shots+=1
+            log('strategy_move',game=self.game_id,bot=self.bot['id'],room=self.room,count=self.shots)
+            await asyncio.sleep((.5 if self.game_id=='crazy8' else 3)*self.scale)
+
 class Worker:
     def __init__(self,base,token,max_games=None,wait=10,scale=1,bot_vs_bot=False,selfplay_per_room=40,reserve_per_room=10):
         self.base=base;self.token=token;self.max_games=max_games;self.wait=wait;self.scale=scale;self.bot_vs_bot=bot_vs_bot
         self.jobs={};self.targets={};self.join_targets={};self.joined=set();self.schedule=FillSchedule();self.bots=[];self.communities=[];self.stop=asyncio.Event();self.last_roster=0
         self.selfplay_per_room=selfplay_per_room;self.reserve_per_room=reserve_per_room
-        self.kinds={};self.retry_at={};self.rotation=Rotation();self.room_cursor=0
+        self.room_games={};self.kinds={};self.retry_at={};self.rotation=Rotation();self.room_cursor=0
     def game_limit(self):
         return self.max_games or (min(1000,max(1,len(self.communities)*(self.selfplay_per_room//2+self.reserve_per_room))) if self.bot_vs_bot else 4)
     def assign(self,bot,room,kind,task):
@@ -139,7 +179,8 @@ class Worker:
                 def joined(rid):
                     self.confirmed_join(bot['id'],rid)
                     if created is not None and not created.done():created.set_result(rid)
-                player=Player(session,self.base,dict(bot),room,self.scale,create,joined)
+                game_id=self.room_games.get(room,'pool')
+                player=(Player if game_id=='pool' else StrategyPlayer)(session,self.base,dict(bot),room,self.scale,create,joined,**({} if game_id=='pool' else {'game_id':game_id}))
                 await player.run()
                 log('match_done',bot=bot['id'],room=player.room,shots=player.shots)
         except asyncio.CancelledError:raise
@@ -180,6 +221,7 @@ class Worker:
                         self.retry_at={uid:until for uid,until in self.retry_at.items() if until>time.time()}
                     rooms=(await request(admin,self.base,'GET','/api/lobby/rooms'))['rooms']
                     self.schedule.prune(rooms)
+                    self.room_games={r['roomId']:(r.get('settings') or {}).get('gameId','pool') for r in rooms}
                     now=time.time()
                     free=[b for b in self.bots if b['enabled'] and not b.get('banned') and b['room'] in self.communities and b['id'] not in self.jobs and b.get('matchCooldownUntil',0)<=now*1000 and self.retry_at.get(b['id'],0)<=now]
                     names={b['username'] for b in self.bots}
@@ -238,7 +280,12 @@ async def main():
     for sig in (signal.SIGINT,signal.SIGTERM):
         try:asyncio.get_running_loop().add_signal_handler(sig,worker.stop.set)
         except NotImplementedError:pass
-    await worker.run()
+    while not worker.stop.is_set():
+        try:await worker.run()
+        except (aiohttp.ClientError,TimeoutError,OSError,BridgeError,Exception) as err:
+            log('reconnecting',seconds=5,error=str(err) if str(err) else type(err).__name__)
+            try:await asyncio.wait_for(worker.stop.wait(),5)
+            except TimeoutError:pass
 if __name__=='__main__':
     try:asyncio.run(main())
     except KeyboardInterrupt:pass

@@ -35,9 +35,11 @@ class Client:
     def __init__(self,session,base):self.session=session;self.base=base;self.uid=''
     async def request(self,method,path,body=None):
         async with self.session.request(method,self.base+path,json=body,allow_redirects=False) as response:
-            if response.status!=200:raise RuntimeError('Platform request denied: '+str(response.status))
+            if response.status not in (200, 201):
+                if response.status in (409, 429):
+                    return {'ok': False, 'status': response.status, 'error': 'transient_conflict'}
+                raise RuntimeError('Platform request denied: '+str(response.status))
             data=await response.json()
-            if data.get('ok') is not True:raise RuntimeError('Platform request rejected')
             return data
 
 async def live(args,config,memory,scripts):
@@ -80,14 +82,21 @@ async def live(args,config,memory,scripts):
                 active={p['id'] for p in engine.active()}
                 if not active:stop.set();return
                 for pid,client in clients.items():
-                    if pid in active:
-                        await client.request('POST','/api/heartbeat',{})
-                        if pid not in joined:await client.request('POST',room+'/enter',{});joined.add(pid)
-                    elif pid in joined:
-                        await client.request('POST',room+'/leave',{});joined.remove(pid)
+                    try:
+                        if pid in active:
+                            await client.request('POST','/api/heartbeat',{})
+                            if pid not in joined:
+                                res = await client.request('POST',room+'/enter',{})
+                                if res.get('ok') is True or res.get('status') == 409:
+                                    joined.add(pid)
+                        elif pid in joined:
+                            await client.request('POST',room+'/leave',{})
+                            joined.remove(pid)
+                    except Exception:
+                        pass
                 observer=clients[next(iter(active))]
                 state=await observer.request('GET',room+'?chat=0')
-                next_members={u['id'] for u in state['members'] if not u.get('isBot')} - bot_ids
+                next_members={u['id'] for u in state.get('members', []) if not u.get('isBot')} - bot_ids
                 if members and not next_members:engine.revision+=1
                 if next_members:last_human=time.monotonic()
                 members=next_members
@@ -142,9 +151,14 @@ async def live(args,config,memory,scripts):
                 pass
             if stop.is_set():return
             state=await client.request('GET',room+'?chat=0')
-            humans={u['id'] for u in state['members'] if not u.get('isBot')}-bot_ids
+            humans={u['id'] for u in state.get('members', []) if not u.get('isBot')}-bot_ids
             if reply.reason=='recorded' and humans:return
-            await client.request('POST',room+'/chat',{'text':msg,'clientMessageId':'bot_'+uuid.uuid4().hex})
+            try:
+                res = await client.request('POST',room+'/chat',{'text':msg,'clientMessageId':'bot_'+uuid.uuid4().hex})
+                if not res or res.get('ok') is not True:
+                    return
+            except Exception as e:
+                return
             # Register sent turn with speaker ID
             engine.sent(reply.speaker)
 

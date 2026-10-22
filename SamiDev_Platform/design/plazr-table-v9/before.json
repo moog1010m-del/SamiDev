@@ -1,0 +1,80 @@
+{
+  "game/games/pool/images/imported/themes/th_basic_table.webp": {
+    "sha256": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+    "size": [
+      433,
+      773
+    ]
+  },
+  "game/games/pool/images/imported/themes/th_basic_background.webp": {
+    "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
+    "size": [
+      128,
+      128
+    ]
+  },
+  "game/games/pool/images/imported/themes/th_basic_preview.webp": {
+    "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+    "size": [
+      512,
+      326
+    ]
+  },
+  "game/images/themes/pool-midnight.webp": {
+    "sha256": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+    "size": [
+      433,
+      773
+    ]
+  },
+  "game/images/themes/pool-midnight-preview.webp": {
+    "sha256": "31e0adc1d8c816132ccba53f69f9b9d8c57fa63f18dd0f5282f458816a1d4f2d",
+    "size": [
+      224,
+      400
+    ]
+  },
+  "game/games/pool/images/ui/ui.webp": {
+    "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+    "size": [
+      1343,
+      625
+    ]
+  },
+  "game/games/pool/main.js": {
+    "sha256": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50"
+  },
+  "game/browser-runtime.js": {
+    "sha256": "62ff2b41e24673d73bb79302d32f25ce845cc22c24eaaf8d5821c36a8a4d8c87"
+  },
+  "game/pool-presentation.js": {
+    "sha256": "6924f39e40bf74ece271a3e193f4b6e696c377bae05963d0d1008f8bd2adee53"
+  },
+  "game/pool-table-mode.js": {
+    "sha256": "c867e47f3f152caecf957921d2defdbced81b8875aa037a32527b88f7502052b"
+  },
+  "game/images/pool-large/background.webp": {
+    "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1"
+  },
+  "game/images/pool-large/emerald-preview.webp": {
+    "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+  },
+  "game/images/pool-large/emerald.webp": {
+    "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+  },
+  "game/images/pool-large/head-line.webp": {
+    "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0"
+  },
+  "game/images/pool-large/moon.webp": {
+    "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94"
+  },
+  "game/images/pool-large/preview.webp": {
+    "sha256": "24d1d3578a37a7adddab4a3115ab301e7083cc4e6f16e9f95439619542a1a916"
+  },
+  "game/images/pool-large/table.webp": {
+    "sha256": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2"
+  },
+  "game/images/pool-large/ui.webp": {
+    "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a"
+  }
+}

@@ -921,33 +921,33 @@
     },
     {
       "path": "game/games/pool/images/imported/themes/th_basic_background.webp",
-      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
+      "sha256": "42eae2ba2b93fc910d1e90b183a778c82a4c22e4ec4118ffb89721f3378a635b",
       "type": "image",
-      "source": "V36 generated sprites and requested UI artwork"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG."
     },
     {
       "path": "game/games/pool/images/imported/themes/th_basic_head_line.webp",
-      "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0",
+      "sha256": "19e81a54e060f610f3fe6ccee8034d716e988f3b783f661cb347dc6cf7ed2742",
       "type": "image",
-      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG."
     },
     {
       "path": "game/games/pool/images/imported/themes/th_basic_preview.webp",
-      "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
+      "sha256": "3fd89898cd843515a82b876fdfa154fb3fb430ff5492c41469c5a3acee67a6e4",
       "type": "image",
-      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG."
     },
     {
       "path": "game/games/pool/images/imported/themes/th_basic_table.webp",
-      "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
+      "sha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
       "type": "image",
-      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG."
     },
     {
       "path": "game/games/pool/images/ui/ui.webp",
-      "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
+      "sha256": "95322d82192fb411b51d7ef9e8b30a2607bfa73d782c3ae98e211c82105c9260",
       "type": "image",
-      "source": "V36 generated sprites and requested UI artwork"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG."
     },
     {
       "path": "game/games/pool/scene-avatars/lobby_avatar_empty_seat.png",
@@ -1659,8 +1659,8 @@
     },
     {
       "path": "game/images/cues/moon.webp",
-      "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94",
-      "source": "V36 generated sprites and requested UI artwork",
+      "sha256": "ddee42272317f7495e12e116c9ecaae1d0a62fa207514ae9f161e7b388f487b8",
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG.",
       "type": "image"
     },
     {
@@ -1697,14 +1697,14 @@
     {
       "path": "game/images/themes/pool-emerald-preview.webp",
       "type": "image",
-      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
-      "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG.",
+      "sha256": "09c0aaa72b2b845f220cf8713ba09e7243a26dbd75e93f5328eaeea9396c5f5b"
     },
     {
       "path": "game/images/themes/pool-emerald.webp",
       "type": "image",
-      "source": "V26: see AUDIO_CREDITS.md and pool theme generation notes",
-      "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+      "source": "2026-10-21 V3 independently generated raster artwork without prior image references; authored raster primitives for small symbols and ball UV labels. No SVG.",
+      "sha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe"
     },
     {
       "path": "game/images/themes/pool-midnight-preview.webp",
@@ -2142,6 +2142,16 @@
       "duration": 0.45,
       "previousPath": "game/sounds/woosh2.m4a",
       "sha256": "b90a61b9b97034221fd16e53b4abb734aa2803a2fe36fa656c042ea3ff84b36b"
+    },
+    {
+      "path": "game/images/effects/plazr-water.webp",
+      "source": "Original text-only image_gen generation; packed in design/pocket-original-water-v1/pack.cjs; no third-party reference images or pixels",
+      "sha256": "3339ba593b649307dada2e2325bc9416bf1e56929beac348095dfc10b404a58f"
+    },
+    {
+      "path": "game/images/effects/plazr-water-preview.webp",
+      "source": "Original text-only image_gen generation; packed in design/pocket-original-water-v1/pack.cjs; no third-party reference images or pixels",
+      "sha256": "f5d53faedd8e1c9ece5e7495dc2b19576fc436d19c87dfd9674e549148bb276f"
     }
   ],
   "audioSource": "V37: 105 effects from 15 CC0 Freesound recordings; existing music and four vocal reactions retained",
@@ -2150,5 +2160,49 @@
   "mediaCount": 237,
   "v36GeneratedImageSources": 7,
   "v37FreesoundEffects": 105,
-  "v37NewAudioFiles": 1
+  "v37NewAudioFiles": 1,
+  "poolPocketWater": {
+    "date": "2026-10-22",
+    "itemId": "pool_pocket_water",
+    "price": 5000,
+    "source": "design/pocket-original-water-v1/generated-source.png",
+    "referenceImagesUsed": false,
+    "motion": "Original Plazr runtime sprite composition; no imported Spine skeleton"
+  },
+  "poolTableCurrent": {
+    "version": "plazr-default-v9-with-saved-large-mode",
+    "date": "2026-10-22",
+    "source": [
+      "design/plazr-table-v9/quarter-generated.png",
+      "design/plazr-table-v9/engraving-generated.png"
+    ],
+    "generationTool": "built-in image_gen; two text-only generations, no reference artwork",
+    "engineRewritten": false,
+    "uiAtlasChanged": false,
+    "quarter": [
+      433,
+      773
+    ],
+    "method": "Native mirrored 433x773 quarter plus non-mirrored raster engraving on the frame; largeTable=1 keeps saved V7 artwork.",
+    "verification": "design/plazr-table-v9/verification.json",
+    "presentation": {
+      "sink": "Original native renderer and pocket VFX, both modes",
+      "aim": "Swept cue-ball circle against existing native rail polygons and pocket capture bounds",
+      "brand": "Non-interactive, cached raster inlay bound to native table coordinates; no physics/input changes"
+    },
+    "modes": {
+      "default": {
+        "setting": 0,
+        "source": "design/plazr-table-v9/table.webp",
+        "name": "Plazr Graphite",
+        "engraving": "Plazr"
+      },
+      "large": {
+        "setting": 1,
+        "source": "game/images/pool-large/table.webp",
+        "byteForByte": true
+      }
+    },
+    "referenceImagesUsed": false
+  }
 }

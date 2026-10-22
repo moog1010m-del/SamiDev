@@ -15,6 +15,8 @@ for(const align of ['BELOW','ABOVE','LEFT','RIGHT'])for(const text of ['888','٩
  assert(!overlap(row,dot),'presence must not overlap name row');assert(!overlap(row,crown),'crown must not overlap name row');assert(!overlap(dot,crown),'presence must not overlap crown');
  assert(a.idContainer.width<=240.01,'name and badges must fit their budget');
  assert(a.nameText.x>=badgeWidth*a.badgeContainer.scaleX,'badge/name gap');
+ const nameBounds=rect(a.nameText,{x:row.x,y:row.y});nameBounds.w=a.nameTextMeasure.width;nameBounds.h=40;nameBounds.y=a.idContainer.y-a.idContainer.anchorY*a.idContainer.height+a.nameText.y-20;
+ assert.equal(a.localTurnPill.visible,false,'legacy turn pill is disabled; dedicated HUD draws the badge');
  a.maxNameWidth=120;SamiDevAvatarLayout.position(a);const short=a.nameText.text;
  assert(a.idContainer.width<=120.01,'badges and long name also fit narrow side seats');
  a.maxNameWidth=240;SamiDevAvatarLayout.position(a);assert(a.nameText.text.length>=short.length,'name restores after resize');

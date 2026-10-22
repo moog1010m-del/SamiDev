@@ -442,6 +442,7 @@ class GameRuntimeFactory {
     };
     const nativeSettings = structuredClone(room.settings);
     delete nativeSettings.gameId;
+    delete nativeSettings.largeTable;
     const seats = g.initialize(nativeSettings, undefined);
     if (seats !== room.capacity) throw new Error(`GameLogic seat mismatch: ${seats} != ${room.capacity}`);
     for (let s = 0; s < seats; s++) g.enter(s);

@@ -59,3 +59,29 @@ html[data-theme="light"] .store-product-sheet{background:#f9fbfa;color:#243734;b
 .store-product-availability:is([data-kind="moderator"],[data-kind="event"],[data-kind="unavailable"]){color:#f19c94}
 html[data-theme="light"] .store-product-availability{color:#657d77}
 html[data-theme="light"] .store-product-availability:is([data-kind="moderator"],[data-kind="event"],[data-kind="unavailable"]){color:#ad493f}
+.store-wallet-card{flex-wrap:wrap}
+.coin-topup{flex:0 0 100%;min-width:0;box-sizing:border-box;padding-top:16px;border-top:1px solid var(--line,#28353d)}
+.coin-topup h3{margin:0 0 8px}
+.coin-topup p,.coin-topup small{font-size:13px;line-height:1.7}
+.coin-topup-packs{display:grid;gap:8px;margin:12px 0}
+.coin-topup-pack{width:100%;padding:12px;border-radius:12px;white-space:normal}
+.coin-topup-pack:disabled{opacity:.5;cursor:not-allowed}
+.coin-topup-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.coin-topup-eyebrow{display:block;color:var(--muted,#9badb5);font-size:12px;margin-bottom:6px}
+.coin-topup-heading h3{font-size:22px;margin:0}.coin-topup-rate{padding:8px 12px;border:1px solid var(--line,#28353d);border-radius:30px;font-size:12px;white-space:nowrap}.coin-topup-rate b{display:inline-block;direction:ltr;color:#edc570}
+.coin-topup-packs{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.coin-topup-pack{display:flex;flex-direction:column;align-items:center;padding:16px 10px 10px;border:1px solid #34434a;background:linear-gradient(165deg,#1c292f,#101b21);color:#ecf2f3;transition:border-color .15s,transform .15s;min-width:0;cursor:pointer}
+.coin-topup-pack:not(:disabled):hover{transform:translateY(-3px);border-color:#e6c171}.coin-topup-pack:focus-visible{outline:3px solid #65cbbc;outline-offset:3px}
+.coin-topup-art{width:104px;max-width:100%;height:80px;display:block}.coin-topup-art svg{display:block;width:100%;height:100%}
+.coin-topup-amount{font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:6px}.coin-topup-unit{font-size:12px;color:#9badb5;margin:4px 0 14px}
+.coin-topup-price{font-size:23px;font-weight:700;direction:ltr;line-height:1.2}.coin-topup-currency{font-size:10px;color:#9badb5;letter-spacing:1px;margin:4px 0 14px}
+.coin-topup-action{width:100%;box-sizing:border-box;border-radius:8px;background:#25383c;padding:9px 3px;font-size:12px;color:#a6dfd4;white-space:normal}
+.coin-payment-methods{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line,#28353d);padding-top:16px;margin-top:16px}.coin-payment-label{font-size:12px;color:var(--muted,#9badb5)}.coin-payment-label b{color:var(--text,#e7eeee)}
+.coin-payment-badges{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.coin-payment-badge{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:4px;height:36px;min-width:64px;padding:4px 10px;border-radius:7px;background:#fff;border:1px solid #dce1e5;color:#111;font-family:Arial,sans-serif;user-select:none}
+.payment-visa{color:#1434cb;font-style:italic;font-size:22px;font-weight:900;letter-spacing:-1px}.payment-mastercard{flex-direction:column;gap:0;font-size:7px;min-width:66px}.mastercard-mark{position:relative;display:block;width:30px;height:19px}.mastercard-mark:before,.mastercard-mark:after{content:"";position:absolute;width:19px;height:19px;border-radius:50%;top:0;left:0;background:#eb001b}.mastercard-mark:after{left:11px;background:#f79e1b;mix-blend-mode:multiply}.payment-apple{font-size:18px;font-weight:600;letter-spacing:-.5px}.payment-apple>span{font-size:24px}
+.coin-payment-availability{display:block;color:var(--muted,#9badb5);margin-top:10px}.coin-topup>small:last-child{display:block;color:var(--muted,#9badb5);margin-top:4px}
+html[data-theme="light"] .coin-topup-pack{background:linear-gradient(160deg,#fff,#f5f8f8);color:#20343b;border-color:#d1dde1}html[data-theme="light"] .coin-topup-action{background:#e2f1ed;color:#25665e}html[data-theme="light"] .coin-topup-rate b{color:#8a611b}
+html[data-theme="light"] .coin-topup-unit,html[data-theme="light"] .coin-topup-currency{color:#526b75}
+@media(prefers-reduced-motion:reduce){.coin-topup-pack{transition:none}.coin-topup-pack:not(:disabled):hover{transform:none}}
+@media(max-width:700px){.coin-topup-packs{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.coin-topup-heading h3{font-size:20px}.coin-topup-amount{font-size:21px}.coin-topup-pack{padding-top:10px}.coin-topup-art{height:65px}.coin-topup-rate{padding:7px 9px}}
+@media(max-width:380px){.coin-topup-packs{grid-template-columns:repeat(2,minmax(0,1fr))}.coin-topup-heading{align-items:flex-start;flex-direction:column;gap:10px}.coin-payment-badges{gap:6px}}

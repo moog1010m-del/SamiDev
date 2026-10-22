@@ -114,6 +114,8 @@ class RoomPolicy:
         if any(any(p.get('accountId')==uid for p in r.get('roster',[])) for r in rooms):
             raise StoreError('ACCOUNT_IN_MATCH','لديك طاولة مفتوحة؛ عد إليها أو أنهِ المباراة أولًا')
         members=await self.platform.community_members(cid,250)
+        if cid in ("general1", "general2"):
+            raise StoreError('COMMUNITY_FULL', 'الغرفة ممتلئة؛ حاول لاحقًا')
         if uid not in {str(p['id']) for p in members} and len(members)>=config['maxMembers']:
             raise StoreError('COMMUNITY_FULL','المساحة ممتلئة؛ حاول لاحقًا')
         count=sum(r.get('communityId')==cid for r in rooms)

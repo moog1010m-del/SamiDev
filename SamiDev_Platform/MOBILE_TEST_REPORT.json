@@ -117,7 +117,7 @@
       "command": "python start_dev.py --check",
       "exitCode": 0,
       "passed": true,
-      "output": "[SamiDev GameHost] http://127.0.0.1:55287 games=carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-ba54f95c store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer and Crazy 8\nProject:  /workspace/scratch/b90aa68dabac/work/SamiDev_Platform_V25\nBuild:    samidev-v25-a5b2dba31c5aa4c0\nGameHost: http://127.0.0.1:55287  games=carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:33745/platform/?build=samidev-v25-a5b2dba31c5aa4c0\nCHECK PASSED: all three games and all platform files are served by this project.\n"
+      "output": "[SamiDev GameHost] http://127.0.0.1:55287 games=carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-ba54f95c store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer and Plazr Uno\nProject:  /workspace/scratch/b90aa68dabac/work/SamiDev_Platform_V25\nBuild:    samidev-v25-a5b2dba31c5aa4c0\nGameHost: http://127.0.0.1:55287  games=carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:33745/platform/?build=samidev-v25-a5b2dba31c5aa4c0\nCHECK PASSED: all three games and all platform files are served by this project.\n"
     },
     {
       "command": "SD_MOBILE=1 SD_LAYOUT_ONLY=1 SD_VIEWPORT=390x844 SD_SEATS=2 node tests/browser_multigame_smoke.js carrom online",

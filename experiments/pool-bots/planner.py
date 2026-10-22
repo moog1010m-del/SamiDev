@@ -2,7 +2,7 @@
 import math,random
 from dataclasses import dataclass,asdict
 RADIUS=20.5
-SKILLS={'beginner':dict(angle=.040,power=.12,choices=5),'medium':dict(angle=.011,power=.055,choices=2),'expert':dict(angle=.0075,power=.022,choices=1)}
+SKILLS={'beginner':dict(angle=.040,power=.12,choices=5),'medium':dict(angle=.011,power=.055,choices=2),'expert':dict(angle=.001,power=.008,choices=1)}
 @dataclass
 class Candidate:
     angle:float
@@ -50,7 +50,7 @@ def candidates(view,seat,cue=None):
             tangent=(approach[0]-direction[0]*cut,approach[1]-direction[1]*cut)
             tangent_end=(point[0]+tangent[0]*250,point[1]+tangent[1]*250)
             scratch=any(segment_distance(p,point,tangent_end)<45 and distance(point,p)>65 for p in view['pockets'])
-            score=path/(cut*cut)+ (600 if scratch else 0)
+            score=path/(cut*cut)+ (5000 if scratch else 0)
             result.append(Candidate(math.atan2(ghost[1]-cue[1],ghost[0]-cue[0]),power,target[0],pocket_index,score,path,cut))
     return sorted(result,key=lambda candidate:candidate.score)
 def placement(view,seat):

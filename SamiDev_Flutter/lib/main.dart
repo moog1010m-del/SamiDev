@@ -48,7 +48,7 @@ class SamiDevApp extends StatelessWidget {
       dividerColor:dark?const Color(0xff222222):const Color(0xffe2e5e8),
       navigationBarTheme:NavigationBarThemeData(backgroundColor:colors.surface,height:64,indicatorColor:colors.primary.withValues(alpha:.13)));
   }
-  @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,__)=>MaterialApp(
+  @override Widget build(BuildContext context)=>ValueListenableBuilder<ThemeMode>(valueListenable:appTheme,builder:(_,mode,_)=>MaterialApp(
     debugShowCheckedModeBanner:false,title:'Plazr',theme:theme(Brightness.light),darkTheme:theme(Brightness.dark),themeMode:mode,
     builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:const AudienceGate(child:ParticipationGate(child:PlatformScreen()))));
 }
@@ -90,7 +90,7 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   int progress=0;
   Uri? current;
   bool _starting=false, _background=false;
-  @override void initState(){super.initState();WidgetsBinding.instance.addObserver(this);chatFocus.addListener(()=>mounted?setState((){}):null);unawaited(start());}
+  @override void initState(){super.initState();WidgetsBinding.instance.addObserver(this);chatFocus.addListener((){if(mounted)setState((){if(inGame&&chatFocus.hasFocus)showChat=true;});});unawaited(start());}
   @override void didChangeDependencies(){super.didChangeDependencies();final dark=Theme.of(context).brightness==Brightness.dark;if(dark!=_lastDark){_lastDark=dark;unawaited(syncTheme());}if(MediaQuery.sizeOf(context).shortestSide<600){unawaited(SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]));}}
   Future<void> start() async {
     if(_starting)return;_starting=true;
@@ -347,8 +347,11 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
   Future<void> openPage(String page) async {
     if(!mounted||runtime==null)return;
     setState(()=>webPage=page);chatFocus.unfocus();
-    if(current==null||!current!.path.startsWith('/platform'))await controller!.loadRequest(runtime!.origin.replace(path:'/platform/'));
-    else await configurePlatform();
+    if(current==null||!current!.path.startsWith('/platform')) {
+      await controller!.loadRequest(runtime!.origin.replace(path:'/platform/'));
+    } else {
+      await configurePlatform();
+    }
   }
   Future<void> openAccountSettings() async {
     if(runtime==null||gamesProfile==null)return;
@@ -423,14 +426,20 @@ class _PlatformScreenState extends State<PlatformScreen> with WidgetsBindingObse
       unawaited(gameController?.reload());if(!nativeHome&&!inGame)unawaited(controller?.reload());
     }
   }
+  bool _gameKeyboardWasOpen=false;
+  @override void didChangeMetrics(){
+    final open=WidgetsBinding.instance.platformDispatcher.views.any((v)=>v.viewInsets.bottom>0);
+    if(inGame&&_gameKeyboardWasOpen&&!open){chatFocus.unfocus();if(mounted)setState(()=>showChat=false);}
+    _gameKeyboardWasOpen=open;
+  }
   @override void dispose(){gameHaptics.dispose();unawaited(friendNotifications?.stop());dismissFriendBanner();for(final timer in chatPendingTimers.values){timer.cancel();}WidgetsBinding.instance.removeObserver(this);unawaited(subscription?.cancel());unawaited(runtime?.close());input.dispose();chatScroll.dispose();chatFocus.dispose();unawaited(SystemChrome.setPreferredOrientations(DeviceOrientation.values));super.dispose();}
   Widget chatHistory(){
     final colors=Theme.of(context).colorScheme;
-    return ConstrainedBox(constraints:BoxConstraints(maxHeight:min(230,MediaQuery.sizeOf(context).height*.28)),child:Material(color:colors.surface.withValues(alpha:.97),elevation:6,child:messages.isEmpty?
+    return ConstrainedBox(constraints:BoxConstraints(maxHeight:min(230,MediaQuery.sizeOf(context).height*.28)),child:Material(color:Colors.transparent,elevation:0,child:messages.isEmpty?
       const Padding(padding:EdgeInsets.all(18),child:Text('لا توجد رسائل بعد. قل مرحبًا.')):
       ListView.builder(controller:chatScroll,shrinkWrap:true,padding:const EdgeInsets.all(14),itemCount:messages.length,itemBuilder:(context,i){final m=messages[i];return Padding(padding:const EdgeInsets.only(bottom:10),child:Align(alignment:m['seat']==table.seat?Alignment.centerRight:Alignment.centerLeft,child:Column(crossAxisAlignment:m['seat']==table.seat?CrossAxisAlignment.end:CrossAxisAlignment.start,children:[Text(table.roster.where((p)=>p['seat']==m['seat']).map((p)=>p['name']?.toString()??'لاعب').firstOrNull??'لاعب',style:TextStyle(fontSize:11,color:colors.primary)),if(m['pending']==true)Text(m['failed']==true?'تعذر تأكيد الإرسال':'جارٍ الإرسال',style:const TextStyle(fontSize:10)),const SizedBox(height:4),if(m['stickerId']!=null)StickerArtwork(asset:m['stickerAsset']?.toString()??'',size:100)else ChatCosmetic(id:m['chatBubble']?.toString()??'',child:Text(m['text']?.toString()??'',style:const TextStyle(fontSize:15,height:1.4)))])));})));
   }
-  Widget gameSurface()=>GameViewport(active:inGame,dim:chatFocus.hasFocus&&MediaQuery.viewInsetsOf(context).bottom>0,
+  Widget gameSurface()=>GameViewport(active:inGame,dim:false,
     overlay:showChat?chatHistory():null,child:WebViewWidget(key:const ValueKey('game-view'),controller:gameController!));
   @override Widget build(BuildContext context){
     final ready=!loading&&error==null&&runtime!=null;

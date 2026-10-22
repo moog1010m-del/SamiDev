@@ -1,7 +1,7 @@
 (() => {
   'use strict';
-  const games = [['carrom','الكيرم'],['crazy8','كريزي 8'],['pool','البلياردو'],['tablesoccer','الكورة']];
-  const previews = new Set(['badge_shard','badge_ember','badge_moonstone','banner_dunes','banner_garden','banner_canyon','chat_turquoise','chat_mist','chat_ember'].map(id=>'/platform/assets/cosmetics/'+id+'.webp'));
+  const games = [['carrom','الكيرم'],['crazy8','بلازر أونو'],['pool','البلياردو'],['tablesoccer','الكورة']];
+  const previews = new Set(['/images/effects/plazr-water-preview.webp','badge_shard','badge_ember','badge_moonstone','banner_dunes','banner_garden','banner_canyon','chat_turquoise','chat_mist','chat_ember'].map(id=>'/platform/assets/cosmetics/'+id+'.webp'));
   for(const asset of ['/images/cues/classic-preview.webp','/images/cues/moon-preview.webp','/images/themes/classic-preview.webp','/images/themes/cat-preview.webp','/images/themes/pool-midnight-preview.webp','/images/themes/pool-emerald-preview.webp','/games/crazy8/images/table-background.webp','/games/tablesoccer/images/thumbnail-standard.png'])previews.add(asset);
   let current = window.SamiDevGames.current().id, state, pending = false, previousFocus, requestEpoch = 0;
   const node = (tag, className, value) => { const e=document.createElement(tag); if(className)e.className=className; if(value)e.textContent=value; return e; };
@@ -11,7 +11,7 @@
   const header=node('div','sd-inventory-header'), heading=node('h2',null,'مقتنياتي');heading.id='sd-inventory-title';
   const close=node('button',null,'×');close.setAttribute('aria-label','إغلاق المقتنيات');header.append(heading,close);
   const tabs=node('div','sd-inventory-tabs'),status=node('p','sd-inventory-status');status.setAttribute('role','status');
-  const body=node('div','sd-inventory-body'),note=node('div','sd-inventory-note','ثيم البلياردو والمضرب يظهران للجميع في دور صاحبهما. بقية المقتنيات تُطبّق عند دخول اللعبة من جديد.');
+  const body=node('div','sd-inventory-body'),note=node('div','sd-inventory-note','ثيم البلياردو والمضرب ومؤثر الجيب تظهر للجميع في دور صاحبها. بقية المقتنيات تُطبّق عند دخول اللعبة من جديد.');
   // The active room owns the inventory context; never expose other games' items.
   const activeGame = () => window.SamiDevGames.current().id;
   current = activeGame();

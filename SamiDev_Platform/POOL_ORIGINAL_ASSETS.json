@@ -1,6 +1,6 @@
 {
   "source": "pool(8).zip",
-  "preservedImages": 15,
+  "preservedImages": 13,
   "files": [
     {
       "path": "game/games/pool/scene-avatars/scene_avatars_bot.webp",
@@ -79,25 +79,13 @@
       "sha256": "574b37defc614e0220202d01d9a0053ffe835c71d9ab912c428c36fba62fa9b0",
       "type": "image",
       "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
-    },
-    {
-      "path": "game/games/pool/images/imported/themes/th_basic_preview.webp",
-      "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8",
-      "type": "image",
-      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
-    },
-    {
-      "path": "game/games/pool/images/imported/themes/th_basic_head_line.webp",
-      "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0",
-      "type": "image",
-      "source": "pool(8).zip: original visual asset preserved byte-for-byte at user request"
     }
   ],
   "replacedTable": {
     "path": "game/games/pool/images/imported/themes/th_basic_table.webp",
     "previousSha256": "5a711fdab61554d8da52933f964b6321221872501a7057ac5f7470c2b833b73f",
-    "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
-    "source": "Generated pool table, original geometry alpha/pocket mask retained; user requested table-only replacement"
+    "sha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
+    "source": "V3 original generation from numeric geometry, without old image references or copied alpha"
   },
   "brandReplacements": [
     {
@@ -108,18 +96,47 @@
       "reason": "Reuse existing SamiDev currency artwork at identical 48x48 dimensions; resource key unchanged"
     }
   ],
-  "v36Replacements": [
+  "v36Replacements": [],
+  "v3RasterReplacements": [
     {
       "path": "game/games/pool/images/ui/ui.webp",
-      "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a",
-      "type": "image",
-      "source": "V36: requested cue-frame/background replacement; other atlas pixels retained"
+      "sha256": "95322d82192fb411b51d7ef9e8b30a2607bfa73d782c3ae98e211c82105c9260",
+      "source": "design/pool-original-v3/ui.webp"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_table.webp",
+      "sha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
+      "source": "design/pool-original-v3/table.webp"
+    },
+    {
+      "path": "game/images/themes/pool-emerald.webp",
+      "sha256": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
+      "source": "design/pool-original-v3/table.webp"
+    },
+    {
+      "path": "game/images/cues/moon.webp",
+      "sha256": "ddee42272317f7495e12e116c9ecaae1d0a62fa207514ae9f161e7b388f487b8",
+      "source": "design/pool-original-v3/cue-moon.webp"
     },
     {
       "path": "game/games/pool/images/imported/themes/th_basic_background.webp",
-      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1",
-      "type": "image",
-      "source": "V36: requested cue-frame/background replacement; other atlas pixels retained"
+      "sha256": "42eae2ba2b93fc910d1e90b183a778c82a4c22e4ec4118ffb89721f3378a635b",
+      "source": "design/pool-original-v3/background.webp"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_preview.webp",
+      "sha256": "3fd89898cd843515a82b876fdfa154fb3fb430ff5492c41469c5a3acee67a6e4",
+      "source": "design/pool-original-v3/basic-preview.webp"
+    },
+    {
+      "path": "game/images/themes/pool-emerald-preview.webp",
+      "sha256": "09c0aaa72b2b845f220cf8713ba09e7243a26dbd75e93f5328eaeea9396c5f5b",
+      "source": "design/pool-original-v3/emerald-preview.webp"
+    },
+    {
+      "path": "game/games/pool/images/imported/themes/th_basic_head_line.webp",
+      "sha256": "19e81a54e060f610f3fe6ccee8034d716e988f3b783f661cb347dc6cf7ed2742",
+      "source": "design/pool-original-v3/head-line.webp"
     }
   ]
 }

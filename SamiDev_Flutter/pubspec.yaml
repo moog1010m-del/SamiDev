@@ -58,6 +58,8 @@ flutter:
     - assets/runtime/images/
     - assets/runtime/images/controls/
     - assets/runtime/images/cues/
+    - assets/runtime/images/effects/
+    - assets/runtime/images/pool-large/
     - assets/runtime/images/themes/
     - assets/runtime/imported/
     - assets/runtime/platform/

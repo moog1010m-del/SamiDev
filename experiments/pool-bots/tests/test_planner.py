@@ -29,7 +29,9 @@ class PlannerTests(unittest.TestCase):
   self.assertTrue(eligible_room(room,10,now=12));self.assertFalse(eligible_room(room,10,now=5))
   for mode in (1,2,3,4,5,6):self.assertFalse(eligible_room({**room,'settings':{'gameId':'pool','gameType':mode}},0,now=12))
   self.assertFalse(eligible_room({**room,'started':True},0,now=12))
-  self.assertFalse(eligible_room({**room,'settings':{'gameId':'carrom'}},0,now=12))
+  self.assertTrue(eligible_room({**room,'settings':{'gameId':'carrom'}},0,now=12))
+  self.assertTrue(eligible_room({**room,'settings':{'gameId':'crazy8'}},0,now=12))
+  self.assertFalse(eligible_room({**room,'settings':{'gameId':'tablesoccer'}},0,now=12))
   for value in ('http://external.test','https://user:pass@example.com','https://example.com/path'):
    with self.assertRaises(ValueError):origin(value)
  def test_blocked_shot_is_not_called_clear(self):

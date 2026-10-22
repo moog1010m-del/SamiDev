@@ -30,7 +30,7 @@
   }
   async function api(path, options={}){
     const opts={credentials:'same-origin',...options};
-    opts.headers={'Content-Type':'application/json',...(options.headers||{})};
+    opts.headers={'Content-Type':'application/json','X-Plazr-Client':window.SamiDevMobile?'app':'web',...(options.headers||{})};
     const r=await fetch(path,opts); let data={};
     try{data=await r.json();}catch(_){data={ok:false,message:`HTTP ${r.status}`};}
     if(!r.ok||data.ok===false) throw Object.assign(new Error(data.message||'فشل الطلب'),{status:r.status,code:data.error});
@@ -52,7 +52,7 @@
     const n=Math.max(0,Math.floor(Number(value)||0));
     return n.toLocaleString('en-US');
   }
-  const DEFAULT_AVATAR_URL='/images/default-avatar.png';
+  const DEFAULT_AVATAR_URL='/images/default-avatar-v2.png';
   function wireAvatarImage(image, fallback=null){
     if(!image)return;
     if(image.dataset.avatarWired==='1')return;
@@ -191,7 +191,7 @@
     return guestResume;
   }
   function showAuth({accountSettings=false}={}){if(!accountSettings){friendsWorkspace.stop();clearInterval(state.poll);resumeGuest();return;}openSettings('account');}
-  function showApp(){friendsWorkspace.stop(); if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate('lobby'); startPolling(); loadFriends(); friendsWorkspace.start(); handleFriendLink(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={MATCH_COOLDOWN:'حاول بعد دقيقة',ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة',COMMUNITY_DISABLED:'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
+  function showApp(){friendsWorkspace.stop(); if(new URLSearchParams(location.search).get('settings')==='account')setTimeout(()=>{const u=new URL(location.href);u.searchParams.delete('settings');history.replaceState(null,'',u);openSettings('account');},0);stopCommunityLive();closeSettings(true);$('#auth-screen').classList.add('hidden'); $('#app').classList.remove('hidden'); navigate(new URLSearchParams(location.search).get('topup')==='return'?'store':'lobby'); startPolling(); loadFriends(); friendsWorkspace.start(); handleFriendLink(); handlePendingInvite(); restoreCommunityFromLocation(); const url=new URL(location.href),reason=url.searchParams.get('notice'),notices={MATCH_COOLDOWN:'حاول بعد دقيقة',ROOM_WAIT_EXPIRED:'انتهت مهلة انتظار اللاعبين',TABLE_CLOSED:'أغلق منشئ الطاولة المباراة قبل اللعب',TABLE_KICKED:'أخرجك منشئ الطاولة قبل بدء اللعب',COMMUNITY_BANNED:'أُخرجت من المساحة بسبب الحظر',COMMUNITY_KICKED:'أُخرجت من المساحة لمدة دقيقة',COMMUNITY_DISABLED:'هذه المساحة متوقفة مؤقتًا؛ اختر مساحة أخرى'};if(notices[reason]){toast(notices[reason]);url.searchParams.delete('notice');history.replaceState(null,'',url);}}
 
   async function boot(){
     applyTheme(preferredTheme(),{persist:false});
@@ -217,7 +217,7 @@
     $$('.pool-setting').forEach(x=>x.classList.toggle('hidden',!pool));
     $$('.board-players-setting').forEach(x=>x.classList.toggle('hidden',cards||pool));
     $('#create-game-description').textContent=pool?'اختر نوع البلياردو: إيت بول أو ناين بول أو الثلاثي أو قيم بول.':cards?'طابق اللون أو الرقم وتخلّص من أوراقك أولًا.':soccer?'فريقان، تسديدات وتمريرات وأهداف.':'الكيرم الكلاسيكي وأنماط النقاط.';
-    $('#create-go').textContent=pool?'إنشاء مباراة بلياردو':cards?'إنشاء مباراة أونو':soccer?'إنشاء مباراة كرة الطاولة':'إنشاء مباراة الكيرم';
+    $('#create-go').textContent=pool?'إنشاء مباراة بلياردو':cards?'إنشاء مباراة بلازر أونو':soccer?'إنشاء مباراة كرة الطاولة':'إنشاء مباراة الكيرم';
   }
   function openCreateGame(gameId=state.settings.gameId){
     if(!state.activeCommunity)return toast('اختر مساحة أولًا',true);
@@ -306,6 +306,7 @@
     $$('[data-create-game]').forEach(button=>button.onclick=()=>selectCreateGame(button.dataset.createGame));
     $$('[data-quick-game]').forEach(button=>button.onclick=()=>openCreateGame(button.dataset.quickGame));
     $('#open-create').onclick=()=>openCreateGame();
+    $('#community-create-table').onclick=()=>openCreateGame();
     $$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close).classList.add('hidden'));
     selectCreateGame(state.settings.gameId);
     $('#create-modal').addEventListener('click',e=>{if(e.target.id==='create-modal')e.currentTarget.classList.add('hidden');});
@@ -316,6 +317,7 @@
     $('#admin-refresh').onclick=loadAdmin;
     window.matchMedia('(max-width:600px)').addEventListener('change',()=>{state.storePage=0;if(state.store)renderStore();});
     $('#store-refresh').onclick=()=>loadStore(true);
+    setupStoreWallet();
     const photoInput=$('#profile-photo-input');
     const choosePhoto=()=>photoInput.click();
     $('#profile-photo-btn').onclick=openProfileEditor;
@@ -380,8 +382,61 @@
     return window.SamiDevStickerArt.markup(item.asset,className+(item.slot==='profile_banner'?' store-banner-art':''),item.name);
   }
   function applyCosmeticPreviews(root){root.querySelectorAll('[data-chat-cosmetic]').forEach(el=>window.SamiDevCosmetics?.bubble(el,el.dataset.chatCosmetic));}
+  let coinCheckoutBusy=false;
+  function setupStoreWallet(){
+    const trigger=$('#store-wallet-open');if(!trigger||$('#store-wallet-modal'))return;
+    const wallet=$('.store-wallet-card'),balance=$('.store-wallet-main',wallet),topup=$('.coin-topup',wallet),ledger=$('.store-ledger-panel');
+    const modal=document.createElement('div');modal.id='store-wallet-modal';modal.className='modal store-wallet-modal hidden';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','المحفظة');
+    const card=document.createElement('section');card.className='modal-card store-wallet-dialog';
+    const header=document.createElement('header');header.innerHTML='<h2>المحفظة</h2><button type="button" aria-label="إغلاق المحفظة">×</button>';
+    const tabs=document.createElement('div');tabs.className='wallet-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','أقسام المحفظة');
+    const history=document.createElement('button'),buy=document.createElement('button');history.type=buy.type='button';history.textContent='سجل العمليات';buy.textContent='شراء كوينز';history.setAttribute('role','tab');buy.setAttribute('role','tab');
+    history.id='wallet-history-tab';buy.id='wallet-buy-tab';ledger.id='wallet-history-panel';topup.id='wallet-buy-panel';ledger.setAttribute('role','tabpanel');topup.setAttribute('role','tabpanel');history.setAttribute('aria-controls',ledger.id);buy.setAttribute('aria-controls',topup.id);ledger.setAttribute('aria-labelledby',history.id);topup.setAttribute('aria-labelledby',buy.id);
+    const select=buying=>{ledger.hidden=buying;topup.hidden=!buying;history.setAttribute('aria-selected',String(!buying));buy.setAttribute('aria-selected',String(buying));};
+    history.onclick=()=>select(false);buy.onclick=()=>select(true);tabs.append(history,buy);
+    card.append(header,balance,tabs,ledger,topup);modal.append(card);document.body.append(modal);wallet.remove();
+    const close=()=>{modal.classList.add('hidden');trigger.focus({preventScroll:true});};header.querySelector('button').onclick=close;modal.onclick=e=>{if(e.target===modal)close();};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.classList.contains('hidden'))close();});
+    trigger.onclick=()=>{select(false);modal.classList.remove('hidden');history.focus({preventScroll:true});loadStore();};
+  }
+  function renderCoinTopup(){
+    const box=$('#coin-topup-packs'),status=$('#coin-topup-status');
+    if(!box||!status)return;
+    const topup=state.store?.topup;
+    box.replaceChildren();
+    status.textContent=!topup?.available?'شحن الكوينز غير متاح حاليًا.':topup.sandbox?'الدفع في وضع الاختبار؛ لن يُخصم مبلغ ولن تُضاف كوينز فعلية.':'تُضاف الكوينز تلقائيًا بعد تأكيد الدفع. ارجع للمتجر واضغط تحديث لمراجعة رصيدك.';
+    for(const [packIndex,pack] of (topup?.packs||[]).entries()){
+      const button=document.createElement('button');button.type='button';button.className='coin-topup-pack';
+      button.disabled=!topup.available||coinCheckoutBusy;
+      button.setAttribute('aria-label',`${formatProfileStat(pack.coins)} كوين — $${pack.usd} USD`);
+      const art=document.createElement('span');art.className='coin-topup-art';art.setAttribute('aria-hidden','true');
+      art.innerHTML='<svg viewBox="0 0 120 88" focusable="false"><ellipse cx="60" cy="75" rx="43" ry="7" fill="#000" opacity=".14"/>'+Array.from({length:Math.min(5,packIndex+1)},(_,i)=>{
+        const x=26+(i%3)*24,y=64-Math.floor(i/3)*22;
+        return `<g transform="translate(${x} ${y})"><path d="M-15-7v7c0 10 30 10 30 0v-7" fill="#c88922"/><ellipse cy="-7" rx="15" ry="11" fill="#f9cd65" stroke="#ffe6a1" stroke-width="2"/><ellipse cy="-7" rx="10" ry="7" fill="none" stroke="#d39428"/><path d="M3-11c-7-4-10 7-2 7" fill="none" stroke="#ac711d" stroke-width="2" stroke-linecap="round"/></g>`;
+      }).join('')+'<path d="m92 14 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#ffe7a0"/></svg>';
+      const amount=document.createElement('strong');amount.className='coin-topup-amount';amount.textContent=formatProfileStat(pack.coins);
+      const unit=document.createElement('span');unit.className='coin-topup-unit';unit.textContent='كوين';
+      const price=document.createElement('span');price.className='coin-topup-price';price.textContent=`$${pack.usd}`;
+      const currency=document.createElement('span');currency.className='coin-topup-currency';currency.textContent='USD';
+      const action=document.createElement('span');action.className='coin-topup-action';action.textContent=coinCheckoutBusy?'جارٍ فتح الدفع…':'اختيار الباقة';
+      button.append(art,amount,unit,price,currency,action);
+      button.onclick=async()=>{
+        if(coinCheckoutBusy)return;
+        if(!confirm(`${topup.sandbox?'اختبار شراء':'شراء'} ${formatProfileStat(pack.coins)} كوين مقابل $${pack.usd} USD عبر Xsolla؟`))return;
+        coinCheckoutBusy=true;renderCoinTopup();
+        try{
+          const result=await api('/api/payments/xsolla/checkout',{method:'POST',body:JSON.stringify({sku:pack.sku})});
+          const url=new URL(result.url);
+          if(url.protocol!=='https:'||!['secure.xsolla.com','sandbox-secure.xsolla.com'].includes(url.hostname))throw new Error('رابط الدفع غير صالح');
+          window.location.assign(url.href);
+        }catch(err){toast(err.message||'تعذر فتح الدفع',true);}
+        finally{coinCheckoutBusy=false;renderCoinTopup();}
+      };
+      box.append(button);
+    }
+  }
   function renderStore(){
     wireStoreCategoryButtons();
+    renderCoinTopup();
     const data=state.store||{}, catalog=Array.isArray(data.catalog)?data.catalog:[], inventory=Array.isArray(data.inventory)?data.inventory:[], ledger=Array.isArray(data.ledger)?data.ledger:[];
     const userStars=Number(data.starsCount??state.user?.starsCount??5);
     const selectedCat=state.storeCategory||'profile';
@@ -400,18 +455,8 @@
     });
 
     if(selectedCat==='profile')filteredCatalog.sort((a,b)=>{const order=item=>item.slot==='profile_stars'?-1:(window.SamiDevStickerArt.cell(item.asset)??10);return order(a)-order(b);});
-    const pageSize=window.matchMedia("(max-width:600px)").matches?6:12;
-    const pageCount=Math.max(1,Math.ceil(filteredCatalog.length/pageSize));
-    state.storePage=Math.max(0,Math.min(pageCount-1,Number(state.storePage)||0));
-    const visibleCatalog=filteredCatalog.slice(state.storePage*pageSize,(state.storePage+1)*pageSize);
-    const pager=$('#store-pagination');if(pager){pager.replaceChildren();pager.hidden=pageCount<=1;if(pageCount>1){
-      for(const [label,delta] of [['السابق',-1],['التالي',1]]){
-        const button=document.createElement('button');button.type='button';button.textContent=label;
-        button.disabled=state.storePage+delta<0||state.storePage+delta>=pageCount;
-        button.onclick=()=>{state.storePage+=delta;renderStore();$('#store-catalog').scrollIntoView({block:'start',behavior:'smooth'});};pager.append(button);
-        if(delta===-1){const status=document.createElement('span');status.setAttribute('aria-live','polite');status.textContent=`${state.storePage+1} / ${pageCount}`;pager.append(status);}
-      }
-    }}
+    const visibleCatalog=filteredCatalog;
+    const pager=$('#store-pagination');if(pager){pager.replaceChildren();pager.hidden=true;}
     const box=$('#store-catalog');if(box){box.replaceChildren();if(!filteredCatalog.length){box.append(emptyBlock('لا توجد عناصر متاحة في هذا القسم حاليًا.'));}else for(const item of visibleCatalog){
       const active=(data.equipped?.[item.slot]===item.id);
       const owned=item.owned||item.availableToAll||item.default;
@@ -426,7 +471,7 @@
     const ledgerBox=$('#store-ledger');if(ledgerBox){ledgerBox.replaceChildren();if(!ledger.length){ledgerBox.append(emptyBlock('لا توجد حركات حتى الآن.'));}else for(const entry of ledger){
       const row=document.createElement('div');row.className='store-ledger-row';const mark=document.createElement('span');mark.className='coin-mark small';mark.textContent='C';
       const copy=document.createElement('div');const title=document.createElement('strong');
-      title.textContent=entry.type==='daily_match_reward'?'مكافأة مباراة يومية':entry.type==='store_purchase'?'شراء من المتجر':entry.type==='username_change'?'تغيير اسم المستخدم':'حركة متجر';
+      title.textContent=entry.type==='coin_topup'?'شحن كوينز':entry.type==='coin_refund'?'استرجاع شحن كوينز':entry.type==='daily_match_reward'?'مكافأة مباراة يومية':entry.type==='store_purchase'?'شراء من المتجر':entry.type==='username_change'?'تغيير اسم المستخدم':'حركة متجر';
       const meta=document.createElement('small');const d=new Date(Number(entry.createdAt)||Date.now());meta.textContent=(entry.roomId?`مباراة ${entry.roomId} · `:'')+d.toLocaleString('ar-SA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});copy.append(title,meta);
       const amount=document.createElement('b');const n=Math.trunc(Number(entry.amount)||0),abs=Math.abs(n).toLocaleString('en-US');amount.textContent=`${n>=0?'+':'-'}${abs}`;row.append(mark,copy,amount);ledgerBox.append(row);
     }}
@@ -538,7 +583,7 @@
       if(state.page==='lobby'&&!window.SamiDevGameHost?.active){
         if(state.activeCommunity)loadCommunityState(); else loadCommunities();
       }
-      api('/api/heartbeat',{method:'POST',body:'{}'}).catch(()=>{});
+      api('/api/heartbeat',{method:'POST',body:'{}'}).catch(()=>{});pollWebChallenge();
       if(state.page==='friends'&&Date.now()-(state.friendRefresh||0)>15000){state.friendRefresh=Date.now();loadFriends();}
     },3000);
   }
@@ -614,7 +659,7 @@
       // Message IDs reconcile recovery with socket events and acknowledgements.
       const d=await api(`/api/communities/${encodeURIComponent(active.id)}`);
       if(state.activeCommunity?.id!==active.id)return;
-      state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);window.SamiDevCommunityLive?.history(d.messages||[]);
+      state.blockedUsers=new Set(d.blockedUsers||[]);state.communityCapabilities=d.capabilities||{};state.activeCommunity=d.community||active;state.rooms=d.rooms||[];state.communityMembers=d.members||[];mergeCommunityMessages(d.messages||[]);startCommunityLive(active.id);window.SamiDevCommunityLive?.history(d.messages||[]);
       renderCommunityState();renderRooms();
       if(manual)toast('تم تحديث المساحة');
     }catch(err){if(err.status===401)return showAuth();if(err.status===404||['COMMUNITY_BANNED','COMMUNITY_KICKED','COMMUNITY_DISABLED'].includes(err.code)){toast(err.message,true);leaveCommunity();return;}if(manual)toast(err.message,true);}
@@ -658,10 +703,11 @@
     const members=visibleCommunityMembers(),update=stableList(box);
     if(!members.length){if(!update.reuse('empty',null))update.add(emptyBlock('لا يوجد أعضاء آخرون متصلون الآن.'));update.finish();return;}
     for(const u of members){
-      if(update.reuse(String(u.id),[u.id,u.displayName,u.username,u.nameBadgeAsset,u.nameBadgeName,u.starsCount,u.wins,u.reputation]))continue;
-      const name=String(u.displayName||u.username||'Player');
+      if(update.reuse(String(u.id),[u.id,u.displayName,u.username,u.nameBadgeAsset,u.nameBadgeName,u.starsCount,u.wins,u.reputation,state.blockedUsers?.has(String(u.id))]))continue;
+      const blocked=state.blockedUsers?.has(String(u.id));
+      const name=blocked?'User blocked':String(u.displayName||u.username||'Player');
       const row=document.createElement('div');row.className='community-member';row.dataset.publicProfile=String(u.id||'');row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label',`فتح ملف ${name}`);
-      row.append(avatarNode(u,'community-member-avatar'));
+      row.append(avatarNode(blocked?{displayName:name}:u,'community-member-avatar'));
       const copy=document.createElement('div');copy.className='community-member-copy';
       const title=document.createElement('div');title.className='community-member-title';const strong=document.createElement('strong');strong.textContent=name;
       const emblem=profileSprite('profile-sprite-emblem community-member-emblem');
@@ -682,9 +728,61 @@
       reputation.innerHTML=window.SamiDevProfileDetails.flameMarkup(u.reputation);
       reputation.append(document.createTextNode(`سمعة ${formatProfileStat(u.reputation)}`));
       meta.append(wins,reputation);
-      copy.append(title,stars,meta);const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);update.add(row);
+      if(blocked){title.replaceChildren(strong);copy.append(title);}else copy.append(title,stars,meta);
+      if(!window.SamiDevMobile){
+        const actions=document.createElement('div');actions.className='member-web-actions';
+        actions.addEventListener('keydown',e=>e.stopPropagation());
+        const block=document.createElement('button');block.type='button';block.textContent=blocked?'↶':'×';block.title=blocked?'إلغاء الحظر':'حظر المستخدم';block.setAttribute('aria-label',block.title);
+        block.onclick=async e=>{e.stopPropagation();block.disabled=true;try{await api('/api/users/'+encodeURIComponent(u.id)+'/block',{method:'POST',body:JSON.stringify({blocked:!blocked})});await loadCommunityState();toast(blocked?'تم إلغاء الحظر':'تم حظر المستخدم');}catch(err){toast(err.message,true);}finally{block.disabled=false;}};
+        const invite=document.createElement('button');invite.type='button';invite.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';invite.title='دعوة 1 ضد 1';invite.setAttribute('aria-label',invite.title);invite.disabled=!!blocked;invite.onclick=e=>{e.stopPropagation();openWebChallenge(u);};actions.append(block,invite);copy.append(actions);
+      }
+      const online=document.createElement('span');online.className='community-member-online';online.setAttribute('aria-label','متصل الآن');row.append(copy,online);if(blocked){delete row.dataset.publicProfile;row.removeAttribute('role');row.removeAttribute('tabindex');row.removeAttribute('aria-label');}update.add(row);
     }update.finish();
   }
+
+  let webChallengeBusy=false,challengeDialog=null,challengeCountdownTimer=null;const handledChallenges=new Set();
+  function challengeBox(title){
+    clearInterval(challengeCountdownTimer);challengeDialog?.remove();const box=document.createElement('div');box.className='modal web-challenge-modal';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
+    const card=document.createElement('div');card.className='modal-card';const h=document.createElement('h3');h.textContent=title;const head=document.createElement('div');head.className='challenge-heading';const close=document.createElement('button');close.type='button';close.className='challenge-close';close.textContent='×';close.setAttribute('aria-label','إغلاق الدعوة');close.onclick=()=>{box.remove();if(challengeDialog===box)challengeDialog=null;};head.append(h,close);const strip=document.createElement('div');strip.className='challenge-game-strip';strip.textContent='مباراة فردية · 1 ضد 1';card.append(head,strip);box.append(card);document.body.append(box);challengeDialog=box;return card;
+  }
+  function challengeButton(card,label,handler){const b=document.createElement('button');b.type='button';b.className='primary challenge-action';b.textContent=label;if(label==='رجوع'||label==='رفض'||label==='إلغاء الدعوة')b.classList.add('challenge-secondary');b.onclick=async()=>{b.disabled=true;try{await handler();}catch(e){toast(e.message,true);}finally{b.disabled=false;}};card.append(b);return b;}
+  function openWebChallenge(user){
+    const card=challengeBox('دعوة إلى '+(user.displayName||user.username));
+    const select=document.createElement('select');select.setAttribute('aria-label','اللعبة');for(const [id,name] of [['pool','البلياردو'],['carrom','الكيرم'],['crazy8','بلازر أونو'],['tablesoccer','كرة الطاولة']]){const o=document.createElement('option');o.value=id;o.textContent=name;select.append(o);}select.onchange=()=>{card.querySelector('.challenge-game-strip').textContent=select.selectedOptions[0].textContent+' · 1 ضد 1';};select.onchange();const label=document.createElement('label');label.className='challenge-select-label';label.textContent='نوع اللعبة';label.append(select);card.append(label);
+    const tableOption=document.createElement('label');tableOption.className='challenge-table-option';
+    const largeTable=document.createElement('input');largeTable.type='checkbox';largeTable.name='largeTable';
+    const tableText=document.createElement('span');tableText.textContent='الطاولة الكبيرة';tableOption.append(largeTable,tableText);card.append(tableOption);
+    const changeGame=select.onchange;select.onchange=()=>{changeGame();tableOption.hidden=select.value!=='pool';};select.onchange();
+    const note=document.createElement('p');note.className='challenge-note';note.textContent='إعدادات اللعبة الأساسية · مهلة الرد 30 ثانية';card.append(note);
+    challengeButton(card,'إرسال الدعوة',async()=>{await api('/api/web-challenges',{method:'POST',body:JSON.stringify({action:'send',target:String(user.id),gameId:select.value,community:state.activeCommunity?.id,largeTable:select.value==='pool'&&largeTable.checked?1:0})});challengeDialog?.remove();challengeDialog=null;await pollWebChallenge();});
+    challengeButton(card,'رجوع',()=>{challengeDialog?.remove();challengeDialog=null;});
+  }
+  async function pollWebChallenge(){
+    if(window.SamiDevMobile||!state.user||webChallengeBusy)return;webChallengeBusy=true;
+    try{
+      const {challenge:c,serverNow}=await api('/api/web-challenges');if(!c)return;
+      const key=c.id+':'+c.status;if(handledChallenges.has(key))return;
+      if(window.SamiDevGameHost?.active&&c.status==='pending')return;
+      handledChallenges.add(key);
+      if(c.status==='pending'){
+        const incoming=String(c.target)===String(state.user.id),names={pool:'البلياردو',carrom:'الكيرم',crazy8:'بلازر أونو',tablesoccer:'كرة الطاولة'};
+        const card=challengeBox(incoming?'دعوة من '+c.senderName:'بانتظار رد اللاعب');const p=document.createElement('p');p.textContent=(names[c.gameId]||'')+' · 1 ضد 1';card.append(p);
+        const clock=document.createElement('div');clock.className='challenge-countdown';clock.setAttribute('role','timer');clock.setAttribute('aria-label','الوقت المتبقي للرد');const number=document.createElement('strong');const caption=document.createElement('small');caption.textContent='ثانية';clock.append(number,caption);card.append(clock);
+        const deadline=performance.now()+Math.max(0,(c.expires-serverNow)*1000);let lastSeconds=-1;
+        const tick=()=>{if(!card.isConnected){clearInterval(challengeCountdownTimer);return;}const remaining=Math.max(0,deadline-performance.now()),seconds=Math.ceil(remaining/1000);if(seconds!==lastSeconds){number.textContent=String(seconds);lastSeconds=seconds;}clock.style.setProperty('--remaining',String(remaining/30000));if(!remaining){clearInterval(challengeCountdownTimer);card.querySelectorAll('.challenge-action,.challenge-close').forEach(b=>b.disabled=true);pollWebChallenge();}};
+        tick();challengeCountdownTimer=setInterval(tick,100);
+        const respond=async action=>{await api('/api/web-challenges',{method:'POST',body:JSON.stringify({id:c.id,action})});challengeDialog?.remove();challengeDialog=null;handledChallenges.delete(key);};
+        card.querySelector('.challenge-game-strip').textContent=(names[c.gameId]||'')+' · 1 ضد 1'+(c.gameId==='pool'&&Number(c.largeTable)===1?' · الطاولة الكبيرة':'');card.querySelector('.challenge-close').onclick=()=>respond(incoming?'reject':'cancel').catch(e=>toast(e.message,true));
+        if(incoming){challengeButton(card,'قبول',()=>respond('accept'));challengeButton(card,'رفض',()=>respond('reject'));}else challengeButton(card,'إلغاء الدعوة',()=>respond('cancel'));
+      }else{
+        clearInterval(challengeCountdownTimer);challengeDialog?.remove();challengeDialog=null;
+        if(c.status==='accepted'){
+          const t=await ticket(c.community),q=new URLSearchParams({online:'1',action:'join',room:c.roomId,community:c.community,ticket:t,game:c.gameId});if(c.token)q.set('token',c.token);await openGame(c.gameId,q);
+        }else toast(({rejected:'تم رفض الدعوة',cancelled:'تم إلغاء الدعوة',expired:'انتهت مهلة الدعوة'})[c.status]||'انتهت الدعوة');
+      }
+    }catch(e){if(e.status!==401)console.debug('Challenge polling unavailable');}finally{webChallengeBusy=false;}
+  }
+
   function chatTime(ts){const d=new Date(Number(ts)||Date.now());return d.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});}
   function renderCommunityMessages(){
     const box=$('#community-chat-messages');if(!box)return;const wasNearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70,update=stableList(box);
@@ -715,9 +813,10 @@
   }
   function renderCommunityPublicProfile(user){
     let moderation=$('#community-profile-moderation');
-    if(!moderation){moderation=document.createElement('div');moderation.id='community-profile-moderation';moderation.className='community-public-actions';$('#community-profile-actions').insertAdjacentElement('afterend',moderation);}
-    moderation.replaceChildren();
+    if(!moderation){moderation=document.createElement('details');moderation.id='community-profile-moderation';moderation.className='community-public-actions';$('#community-profile-actions').insertAdjacentElement('afterend',moderation);}
+    moderation.replaceChildren();moderation.open=false;moderation.hidden=true;
     if(user.id!==state.user?.id&&state.activeCommunity&&state.communityCapabilities?.canModerate){
+      moderation.hidden=false;const summary=document.createElement('summary');summary.textContent='أدوات إشراف المساحة';moderation.append(summary);
       const options={kick:'إخراج لمدة دقيقة',mute:'كتم ١٠ دقائق',unmute:'إلغاء الكتم',ban:'حظر من المساحة',unban:'فك حظر المساحة'};
       if(state.communityCapabilities.canAssignModerators){options.grant_moderator='تعيين مشرف لهذه المساحة';options.revoke_moderator='سحب إشراف هذه المساحة';}
       for(const [action,title] of Object.entries(options)){
@@ -767,7 +866,7 @@
     const rows=(user.gameStatistics||[]).filter(s=>Number(s.played)>0).sort((a,b)=>Number(b.wins)-Number(a.wins));
     const best=rows[0];root.hidden=!best;if(!best)return;
     const mark={pool:'pool',carrom:'carrom',tablesoccer:'football',crazy8:'cards'}[best.gameId];
-    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'أونو'};
+    const names={pool:'البلياردو',carrom:'الكيرم',tablesoccer:'كرة الطاولة',crazy8:'بلازر أونو'};
     const img=document.createElement('img');img.src='/room-sprites/'+mark+'.png';img.alt='';
     const info=document.createElement('div'),name=document.createElement('strong'),rank=document.createElement('small');
     name.textContent=names[best.gameId]||'اللعبة';rank.textContent=`${best.rankName} · المستوى ${formatProfileStat(best.level)}`;
@@ -902,13 +1001,15 @@
         : watching
           ? `<button class="secondary watch-room" data-room="${rid}">مشاهدة</button>`
           : '<button class="secondary room-waiting" disabled>تجهيز</button>';
-      const template=document.createElement('template');template.innerHTML=`<article class="room-card community-room-card">
+      const shortGameName=stg.gameId==='pool'?({0:'إيت بول',1:'إيت بول · فرق',2:'إيت بول',3:'ناين بول',4:'ناين بول · فرق',5:'ناين بول',6:'الثلاثي',7:'قيم بول'})[Number(stg.gameType)||0]||'البلياردو':({carrom:'الكيرم',crazy8:'بلازر أونو',tablesoccer:'كرة الطاولة'})[stg.gameId]||'مباراة';
+      const template=document.createElement('template');template.innerHTML=`<article class="room-card community-room-card plazr-table-card">
         <div class="room-mobile-top"><div class="room-code">${rid}</div>${st}</div>
         <div class="room-game-identity">
           <span class="room-game-mark"><img src="/room-sprites/${({pool:"pool",carrom:"carrom",crazy8:"cards",tablesoccer:"football"})[stg.gameId]||"carrom"}.png?v=36" alt="${modeName}" width="58" height="58"></span>
-          <div><small>غرفة ${rid}</small><strong>${modeName}</strong><p>المنشئ: ${host}</p></div>
+          <div><small>غرفة ${rid}</small><strong title="${modeName}">${escapeHtml(shortGameName)}</strong><p>المنشئ: ${host}</p></div>
         </div>
         <div class="room-roster" aria-label="اللاعبون">${roomSeatsMarkup(r)}</div>
+        <div class="table-player-names">${(r.roster||[]).map(p=>`<span dir="auto">${escapeHtml(p.name||'Player')}</span>`).join('')}</div>
         <div class="room-desktop-state"><strong>${Number(r.occupied)||0}/${Number(r.capacity)||0}</strong><small>لاعبون</small>${st}</div>
         <div class="room-mobile-meta room-meta"><div><b>${roomKind(r)}</b><small>النوع</small></div><div><b>${r.occupied}/${r.capacity}</b><small>اللاعبون</small></div><div><b>${modeName}</b><small>النمط</small></div></div>
         <div class="room-mobile-host room-host">المنشئ: ${host}</div>
@@ -955,7 +1056,7 @@
     const row=state.rooms.find(r=>r.roomId===room),game=row?.settings?.gameId||'carrom';
     if(!await window.PlazrGameEntry.confirm({game,room,watch:true,description:row?window.SamiDevGames.label(row.settings)+' · المقاعد: '+(Number(row.occupied)||0)+' من '+(Number(row.capacity)||2):''}))return;
     try{const cid=state.activeCommunity?.id||null;if(cid)try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const q=new URLSearchParams({online:'1',action:'watch',room,ticket:t});if(cid)q.set('community',cid);await openGame(state.rooms.find(r=>r.roomId===room)?.settings?.gameId||'carrom',q);}catch(err){window.PlazrGameEntry?.fail(err);toast(err.message,true);}}
-  async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}await openGame(gid,q);}catch(err){toast(err.message,true);}}
+  async function createRoom(){try{const cid=state.activeCommunity?.id;if(!cid)return toast('اختر مساحة أولًا',true);try{sessionStorage.setItem('samidev_return_community',cid);}catch(_){}const t=await ticket(cid);const gid=$('#create-game').value;const q=new URLSearchParams({online:'1',action:'create',ticket:t,community:cid,players:state.settings.players,game:gid});if(gid==='pool'){q.set('gameType',$('#create-pool-mode').value);q.set('largeTable',$('#create-pool-table').value);q.set('live','1');}else if(gid==='crazy8'){q.delete('players');q.set('seats',$('#create-card-seats').value);q.set('special',$('#create-card-special').value);q.set('live',$('#create-card-live').value);}else if(gid==='tablesoccer'){q.set('live',$('#create-soccer-mode').value);q.set('goalsToWin',$('#create-goals').value);q.set('passes',$('#create-passes').value);}else{q.set('gamemode',$('#create-gamemode').value);q.set('live',state.settings.live);q.set('break',$('#create-break').value);}await openGame(gid,q);}catch(err){toast(err.message,true);}}
   async function handleFriendLink(){const u=new URL(location.href),token=u.searchParams.get('friend');if(!token)return;u.searchParams.delete('friend');history.replaceState(null,'',u);if(!confirm('إرسال طلب صداقة لصاحب هذا الرابط؟'))return;try{const d=await api('/api/direct/redeem',{method:'POST',body:JSON.stringify({token})});toast(d.status==='accepted'?'تمت إضافة الصديق':'تم إرسال طلب الصداقة');friendsWorkspace.refresh();}catch(e){toast(e.message,true);}}
   async function loadFriends(){return friendsWorkspace.refresh();}
   function personRow(u,actions=''){return `<div class="person"><span class="presence ${u.online?'online':''}"></span><div class="person-info"><strong>${escapeHtml(u.displayName||u.username)}</strong><small>${escapeHtml(u.username)}${u.online?' · متصل':''}</small></div><div class="person-actions">${actions}</div></div>`;}

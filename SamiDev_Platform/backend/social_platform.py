@@ -12,6 +12,7 @@ from PIL import Image
 import json
 import logging
 import os
+import math
 import re
 import secrets
 import time
@@ -75,7 +76,7 @@ STORE_CATALOG.update({
     "pool_cue_moon": {"name":"ضوء القمر", "description":"مضرب كحلي وفضي مزين بهلال. يظهر في دورك عند تفعيله.", "slot":"pool_cue", "category":"pool", "gameId":"pool", "asset":"/images/cues/moon-preview.webp", "price":0, "availableToAll":True, "default":False},
     "pool_midnight": {"name":"ليل المجلس", "description":"قماش أزرق وإطار جوز داكن ونحاس.", "slot":"pool_theme", "category":"pool", "gameId":"pool", "asset":"/images/themes/pool-midnight-preview.webp", "price":0, "availableToAll":True, "default":True},
     "pool_emerald": {"name":"زمرد", "description":"قماش زمردي وإطار جوز ونحاس.", "slot":"pool_theme", "category":"pool", "gameId":"pool", "asset":"/images/themes/pool-emerald-preview.webp", "price":0, "availableToAll":True, "default":False},
-    "crazy8_original": {"name":"ورق SamiDev", "description":"تصميم كريزي 8 الحالي.", "slot":"crazy8_theme", "category":"crazy8", "gameId":"crazy8", "asset":"/games/crazy8/images/table-background.webp", "price":0, "availableToAll":True, "default":True},
+    "crazy8_original": {"name":"ورق SamiDev", "description":"تصميم بلازر أونو الحالي.", "slot":"crazy8_theme", "category":"crazy8", "gameId":"crazy8", "asset":"/games/crazy8/images/table-background.webp", "price":0, "availableToAll":True, "default":True},
     "soccer_original": {"name":"ملعب SamiDev", "description":"تصميم ملعب الكورة الحالي.", "slot":"tablesoccer_theme", "category":"tablesoccer", "gameId":"tablesoccer", "asset":"/games/tablesoccer/images/thumbnail-standard.png", "price":0, "availableToAll":True, "default":True},
     "profile_star": {"name":"نجمة ذهبية", "description":"ملصق نجمة ذهبية تزين بطاقة ملفك الشخصي. يمكنك جمع حتى 5 نجوم.", "slot":"profile_stars", "category":"profile", "gameId":"", "asset":"/platform/assets/profile/raster/star.webp", "price":50, "maxQuantity":5, "availableToAll":False, "default":False},
 })
@@ -91,7 +92,11 @@ STORE_CATALOG.update({
     'badge_jellyfish': {'name': 'نبض البحر', 'description': 'ألوان مضيئة وإيقاع لطيف.', 'slot': 'name_badge', 'category': 'profile', 'gameId': '', 'asset': '/platform/assets/stickers/samidev-stickers.png#cell-7', 'price': 200, 'availableToAll': False, 'default': False},
 })
 STORE_CATALOG["profile_star"]["asset"] = "/platform/assets/profile/identity/profile-atlas.png#star"
-STORE_DEFAULT_EQUIPPED = {"carrom_theme":"carrom_classic", "pool_theme":"pool_midnight", "pool_cue":"pool_cue_classic", "crazy8_theme":"crazy8_original", "tablesoccer_theme":"soccer_original", "name_badge":""}
+STORE_CATALOG.update({
+    "pool_pocket_default": {"name":"تأثير الجيب العادي", "description":"العودة إلى التأثير الأساسي دون رشة الماء.", "slot":"pool_pocket_effect", "category":"pool", "gameId":"pool", "asset":"/images/themes/pool-midnight-preview.webp", "price":0, "availableToAll":True, "default":True},
+    "pool_pocket_water": {"name":"رشة اليشم", "description":"مؤثر ماء فيروزي أصلي ينفجر عند دخول الكرة للجيب في ضربتك، ويظهر لجميع اللاعبين.", "slot":"pool_pocket_effect", "category":"pool", "gameId":"pool", "asset":"/images/effects/plazr-water-preview.webp", "price":5000, "availableToAll":False, "default":False},
+})
+STORE_DEFAULT_EQUIPPED = {"pool_pocket_effect":"pool_pocket_default","carrom_theme":"carrom_classic", "pool_theme":"pool_midnight", "pool_cue":"pool_cue_classic", "crazy8_theme":"crazy8_original", "tablesoccer_theme":"soccer_original", "name_badge":""}
 
 
 def effective_store_equipment(equipped: dict[str, str], inventory: list[str]) -> dict[str, str]:
@@ -104,10 +109,12 @@ def effective_store_equipment(equipped: dict[str, str], inventory: list[str]) ->
 
 
 COMMUNITIES = {
-    "majlis": {"id":"majlis","name":"Saudi Arabia","description":"مساحة السعودية للمحادثة ولقاء اللاعبين وبدء المباريات.","accent":"#238150","mark":"🇸🇦","countryCode":"sa","order":1},
-    "square": {"id":"square","name":"Kuwait","description":"مساحة الكويت للمحادثة والمباريات والتجمعات اليومية.","accent":"#27927b","mark":"🇰🇼","countryCode":"kw","order":2},
-    "diwan": {"id":"diwan","name":"Jordan","description":"مساحة الأردن للتعارف وتكوين مجموعات ومشاركة اللعب.","accent":"#b95352","mark":"🇯🇴","countryCode":"jo","order":3},
-    "elite": {"id":"elite","name":"Iraq","description":"مساحة العراق للمحادثة والتحديات ولقاء اللاعبين.","accent":"#b88942","mark":"🇮🇶","countryCode":"iq","order":4},
+    "general1": {"id":"general1","name":"روم عام 1","description":"الروم العام الأول للمحادثة وبدء المباريات والتحديات.","accent":"#f59e0b","mark":"👑","countryCode":"","order":1},
+    "general2": {"id":"general2","name":"روم عام 2","description":"الروم العام الثاني للمحادثة وبدء المباريات والتحديات.","accent":"#3b82f6","mark":"🔥","countryCode":"","order":2},
+    "majlis": {"id":"majlis","name":"Saudi Arabia","description":"مساحة السعودية للمحادثة ولقاء اللاعبين وبدء المباريات.","accent":"#238150","mark":"🇸🇦","countryCode":"sa","order":3},
+    "square": {"id":"square","name":"Kuwait","description":"مساحة الكويت للمحادثة والمباريات والتجمعات اليومية.","accent":"#27927b","mark":"🇰🇼","countryCode":"kw","order":4},
+    "diwan": {"id":"diwan","name":"Jordan","description":"مساحة الأردن للتعارف وتكوين مجموعات ومشاركة اللعب.","accent":"#b95352","mark":"🇯🇴","countryCode":"jo","order":5},
+    "elite": {"id":"elite","name":"Iraq","description":"مساحة العراق للمحادثة والتحديات ولقاء اللاعبين.","accent":"#b88942","mark":"🇮🇶","countryCode":"iq","order":6},
 }
 
 DEFAULT_COMMUNITIES = {key:dict(value) for key,value in COMMUNITIES.items()}
@@ -365,6 +372,8 @@ class PlatformService:
         self.mem_community_chat: dict[str, list[dict[str, Any]]] = {cid: [] for cid in COMMUNITIES}
         self.mem_active_community: dict[str, tuple[str, float]] = {}
         self.mem_community_joined: dict[str, int] = {}
+        self._showcase_user_cache: list[dict[str, Any]] = []
+        self._showcase_cache_time: float = 0
         from account_lifecycle import AccountLifecycle
         self.accounts = AccountLifecycle(self)
         from account_security import AccountSecurity
@@ -457,12 +466,18 @@ class PlatformService:
         for item in sorted(COMMUNITIES.values(), key=lambda x: int(x.get("order") or 0)):
             if not include_disabled and not item.get('enabled',True):continue
             cid = str(item["id"])
-            members = await self.community_members(cid, 250)
-            out.append({**item, "onlineCount": len(members)})
+            if cid in ("general1", "general2"):
+                online_count = 120
+            else:
+                members = await self.community_members(cid, 250)
+                online_count = len(members)
+            out.append({**item, "onlineCount": online_count})
         return out
 
     async def touch_community(self, uid: str, community_id: str) -> str:
         cid=normalize_community_id(community_id)
+        if cid in ("general1", "general2"):
+            raise PlatformError('COMMUNITY_FULL', 'الغرفة ممتلئة؛ حاول لاحقًا', 409)
         active=await self.r.get(self.k_active_community(uid)) if self.r is not None else next((value[0] for value in [self.mem_active_community.get(uid)] if value and value[1]>time.monotonic()),None)
         if active==cid:return await self._touch_community(uid,cid)
         async with self.room_policy.transaction():
@@ -546,6 +561,8 @@ class PlatformService:
             if stale:
                 await self.r.srem(self.k_community_members(cid), *stale)
             out.sort(key=lambda x: (-x.get("communityJoinedAt", 0), str(x.get("id") or "")))
+            if cid in ("general1", "general2"):
+                out = await self._augment_showcase_members(cid, out, limit)
             return out[:limit]
         now = time.monotonic()
         out: list[dict[str, Any]] = []
@@ -562,7 +579,129 @@ class PlatformService:
                     row["communityJoinedAt"] = self.mem_community_joined.get(uid, 0) / 1_000_000
                     out.append(row)
         out.sort(key=lambda x: (-x.get("communityJoinedAt", 0), str(x.get("id") or "")))
+        if cid in ("general1", "general2"):
+            out = await self._augment_showcase_members(cid, out, limit)
         return out[:limit]
+
+    def cosmetic_room_count(self, cid: str) -> int:
+        if cid not in ("general1", "general2"):
+            return 0
+        t_sec = time.time()
+        phase = 0.0 if cid == "general1" else 2.1
+        val = 74.0 + 21.0 * math.sin((t_sec / 150.0) + phase) + 5.0 * math.cos((t_sec / 45.0) + phase * 1.5)
+        return max(50, min(100, int(round(val))))
+
+    async def _ensure_showcase_cache(self):
+        now_mono = time.monotonic()
+        if not self._showcase_user_cache or (now_mono - self._showcase_cache_time) > 300:
+            profiles = []
+            if self.r is not None and hasattr(self.r, "pool"):
+                try:
+                    async with self.r.pool.acquire() as conn:
+                        rows = await conn.fetch(
+                            "SELECT value FROM samidev_social_documents "
+                            "WHERE kind='hash' AND key LIKE $1 "
+                            "AND COALESCE(value->>'banned', '0') <> '1' "
+                            "ORDER BY key",
+                            self.k_user("") + "%"
+                        )
+                        for r in rows:
+                            val = json.loads(r['value']) if isinstance(r['value'], str) else r['value']
+                            if isinstance(val, dict) and val.get("role") != "admin" and val.get("username") not in ("admin", "plazr"):
+                                profiles.append(val)
+                except Exception:
+                    profiles = []
+            if not profiles and self.mem_users:
+                profiles = [
+                    u for u in self.mem_users.values()
+                    if u.get("role") != "admin" and u.get("username") not in ("admin", "plazr")
+                ]
+            if profiles:
+                self._showcase_user_cache = profiles
+                self._showcase_cache_time = now_mono
+
+    async def _augment_showcase_members(self, cid: str, real_members: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+        target_count = 120
+        await self._ensure_showcase_cache()
+        if not self._showcase_user_cache:
+            return real_members
+        seen_ids = {str(m.get("id")) for m in real_members}
+        out = list(real_members)
+        is_gen1 = (cid == "general1")
+        pool = [u for i, u in enumerate(self._showcase_user_cache) if (i % 2 == 0 if is_gen1 else i % 2 != 0)]
+        now = now_ms()
+        for idx, u in enumerate(pool):
+            if len(out) >= min(limit, target_count):
+                break
+            uid = str(u.get("id") or "")
+            if not uid or uid in seen_ids:
+                continue
+            seen_ids.add(uid)
+            row = public_user(u, online=True)
+            joined_offset_ms = (idx * 33_000 + 45_000)
+            row["communityJoinedAt"] = (now - joined_offset_ms) / 1000.0
+            out.append(row)
+        return out
+
+    def _showcase_rooms(self, cid: str) -> list[dict[str, Any]]:
+        if cid not in ("general1", "general2"):
+            return []
+        users = self._showcase_user_cache
+        if not users:
+            return []
+        offset = 0 if cid == "general1" else 15
+        def _get_player(seat: int, u_idx: int) -> dict[str, Any]:
+            u = users[(offset + u_idx) % len(users)]
+            uname = str(u.get("displayName") or u.get("username") or "Player")
+            badge = cosmetic_id(u.get("nameBadge"), "name_badge")
+            badge_item = STORE_CATALOG.get(badge)
+            return {
+                "seat": seat,
+                "id": str(u.get("id") or ""),
+                "userId": str(u.get("id") or ""),
+                "username": str(u.get("username") or ""),
+                "displayName": uname,
+                "name": uname,
+                "avatar": u.get("avatar") or "",
+                "nameBadgeAsset": badge_item.get("asset", "") if badge_item else "",
+                "connected": True,
+                "ready": True,
+            }
+        now = now_ms()
+        if cid == "general1":
+            configs = [
+                ("101", "pool", 2, {"gameId": "pool", "live": 0, "rounds": 1}, 0),
+                ("102", "carrom", 2, {"gameId": "carrom", "live": 0, "rounds": 1}, 2),
+                ("103", "crazy8", 4, {"gameId": "crazy8", "live": 0, "rounds": 1, "special": 1}, 4),
+                ("104", "tablesoccer", 2, {"gameId": "tablesoccer", "live": 1, "rounds": 1}, 8),
+                ("105", "pool", 2, {"gameId": "pool", "live": 0, "rounds": 1}, 10),
+            ]
+        else:
+            configs = [
+                ("201", "pool", 2, {"gameId": "pool", "live": 0, "rounds": 1}, 0),
+                ("202", "carrom", 2, {"gameId": "carrom", "live": 0, "rounds": 1}, 2),
+                ("203", "crazy8", 4, {"gameId": "crazy8", "live": 0, "rounds": 1, "special": 0}, 4),
+                ("204", "tablesoccer", 2, {"gameId": "tablesoccer", "live": 1, "rounds": 1}, 8),
+                ("205", "carrom", 2, {"gameId": "carrom", "live": 0, "rounds": 1}, 10),
+            ]
+        rooms = []
+        for rid, gid, cap, settings, p_start in configs:
+            roster = [_get_player(s, p_start + s) for s in range(cap)]
+            rooms.append({
+                "roomId": rid,
+                "communityId": cid,
+                "capacity": cap,
+                "occupied": cap,
+                "settings": settings,
+                "started": True,
+                "begun": False,
+                "finished": False,
+                "createdAt": now - (int(rid) * 15_000),
+                "ownerSeat": 0,
+                "hostName": roster[0]["name"],
+                "roster": roster,
+            })
+        return rooms
 
     async def community_chat_history(self, community_id: str, limit: int = 80) -> list[dict[str, Any]]:
         cid = normalize_community_id(community_id)
@@ -1614,6 +1753,8 @@ class PlatformHttp:
         self.room_store = room_store
         self.trust_proxy = trust_proxy
         self.trust_forwarded_https = trust_forwarded_https
+        from xsolla_payments import XsollaPayments
+        self.payments = XsollaPayments(self)
 
     def _peer(self, request: web.Request) -> str:
         peer = request.remote or "?"
@@ -1649,6 +1790,8 @@ class PlatformHttp:
         if not user:
             raise PlatformError("AUTH_REQUIRED", "يجب تسجيل الدخول أولًا", 401)
         await self.platform.community_definitions.refresh()
+        if hasattr(self,'web_challenges') and (request.headers.get('X-Plazr-Client')=='app' or request.headers.get('User-Agent','').startswith('SamiDev/')):
+            await self.web_challenges.presence(str(user['id']),'app')
         return user
 
     async def _optional_user(self, request: web.Request) -> dict[str, Any] | None:
@@ -1795,6 +1938,7 @@ class PlatformHttp:
     async def store_state(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         snapshot = await self.platform.store_snapshot(str(user["id"]))
+        snapshot['topup'] = self.payments.catalog()
         return web.json_response({"ok": True, **snapshot}, headers={"Cache-Control": "private, no-store"})
 
     async def store_equip(self, request: web.Request) -> web.Response:
@@ -1868,6 +2012,7 @@ class PlatformHttp:
     async def heartbeat(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         await self.platform.touch_presence(str(user["id"]))
+        await self.web_challenges.presence(str(user['id']), 'app' if request.headers.get('X-Plazr-Client')=='app' or request.headers.get('User-Agent','').startswith('SamiDev/') else 'web')
         return web.json_response({"ok": True})
 
     async def communities(self, request: web.Request) -> web.Response:
@@ -1880,17 +2025,25 @@ class PlatformHttp:
                 room_counts[cid] += 1
         items = await self.platform.community_catalog()
         for item in items:
-            item["gameRoomCount"] = room_counts.get(str(item["id"]), 0)
+            cid = str(item["id"])
+            if cid in ("general1", "general2"):
+                item["gameRoomCount"] = self.platform.cosmetic_room_count(cid)
+            else:
+                item["gameRoomCount"] = room_counts.get(cid, 0)
         return web.json_response({"ok": True, "communities": items, "notifications": system_notifications(user), "ts": now_ms()})
 
     async def community_state(self, request: web.Request) -> web.Response:
         user = await self._user(request)
         cid = normalize_community_id(request.match_info.get("community_id"))
         await self.platform.touch_community(str(user["id"]), cid)
-        rooms = [r for r in await self.room_store.list_public_rooms(200) if str(r.get("communityId") or "majlis") == cid]
+        real_rooms = [r for r in await self.room_store.list_public_rooms(200) if str(r.get("communityId") or "majlis") == cid]
+        await self.platform._ensure_showcase_cache()
+        showcase = self.platform._showcase_rooms(cid)
+        rooms = real_rooms + showcase
         return web.json_response({
             "ok": True, "community": dict(COMMUNITIES[cid]),
             "capabilities": {"canModerate":self.platform.community_rules.can_moderate(user,cid),"canAssignModerators":user.get("role")=="admin"},
+            "blockedUsers": sorted(await self.platform.safety.blocked(user["id"])),
             "members": await self.platform.community_members(cid),
             "messages": (await self.platform.safety.community_event(user["id"], {"messages": await self.platform.community_chat_history(cid)}))["messages"] if request.query.get("chat") != "0" else [],
             "rooms": rooms, "ts": now_ms(),

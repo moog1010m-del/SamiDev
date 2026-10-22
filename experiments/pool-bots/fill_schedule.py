@@ -8,7 +8,9 @@ MULTI_DELAYS=(60,30,15,10)
 def waiting_room(room):
     settings=room.get('settings') or {}
     capacity=room.get('capacity');occupied=room.get('occupied',0)
-    return settings.get('gameId')=='pool' and SUPPORTED_MODES.get(settings.get('gameType',0))==capacity and not room.get('started') and not room.get('finished') and 0<occupied<capacity
+    game=settings.get('gameId')
+    supported=(game=='pool' and SUPPORTED_MODES.get(settings.get('gameType',0))==capacity) or (game=='carrom' and capacity in (2,4)) or (game=='crazy8' and capacity in (2,3,4,6))
+    return supported and not room.get('started') and not room.get('finished') and 0<occupied<capacity
 
 
 class FillSchedule:

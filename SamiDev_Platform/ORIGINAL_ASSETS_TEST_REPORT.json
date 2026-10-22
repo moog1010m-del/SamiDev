@@ -102,7 +102,7 @@
       "command": "python start_dev.py --check",
       "exitCode": 0,
       "passed": true,
-      "output": "[SamiDev GameHost] http://127.0.0.1:34185 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-177c9dfa store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/pool-integration/SamiDev_Platform_V25\nBuild:    samidev-v25-bfa11fb492fd3792\nGameHost: http://127.0.0.1:34185  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:49819/platform/?build=samidev-v25-bfa11fb492fd3792\nCHECK PASSED: all four games and all platform files are served by this project.\n"
+      "output": "[SamiDev GameHost] http://127.0.0.1:34185 games=pool,carrom,tablesoccer,crazy8 rooms=0\n[SamiDev Realtime] node=node-177c9dfa store=memory\n\nSamiDev V25: served UI verified - Carrom, Table Soccer, Plazr Uno and Pool\nProject:  /workspace/scratch/b90aa68dabac/work/pool-integration/SamiDev_Platform_V25\nBuild:    samidev-v25-bfa11fb492fd3792\nGameHost: http://127.0.0.1:34185  games=pool,carrom,tablesoccer,crazy8\nGame:     http://127.0.0.1:49819/platform/?build=samidev-v25-bfa11fb492fd3792\nCHECK PASSED: all four games and all platform files are served by this project.\n"
     }
   ]
 }

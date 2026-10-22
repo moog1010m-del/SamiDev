@@ -107,8 +107,9 @@ void main() {
     final calls = <String>[];
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-          if (call.method == 'HapticFeedback.vibrate')
+          if (call.method == 'HapticFeedback.vibrate') {
             calls.add(call.arguments as String);
+          }
           return null;
         });
     addTearDown(

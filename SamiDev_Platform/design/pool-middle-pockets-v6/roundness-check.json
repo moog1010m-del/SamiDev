@@ -1,0 +1,14 @@
+{
+  "before": [
+    {
+      "alongRail": 68,
+      "acrossRail": 54
+    }
+  ],
+  "after": [
+    {
+      "alongRail": 52,
+      "acrossRail": 52
+    }
+  ]
+}

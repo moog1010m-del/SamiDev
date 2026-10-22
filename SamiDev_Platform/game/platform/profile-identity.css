@@ -117,3 +117,22 @@ html[data-theme="light"] .profile-showcase .sd-owned-card,html[data-theme="light
 .community-public-profile-close svg,#sdpp-card .sdpp-close svg{width:18px;height:18px;display:block;pointer-events:none}
 .sd-profile-expanded .community-public-profile-close::before{background:var(--identity-panel);border-color:var(--identity-line)}
 .community-public-profile-close:focus-visible,#sdpp-card .sdpp-close:focus-visible{outline:2px solid #65cbbc;outline-offset:1px}
+
+/* Compact public preview with a proportional cover and grouped controls. */
+@media(min-width:701px){
+ .community-public-profile-modal .community-public-profile-shell{width:min(550px,calc(100vw - 48px))}
+ .community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-card .profile-cover{height:138px;background-size:cover!important}
+ .community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-card .profile-showcase-body{margin-top:-46px;padding:0 20px 16px}
+ .community-public-profile-modal:not(.sd-profile-expanded) .profile-avatar{width:92px;height:92px}
+ .community-public-profile-modal:not(.sd-profile-expanded) .profile-name-row{margin-top:10px;min-height:27px}
+ .community-public-profile-modal:not(.sd-profile-expanded) .community-public-profile-handle{margin:6px 0!important;line-height:1.5;font-size:12px!important}
+ .community-public-profile-modal:not(.sd-profile-expanded) .profile-stats{margin:12px 0 4px;padding:6px 0}
+ .community-public-profile-modal:not(.sd-profile-expanded) .profile-stat{min-height:48px!important;gap:4px!important}
+ .community-public-profile-modal:not(.sd-profile-expanded) .sd-open-full{margin:10px 0;padding:6px 10px}
+ .community-public-profile-modal .community-public-profile-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-areas:"friend friend collection" "reputation block report";margin-top:8px!important;gap:7px!important}
+ .community-public-profile-modal .community-public-profile-actions .community-public-action{min-height:40px!important;padding:6px 8px!important;border-radius:8px!important}
+}
+#community-profile-moderation{margin-top:12px;border-top:1px solid var(--identity-line);padding-top:10px;text-align:right}
+#community-profile-moderation[hidden]{display:none}
+#community-profile-moderation summary{cursor:pointer;font-size:12px;color:var(--identity-muted);padding:4px 0}
+#community-profile-moderation .ghost{margin:6px 3px 0;min-height:32px;padding:6px 9px;font-size:11px}

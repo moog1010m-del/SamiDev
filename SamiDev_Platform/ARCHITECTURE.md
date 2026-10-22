@@ -1,7 +1,7 @@
 # SamiDev Authoritative Game Architecture
 
-Crazy 8 is registered alongside Carrom and Table Soccer. Each game uses its own
-`GameRuntimeFactory`. Crazy 8 checkpoints contain private server state plus native
+Plazr Uno is registered alongside Carrom and Table Soccer. Each game uses its own
+`GameRuntimeFactory`. Plazr Uno checkpoints contain private server state plus native
 per-seat serialized views; the gateway only sends the authenticated seat view
 (or spectator view -1) to browsers. Turn clocks wait for clients to finish loading.
 See `CRAZY8_INTEGRATION_AR.md` for the integration and validation limits.

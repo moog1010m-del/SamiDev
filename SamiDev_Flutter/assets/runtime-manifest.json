@@ -1,43 +1,43 @@
 {
   "version": 1,
   "engines": {
-    "carrom": "25a933fb14fe7db07dc04ef5bb14ee36630a9e46905c3a79e240195908d8a3a0",
-    "crazy8": "0286e37092df64924d988e1c0e4f3fbe9a4d934defca66457730ebf55195ce59",
-    "pool": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
-    "tablesoccer": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085"
+    "carrom": "643370132da109c64fcff5976ef3be49b3220d97be419c5432e3c741239cbc44",
+    "crazy8": "7471c04023d89c6f56aac110a0b4a92ca2aef6cb8d1912983b1b0161b53d5a39",
+    "pool": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50",
+    "tablesoccer": "94a2ed141ec0fe64a5f58d547bf78c9650a5c572d1963c3c17825e3cf6ae1dce"
   },
   "files": {
     "__assets.json": {
       "size": 6693,
-      "sha256": "2d3b6abc8c515b32e344c8492521a684ec56df8d0715723c90db9d2555449d63"
+      "sha256": "2bdfee7838e1ac6cde5c572e4c49a3596ff4ed82b73510d7d3775c5b5b0a84b3"
     },
     "asset-worker.js": {
-      "size": 66648,
-      "sha256": "7962ebe4dbc5ad8b39305e4db51a79050fb45e2a628abb4fa7758979e9101652"
+      "size": 68873,
+      "sha256": "be24a6c23fa3e06de1ae1569a2f04e6cd1a991d22bb3851d984a9a1266f3e899"
     },
     "attestation.json": {
-      "size": 36482,
-      "sha256": "087e0bff03ac6a40d2f1a176fbbb3992cae834268744fa64791602b726eab000"
+      "size": 49574,
+      "sha256": "7f2dd2a62916c3f85350f1c64071792101712eeb377896b6f2fbe0fa5d54f6f3"
     },
     "browser-runtime.js": {
-      "size": 88974,
-      "sha256": "a83366fc59a9a0d9da24e216c0892fdae49cebfe233f5c44ea6f888e7085a2cb"
+      "size": 94061,
+      "sha256": "9139944c0f6a779383fb43ee24ec319634b5c88461610c211984e267f3f5e0cc"
     },
     "carrom-themes.js": {
       "size": 1695,
       "sha256": "8743ebd5c5f0665940fb7aade2755acbc218bf61cd18e743d3a3eacd3420eb0d"
     },
     "chat-polish.css": {
-      "size": 4099,
-      "sha256": "b896168b59ec99f672f9c4e804480c9a78e6f4ab1388e23e38bd7b4d20744939"
+      "size": 4941,
+      "sha256": "ce5914b5bf59fc38512dea546247057a618f97fc784400a89ccc9f16b8c86a17"
     },
     "chat-ui.js": {
-      "size": 22364,
-      "sha256": "4d850e25fde12b994a36b6ad632777f5c17759659a6547d01a4114c8836308f9"
+      "size": 23673,
+      "sha256": "79d75b71e18ed1d6b5cc3d270f437c62de85882eff9131f14d391c222f6819c3"
     },
     "cosmetic-ui.css": {
-      "size": 7642,
-      "sha256": "b3d75983b026bdd27bc44da50a63448494d3bcf4ad2602644d35b2359b1ecd7b"
+      "size": 7902,
+      "sha256": "821b2d02501edb2bef64381bcc3340ee95a4ca2744b489da636fabaf5f34c003"
     },
     "cosmetic-ui.js": {
       "size": 4857,
@@ -48,36 +48,36 @@
       "sha256": "0770e28eaae5a659656efb48e790e7839d93ac2177e9d0eb15de6f91958b8180"
     },
     "discover/alternatives.html": {
-      "size": 4331,
-      "sha256": "cdfab7e4b6d30b42cc2507d992a5f9253c2d771f8286811804d10821a8487c8c"
+      "size": 4344,
+      "sha256": "c3e3b5ee33c7bf5ee23d73326172573279b589a4fe4c4d83c163da88528af5a7"
     },
     "discover/billiards.html": {
-      "size": 4327,
-      "sha256": "6dcfad37310b34b9b4edc6cf2cab16e2bcb6cc173e0c036bc5cad2dfeaa5ca2a"
+      "size": 4333,
+      "sha256": "f5773755fe73dd080fc60f5f393ef6e81db4cc172f673b6849b54e31ab18489e"
     },
     "discover/carrom.html": {
-      "size": 4012,
-      "sha256": "43cb99abcc81da657aed19488a0ef50cc4017b63b883316a0064bcb2037da83d"
+      "size": 4018,
+      "sha256": "b866f65fb856a9f10b2c634ec802d0e578055b986e2874189dc30e94e7568bad"
     },
     "discover/crazy8.html": {
-      "size": 3664,
-      "sha256": "a56c8241ad477570f624ded21aa2179243601883901c8e66ee0454a295eef8d7"
+      "size": 3709,
+      "sha256": "3ebd433e93a86ef7446f2b9e681aef409803f216be5d40bae5d0e54f2e99dc5f"
     },
     "discover/discover.css": {
       "size": 4051,
       "sha256": "050efe12c2bd0c9c332093a53288feeac2849bfb3ee510d601a12ded4f9c04a9"
     },
     "discover/english.html": {
-      "size": 3658,
-      "sha256": "061376d93854cb7f02f16f87e1f9881dc00d4b4335f4f296c73daecae3298bf3"
+      "size": 3649,
+      "sha256": "2dcb5f31c4247abc8512b9b25fb9a50cffd08cc7db8c8b6a12843088e75cdfef"
     },
     "discover/index.html": {
-      "size": 6717,
-      "sha256": "81e0b675115b5478726c06dc419978c7946d507caa60bd7e3fb2bbc6bef46fb2"
+      "size": 6745,
+      "sha256": "acf45a68b04851555561732a1b8c2f56947147bb1c374dde6013df8dae3fa91b"
     },
     "discover/table-soccer.html": {
-      "size": 3748,
-      "sha256": "1e534d5df735042a76401e85b6e0181b02623145ba9a61c3b23123cbd3870623"
+      "size": 3754,
+      "sha256": "28c3e201904893c2b0b7fc80776bd441dc73081c5a45bd3c259c9037d02e1b7a"
     },
     "game-bootstrap.js": {
       "size": 3785,
@@ -149,11 +149,11 @@
     },
     "games/crazy8/attestation.json": {
       "size": 6552,
-      "sha256": "06e8d7450e560f48c68e95aaa4a7bfc0a0a0170e1035764a589dc12f7fc32e4b"
+      "sha256": "eb82bd9b1495cdd150945ae673e3f23a9f31fbac3aa6cfbec6739be2cd29a0b8"
     },
     "games/crazy8/dictionary.json": {
-      "size": 28417,
-      "sha256": "df539a2aa0c9595857e5cc189ddd11adf36ed0c1ad9140297dab80e0a37c964a"
+      "size": 28432,
+      "sha256": "34c43f1103d8f7100f3bedef6c3842d11ef9f52ea9101195482a66e002dc6a1f"
     },
     "games/crazy8/images/CardBackSheet.json": {
       "size": 82,
@@ -184,12 +184,12 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "games/crazy8/index.html": {
-      "size": 7823,
-      "sha256": "5d8e9dc744d9ec1fb879e2de762743ec32ba4a9262cb53d833a9c042c2ea59d0"
+      "size": 7835,
+      "sha256": "7546bf24d2901b7b0953531aae18c9cd8e8460d88c4fd120d6f6b0a4613ea837"
     },
     "games/crazy8/main.js": {
-      "size": 783040,
-      "sha256": "0286e37092df64924d988e1c0e4f3fbe9a4d934defca66457730ebf55195ce59"
+      "size": 790026,
+      "sha256": "7471c04023d89c6f56aac110a0b4a92ca2aef6cb8d1912983b1b0161b53d5a39"
     },
     "games/crazy8/scene-avatars/lobby_avatar_empty_seat.png": {
       "size": 3723,
@@ -353,23 +353,23 @@
     },
     "games/pool/attestation.json": {
       "size": 18543,
-      "sha256": "eb03ab6d437c24e6d351a06733deb9c29bed0725281e81278bd42667bfd773d6"
+      "sha256": "ef2cab501dc1a7636f511fa0703814165bf95e6c534cb00b2d0b7d3f32aebf08"
     },
     "games/pool/images/imported/themes/th_basic_background.webp": {
-      "size": 290,
-      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1"
+      "size": 44,
+      "sha256": "db437dd48b67181654fa213c1616d922a0af5242c0faa7308b4dced816aae7f6"
     },
     "games/pool/images/imported/themes/th_basic_head_line.webp": {
       "size": 208,
       "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0"
     },
     "games/pool/images/imported/themes/th_basic_preview.webp": {
-      "size": 26406,
-      "sha256": "7818d52a59f875e7c9c9df97d0337c65911b51e2755f3a8d99f9edefe5c454a8"
+      "size": 125782,
+      "sha256": "78053dd7ddae39f01224afe11d80039a46b06b3f0cc9fd6a41b8e0a924796c7f"
     },
     "games/pool/images/imported/themes/th_basic_table.webp": {
-      "size": 336002,
-      "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083"
+      "size": 439066,
+      "sha256": "943502cb0da23f4ecf17d7e76ec8032eaa4479a7461bba4d1dc839073a713d7e"
     },
     "games/pool/images/ui/ui.webp": {
       "size": 205024,
@@ -836,12 +836,12 @@
       "sha256": "1c3efbf483d7973fbe3dee71ad0051df3bc8d23333e7e211a62c60edbe0d0eb2"
     },
     "games/pool/index.html": {
-      "size": 7271,
-      "sha256": "08d2f400799eb5af6412768c1c624f6a4419121c0bd800d8037b6e262925b658"
+      "size": 7593,
+      "sha256": "6d6aecc3e4a416df1bb6c45313e32de30855270f8569cc40cb07d0f912d4624f"
     },
     "games/pool/main.js": {
-      "size": 991187,
-      "sha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5"
+      "size": 998407,
+      "sha256": "f497658a5982d2a2ee229b380301906c6c8a03a1e17dd9034fccb01e7ec21b50"
     },
     "games/pool/scene-avatars/lobby_avatar_empty_seat.png": {
       "size": 12860,
@@ -1065,7 +1065,7 @@
     },
     "games/tablesoccer/attestation.json": {
       "size": 8113,
-      "sha256": "12171c064db3050c55c9eb3018bd7aef364472b75ec0465b7f92674961c7fd33"
+      "sha256": "b6709258e54f43264d30b7bfd37f1978aaeb23a588689f5610e4db46582725e3"
     },
     "games/tablesoccer/dictionary.json": {
       "size": 82289,
@@ -1164,12 +1164,12 @@
       "sha256": "5c3c2543293f9dcc881a47de08b1178164096bab564acab990c330c9335822d9"
     },
     "games/tablesoccer/index.html": {
-      "size": 8035,
-      "sha256": "de3c4c6f2ae66cce29218099ff9ac762821bd38a91ac6155933d12869e4324eb"
+      "size": 8036,
+      "sha256": "2e3cf4617b7864ba1937c83a7d6e425012b27b7b689911bdcc917774efbcee77"
     },
     "games/tablesoccer/main.js": {
-      "size": 967301,
-      "sha256": "5421dac8d634db131f613644dc66176fd62db67efb62bf4fed2f60221b24d085"
+      "size": 974322,
+      "sha256": "94a2ed141ec0fe64a5f58d547bf78c9650a5c572d1963c3c17825e3cf6ae1dce"
     },
     "games/tablesoccer/scene-avatars/lobby_avatar_empty_seat.png": {
       "size": 3723,
@@ -1395,13 +1395,57 @@
       "size": 25816,
       "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94"
     },
+    "images/default-avatar-v2.png": {
+      "size": 45981,
+      "sha256": "2400b09b266f7c1f3d7fac4e1ea651f612d94d1b11980f272fbe8d6202e1a047"
+    },
     "images/default-avatar.png": {
-      "size": 14244,
-      "sha256": "ee59be84b2628148d828e9adf5a7ee7b75fd32b37802ec33344f93592a290b91"
+      "size": 45981,
+      "sha256": "2400b09b266f7c1f3d7fac4e1ea651f612d94d1b11980f272fbe8d6202e1a047"
+    },
+    "images/effects/plazr-water-preview.webp": {
+      "size": 44754,
+      "sha256": "f5d53faedd8e1c9ece5e7495dc2b19576fc436d19c87dfd9674e549148bb276f"
+    },
+    "images/effects/plazr-water.webp": {
+      "size": 1602872,
+      "sha256": "3339ba593b649307dada2e2325bc9416bf1e56929beac348095dfc10b404a58f"
     },
     "images/game.webp": {
       "size": 3043332,
       "sha256": "f566bcd679679d4c9348c867eb345559e3f4690161d3cf718350806865d3fc84"
+    },
+    "images/pool-large/background.webp": {
+      "size": 290,
+      "sha256": "8dd991ac04e6e79f4c83bb407e8b36b7dcd869c4d4d422c3d5afbc9c7c8967c1"
+    },
+    "images/pool-large/emerald-preview.webp": {
+      "size": 4068,
+      "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
+    },
+    "images/pool-large/emerald.webp": {
+      "size": 373298,
+      "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
+    },
+    "images/pool-large/head-line.webp": {
+      "size": 208,
+      "sha256": "39fde2cec0ad05033d0629eb0d5fb1c837021c60c0c2a0a5a797d1f7eb4e72c0"
+    },
+    "images/pool-large/moon.webp": {
+      "size": 25816,
+      "sha256": "529a16d1c0d87af3dba54bfb972afb6a4f855b35f06c6fffeaa06fc90ef37f94"
+    },
+    "images/pool-large/preview.webp": {
+      "size": 92518,
+      "sha256": "24d1d3578a37a7adddab4a3115ab301e7083cc4e6f16e9f95439619542a1a916"
+    },
+    "images/pool-large/table.webp": {
+      "size": 170874,
+      "sha256": "4815325723dc50e14a9a8733cf57609f7723a8d826428311922ec76a598f41d2"
+    },
+    "images/pool-large/ui.webp": {
+      "size": 205024,
+      "sha256": "324aebbfaad271d90d31e1c1d76beab2d7941cade7ac92f00874416bbba2d48a"
     },
     "images/table-background.webp": {
       "size": 32688,
@@ -1419,6 +1463,10 @@
       "size": 377898,
       "sha256": "2a6bc28aa385bedb4982171737775607ee5cfc494d7945d4fff34c35ccce00e4"
     },
+    "images/themes/plazr-engraving.webp": {
+      "size": 130282,
+      "sha256": "9faba3f96f1e416c9052db16f34356ace99f13bee5fba552e5909bec4ab6e6d4"
+    },
     "images/themes/pool-emerald-preview.webp": {
       "size": 4068,
       "sha256": "c6c5606af761544451c37917fc7f4b01d044e5425691968c47e9987e7cf13613"
@@ -1428,12 +1476,12 @@
       "sha256": "bbc42e3edf503a49b0e9dbd6e5e91b5327fd038e683d12c85c45e35072c7b7be"
     },
     "images/themes/pool-midnight-preview.webp": {
-      "size": 3718,
-      "sha256": "1690730118f1af8559e64ba57d4708405c19c4893e8ebf934b9e2739f564db36"
+      "size": 74490,
+      "sha256": "cf3166d3cc72adefc585b939b2e0c6baa6584e3136f4f04a0bd1e55cbd695dc5"
     },
     "images/themes/pool-midnight.webp": {
-      "size": 336002,
-      "sha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083"
+      "size": 439066,
+      "sha256": "943502cb0da23f4ecf17d7e76ec8032eaa4479a7461bba4d1dc839073a713d7e"
     },
     "images/themes/samidev-walnut-board.png": {
       "size": 2183907,
@@ -1480,24 +1528,24 @@
       "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "index.html": {
-      "size": 7891,
-      "sha256": "17f4e8473e2bc741b0303b4e7505245ec351e487a91c389fd484796d37f76a9a"
+      "size": 7892,
+      "sha256": "af28bf14b6a785f882b6786d4a2f5f3bc2ea3e7f76a8818e9b5c6da1760975c2"
     },
     "inventory-ui.css": {
       "size": 3954,
       "sha256": "3fd364b75c609c2765dacb711369e868a222c519dc0f5dc28f09216193adb653"
     },
     "inventory-ui.js": {
-      "size": 6638,
-      "sha256": "773429c7d8cae8e5940f012d0bb0dbc4f29790a9653c0dcde79a89ba09084b33"
+      "size": 6704,
+      "sha256": "b6d4330e3f34533d087f31e0cf2c9ad4f232aed7a589d9a4e8d98440d6d1621d"
     },
     "launcher.js": {
-      "size": 11889,
-      "sha256": "564733a3467c675465252833b179e9f62e94d63cf133e730d580e337b4717bc2"
+      "size": 12201,
+      "sha256": "cb1f3537bf3790eb986963b5c02df249aa0c9b8b2794f8779a3b5412bcdb8125"
     },
     "main.js": {
-      "size": 950687,
-      "sha256": "25a933fb14fe7db07dc04ef5bb14ee36630a9e46905c3a79e240195908d8a3a0"
+      "size": 957604,
+      "sha256": "643370132da109c64fcff5976ef3be49b3220d97be419c5432e3c741239cbc44"
     },
     "match-reward-ui.js": {
       "size": 2851,
@@ -1505,7 +1553,7 @@
     },
     "platform/about.html": {
       "size": 2706,
-      "sha256": "d264ed9b0cbf7422297d202f6b9357d9c8b61ac9c0ca6236877d975e78c11e69"
+      "sha256": "741b1e7aa202e45c3e09b4be2fa3fca0f9dc2a6b62fe171f21eb6c0f6cf359da"
     },
     "platform/account-deletion.html": {
       "size": 2744,
@@ -1516,8 +1564,8 @@
       "sha256": "7e43347778ea8ed0760892ed975f4baeaca57b10297b20bc66d72672eac0a687"
     },
     "platform/account-settings.js": {
-      "size": 11637,
-      "sha256": "5a2a657d36c5bc42825e9e2bf0d0246bdbaf8462a0e3f66ee998cfd06e90e649"
+      "size": 11758,
+      "sha256": "b28b95fc50969cbda26e7c90feca1cb53b8666145c2d1b2de7dfd8b73bc57414"
     },
     "platform/admin-workspace.css": {
       "size": 2360,
@@ -2644,16 +2692,16 @@
       "sha256": "bf4553ca952bddc9d0cc018d59254e6e5280c5e8320a1486815b4cc51a89bb8a"
     },
     "platform/build.json": {
-      "size": 7017,
-      "sha256": "0eb570de5facdc787bd02b63337c4f76060b73dbf2ae72ea2db61355cada659d"
+      "size": 7503,
+      "sha256": "813ebeb4fc06d4ac2f29e24cdd71f22d7cf9ca89c21a1e5f2b76779ab465babf"
     },
     "platform/children.html": {
       "size": 4698,
-      "sha256": "1c38f1392369d27aa89052faef0005b37d7d3572971a0af44abea7efd26ff0de"
+      "sha256": "d6d2446f27fec7f92c498677187e23dfdd4987e1dac104b9666a640ebe028ca2"
     },
     "platform/community-guidelines.html": {
       "size": 4054,
-      "sha256": "271890caf8ed7adcd8b393dcbdc789a18d6aea05dc2fe0c134657eeca95258cd"
+      "sha256": "3d03ff653312b771340174db00978d5c4391e8e58d39225c1af0d6c888b7575a"
     },
     "platform/community-live.js": {
       "size": 6867,
@@ -2661,7 +2709,7 @@
     },
     "platform/contact.html": {
       "size": 4024,
-      "sha256": "a67a2f828cf546b1d2556595b5732c51ab9400f0a2ae57930f04ea5a549ce8bc"
+      "sha256": "5870c2ae5eeabb8b27cbcc92158993bcf194a2a70555e2f11ca24c3e794750f0"
     },
     "platform/desktop-layout.css": {
       "size": 3344,
@@ -2680,8 +2728,8 @@
       "sha256": "d926cdd773dd99182f07825c0001e08a1dd998372d02f597ed98df815d22ebb1"
     },
     "platform/game-entry.js": {
-      "size": 4437,
-      "sha256": "a1fd36c0a200137a777ff6b170863d700e64f9675c1145499a0ae75d5b5a5748"
+      "size": 4500,
+      "sha256": "42146ed6d0dc842f718f543fd7f3b46ac7c0b0beb83fdf17a53444824f1c38fe"
     },
     "platform/game-host.js": {
       "size": 5498,
@@ -2692,32 +2740,32 @@
       "sha256": "9ef797ab811ce927957ceb4c9a99da1c159e4b202fbd8b673751f299f3df1072"
     },
     "platform/index.html": {
-      "size": 55502,
-      "sha256": "33edc3d978abf095d04806c95dc3d26fd6d1773108b6a6f0c12d8ff0eeb570b2"
+      "size": 56077,
+      "sha256": "abf9636eb94a9159f4b5b073932d419e492d79ea1257915c7c2482aec7eb21b9"
     },
     "platform/legal-content.json": {
-      "size": 33088,
-      "sha256": "136a04edb2b2dd03af2126278fe8606675c37d841753a5cf379a9073a09f2af0"
+      "size": 32683,
+      "sha256": "67f4bd3ab9c7a5fa97489764d99dce7e391c8c4feea1f0dc4acf4df6a617d44a"
     },
     "platform/legal.css": {
       "size": 2275,
       "sha256": "ca3e74c2639af8d6c14076d55ff762af054c285e5ebc7ce0e17dd0a7a516fd0c"
     },
     "platform/platform.css": {
-      "size": 119584,
-      "sha256": "b68b7253ca69dfb7b37de511c475e4fa63f64e6fcea7362e420943cc434f9cda"
+      "size": 140537,
+      "sha256": "50ad2e6f4ff8d2e3612e5e279b9762c100934d92e54a381fa5f7d4342c920ec1"
     },
     "platform/platform.js": {
-      "size": 96932,
-      "sha256": "28f6b3166d05f7b7682f017dc3ef95251014cae9525117b33e994b0f11dab6f2"
+      "size": 112362,
+      "sha256": "22d00945a55062f21eb251c90d715496deed802137c5a0239354d255dd1e35d0"
     },
     "platform/privacy.html": {
-      "size": 16366,
-      "sha256": "86c55887479c47fb62897423c96de06799a0ea9e4ffb0ec89787bb5f5c94a296"
+      "size": 15508,
+      "sha256": "d090aff4c0e0b018b5d83f2f944fda9d482150f8aa57cdc1163bb3e1ff3ce2b6"
     },
     "platform/profile-identity.css": {
-      "size": 17368,
-      "sha256": "7cf484de5dc720bad8bcf6f42ce448858fe30718562d44722c8289f90f349357"
+      "size": 19512,
+      "sha256": "0ae6119465cd92126bb793ca5a65467e9c35b95cb1ad9fe593ca33d1d5a8ed75"
     },
     "platform/ranks.html": {
       "size": 8381,
@@ -2728,12 +2776,12 @@
       "sha256": "272603f78cf1b56e163c5f12e423042f250f9be105b28f96784b442911e65189"
     },
     "platform/store.css": {
-      "size": 9185,
-      "sha256": "b79219a4a27e0f9c61220de9929e3051d99ec00017f9454247421a23ce171f46"
+      "size": 13545,
+      "sha256": "dd81e8e71dd2ce0eca74b93c810b019f48870c2ea978bcb2ca8b2c20bcc5239d"
     },
     "platform/terms.html": {
-      "size": 7286,
-      "sha256": "c33e3e8f77349cb0e89b28a13b071af1967a64525d065485293b52f559e27c82"
+      "size": 7807,
+      "sha256": "6213c77fba951d094855dd4a4b87517652d2f6f07f1f4d72e77c2931ccd022c5"
     },
     "platform/vendor/google-auth.js": {
       "size": 130955,
@@ -2744,28 +2792,48 @@
       "sha256": "8f5ff84a641e56babac41708ab1b12471ac9b34bc0f381ce8e30b6bec51b4302"
     },
     "player-profile-ui.js": {
-      "size": 35739,
-      "sha256": "3ae7ba61387aaf7124b8d21d5e2ccc5e0cad983e84fbcc2cc3d644bef77c0578"
+      "size": 36160,
+      "sha256": "b0be42e063006d506e7f29b44efacb255146d41adacb4243e8e8e13b18826e8f"
+    },
+    "pool-aim-presentation.js": {
+      "size": 3231,
+      "sha256": "fa7f7e79f8fbe072538705c135d4553ac765a001448abf1b588ff45770993b56"
+    },
+    "pool-brand-mark.js": {
+      "size": 2425,
+      "sha256": "f8da0ba5ac7d0af097c761512f84db2cb201800e9bea908295ce94ee214a60ae"
+    },
+    "pool-pocket-effects.js": {
+      "size": 4301,
+      "sha256": "958762c24ea0c04ee7dda070bebd87a90516de36ded2c433a9d86435936ecb6a"
     },
     "pool-presentation.js": {
-      "size": 8417,
-      "sha256": "b2ac24884a89236c01a5bf4e97827d36e8a3ffcaebd50265a5c2abc88753ed2d"
+      "size": 9313,
+      "sha256": "6924f39e40bf74ece271a3e193f4b6e696c377bae05963d0d1008f8bd2adee53"
+    },
+    "pool-result-card.js": {
+      "size": 7826,
+      "sha256": "dac9662e84e4f2e6762db48b58365e671c07b35962e81810e9ba4f8f1a8aa6bf"
+    },
+    "pool-table-mode.js": {
+      "size": 1444,
+      "sha256": "c867e47f3f152caecf957921d2defdbced81b8875aa037a32527b88f7502052b"
     },
     "profile-details.css": {
       "size": 12488,
       "sha256": "cf54832112138972566486d86ac574444336069446c2da920a1c29b0c621f85d"
     },
     "profile-details.js": {
-      "size": 12173,
-      "sha256": "6452258e6f78ab77e27ee80583a2b4161f2f1a1517fcbfb5a40f77232ea4e32f"
+      "size": 12311,
+      "sha256": "d98363f49dc5759dfa71f951a17e9a8011c8c121c47fd4ca63481c3f18bdd552"
     },
     "robots.txt": {
       "size": 136,
       "sha256": "7c0317ac7238c7aac95f7c63176ce6843445715cd67fb28a4a7a40b74cf68127"
     },
     "room-menu.js": {
-      "size": 21041,
-      "sha256": "b817ad7b27502814c1fc4b5da33ce323d4ebd6640937ef731d498607429be3e2"
+      "size": 21547,
+      "sha256": "b1ac12d325c630a2df95edbbfedf6714df2a37926ba2c722bf1006d694b40aa6"
     },
     "room-sprites/cards.png": {
       "size": 74876,
@@ -2796,16 +2864,16 @@
       "sha256": "543fc0ecad13b711e42af81a6587c968edded91b77b6ce6223c22e802249f081"
     },
     "runtime-games.json": {
-      "size": 25355,
-      "sha256": "c020eb8d98e456d962a7d05f57c738d37333226115ef34792e79311787c20118"
+      "size": 25582,
+      "sha256": "3c471cc4ab4cf79c7fed326103276f1bb6fc8428279561076a4ae8851a52b217"
     },
     "samidev-games.js": {
-      "size": 2872,
-      "sha256": "487759056cfa0c5fa299c10e99db1c7d04ddaf885589367505a5f5d603d24a57"
+      "size": 3036,
+      "sha256": "5022ecc4dbc539e7c73dccc6e3d60f0f3d44dcfb2739ae81595c61419d35ec51"
     },
     "samidev-integrity.json": {
       "size": 662,
-      "sha256": "23103e097ec9a2ad9b49122595bad12f4181c03469365bb2951af67c564aeb06"
+      "sha256": "8b2259ab47e7e16080843ee095c0522bdb0eb0d4410c9e431bd589548db5d452"
     },
     "samidev-network.js": {
       "size": 22954,
@@ -2966,6 +3034,10 @@
     "sounds/disc-rail-tap.m4a": {
       "size": 3951,
       "sha256": "ef09f5b4ae1998a41036b943a54de79032763ad8191f1aee0dfff96ab4223348"
+    },
+    "sounds/plazr-water-wave.wav": {
+      "size": 145574,
+      "sha256": "c0d00b97a4b364fff4a745bf1725bca2eae591d2d7561b974659bacf12f1a00a"
     },
     "sounds/pocket-drop-deep.m4a": {
       "size": 5970,

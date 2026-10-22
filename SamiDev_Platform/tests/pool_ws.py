@@ -28,12 +28,12 @@ async def main():
   for path in ['/games/pool/index.html','/browser-runtime.js','/games/pool/sounds/cue_hard1.m4a']:
    async with probe.get(url+path) as r:assert r.status==200,path
   peers=[await ws(s) for s in users[:2]]
-  await peers[0].send_json({'type':'create_room','settings':{'gameId':'pool','players':1,'gameType':999}})
-  created=await receive(peers[0],'created');rid=created['roomId'];assert created['capacity']==2 and created['settings']['gameType']==0
+  await peers[0].send_json({'type':'create_room','settings':{'gameId':'pool','players':1,'gameType':999,'largeTable':1}})
+  created=await receive(peers[0],'created');rid=created['roomId'];assert created['capacity']==2 and created['settings']['gameType']==0 and created['settings']['largeTable']==1
   await peers[0].send_json({'type':'create_invite'});invite=await receive(peers[0],'invite_created')
   await peers[1].send_json({'type':'join_invite','inviteToken':invite['inviteToken']});assert (await receive(peers[1],'joined'))['seat']==1
   for w in peers:
-   start=await receive(w,'start');assert len(start['snapshot']['pool']['balls'])==16
+   start=await receive(w,'start');assert len(start['snapshot']['pool']['balls'])==16 and start['settings']['largeTable']==1
   for w in peers:await w.send_json({'type':'runtime_ready'})
   for w in peers:assert (await receive(w,'begin_match'))['type']=='begin_match'
   started_state=await app.SERVICE.gamehost.state(rid)
@@ -57,7 +57,7 @@ async def main():
   rogue=await ws(users[2]);await rogue.send_json({'type':'join_room','roomId':rid,'token':created['token']});assert (await receive(rogue,'joined')).get('code')=='RECONNECT_ACCOUNT_MISMATCH'
   results.append('Chat, spectator view, spectator move rejection, forged result rejection and seat ownership')
   await peers[0].close();peers[0]=await ws(users[0]);await peers[0].send_json({'type':'join_room','roomId':rid,'token':created['token']});assert (await receive(peers[0],'joined'))['seat']==0
-  snap=(await receive(peers[0],'start'))['snapshot'];assert snap['pool']['sequence']==sequence
+  reconnect=await receive(peers[0],'start');snap=reconnect['snapshot'];assert snap['pool']['sequence']==sequence and reconnect['settings']['largeTable']==1
   async with probe.delete(GH+'/v1/room/'+rid,headers={'X-SamiDev-Service-Key':'integration-test-key'}) as r:assert r.status==200
   restored=await app.SERVICE._ensure_authority(rid,renew=True);assert restored['pool']['sequence']==sequence and restored['pool']['balls']==snap['pool']['balls']
   await move(1,{'a':0});state=await app.SERVICE.gamehost.state(rid);assert state['gameOver'] and state['finishOrder']==[[0],[1]]

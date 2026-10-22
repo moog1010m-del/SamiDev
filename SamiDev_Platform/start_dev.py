@@ -173,7 +173,7 @@ def main() -> int:
         if set(gh.get("games", {})) != {"carrom", "tablesoccer", "crazy8", "pool"}:
             raise RuntimeError("GameHost did not load all four games.")
         url = base_url + "/platform/?build=" + manifest["buildId"]
-        print(f"\nSamiDev {manifest['release']}: served UI verified - Carrom, Table Soccer, Crazy 8 and Pool")
+        print(f"\nSamiDev {manifest['release']}: served UI verified - Carrom, Table Soccer, Plazr Uno and Pool")
         print(f"Project:  {ROOT}")
         print(f"Build:    {manifest['buildId']}")
         print('Storage: Redis + PostgreSQL (persistent)' if args.storage == 'persistent' else 'WARNING: disposable MEMORY demo. Accounts and rooms are lost when stopped.')

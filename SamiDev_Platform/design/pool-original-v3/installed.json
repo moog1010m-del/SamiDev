@@ -1,0 +1,22 @@
+{
+  "files": {
+    "game/games/pool/images/ui/ui.webp": "95322d82192fb411b51d7ef9e8b30a2607bfa73d782c3ae98e211c82105c9260",
+    "game/games/pool/images/imported/themes/th_basic_table.webp": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
+    "game/images/themes/pool-emerald.webp": "840556168f18663c1421e59a6e4bae656c95c5c31cbecca6e31b9eedd49f28fe",
+    "game/images/cues/moon.webp": "ddee42272317f7495e12e116c9ecaae1d0a62fa207514ae9f161e7b388f487b8",
+    "game/games/pool/images/imported/themes/th_basic_background.webp": "42eae2ba2b93fc910d1e90b183a778c82a4c22e4ec4118ffb89721f3378a635b",
+    "game/games/pool/images/imported/themes/th_basic_preview.webp": "3fd89898cd843515a82b876fdfa154fb3fb430ff5492c41469c5a3acee67a6e4",
+    "game/images/themes/pool-emerald-preview.webp": "09c0aaa72b2b845f220cf8713ba09e7243a26dbd75e93f5328eaeea9396c5f5b",
+    "game/games/pool/images/imported/themes/th_basic_head_line.webp": "19e81a54e060f610f3fe6ccee8034d716e988f3b783f661cb347dc6cf7ed2742"
+  },
+  "engineUnchanged": true,
+  "cache": "2f72bd5ff482b8e66cf3",
+  "runtimeLoadingFix": {
+    "version": "pool-raster-v3-95322d82192f",
+    "removedSvgAimOverlay": true,
+    "liveScreenshot": "live-v3.png",
+    "mainEngineSha256": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+    "runtimeTests": 39,
+    "cacheContractTest": "passed"
+  }
+}

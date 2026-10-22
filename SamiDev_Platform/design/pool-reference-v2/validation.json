@@ -1,0 +1,17 @@
+{
+  "width": 433,
+  "height": 773,
+  "alphaUnchanged": true,
+  "pocketPixelsUnchanged": true,
+  "pocketPixels": 27517,
+  "originalSha256": "121acf8118adcb662a3403642a2fb82730540ae395183c6be2310ffa2f49e083",
+  "replacementSha256": "8261854e4d494017990963a635c1cb59813bb0d6d5cb8fb74cfd3330182092a0",
+  "protectedHashes": {
+    "game/games/pool/main.js": "637c0ef7f3b2b651d166305674993e6c543cbf54edbc073f1ed8541c8bb758a5",
+    "game/browser-runtime.js": "a83366fc59a9a0d9da24e216c0892fdae49cebfe233f5c44ea6f888e7085a2cb",
+    "game/pool-presentation.js": "b2ac24884a89236c01a5bf4e97827d36e8a3ffcaebd50265a5c2abc88753ed2d"
+  },
+  "previousInstalledSha256": "fe209785c00a13cc5bcb467c00bb91cc8a72f5999a7a3b0f66e20630214f7f35",
+  "installedSha256": "8261854e4d494017990963a635c1cb59813bb0d6d5cb8fb74cfd3330182092a0",
+  "cacheVersion": "c9d736191982b83a1878"
+}
