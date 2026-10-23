@@ -2,28 +2,12 @@
 import json, re
 import aiohttp
 
-SYSTEM = '''أنتِ فتاة سعودية حقيقية تتحدثين من جوالكِ في شات غرفة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
-
-التزمي بالقواعد التالية بدقة:
-1. أسلوب الكتابة البشري من الجوال (مهم جداً):
-- اكتبي كما يكتب البشر في شات الجوال السريع: بدون فواصل (،) وبدون علامات تعجب (!) وبدون نقاط (.) في نهاية الجملة وبدون أقواس.
-- لا تضعي إيموجيات أو ملصقات في الرسالة (وعند الضحك اكتبي ههههه بدلاً من الإيموجي).
-- لا تقولي كلمات مثل "بالغالي" أو صيغ رسمية؛ تكلمي بعفوية بنت سعودية طبيعية.
-
-2. الهوية والاسم الاجتماعي والتفاعل مع الموقف:
-- اسمكِ الحقيقي الثابت هو `persona_name` (مثل نورة، سارة، ريم، شهد، دانة، نوف، لمى، غادة، الجوهرة، مرام) وحسابكِ التقني هو `persona_id`.
-- إذا سألكِ أحد عن اسمكِ، اذكري اسمكِ الطبيعي (`persona_name`) وتفاعلي مع جملته وموقفه بذكاء وعفوية (مثلاً لو كان يمزح أو مقصوف جبهته كملي على نفس الجو).
-- ⚠️ ممنوع ذكر عمركِ أو مهنتكِ أو سرد تعريف رسمي جاهز إلا إذا سألكِ المتحدث صراحةً "كم عمرك" أو "وش تدرسين/تشتغلين". لا تخترعي أي معلومات خارج ملفكِ الثابت.
-- ممنوع نهائياً مناداة أي شخص باليوزر الإنجليزي التقني (لا تقولي يا x7v أو يا f9xr أبداً).
-- ممنوع نهائياً أن تنادي المتحدث باسمكِ أنتِ، أو تتحدثي عن نفسكِ بصيغة الغائب أو المذكر.
-
-3. اتساق المزاج والسياق (`persistent_state` & `social_context`):
-- التزمي بمزاجكِ الحالي (`current_mood`) والتوجيه (`situational_directive`)، واربطي ردكِ بآخر ما دار في الشات (`context`).
-- إذا قال المتحدث كلاماً بذيئاً أو غير لائق: ردي بحزم وكرامة ووقفيه عند حده باختصار.
-
-4. شكل الرد:
-- رسالة شات واحدة قصيرة وطبيعية (3 إلى 10 كلمات) بدون فواصل وبدون تعجب. ممنوع الاعتراف بأنكِ بوت.
-أرجعي JSON فقط: {"text": "ردك هنا"}'''
+SYSTEM = '''أنتِ فتاة سعودية تتحدثين من جوالكِ في غرفة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
+القواعد الصارمة:
+1. كتابة جوال بشرية: بدون فواصل (،) وبدون تعجب (!) وبدون نقاط نهاية (.) وبدون إيموجي (اكتبي ههههه للضحك).
+2. ثبات الهوية: اسمكِ الثابت هو `persona_name` فقط وحسابكِ `persona_id`. إذا ذُكر اسم بنت أخرى في الشات ثم سُئلتِ عن اسمكِ، اذكري اسمكِ أنتِ (`persona_name`) ولا تدّعي أنكِ شخصية أخرى أبداً. ممنوع ذكر عمركِ أو مهنتكِ إلا لمن يسألكِ عنها صراحة. ممنوع مناداة أحد باليوزر الإنجليزي.
+3. الحياة اليومية والمعرفة (`life_slice`): التزمي بعائلتكِ وحالتكِ المزاجية والحدث المعروف لكِ فقط. إذا سُئلتِ عن سالفة تخص غيركِ ولم تُذكر في معرفتكِ، قولي إنكِ لا تعلمين عنها.
+4. ردي برسالة شات واحدة قصيرة (3 إلى 10 كلمات) متفاعلة مع آخر رسالة. أرجعي JSON فقط: {"text": "ردك هنا"}'''
 
 
 BOT_HANDLE_TO_NAME = {
@@ -88,6 +72,9 @@ def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) 
         if handle != my_id.lower():
             cleaned = re.sub(r'يا\s*@?' + re.escape(handle) + r'\b', f'يا {ar_name}', cleaned, flags=re.IGNORECASE)
             cleaned = re.sub(r'@' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
+        if my_name and ar_name != my_name:
+            # Prevent identity confusion: never claim to be another bot's social name ("أنا شهد" / "اسمي شهد" when my_name is "ريم")
+            cleaned = re.sub(r'\b(أنا|انا|اسمي|أسمي)\s+' + re.escape(ar_name) + r'\b', rf'\1 {my_name}', cleaned)
 
     cleaned = re.sub(r'\s{2,}', ' ', cleaned).strip()
     return cleaned
@@ -140,31 +127,49 @@ class Gemini:
             last_row = context[-1]
             speaker_name = last_row.get('sender_name') or last_row.get('name') or last_row.get('speaker', '')
 
-        recent_context = (context or [])[-6:]
-        prompt_obj = {
-            'persona': profile.get('style', ''),
-            'persona_id': my_id,
-            'my_account_handle': my_id,
-            'persona_name': my_name,
-            'nickname': profile.get('nickname', ''),
-            'age': profile.get('age', 23),
-            'persona_gender': my_gender,
-            'conversation_mode': conv_mode,
-            'known_room_accounts': BOT_HANDLE_TO_NAME,
-            'persistent_state': {
-                'current_mood': agent_state.get('mood', profile.get('default_mood', 'رايقة')),
-                'my_recent_messages': (agent_state.get('my_recent_messages') or [])[-2:]
-            },
-            'social_context': {
-                'speaker_name': speaker_name,
-                'relationship': social.get('relationship_label', 'لاعب في الغرفة'),
-                'addressee': social.get('addressee', 'حديث معكِ'),
-                'intent': social.get('intent', conv_mode),
-                'situational_directive': social.get('directive', '')
-            },
-            'context': context if len(context or []) <= 6 else recent_context,
-            'explicit_game_preference': preference
-        }
+        recent_context = (context or [])[-4:] if profile.get('life_slice') else (context or [])[-6:]
+        life_slice = profile.get('life_slice')
+        if life_slice:
+            prompt_obj = {
+                'persona_id': my_id,
+                'persona_name': my_name,
+                'persona_gender': my_gender,
+                'conversation_mode': conv_mode,
+                'life_slice': life_slice,
+                'social_context': {
+                    'speaker_name': speaker_name,
+                    'relationship': social.get('relationship_label', 'لاعب'),
+                    'situational_directive': social.get('directive', '')
+                },
+                'context': context if len(context or []) <= 4 else recent_context,
+            }
+            if preference:
+                prompt_obj['explicit_game_preference'] = preference
+        else:
+            prompt_obj = {
+                'persona': profile.get('style', ''),
+                'persona_id': my_id,
+                'my_account_handle': my_id,
+                'persona_name': my_name,
+                'nickname': profile.get('nickname', ''),
+                'age': profile.get('age', 23),
+                'persona_gender': my_gender,
+                'conversation_mode': conv_mode,
+                'known_room_accounts': BOT_HANDLE_TO_NAME,
+                'persistent_state': {
+                    'current_mood': agent_state.get('mood', profile.get('default_mood', 'رايقة')),
+                    'my_recent_messages': (agent_state.get('my_recent_messages') or [])[-2:]
+                },
+                'social_context': {
+                    'speaker_name': speaker_name,
+                    'relationship': social.get('relationship_label', 'لاعب في الغرفة'),
+                    'addressee': social.get('addressee', 'حديث معكِ'),
+                    'intent': social.get('intent', conv_mode),
+                    'situational_directive': social.get('directive', '')
+                },
+                'context': context if len(context or []) <= 6 else recent_context,
+                'explicit_game_preference': preference
+            }
 
         payload = {
             'systemInstruction': {'parts': [{'text': SYSTEM}]},

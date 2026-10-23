@@ -1,10 +1,11 @@
-"""Isolated orchestration, Social Relationship Graph, Persistent Agent State, and Natural Human Typing."""
+"""Isolated orchestration, Social Relationship Graph, Persistent Agent State, Life Engine, and Natural Human Typing."""
 from __future__ import annotations
 import json, random, re, sqlite3, time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from life_engine import LifeEngine, PERSONA_LIFE_PROFILES
 
 
 def safe_text(text):
@@ -97,7 +98,9 @@ class Reply:
 class Memory:
     def __init__(self, path, days=30):
         Path(path).parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(path)
+        self.db = sqlite3.connect(path, timeout=15.0)
+        self.db.execute('PRAGMA journal_mode=WAL')
+        self.db.execute('PRAGMA synchronous=NORMAL')
         self.days = days
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS messages(room TEXT, id TEXT, uid TEXT, text TEXT, ts REAL, sender_name TEXT DEFAULT '', PRIMARY KEY(room, id));
@@ -423,6 +426,9 @@ class Coordinator:
         self.last_riddle_end = -1e9
         self.riddle_index = 0
         self.social_scene_index = 0
+        self.enable_life_engine = bool(config.get('enable_life_engine', True))
+        self.virtual_day = int(config.get('virtual_day', 1))
+        self.life = LifeEngine(self.memory.db, room=self.room) if self.enable_life_engine else None
 
     def social_name_of(self, bot_id: str) -> str:
         p = self.profile_map.get(bot_id)
@@ -493,18 +499,33 @@ class Coordinator:
         if text:
             text_lower = text.casefold()
             text_norm = norm_ar(text)
+            words = text_norm.split()
+            # Pass 1: Direct vocative ('يا ريم', 'يا لمى') or explicit handle or sentence-initial name
             for p in active:
                 if p['id'] in exclude:
                     continue
                 sname = norm_ar(p.get('social_name', ''))
                 nick = norm_ar(p.get('nickname', ''))
                 pname = norm_ar(p.get('name', ''))
-                if (
-                    p['id'].casefold() in text_lower
-                    or (p.get('username') and p['username'].casefold() in text_lower)
-                    or (sname and sname in text_norm.split())
-                    or (nick and nick in text_norm.split())
-                    or (pname and pname in text_norm.split())
+                names = [n for n in (sname, nick, pname) if n]
+                is_vocative = any(f"يا {n}" in text_norm or (words and words[0] == n) for n in names)
+                is_handle = p['id'].casefold() in text_lower or bool(p.get('username') and p['username'].casefold() in text_lower)
+                if is_vocative or is_handle:
+                    if user_id and user_id not in self.identities:
+                        self.threads[user_id] = (p['id'], time.monotonic())
+                    return p
+
+            # Pass 2: General mention (unless preceded by third-person prepositions like 'مع شهد' or 'عن شهد')
+            for p in active:
+                if p['id'] in exclude:
+                    continue
+                sname = norm_ar(p.get('social_name', ''))
+                nick = norm_ar(p.get('nickname', ''))
+                pname = norm_ar(p.get('name', ''))
+                names = [n for n in (sname, nick, pname) if n]
+                if any(
+                    n in words and not any(f"{prep} {n}" in text_norm for prep in ('مع', 'عن', 'ان', 'لأن', 'لان'))
+                    for n in names
                 ):
                     if user_id and user_id not in self.identities:
                         self.threads[user_id] = (p['id'], time.monotonic())
@@ -599,6 +620,50 @@ class Coordinator:
                 'solved': False
             }
             return Reply(p1['id'], humanize_chat('بنات مين الجديدة اللي معنا بالشات ما قد سولفنا من قبل ههههه', self.turn + 1), 'social_intro')
+
+        if self.life and (self.social_scene_index % 2 == 0):
+            # 1. Check if any active friend has a follow-up question on a known event from a previous day
+            for f_prof in active:
+                for o_prof in active:
+                    if f_prof['id'] != o_prof['id']:
+                        fq = self.life.get_followup_question(f_prof['id'], o_prof['id'], self.virtual_day)
+                        if fq:
+                            ev = self.life.get_event(fq['event_id'])
+                            dev_reply = (ev['developing_text'] or ev['resolved_text']) if ev else 'الحمد لله الأمور طيبة الحين'
+                            self.current_riddle = {
+                                'type': 'social_scene',
+                                'steps': [
+                                    (o_prof['id'], dev_reply, 6.5),
+                                ],
+                                'stage': 0,
+                                'next_stage_time': now + 6.5,
+                                'solved': False
+                            }
+                            return Reply(f_prof['id'], humanize_chat(fq['question'], self.turn + 1), 'life_followup')
+
+            # 2. Otherwise share a fresh daily life event with two present friends/sisters
+            speaker_prof = active[self.social_scene_index % len(active)]
+            listeners = [p['id'] for p in active if p['id'] != speaker_prof['id']][:2]
+            if listeners:
+                ev = self.life.create_daily_event(speaker_prof['id'], virtual_day=self.virtual_day)
+                opener = self.life.share_event(ev['event_id'], speaker_prof['id'], listeners, current_day=self.virtual_day)
+                l1 = listeners[0]
+                sname = self.social_name_of(speaker_prof['id'])
+                fam = self.life.get_family_relation(l1, speaker_prof['id'])
+                if fam and fam['fact_relation'] == 'sister':
+                    react = f'ههههه الله يعينك يا أختي {sname} عاد أنتِ أدرى بالوضع'
+                elif ev['valence'] == 'positive':
+                    react = f'ما شاء الله يا {sname} خبر يفتح النفس والله دوم الروقان'
+                else:
+                    react = f'ههههه يلا بسيطة يا {sname} تعالي نلعب ونغير جو بالمجلس'
+                self.current_riddle = {
+                    'type': 'social_scene',
+                    'steps': [(l1, react, 6.5)],
+                    'stage': 0,
+                    'next_stage_time': now + 6.5,
+                    'solved': False
+                }
+                return Reply(speaker_prof['id'], humanize_chat(opener, self.turn + 1), 'life_event_share')
 
         scenes = [
             ('x7v', 'r9kx', 'z8qx',
@@ -881,12 +946,18 @@ class Coordinator:
             }
 
         is_bot_speaker = message.user_id in self.identities
+        other_id = ''
         if is_bot_speaker:
             bot_info = self.identities[message.user_id]
             other_id = bot_info.get('persona_id', '')
             rel = self.memory.get_relationship(my_id, other_id)
             speaker_name = self.social_name_of(other_id) if rel['knows_name'] else 'إحدى البنات'
-            if rel['level'] == 'close_friend':
+            fam_rel = self.life.get_family_relation(my_id, other_id) if self.life else None
+            if fam_rel and fam_rel['fact_relation'] == 'sister':
+                rel_label = f"أختكِ الشقيقة في الغرفة ({speaker_name})"
+            elif fam_rel and fam_rel['fact_relation'] == 'cousin':
+                rel_label = f"بنت خالتكِ وصديقتكِ في الغرفة ({speaker_name})"
+            elif rel['level'] == 'close_friend':
                 rel_label = f"صديقتكِ المقربة التي تمونين عليها ({speaker_name})"
             elif rel['knows_name']:
                 rel_label = f"معرفة لطيفة في الغرفة ({speaker_name})"
@@ -919,6 +990,8 @@ class Coordinator:
         disp = speaker_name if speaker_name else 'اللاعب'
         if any(norm_ar(w) in clean_txt for w in RUDE_TERMS):
             intent = 'inappropriate_or_rude'
+            if self.life:
+                self.life.update_emotion(my_id, -0.8, f'رسالة غير لائقة من {disp}')
             mood = 'منزعجة وحازمة (ترفض قلة الأدب وترد بكرامة)'
             activity = f'ترد بحزم على تجاوز من {disp}'
             directive = (
@@ -933,11 +1006,15 @@ class Coordinator:
             directive = f"({disp}) يعاتبكم لأنكم انشغلتم عنه. قولي له إنكم رديتوا عليه أو اعتذري بعفوية بدون فواصل أو تعجب."
         elif any(norm_ar(w) in clean_txt for w in APOLOGY_TERMS):
             intent = 'apology'
+            if self.life:
+                self.life.update_emotion(my_id, 0.4, f'اعتذار لطيف من {disp}')
             mood = 'هادية ومتقبلة للاعتذار'
             activity = f'تتقبل اعتذار {disp}'
             directive = f"({disp}) يعتذر أو يمزح. تقبلي كلامه بذوق ولطفي الجو بدون فواصل أو تعجب."
         elif mode == 'welcome' or any(w in clean_txt for w in ('سلام عليكم', 'السلام عليكم', 'مساء الخير', 'صباح الخير')):
             intent = 'welcome'
+            if self.life:
+                self.life.update_emotion(my_id, 0.2, f'تحية من {disp}')
             mood = 'مرحبة وبشوشة'
             activity = f'ترحب بـ {disp}'
             directive = f"({disp}) يلقي التحية. ردي عليه السلام بعفوية واسأليه كيفك بدون فواصل أو علامات تعجب."
@@ -952,9 +1029,17 @@ class Coordinator:
             )
         else:
             intent = mode
-            mood = agent_state.get('mood', default_mood)
+            mood = (self.life.get_emotion(my_id)['mood_label'] if self.life else agent_state.get('mood', default_mood))
             activity = f'تسولف مع {disp}'
             directive = f"أنتِ {my_social_name}. ردي على ({disp}) بطبيعية وعفوية بدون فواصل وبدون علامات تعجب وبدون إيموجي."
+
+        if self.life:
+            ep = self.life.check_epistemic_event_query(my_id, text)
+            if ep:
+                if not ep['knows']:
+                    directive += f" تنبيه معرفي: {ep['text']} (ممنوع ادعاء معرفة هذه السالفة)."
+                else:
+                    directive += f" السالفة في ذاكرتكِ ({ep['status']}): {ep['text']}"
 
         self.memory.set_agent_state(my_id, mood=mood, activity=activity, last_target_uid=message.user_id, last_target_name=speaker_name)
         agent_state['mood'] = mood
@@ -1065,6 +1150,16 @@ class Coordinator:
         if any(term in text for term in ('رصيدي', 'كم فوز', 'كم عمري', 'نتيجة', 'نتيجه', 'سعر', 'عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي شيك من المنصة')
 
+        if self.life:
+            if any(w in clean_text for w in ('مين اختك', 'من اختك', 'مين اخوك', 'من اخوك', 'اسم امك', 'وش اسم امك', 'عايلتك', 'عائلتك', 'ريم اختك', 'نوره اختك', 'محمد اخوك', 'وش تقرب لك')):
+                return local(self.life.resolve_family_fact(profile['id']))
+            ep = self.life.check_epistemic_event_query(profile['id'], text)
+            if ep:
+                if not ep['knows']:
+                    return local(ep['text'])
+                if ep['status'] in ('Resolved', 'Archived'):
+                    return local(ep['text'])
+
         if text in ('السلام عليكم', 'سلام عليكم', 'السلام عليكم ورحمة الله', 'السلام عليكم ورحمة الله وبركاته'):
             reply = await self.generate_reply(profile, self.memory.preference(message.user_id), 'welcome', trigger_message=message)
             if reply:
@@ -1115,6 +1210,8 @@ class Coordinator:
     async def generate_reply(self, profile, preference, mode, trigger_message: Message | None = None):
         if not self.provider or not self.memory.reserve_call(self.config['daily_model_calls']):
             return None
+        if self.life and not self.life.budget.can_make_call(self.room, priority='optional_initiative' if mode == 'initiative' else 'human_reply'):
+            return None
         before = self.revision
         agent_state, social_context = self._build_social_and_agent_state(profile, trigger_message, mode)
         enriched_profile = {
@@ -1123,6 +1220,15 @@ class Coordinator:
             'agent_state': agent_state,
             'social_context': social_context
         }
+        if self.life:
+            other_bot_id = ''
+            if trigger_message and trigger_message.user_id in self.identities:
+                other_bot_id = self.identities[trigger_message.user_id].get('persona_id', '')
+            enriched_profile['life_slice'] = self.life.build_economic_memory_slice(
+                profile['id'],
+                other_bot_id,
+                trigger_message.text if trigger_message else ''
+            )
         try:
             context = self.memory.context(self.room, self.identities)
             answer = await self.provider.generate(enriched_profile, context, preference)
@@ -1162,6 +1268,12 @@ class Coordinator:
                         text = pat.sub('', text)
                     text = re.sub(r'\s{2,}', ' ', text).strip()
 
+        # Prevent identity confusion: never claim another bot's social name ("أنا شهد" when my_sname is "ريم")
+        for pid, pdata in PERSONA_LIFE_PROFILES.items():
+            other_sname = pdata['social_name']
+            if my_sname and other_sname != my_sname:
+                text = re.sub(r'\b(أنا|انا|اسمي|أسمي)\s+' + re.escape(other_sname) + r'\b', rf'\1 {my_sname}', text)
+
         if not valid_output(text):
             return None
         if not messages_tuple:
@@ -1178,6 +1290,14 @@ class Coordinator:
             last_target_name=speaker_name
         )
         tokens = getattr(self.provider, 'last_usage', None)
+        if self.life and isinstance(tokens, dict) and tokens.get('totalTokenCount'):
+            self.life.budget.record_gemini_usage(
+                self.room,
+                getattr(self.provider, 'model', 'gemini'),
+                tokens.get('promptTokenCount', 0),
+                tokens.get('candidatesTokenCount', 0),
+                tokens.get('totalTokenCount', 0)
+            )
         return Reply(my_id, text, 'initiative' if mode == 'initiative' else 'model', tokens, messages_tuple)
 
 
