@@ -2,7 +2,21 @@ Set-Location $PSScriptRoot
 $g = Get-Content "C:\Users\Dev\.samidev\secrets\gemini.json" | ConvertFrom-Json
 $b = Get-Content "C:\Users\Dev\.samidev\secrets\bot_sessions.json" | ConvertFrom-Json
 
-$env:GEMINI_API_KEY = $g.GEMINI_API_KEY
+$allKeys = @()
+if ($g.GEMINI_API_KEYS) {
+    foreach ($k in $g.GEMINI_API_KEYS) {
+        if ($k -and $k.Trim() -ne "" -and -not $k.StartsWith("PUT_KEY_")) {
+            $allKeys += $k.Trim()
+        }
+    }
+}
+if ($g.GEMINI_API_KEY -and $g.GEMINI_API_KEY.Trim() -ne "") {
+    if ($allKeys -notcontains $g.GEMINI_API_KEY.Trim()) {
+        $allKeys += $g.GEMINI_API_KEY.Trim()
+    }
+}
+
+$env:GEMINI_API_KEY = ($allKeys -join ",")
 $env:GEMINI_MODEL = "gemini-flash-lite-latest"
 $b.psobject.properties | ForEach-Object {
     Set-Item "env:$($_.Name)" $_.Value

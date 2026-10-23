@@ -46,3 +46,20 @@ class GeminiTests(unittest.IsolatedAsyncioTestCase):
     async def test_refusal_and_quota_failure(self):
         self.assertEqual(await Gemini(Session(finish='SAFETY'),'test','model').generate({'style':'سعودي'},[],None),{'text':'','messages':[]})
         with self.assertRaises(RuntimeError):await Gemini(Session(status=429),'test','model').generate({'style':'سعودي'},[],None)
+
+    async def test_multi_key_rotation_and_failover(self):
+        class FailoverSession:
+            def __init__(self):
+                self.tried_keys = []
+            def post(self, url, **kwargs):
+                k = kwargs['headers']['x-goog-api-key']
+                self.tried_keys.append(k)
+                if k == 'dead-key-1':
+                    return Response(429, {})
+                return Response(200, {'candidates': [{'finishReason': 'STOP', 'content': {'parts': [{'text': '{"text":"شغال تمام"}'}]}}]})
+
+        sess = FailoverSession()
+        provider = Gemini(sess, 'dead-key-1,healthy-key-2,healthy-key-3', 'test-model')
+        res = await provider.generate({'style': 'سعودي'}, [], None)
+        self.assertEqual(res['text'], 'شغال تمام')
+        self.assertEqual(sess.tried_keys, ['dead-key-1', 'healthy-key-2'])

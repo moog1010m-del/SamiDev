@@ -83,8 +83,11 @@ def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) 
         if tp_masc.search(cleaned):
             cleaned = tp_masc.sub('أنا ما ألعب', cleaned)
 
+    # Only replace "يا <handle>" or "@<handle>" when addressing another bot so she can still state account usernames if asked
     for handle, ar_name in BOT_HANDLE_TO_NAME.items():
-        cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
+        if handle != my_id.lower():
+            cleaned = re.sub(r'يا\s*@?' + re.escape(handle) + r'\b', f'يا {ar_name}', cleaned, flags=re.IGNORECASE)
+            cleaned = re.sub(r'@' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
 
     cleaned = re.sub(r'\s{2,}', ' ', cleaned).strip()
     return cleaned
@@ -92,12 +95,37 @@ def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) 
 
 class Gemini:
     def __init__(self, session, key, model):
-        if not key or not re.fullmatch(r'[A-Za-z0-9._-]+', model):
+        if isinstance(key, (list, tuple)):
+            raw_keys = [str(k).strip() for k in key if str(k).strip()]
+        elif isinstance(key, str):
+            raw_keys = [k.strip() for k in key.split(',') if k.strip()]
+        else:
+            raw_keys = []
+        # Deduplicate while preserving order
+        self.keys = list(dict.fromkeys(raw_keys))
+        if not self.keys or not re.fullmatch(r'[A-Za-z0-9._-]+', model):
             raise ValueError('Configure GEMINI_API_KEY and GEMINI_MODEL')
+        self.key = self.keys[0]
         self.session = session
-        self.key = key
         self.model = model
         self.last_usage = {}
+        self._key_index = 0
+        self._cooldown_until = {}  # key -> monotonic timestamp
+
+    def _ordered_candidate_keys(self) -> list[str]:
+        import time as _time
+        now = _time.monotonic()
+        n = len(self.keys)
+        healthy = []
+        cooling = []
+        for i in range(n):
+            k = self.keys[(self._key_index + i) % n]
+            if self._cooldown_until.get(k, 0) <= now:
+                healthy.append(k)
+            else:
+                cooling.append(k)
+        self._key_index = (self._key_index + 1) % n
+        return healthy if healthy else cooling
 
     async def generate(self, profile, context, preference):
         my_id = profile.get('id', '')
@@ -116,11 +144,13 @@ class Gemini:
         prompt_obj = {
             'persona': profile.get('style', ''),
             'persona_id': my_id,
+            'my_account_handle': my_id,
             'persona_name': my_name,
             'nickname': profile.get('nickname', ''),
             'age': profile.get('age', 23),
             'persona_gender': my_gender,
             'conversation_mode': conv_mode,
+            'known_room_accounts': BOT_HANDLE_TO_NAME,
             'persistent_state': {
                 'current_mood': agent_state.get('mood', profile.get('default_mood', 'رايقة')),
                 'my_recent_messages': (agent_state.get('my_recent_messages') or [])[-2:]
@@ -156,10 +186,25 @@ class Gemini:
             }
         }
         url = 'https://generativelanguage.googleapis.com/v1beta/models/' + self.model + ':generateContent'
-        async with self.session.post(url, json=payload, headers={'x-goog-api-key': self.key}, timeout=aiohttp.ClientTimeout(total=15), allow_redirects=False) as response:
-            if response.status != 200:
-                raise RuntimeError('Model unavailable')
-            data = await response.json()
+        import time as _time
+        data = None
+        last_err = None
+        for current_key in self._ordered_candidate_keys():
+            try:
+                async with self.session.post(url, json=payload, headers={'x-goog-api-key': current_key}, timeout=aiohttp.ClientTimeout(total=15), allow_redirects=False) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        self.key = current_key
+                        break
+                    # Cooldown failed/rate-limited key (5 min for 429, 15 min for 401/403) and immediately try next partner key
+                    cooldown_sec = 900 if response.status in (400, 401, 403) else 300
+                    self._cooldown_until[current_key] = _time.monotonic() + cooldown_sec
+                    last_err = RuntimeError('Model unavailable')
+            except Exception as exc:
+                self._cooldown_until[current_key] = _time.monotonic() + 120
+                last_err = exc
+        if data is None:
+            raise (last_err or RuntimeError('Model unavailable'))
         self.last_usage = data.get('usageMetadata', {})
         candidates = data.get('candidates') or []
         if not candidates or candidates[0].get('finishReason') != 'STOP':
