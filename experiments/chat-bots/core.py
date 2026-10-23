@@ -29,6 +29,7 @@ def normalize_saudi_dialect(s: str) -> str:
     s = re.sub(r'\bباروم\b', 'بالروم', s)
     s = re.sub(r'بالروم\s+ذا\s+معن[ىي]', 'بالروم ذا معنا', s)
     s = re.sub(r'\bاصتناعي\b', 'اصطناعي', s)
+    s = re.sub(r'\bعمكر\b', 'عمرك', s)
     return s
 
 
@@ -49,11 +50,11 @@ EMOJI_RE = re.compile(
 )
 
 
-def humanize_chat(text: str, turn_index: int = 1, strip_trailing_laugh: bool = False) -> str:
+def humanize_chat(text: str, turn_index: int = 1, strip_trailing_laugh: bool = True) -> str:
     """Make bot output look like real Saudi mobile typing without distorting words:
     - Strip commas (،), exclamation marks (!), semicolons (؛), trailing periods (.)
     - Remove awkward male/robotic vocatives ('يالطيب', 'بالغالي')
-    - Strip meaningless trailing 'ههههه' when strip_trailing_laugh is True
+    - Strip meaningless 'ههههه' anywhere in the sentence when strip_trailing_laugh is True
     - Allow at most 1 emoji ONLY once every 5 messages (turn_index % 5 == 0); strip all emojis on the other 4 turns.
     """
     if not text:
@@ -71,9 +72,8 @@ def humanize_chat(text: str, turn_index: int = 1, strip_trailing_laugh: bool = F
     emojis = EMOJI_RE.findall(s)
     s_clean = EMOJI_RE.sub('', s)
     if strip_trailing_laugh:
-        # Remove meaningless trailing or leading 'هههه+' unless it's the only word
-        stripped = re.sub(r'\s+\bه{3,}\b\s*$', '', s_clean).strip()
-        stripped = re.sub(r'^\s*\bه{3,}\b\s+', '', stripped).strip()
+        # Remove meaningless 'هههه+' anywhere in the sentence (start, middle, or end) unless it's the only word
+        stripped = re.sub(r'\bه{3,}\b', '', s_clean).strip()
         if stripped:
             s_clean = stripped
     s_clean = re.sub(r'[ \t]{2,}', ' ', s_clean).strip()
@@ -86,9 +86,10 @@ def humanize_chat(text: str, turn_index: int = 1, strip_trailing_laugh: bool = F
 
 RUDE_TERMS = (
     'سراويل', 'سراويلكم', 'فسخو', 'افسخ', 'فصخو', 'افصخ', 'كل زق', 'كلي زق', 'زق',
-    'كلب', 'كلبه', 'حيوان', 'حيوانه', 'غبيه', 'غبي', 'تفو', 'قحبه', 'شرموط', 'منيوك',
-    'وسخ', 'وسخه', 'انقلع', 'انقلعي', 'كلي تبن', 'كل تبن', 'تافهين', 'سافل', 'قذر',
-    'يهود', 'ياهود'
+    'كلب', 'كلبه', 'حيوان', 'حيوانه', 'غبيه', 'غبي', 'تفو', 'تف عليك', 'تفو عليك',
+    'قحبه', 'شرموط', 'منيوك', 'كس امك', 'كسمك', 'تس امك', 'تسمك', 'بقذفك', 'اقذفك',
+    'لها ريحه', 'ريحتك', 'وسخ', 'وسخه', 'انقلع', 'انقلعي', 'كلي تبن', 'كل تبن',
+    'تافهين', 'سافل', 'قذر', 'يهود', 'ياهود'
 )
 
 IGNORED_TERMS = (
@@ -97,7 +98,7 @@ IGNORED_TERMS = (
 )
 
 APOLOGY_TERMS = (
-    'اسف', 'آسف', 'اعتذر', 'أعتذر', 'امزح', 'أمزح', 'نمزح', 'حقكم علي', 'سوري', 'معليش'
+    'اسف', 'آسف', 'اعتذر', 'أعتذر', 'امزح', 'أمزح', 'نمزح', 'حقكم علي', 'حقك علي', 'سامحيني', 'سموحة', 'سوري', 'معليش'
 )
 
 INTRO_TERMS = (
@@ -455,6 +456,7 @@ class Coordinator:
         self.last_riddle_end = -1e9
         self.riddle_index = 0
         self.social_scene_index = 0
+        self.rude_grudges: dict[tuple[str, str], float] = {}
         self.enable_life_engine = bool(config.get('enable_life_engine', True))
         self.virtual_day = int(config.get('virtual_day', 1))
         self.life = LifeEngine(self.memory.db, room=self.room) if self.enable_life_engine else None
@@ -530,6 +532,17 @@ class Coordinator:
             text_lower = text.casefold()
             text_norm = norm_ar(text)
             words = text_norm.split()
+            active_thread_bot = None
+            if is_human and user_id in self.threads:
+                tid, tts = self.threads[user_id]
+                if time.monotonic() - tts <= 120:
+                    active_thread_bot = tid
+            third_person_to_second_markers = (
+                'تسبك', 'سبتك', 'قالتلك', 'قالت لك', 'تحشك', 'تمدحك', 'بينكم',
+                'عنك', 'اختك', 'صديقتك', 'تغار منك', 'قالت عنك'
+            )
+            has_third_to_second = any(m in text_norm for m in third_person_to_second_markers)
+
             # Pass 1: Direct vocative ('يا ريم', 'يا لمى') or explicit handle or sentence-initial name ('ريم ...')
             for p in active:
                 if p['id'] in exclude:
@@ -538,7 +551,13 @@ class Coordinator:
                 nick = norm_ar(p.get('nickname', ''))
                 pname = norm_ar(p.get('name', ''))
                 names = [n for n in (sname, nick, pname) if n]
-                is_vocative = any(f"يا {n}" in text_norm or (words and words[0] == n) for n in names)
+                explicit_ya = any(f"يا {n}" in text_norm for n in names)
+                initial_name = bool(words and any(words[0] == n for n in names))
+                # If the user has an active thread with another bot and starts with "ريم امس تسبك بينكم شي",
+                # "ريم" is a third-person subject while the user is addressing their current interlocutor!
+                if initial_name and not explicit_ya and active_thread_bot and active_thread_bot != p['id'] and has_third_to_second:
+                    initial_name = False
+                is_vocative = explicit_ya or initial_name
                 is_handle = p['id'].casefold() in text_lower or bool(p.get('username') and p['username'].casefold() in text_lower)
                 if is_vocative or is_handle:
                     if is_human:
@@ -653,7 +672,7 @@ class Coordinator:
             self.current_riddle = {
                 'type': 'social_scene',
                 'steps': [
-                    (p2['id'], f'يا هلا فيك أنا {n2} توني انتبه لوجودك معنا ههههه', 6.5),
+                    (p2['id'], f'يا هلا فيك أنا {n2} توني انتبه لوجودك معنا', 6.5),
                     (p1['id'], f'عاشت الأسامي يا {n2} أنا {n1} تشرفنا والله', 6.5),
                     (p2['id'], f'الشرف لي يا {n1} منورة المجلس والله', 6.0),
                 ],
@@ -711,23 +730,23 @@ class Coordinator:
             ('x7v', 'r9kx', 'z8qx',
              'سارة وينك مختفية اليوم ما لك حس؟',
              [
-                 ('r9kx', 'موجودة يا بنت بس انشغلت شوي وش عندك ههههه', 6.0),
-                 ('z8qx', 'هههههه أنتم الثنتين ما تهدون أبد؟', 6.0),
-                 ('x7v', 'شهد محد كلمك اسكتي بس ههههه 😂', 5.5),
+                 ('r9kx', 'موجودة يا بنت بس انشغلت شوي وش عندك', 6.0),
+                 ('z8qx', 'أنتم الثنتين ما تهدون أبد؟', 6.0),
+                 ('x7v', 'شهد محد كلمك اسكتي بس', 5.5),
              ]),
             ('b4yqz', 'f9xr', 't2rnx',
              'دانة للحين صاملة تلعبين بلياردو ولا استسلمتي؟',
              [
-                 ('f9xr', 'أستسلم لمين يا نوف تعالي طاولة وتشوفين الفوز لمين ههههه', 6.5),
-                 ('t2rnx', 'بدينا الهياط ههههه كل مرة تقولون كذا وتتعادلون 😂', 6.0),
-                 ('b4yqz', 'مرام لا تخربين الحماس خليني أفوز عليها أول ههههه', 5.5),
+                 ('f9xr', 'أستسلم لمين يا نوف تعالي طاولة وتشوفين الفوز لمين', 6.5),
+                 ('t2rnx', 'بدينا الهياط كل مرة تقولون كذا وتتعادلون', 6.0),
+                 ('b4yqz', 'مرام لا تخربين الحماس خليني أفوز عليها أول', 5.5),
              ]),
             ('k5lp', 'd7wsx', 'z8qx',
              'غدو خلصتي مذاكرة ولا باقي حايسة؟',
              [
                  ('d7wsx', 'خلاص قفلت الكتب يا لمى راسي صدع قلت أجي أروق معكم', 6.5),
-                 ('z8qx', 'أحسن قرار والله المذاكرة ما تخلص ههههه', 6.0),
-                 ('k5lp', 'شهد جاهزة للتحريض على السحبة دايم ههههه 😂', 5.5),
+                 ('z8qx', 'أحسن قرار والله المذاكرة ما تخلص', 6.0),
+                 ('k5lp', 'شهد جاهزة للتحريض على السحبة دايم', 5.5),
              ]),
             ('v3mk', 'm9sra', 'x7v',
              'الجوهرة كيف كان دوامك اليوم عسى مو زحمة؟',
@@ -842,7 +861,7 @@ class Coordinator:
                 cr['next_stage_time'] = now + 8.5
                 templates = [
                     f'اممم وش رايكم اتوقع {opt1}؟',
-                    f'احس الجواب {opt1} صح ولا غلط ههههه',
+                    f'احس الجواب {opt1} صح ولا غلط',
                     f'اتوقع {opt1} يا بنات',
                     f'شكله {opt1} شرايكم؟'
                 ]
@@ -852,7 +871,7 @@ class Coordinator:
                 cr['stage'] = 2
                 cr['next_stage_time'] = now + 7.5
                 templates = [
-                    f'لا لا اتوقع {opt2} والله أعلم ههههه',
+                    f'لا لا اتوقع {opt2} والله أعلم',
                     f'يمكن {opt2} احترت والله',
                     f'احس {opt2} أقرب شي للصح'
                 ]
@@ -864,9 +883,9 @@ class Coordinator:
                 addr = self.natural_address(cr['tease_id'], cr['idle2_id'])
                 self.memory.evolve_relationship(cr['tease_id'], cr['idle2_id'], 'مزح في اللغز')
                 templates = [
-                    f'هههههه وش جاب {opt2} للغز {addr} ركزي شوي بس',
-                    f'لا مستحيل {addr} هههههه ضحكتيني والله فكروا زين 😂',
-                    f'شكلنا جبنا العيد بالتخمينات ههههه مين ينقذنا'
+                    f'وش جاب {opt2} للغز {addr} ركزي شوي بس',
+                    f'لا مستحيل {addr} من جدك فكروا زين',
+                    f'شكلنا جبنا العيد بالتخمينات مين ينقذنا'
                 ]
                 return Reply(cr['tease_id'], humanize_chat(random.choice(templates), t_idx), 'riddle_tease')
 
@@ -899,8 +918,8 @@ class Coordinator:
                 self.last_riddle_end = time.monotonic()
                 addr_solver = self.natural_address(cr['idle1_id'], cr['solver_id'])
                 templates = [
-                    f'ما شاء الله عليك {addr_solver} لقطتيها قبلي ههههه',
-                    f'كنت بكتبها والله وسبقتيني قهر 😭',
+                    f'ما شاء الله عليك {addr_solver} لقطتيها قبلي',
+                    f'كنت بكتبها والله وسبقتيني قهر',
                     f'كفو يا ذيبة تستاهلين الفوز'
                 ]
                 return Reply(cr['idle1_id'], humanize_chat(random.choice(templates), t_idx), 'riddle_react')
@@ -915,12 +934,12 @@ class Coordinator:
                 cr['stage'] = 2
                 cr['next_stage_time'] = now + 7.5
                 addr = self.natural_address(cr['tease_id'], cr['idle1_id'])
-                return Reply(cr['tease_id'], humanize_chat(f'هههههه من جدك {addr} مستحيل {opt1} عاد 😂', t_idx), 'riddle_tease')
+                return Reply(cr['tease_id'], humanize_chat(f'من جدك {addr} مستحيل {opt1} عاد', t_idx), 'riddle_tease')
 
             elif stage == 2:
                 cr['stage'] = 3
                 cr['next_stage_time'] = now + 9.5
-                return Reply(cr['idle2_id'], humanize_chat('يا جماعة وين أذكياء الشات شكلنا ضيعنا الطاسة ههههه ساعدونا بالحل', t_idx), 'riddle_call_human')
+                return Reply(cr['idle2_id'], humanize_chat('يا جماعة وين أذكياء الشات شكلنا ضيعنا الطاسة ساعدونا بالحل', t_idx), 'riddle_call_human')
 
             elif stage == 3:
                 cr['stage'] = 4
@@ -960,7 +979,7 @@ class Coordinator:
                 cr['solved'] = True
                 self.current_riddle = None
                 self.last_riddle_end = time.monotonic()
-                return Reply(cr['tease_id'], humanize_chat('يا حظك كنت على وشك أرسلها والله وسبقتيني ههههه 😂', t_idx), 'riddle_tease')
+                return Reply(cr['tease_id'], humanize_chat('يا حظك كنت على وشك أرسلها والله وسبقتيني', t_idx), 'riddle_tease')
 
         return None
 
@@ -1130,7 +1149,7 @@ class Coordinator:
                     self.last_riddle_end = time.monotonic()
                     praise_bot = self.choose(exclude_ids=[host['id']])
                     if praise_bot:
-                        self.turn_queue.append(Reply(praise_bot['id'], humanize_chat(f'ما شاء الله عليك يا {disp_name} جبتها صح وحنا نحوس ههههه', self.turn + 2), 'riddle_praise'))
+                        self.turn_queue.append(Reply(praise_bot['id'], humanize_chat(f'ما شاء الله عليك يا {disp_name} جبتها صح وحنا نحوس', self.turn + 2), 'riddle_praise'))
                     return Reply(host['id'], humanize_chat(f'كفو والله يا {disp_name} جبتها صح الجواب هو {raw_ans}', self.turn + 1), 'riddle_solve_human')
 
                 # B) Explicit wrong guess (ONLY if matching one of wrong_options or starting with الجواب/اتوقع or pure number when answer is number)
@@ -1140,7 +1159,7 @@ class Coordinator:
                     or (clean_text.isdigit() and norm_ans.isdigit())
                 )
                 if explicit_guess:
-                    return Reply(host['id'], humanize_chat(f'لا مو هي يا {disp_name} قربت فكر فيها شوي ههههه', self.turn + 1), 'riddle_wrong_guess')
+                    return Reply(host['id'], humanize_chat(f'لا مو هي يا {disp_name} قربت فكر فيها شوي', self.turn + 1), 'riddle_wrong_guess')
 
             # For ANY other human message (greeting, 'عرفوني عليكم', normal chat), STOP the background riddle immediately so bots focus 100% on the human!
             self.current_riddle = None
@@ -1158,6 +1177,27 @@ class Coordinator:
             cleaned = humanize_chat(value, self.turn + 1, strip_trailing_laugh=do_strip)
             self.memory.set_agent_state(profile['id'], last_reply=cleaned, last_target_uid=message.user_id, last_target_name=human_name)
             return Reply(profile['id'], cleaned, 'local', messages=(cleaned,))
+
+        # 2.a Emotional & Dignity Continuity: if this human recently insulted this bot and hasn't apologized,
+        # refuse to answer personal/normal questions until they apologize!
+        is_apology = any(norm_ar(w) in clean_text for w in APOLOGY_TERMS)
+        if is_human and is_rude:
+            self.rude_grudges[(profile['id'], message.user_id)] = time.monotonic()
+        elif is_human and is_apology:
+            had_grudge = self.rude_grudges.pop((profile['id'], message.user_id), None)
+            if had_grudge is not None:
+                if self.life:
+                    self.life.update_emotion(profile['id'], 0.4, f'اعتذار من {human_name or "اللاعب"}')
+                return local('حصل خير بس لا عاد تعيدها')
+        elif is_human:
+            grudge_ts = self.rude_grudges.get((profile['id'], message.user_id), 0.0)
+            if grudge_ts > 0 and (time.monotonic() - grudge_ts) <= 300:
+                grudge_replies = (
+                    'تغلط علي وتبيني أرد عليك عدل أسلوبك واعتذر أول',
+                    'ما راح أجاوبك وأنت تسب احترم نفسك أول',
+                    'ما لي كلام معك بعد أسلوبك ذا لين تعتذر وتحترم نفسك',
+                )
+                return local(grudge_replies[self.turn % len(grudge_replies)])
 
         if is_intro:
             sname = self.social_name_of(profile['id'])
@@ -1180,7 +1220,7 @@ class Coordinator:
             sname = self.social_name_of(profile['id'])
             return local(f'أكيد بنت أنا {sname}')
         if any(term in text for term in ('انت بوت', 'أنت بوت', 'انتي بوت', 'أنتي بوت', 'انت انسان', 'أنت إنسان', 'انتي انسانة', 'أنتي إنسانة', 'انت ريبورت', 'أنت ريبورت', 'انت روبوت', 'أنت روبوت', 'ذكاء اصطناعي')):
-            return local('هههههه وش دعوة أكيد بنت حقيقية أجل شبح؟')
+            return local('وش دعوة أكيد بنت حقيقية أجل شبح؟')
         if any(term in text for term in ('سناب', 'واتساب', 'رقمك', 'صورتك')):
             return local('ما عندي حساب تواصل أعطيك إياه خل سوالفنا هنا')
         if any(term in text for term in ('كم الساعة', 'كم الساعه')):

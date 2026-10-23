@@ -476,6 +476,74 @@ class PlazrLifeEngineTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('تجاوز حدود الأدب', self.mem.get_social_profile('u-ksa')['attitude'])
         self.assertIn('منزعجة وحازمة', self.mem.get_agent_state('v3mk')['mood'])
 
+    async def test_10_grudge_continuity_after_insult_and_zero_out_of_context_laughs(self):
+        """الاختبار 10: عدم الرد الطبيعي على من شتم البوت إلا بعد الاعتذار + منع الضحك خارج السياق + عدم خطف الدور عند ذكر اسم ببداية الجملة."""
+        from core import humanize_chat
+
+        # 1. Exact screenshot flow: KSA calls ريم, insults her ("تفو على وجهك"), then asks her age ("ريم كم عمكر" / "ريم كم عمرك")
+        m1 = Message('g-1', 'u-ksa', 'ريم', 'KSA')
+        self.engine.ingest(m1)
+        r1 = await self.engine.respond(m1)
+        self.assertEqual(r1.speaker, 'v3mk')
+
+        m2 = Message('g-2', 'u-ksa', 'تفو على وجهك', 'KSA')
+        self.engine.ingest(m2)
+        r2 = await self.engine.respond(m2)
+        self.assertEqual(r2.speaker, 'v3mk')
+
+        # Asking age with typo ("ريم كم عمكر") right after insult -> MUST refuse, NOT answer!
+        m3 = Message('g-3', 'u-ksa', 'ريم كم عمكر', 'KSA')
+        self.engine.ingest(m3)
+        r3 = await self.engine.respond(m3)
+        self.assertEqual(r3.speaker, 'v3mk')
+        self.assertNotIn('25', r3.text)
+        self.assertTrue(any(w in r3.text for w in ('تغلط', 'تسب', 'أسلوبك')))
+
+        # Asking age with correct spelling ("ريم كم عمرك") -> MUST STILL refuse while grudge is active!
+        m4 = Message('g-4', 'u-ksa', 'ريم كم عمرك', 'KSA')
+        self.engine.ingest(m4)
+        r4 = await self.engine.respond(m4)
+        self.assertEqual(r4.speaker, 'v3mk')
+        self.assertNotIn('25', r4.text)
+        self.assertTrue(any(w in r4.text for w in ('تغلط', 'تسب', 'أسلوبك')))
+
+        # Asking relation ("طيب وش تقرب لك غادة") -> MUST STILL refuse!
+        m5 = Message('g-5', 'u-ksa', 'طيب وش تقرب لك غادة', 'KSA')
+        self.engine.ingest(m5)
+        r5 = await self.engine.respond(m5)
+        self.assertEqual(r5.speaker, 'v3mk')
+        self.assertNotIn('صديقتي', r5.text)
+
+        # Now KSA apologizes ("اسف حقك علي") -> grudge clears!
+        m6 = Message('g-6', 'u-ksa', 'اسف حقك علي', 'KSA')
+        self.engine.ingest(m6)
+        r6 = await self.engine.respond(m6)
+        self.assertEqual(r6.speaker, 'v3mk')
+        self.assertIn('حصل خير', r6.text)
+
+        # Now asking age ("ريم كم عمرك") -> answers normally ("أنا ريم وعمري 25 سنة")!
+        m7 = Message('g-7', 'u-ksa', 'ريم كم عمرك', 'KSA')
+        self.engine.ingest(m7)
+        r7 = await self.engine.respond(m7)
+        self.assertEqual(r7.speaker, 'v3mk')
+        self.assertIn('25', r7.text)
+
+        # 2. Active thread with نورة (x7v) when user starts sentence with third-person subject "ريم امس تسبك عسى ماشر بينكم شي .؟"
+        m8 = Message('g-8', 'u-ksa', 'يا نورة وينك', 'KSA')
+        self.engine.ingest(m8)
+        r8 = await self.engine.respond(m8)
+        self.assertEqual(r8.speaker, 'x7v')
+
+        m9 = Message('g-9', 'u-ksa', 'ريم امس تسبك عسى ماشر بينكم شي .؟', 'KSA')
+        self.engine.ingest(m9)
+        r9 = await self.engine.respond(m9)
+        self.assertEqual(r9.speaker, 'x7v', "Sentence starting with third-person subject 'ريم امس تسبك' must stay with نورة (x7v)!")
+
+        # 3. Verify mid-sentence and trailing laughter are stripped when strip_trailing_laugh=True
+        mid_laugh = humanize_chat('بدينا الهياط ههههه كل مرة تقولون كذا وتتعادلون', turn_index=1)
+        self.assertNotIn('هههه', mid_laugh)
+        self.assertEqual(mid_laugh, 'بدينا الهياط كل مرة تقولون كذا وتتعادلون')
+
 
 if __name__ == '__main__':
     unittest.main()
