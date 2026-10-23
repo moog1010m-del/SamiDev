@@ -100,6 +100,7 @@ async def live(args, config, memory, scripts):
         engine.identities = {
             clients[p['id']].uid: {
                 'name': p['name'],
+                'social_name': p.get('social_name', p['name']),
                 'kind': 'bot',
                 'persona_id': p['id'],
                 'gender': p.get('gender', 'female')
@@ -210,12 +211,14 @@ async def live(args, config, memory, scripts):
                 return
 
             # If a human spoke while a bot was about to send a pre-scripted riddle/banter message, yield to the human!
-            if not is_human_reply and human_queued:
+            if not is_human_reply and (human_queued or engine.revision != revision or not pending.empty()):
                 return
 
             state = await client.request('GET', room + '?chat=0')
             humans = {u['id'] for u in state.get('members', []) if not u.get('isBot')} - bot_ids
             if reply.reason == 'recorded' and humans:
+                return
+            if not is_human_reply and (human_queued or engine.revision != revision or not pending.empty()):
                 return
             try:
                 res = await client.request('POST', room + '/chat', {'text': msg, 'clientMessageId': 'bot_' + uuid.uuid4().hex})

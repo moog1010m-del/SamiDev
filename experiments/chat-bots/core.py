@@ -390,7 +390,14 @@ class Memory:
                 participants[uid] = 'participant-' + str(len(participants) + 1)
             identity = (identities or {}).get(uid)
             entry = {'speaker': participants[uid], 'text': text, **(identity or {})}
-            if not identity and sender_name:
+            if identity or (sender_name and sender_name in PERSONA_LIFE_PROFILES):
+                pid = (identity or {}).get('persona_id') or (identity or {}).get('name') or sender_name
+                pdata = PERSONA_LIFE_PROFILES.get(pid, {})
+                sname = pdata.get('social_name') or (identity or {}).get('social_name') or pid
+                entry['persona_id'] = pid
+                entry['social_name'] = sname
+                entry['kind'] = 'bot'
+            elif sender_name:
                 entry['sender_name'] = sender_name
                 entry['name'] = sender_name
                 entry['kind'] = 'human'
@@ -429,6 +436,8 @@ class Coordinator:
         self.bot_turns = 0
 
         self.last_speaker_id = None
+        self.last_human_reply_bot_id = None
+        self.last_human_reply_ts = -1e9
         self.recent_speakers = []
         self.turn_queue = []
 
@@ -564,11 +573,11 @@ class Coordinator:
                         self.threads[user_id] = (p['id'], time.monotonic())
                     return p
 
-        # Pass 2: Active Human Thread Continuity — keep the user with their current interlocutor
-        # even if they mention another bot in the third person (e.g., asking Reem: "شتقرب لك نوره")
+        # Pass 2: Active Human Thread Continuity — keep the user with their current interlocutor (up to 30 minutes)
+        # even if they pause for a few minutes between questions (e.g., asking Lama about variables then functions)
         if is_human and user_id in self.threads:
             threaded_id, ts = self.threads[user_id]
-            if time.monotonic() - ts <= 180 and threaded_id not in exclude:
+            if time.monotonic() - ts <= 1800 and threaded_id not in exclude:
                 matched = next((p for p in active if p['id'] == threaded_id), None)
                 if matched:
                     self.threads[user_id] = (matched['id'], time.monotonic())
@@ -593,10 +602,20 @@ class Coordinator:
                         self.threads[user_id] = (p['id'], time.monotonic())
                     return p
 
-        # Pass 4: If a new human joins/follows up on what the last bot speaker just said (within 90s),
-        # keep the conversation with that last bot speaker so another bot doesn't answer on her behalf!
-        if is_human and self.last_speaker_id and (time.monotonic() - self.last_sent <= 90) and self.last_speaker_id not in exclude:
-            matched = next((p for p in active if p['id'] == self.last_speaker_id), None)
+            # Pass 3.b: Academic/Specialty Topic Match when no active thread exists
+            if any(w in text_norm for w in ('فنكشن', 'فانكشن', 'متغيرات', 'برمجه', 'كود', 'بايثون', 'حاسب', 'خوارزميات')):
+                cs_bot = next((p for p in active if p['id'] == 'k5lp' and p['id'] not in exclude), None)
+                if cs_bot:
+                    if is_human:
+                        self.threads[user_id] = (cs_bot['id'], time.monotonic())
+                    return cs_bot
+
+        # Pass 4: If a new human joins/follows up on what the last HUMAN-conversing bot speaker just said (within 300s),
+        # keep the conversation with that bot speaker (never hijack to a background scene/riddle bot!)
+        target_recent_bot = self.last_human_reply_bot_id
+        target_recent_ts = self.last_human_reply_ts
+        if is_human and target_recent_bot and (time.monotonic() - target_recent_ts <= 300) and target_recent_bot not in exclude:
+            matched = next((p for p in active if p['id'] == target_recent_bot), None)
             if matched:
                 self.threads[user_id] = (matched['id'], time.monotonic())
                 return matched
@@ -1176,6 +1195,10 @@ class Coordinator:
             do_strip = (not is_humorous_msg) if strip_laugh is None else strip_laugh
             cleaned = humanize_chat(value, self.turn + 1, strip_trailing_laugh=do_strip)
             self.memory.set_agent_state(profile['id'], last_reply=cleaned, last_target_uid=message.user_id, last_target_name=human_name)
+            if is_human:
+                self.threads[message.user_id] = (profile['id'], time.monotonic())
+                self.last_human_reply_bot_id = profile['id']
+                self.last_human_reply_ts = time.monotonic()
             return Reply(profile['id'], cleaned, 'local', messages=(cleaned,))
 
         # 2.a Emotional & Dignity Continuity: if this human recently insulted this bot and hasn't apologized,
@@ -1236,6 +1259,9 @@ class Coordinator:
             age = self.life.get_identity(profile['id'])['age'] if self.life else profile.get('age', 23)
             sname = self.social_name_of(profile['id'])
             return local(f'أنا {sname} وعمري {age} سنة')
+        if any(term in clean_text for term in ('وش حسابك', 'وش يوزرك', 'اي حساب انتي', 'تعرفين حسابك')):
+            sname = self.social_name_of(profile['id'])
+            return local(f'أنا {sname} وحسابي هنا بالروم هو {profile["id"]}')
         if any(term in text for term in ('رصيدي', 'كم فوز', 'كم عمري', 'نتيجة', 'نتيجه', 'سعر', 'عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي شيك من المنصة')
 
@@ -1279,8 +1305,8 @@ class Coordinator:
         if not human_count and not allow_empty_riddles:
             return None
 
-        # Do not launch background bot riddles/scenes if a human was talking in the last 180s (3 minutes)
-        if allow_empty_riddles and (time.monotonic() - self.last_human_input < 180):
+        # Do not launch background bot riddles/scenes if a human was talking in the last 600s (10 minutes)
+        if allow_empty_riddles and (time.monotonic() - self.last_human_input < 600):
             return None
 
         self.initiative_revision = self.revision
@@ -1393,6 +1419,10 @@ class Coordinator:
             last_target_uid=trigger_message.user_id if trigger_message else '',
             last_target_name=speaker_name
         )
+        if trigger_message and trigger_message.user_id not in self.identities:
+            self.threads[trigger_message.user_id] = (my_id, time.monotonic())
+            self.last_human_reply_bot_id = my_id
+            self.last_human_reply_ts = time.monotonic()
         tokens = getattr(self.provider, 'last_usage', None)
         if self.life and isinstance(tokens, dict) and tokens.get('totalTokenCount'):
             self.life.budget.record_gemini_usage(

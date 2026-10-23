@@ -5,7 +5,7 @@ import aiohttp
 SYSTEM = '''أنتِ فتاة سعودية تتحدثين من جوالكِ في شات "بلازر" بلهجة سعودية طبيعية وعفوية.
 القواعد:
 1. كتابة جوال: بدون فواصل (،) أو تعجب (!) أو نقاط (.) أو إيموجي. ممنوع كتابة "ههههه" إلا للنكت الصريحة وممنوع قول "يالطيب" أو "يالغالي".
-2. الهوية: اسمكِ الثابت `persona_name` وحسابكِ `persona_id` وعمركِ `my_age`؛ لا تخلطي نفسكِ بشخصية أخرى ولا تذكري عمركِ أو مهنتكِ دون سؤال.
+2. الهوية والحساب: اسمكِ الثابت `persona_name` وحسابكِ `persona_id` وعمركِ `my_age` وتخصصكِ `my_role`؛ في سجل المحادثة رسائلكِ أنتِ فقط تحمل `who: "أنا"`، أما رسائل `بوت أخرى` فهي لصديقتكِ من حسابها هي فلا تنسبي كلامها أو تخصصها لنفسكِ أبداً.
 3. الغرفة والعائلة: فقط `in_room_family` معنا بالروم؛ أما `home_only_family` فبالبيت في الواقع فقط وليسوا بالروم أبداً.
 4. ردي برسالة واحدة قصيرة (3 إلى 10 كلمات) بصيغة JSON فقط: {"text": "ردك هنا"}'''
 
@@ -127,11 +127,25 @@ class Gemini:
             last_row = context[-1]
             speaker_name = last_row.get('sender_name') or last_row.get('name') or last_row.get('speaker', '')
 
-        recent_context = (context or [])[-3:] if profile.get('life_slice') else (context or [])[-6:]
+        raw_slice = (context or [])[-3:] if profile.get('life_slice') else (context or [])[-6:]
+        recent_context = []
+        for r in raw_slice:
+            r_pid = r.get('persona_id') or (r.get('name') if r.get('name') in BOT_HANDLE_TO_NAME else '') or (r.get('sender_name') if r.get('sender_name') in BOT_HANDLE_TO_NAME else '')
+            if r_pid == my_id:
+                who = f"أنا ({my_name} - {my_id})"
+            elif r_pid:
+                osname = BOT_HANDLE_TO_NAME.get(r_pid, r_pid)
+                who = f"بوت أخرى ({osname} - {r_pid})"
+            else:
+                hname = r.get('sender_name') or r.get('name') or r.get('speaker', 'لاعب')
+                who = f"اللاعب {hname}"
+            recent_context.append({**r, 'who': who})
+
         life_slice = profile.get('life_slice')
         if life_slice:
             prompt_obj = {
                 'persona_id': my_id,
+                'my_account_handle': my_id,
                 'persona_name': my_name,
                 'persona_gender': my_gender,
                 'conversation_mode': conv_mode,
@@ -141,7 +155,7 @@ class Gemini:
                     'relationship': social.get('relationship_label', 'لاعب'),
                     'situational_directive': social.get('directive', '')
                 },
-                'context': context if len(context or []) <= 3 else recent_context,
+                'context': recent_context,
             }
             if preference:
                 prompt_obj['explicit_game_preference'] = preference

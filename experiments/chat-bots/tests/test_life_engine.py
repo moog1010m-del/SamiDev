@@ -544,6 +544,49 @@ class PlazrLifeEngineTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn('هههه', mid_laugh)
         self.assertEqual(mid_laugh, 'بدينا الهياط كل مرة تقولون كذا وتتعادلون')
 
+    async def test_11_cs_followup_thread_continuity_and_account_awareness(self):
+        """الاختبار 11: منع دخول غادة (d7wsx) على خط محادثة لمى (k5lp) بعد توقف +3 دقائق أو مشهد خلفي + وعي كل بوت بحسابه."""
+        import time as _time
+
+        # 1. KSA talks to لمى (k5lp) about Computer Science variables
+        m1 = Message('cs-1', 'u-ksa', 'لمو تخصصك مو حاسب بالله ؟.', 'KSA')
+        self.engine.ingest(m1)
+        r1 = await self.engine.respond(m1)
+        self.assertEqual(r1.speaker, 'k5lp')
+
+        m2 = Message('cs-2', 'u-ksa', 'سالني الدكتور عن المتغيرات قال اشرحهم بكلمات بسيطه ممكن تساعدني', 'KSA')
+        self.engine.ingest(m2)
+        r2 = await self.engine.respond(m2)
+        self.assertEqual(r2.speaker, 'k5lp')
+        self.engine.ingest(Message('cs-bot-2', 'bot-k5lp', 'المتغيرات مثل الصناديق نحفظ فيها البيانات عشان نستخدمها بعدين', 'k5lp'))
+
+        # 2. Simulate 200 seconds passing (> old 180s limit) AND a background scene message from d7wsx (غادة)
+        self.engine.threads['u-ksa'] = ('k5lp', _time.monotonic() - 200)
+        self.engine.sent('d7wsx')  # Background scene speaker should NOT hijack human thread!
+        self.engine.ingest(Message('cs-bg-1', 'bot-d7wsx', 'اليوم مسكت معي أغير ترتيب غرفتي', 'd7wsx'))
+
+        # 3. KSA asks follow-up: "والفنكشن بالله؟" -> MUST stay with k5lp (لمى), NOT jump to d7wsx (غادة)!
+        m3 = Message('cs-3', 'u-ksa', 'والفنكشن بالله؟', 'KSA')
+        self.engine.ingest(m3)
+        r3 = await self.engine.respond(m3)
+        self.assertEqual(r3.speaker, 'k5lp', "Follow-up 'والفنكشن بالله؟' must be answered by لمى (k5lp), not غادة (d7wsx)!")
+
+        # 4. Verify context attribution in Gemini request distinguishes "أنا" vs "بوت أخرى"
+        last_req_payload = self.session.requests[-1][1]['json']
+        user_json = json.loads(last_req_payload['contents'][0]['parts'][0]['text'])
+        self.assertEqual(user_json['my_account_handle'], 'k5lp')
+        ctx_whos = [row.get('who', '') for row in user_json['context']]
+        self.assertTrue(any('أنا (لمى - k5lp)' in w for w in ctx_whos))
+        self.assertTrue(any('بوت أخرى (غادة - d7wsx)' in w for w in ctx_whos))
+
+        # 5. Direct account handle query ("وش حسابك")
+        m4 = Message('cs-4', 'u-ksa', 'وش حسابك؟', 'KSA')
+        self.engine.ingest(m4)
+        r4 = await self.engine.respond(m4)
+        self.assertEqual(r4.speaker, 'k5lp')
+        self.assertIn('لمى', r4.text)
+        self.assertIn('k5lp', r4.text)
+
 
 if __name__ == '__main__':
     unittest.main()
