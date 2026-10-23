@@ -1,28 +1,27 @@
-"""Token-efficient Gemini REST adapter with Social Relationship & Persistent State grounding."""
+"""Token-efficient Gemini REST adapter with Social Relationship & Human-Typing Style."""
 import json, re
 import aiohttp
 
-# Concise, high-signal system instruction (~220 tokens instead of ~700 tokens to save 70% prompt tokens)
-SYSTEM = '''أنتِ فتاة سعودية حقيقية تتحدثين في غرفة دردشة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
+SYSTEM = '''أنتِ فتاة سعودية حقيقية تتحدثين من جوالكِ في شات غرفة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
 
-التزمي بالقواعد التالية:
-1. الهوية والاسم الاجتماعي:
-- اسمكِ الحقيقي في الغرفة هو `persona_name` (مثل نورة، سارة، ريم، دانة، نوف...) وحسابكِ التقني هو `persona_id`.
-- خاطبي الناس بأسمائهم الاجتماعية الطبيعية (أو ألقابهم إن كانت العلاقة "صديقة مقربة/تمون") أو بدون ذكر اسم أصلاً كما يفعل البشر طبيعياً (مثل: "موجودة يا بنت وش عندك ههههه"، "هههههه أنتم ما تهدون؟").
+التزمي بالقواعد التالية بدقة:
+1. أسلوب الكتابة البشري من الجوال (مهم جداً):
+- اكتبي كما يكتب البشر في شات الجوال السريع: بدون فواصل (،) وبدون علامات تعجب (!) وبدون نقاط (.) في نهاية الجملة وبدون أقواس.
+- لا تضعي إيموجيات أو ملصقات في الرسالة (وعند الضحك اكتبي ههههه بدلاً من الإيموجي).
+- لا تقولي كلمات مثل "بالغالي" أو صيغ رسمية؛ تكلمي بعفوية بنت سعودية طبيعية.
+
+2. الهوية والاسم الاجتماعي:
+- اسمكِ في الغرفة هو `persona_name` (مثل نورة، سارة، ريم، دانة، نوف، لمى، غادة...) وحسابكِ التقني هو `persona_id`.
+- إذا طلب أحد التعارف ("عرفوني عليكم" أو "وش اساميكم")، عرفي بنفسكِ باسمكِ الاجتماعي وممكن تذكرين أسماء صديقاتكِ في الروم (نورة وسارة وريم ودانة) ببساطة.
 - ممنوع نهائياً مناداة أي شخص باليوزر الإنجليزي التقني (لا تقولي يا x7v أو يا f9xr أبداً).
 - ممنوع نهائياً أن تنادي المتحدث باسمكِ أنتِ، أو تتحدثي عن نفسكِ بصيغة الغائب أو المذكر.
 
-2. العلاقات وتطورها (`social_context`):
-- إذا كانت علاقتكِ بالمتحدث "صديقة مقربة": تمونين عليها بالمزح والطقطقة الخفيفة.
-- إذا كانت العلاقة "معرفة عادية": كوني لطيفة ولبقة.
-- إذا كانت العلاقة "غريب / لم يحصل تعارف بعد": لا تتصرفي كأنكِ تعرفينه مسبقاً؛ ردي بلطافة طبيعية بدون تكلف.
-
-3. اتساق المزاج والاستمرارية (`persistent_state`):
-- التزمي بمزاجكِ الحالي (`current_mood`) والتوجيه (`situational_directive`)، واربـطي ردكِ بآخر ما قلتيه (`my_recent_messages`).
+3. اتساق المزاج والسياق (`persistent_state` & `social_context`):
+- التزمي بمزاجكِ الحالي (`current_mood`) والتوجيه (`situational_directive`)، واربطي ردكِ بآخر ما دار في الشات (`context`).
 - إذا قال المتحدث كلاماً بذيئاً أو غير لائق: ردي بحزم وكرامة ووقفيه عند حده باختصار.
 
 4. شكل الرد:
-- رسالة شات واحدة قصيرة وطبيعية (3 إلى 10 كلمات). ممنوع الاعتراف بأنكِ بوت.
+- رسالة شات واحدة قصيرة وطبيعية (3 إلى 10 كلمات) بدون فواصل وبدون تعجب. ممنوع الاعتراف بأنكِ بوت.
 أرجعي JSON فقط: {"text": "ردك هنا"}'''
 
 
@@ -39,12 +38,37 @@ BOT_HANDLE_TO_NAME = {
     't2rnx': 'مرام',
 }
 
+EMOJI_RE = re.compile(
+    r'[\U00010000-\U0010ffff\u2600-\u27bf\u2300-\u23ff\u2b50\u2764\ufe0f\u200d]+'
+)
+
+
+def humanize_punctuation_and_emoji(text: str, allow_single_emoji: bool = False) -> str:
+    """Strip robotic punctuation (commas, exclamation marks, trailing periods) and limit emojis to 1-in-5 turns."""
+    if not text:
+        return ''
+    s = text.strip()
+    # Replace commas, exclamation marks, semicolons, colons with a space
+    s = re.sub(r'[،,!！؛;]+', ' ', s)
+    # Remove trailing periods or ellipses
+    s = re.sub(r'\.{1,}\s*$', '', s)
+    s = re.sub(r'\.{2,}', ' ', s)
+
+    # Handle emojis: either strip all (80% of messages) or keep at most 1 emoji (20% of messages)
+    emojis = EMOJI_RE.findall(s)
+    s_no_emoji = EMOJI_RE.sub('', s)
+    s_no_emoji = re.sub(r'\s{2,}', ' ', s_no_emoji).strip()
+
+    if allow_single_emoji and emojis:
+        first_emoji = emojis[0][:1]
+        return f"{s_no_emoji} {first_emoji}".strip()
+    return s_no_emoji
+
 
 def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) -> str:
     if not text:
         return ''
     cleaned = text.strip()
-    # 1. Prevent bot from addressing the user with the bot's own username or own social name
     for own in {my_id, my_name}:
         if not own:
             continue
@@ -58,13 +82,8 @@ def _fix_identity_slips(text: str, my_id: str, my_name: str, speaker_name: str) 
         if tp_masc.search(cleaned):
             cleaned = tp_masc.sub('أنا ما ألعب', cleaned)
 
-    # 2. Replace any technical bot handles (@x7v, يا f9xr, etc.) with their natural Arabic social name
     for handle, ar_name in BOT_HANDLE_TO_NAME.items():
-        if handle == my_id.lower():
-            # If referring to own handle in third person, strip or replace with first person
-            cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
-        else:
-            cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r'@?' + re.escape(handle) + r'\b', ar_name, cleaned, flags=re.IGNORECASE)
 
     cleaned = re.sub(r'\s{2,}', ' ', cleaned).strip()
     return cleaned
@@ -92,7 +111,6 @@ class Gemini:
             last_row = context[-1]
             speaker_name = last_row.get('sender_name') or last_row.get('name') or last_row.get('speaker', '')
 
-        # Keep prompt compact to minimize token consumption while preserving test contract
         recent_context = (context or [])[-6:]
         prompt_obj = {
             'persona': profile.get('style', ''),
@@ -129,7 +147,7 @@ class Gemini:
                     'properties': {
                         'text': {
                             'type': 'STRING',
-                            'description': 'رد قصير وطبيعي بلهجة سعودية (3 إلى 10 كلمات) بدون استخدام يوزرات تقنية إنجليزية'
+                            'description': 'رد شات قصير وعفوي بدون فواصل وبدون علامات تعجب وبدون إيموجي'
                         }
                     },
                     'required': ['text']

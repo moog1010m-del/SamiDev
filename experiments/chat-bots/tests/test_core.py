@@ -268,8 +268,28 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(reply)
         self.assertEqual(len(reply.messages), 2)
         self.assertEqual(reply.messages[0], 'هههههههه مو صاحي أخوك')
-        self.assertEqual(reply.messages[1], 'تخيل أدور جوالي بالحوش 😂')
+        self.assertIn('تخيل أدور جوالي بالحوش', reply.messages[1])
         self.assertIn('أخوك', reply.text)
+
+    async def test_intro_during_riddle_cancels_riddle_and_strips_punctuation(self):
+        # Start an active riddle
+        self.engine.start_riddle()
+        self.assertIsNotNone(self.engine.current_riddle)
+
+        # Human says 'عرفوني عليكم طيب' while riddle is active
+        intro_msg = Message('intro-1', 'user-ksa', 'عرفوني عليكم طيب', 'KSA')
+        self.engine.ingest(intro_msg)
+        reply = await self.engine.respond(intro_msg)
+        self.assertIsNotNone(reply)
+        # Riddle must be cancelled immediately
+        self.assertIsNone(self.engine.current_riddle)
+        # Must NOT say 'مالك لواء'
+        self.assertNotIn('مالك لواء', reply.text)
+        # Must introduce with Arabic social names
+        self.assertIn('أنا', reply.text)
+        # Must NOT contain commas or exclamation marks
+        self.assertNotIn('،', reply.text)
+        self.assertNotIn('!', reply.text)
 
     async def test_persistent_state_mood_and_self_name_correction_on_rude_message(self):
         captured_profiles = []
