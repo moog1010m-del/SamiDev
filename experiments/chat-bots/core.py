@@ -590,15 +590,15 @@ class Coordinator:
             self.current_riddle = {
                 'type': 'social_scene',
                 'steps': [
-                    (p2['id'], f'يا هلا فيك أنا {n2} وأنتي وش نناديك؟', 6.5),
+                    (p2['id'], f'يا هلا فيك أنا {n2} توني انتبه لوجودك معنا ههههه', 6.5),
                     (p1['id'], f'عاشت الأسامي يا {n2} أنا {n1} تشرفنا والله', 6.5),
-                    (p2['id'], f'الشرف لي يا {n1} منورة الشات والله', 6.0),
+                    (p2['id'], f'الشرف لي يا {n1} منورة المجلس والله', 6.0),
                 ],
                 'stage': 0,
                 'next_stage_time': now + 6.5,
                 'solved': False
             }
-            return Reply(p1['id'], humanize_chat('دايم أشوفك معنا بالمجلس بس ما عرفت اسمك للحين ههههه', self.turn + 1), 'social_intro')
+            return Reply(p1['id'], humanize_chat('بنات مين الجديدة اللي معنا بالشات ما قد سولفنا من قبل ههههه', self.turn + 1), 'social_intro')
 
         scenes = [
             ('x7v', 'r9kx', 'z8qx',
@@ -941,6 +941,15 @@ class Coordinator:
             mood = 'مرحبة وبشوشة'
             activity = f'ترحب بـ {disp}'
             directive = f"({disp}) يلقي التحية. ردي عليه السلام بعفوية واسأليه كيفك بدون فواصل أو علامات تعجب."
+        elif any(norm_ar(w) in clean_txt for w in INTRO_TERMS):
+            intent = 'introduction'
+            mood = agent_state.get('mood', default_mood)
+            activity = f'تتفاعل وتعرف باسمها لـ {disp}'
+            directive = (
+                f"أنتِ {my_social_name}. المتحدث ({disp}) يقول: \"{text}\". "
+                f"تفاعلي مع كلامه وموقفه بذكاء وعفوية واذكري اسمكِ الحقيقي ({my_social_name}) بأسلوب طبيعي غير رسمي. "
+                f"ممنوع ذكر عمركِ أو سرد تعريف جاهز إلا لو سأل عن العمر صراحة."
+            )
         else:
             intent = mode
             mood = agent_state.get('mood', default_mood)
@@ -1022,18 +1031,20 @@ class Coordinator:
 
         if is_intro:
             sname = self.social_name_of(profile['id'])
-            age = profile.get('age', 23)
             self.memory.evolve_relationship(profile['id'], message.user_id, 'تعارف بالأسماء', learned_name=True)
-            # If asking plural ("عرفوني عليكم" / "مين انتم"), have a second friend also chime in!
+            # If asking plural ("عرفوني عليكم" / "مين انتم"), have a second friend also chime in naturally
             if any(w in clean_text for w in ('عرفوني', 'عرفونا', 'انتم', 'انتو', 'اساميكم', 'اسماؤكم', 'اسمائكم', 'موجود')):
                 second_bot = self.choose(exclude_ids=[profile['id']])
                 if second_bot:
                     s2 = self.social_name_of(second_bot['id'])
                     self.memory.evolve_relationship(second_bot['id'], message.user_id, 'تعارف بالأسماء', learned_name=True)
                     welcome_tail = f'يا {human_name}' if human_name else 'معنا'
-                    self.turn_queue.append(Reply(second_bot['id'], humanize_chat(f'وأنا {s2} تشرفنا فيك {welcome_tail} منور المجلس', self.turn + 2), 'intro_followup'))
-                return local(f'أنا {sname} وعمري {age} ومعنا هنا سارة ونورة ودانة والبنات حياك الله بيننا' + (f' يا {human_name}' if human_name else ''))
-            return local(f'أنا {sname} وعمري {age} سنة وأنت وش نناديك؟')
+                    self.turn_queue.append(Reply(second_bot['id'], humanize_chat(f'وأنا {s2} حياك الله {welcome_tail} منور المجلس', self.turn + 2), 'intro_followup'))
+            # Let Gemini respond contextually to the exact situation first!
+            model_reply = await self.generate_reply(profile, self.memory.preference(message.user_id), 'reply', trigger_message=message)
+            if model_reply:
+                return model_reply
+            return local(f'أنا {sname} ومعنا البنات سارة ونورة ودانة حياك الله بيننا' if any(w in clean_text for w in ('عرفوني', 'عرفونا', 'انتم', 'انتو')) else f'أنا {sname} يا هلا فيك')
 
         if any(term in text for term in ('ذكر ولا انثى', 'ذكر ولا أنثى', 'انثى ولا ذكر', 'أنثى ولا ذكر', 'بنت ولا ولد', 'ولد ولا بنت', 'انتي بنت', 'أنتي بنت', 'انت بنت', 'أنت بنت', 'انت ولد', 'أنت ولد', 'انتي ولد', 'أنتي ولد', 'وش جنسك', 'بنت ولا رجال', 'رجال ولا بنت', 'بنت؟', 'ذكر؟', 'انثى؟', 'أنثى؟', 'انتم بنات', 'انتو بنات')):
             sname = self.social_name_of(profile['id'])
@@ -1075,21 +1086,23 @@ class Coordinator:
         if not human_count and not allow_empty_riddles:
             return None
 
-        # Do not launch background bot riddles/scenes if a human was talking in the last 60s
-        if allow_empty_riddles and (time.monotonic() - self.last_human_input < 60):
+        # Do not launch background bot riddles/scenes if a human was talking in the last 180s (3 minutes)
+        if allow_empty_riddles and (time.monotonic() - self.last_human_input < 180):
             return None
 
         self.initiative_revision = self.revision
         now = time.monotonic()
 
-        if allow_empty_riddles and not self.current_riddle and (now - self.last_riddle_end >= 40):
-            if (self.riddle_index + self.social_scene_index) % 2 == 0:
-                scene_reply = self.start_social_scene()
-                if scene_reply:
-                    return scene_reply
-            riddle_reply = self.start_riddle()
-            if riddle_reply:
-                return riddle_reply
+        if allow_empty_riddles:
+            if not self.current_riddle and (now - self.last_riddle_end >= 30):
+                if (self.riddle_index + self.social_scene_index) % 2 == 0:
+                    scene_reply = self.start_social_scene()
+                    if scene_reply:
+                        return scene_reply
+                riddle_reply = self.start_riddle()
+                if riddle_reply:
+                    return riddle_reply
+            return None
 
         if not human_count:
             return None

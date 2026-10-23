@@ -283,10 +283,10 @@ class CoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(reply)
         # Riddle must be cancelled immediately
         self.assertIsNone(self.engine.current_riddle)
-        # Must NOT say 'مالك لواء'
+        # Must NOT say 'مالك لواء' or canned age '21 سنة'
         self.assertNotIn('مالك لواء', reply.text)
-        # Must introduce with Arabic social names
-        self.assertIn('أنا', reply.text)
+        self.assertNotIn('21 سنة', reply.text)
+        self.assertEqual(reply.reason, 'model')
         # Must NOT contain commas or exclamation marks
         self.assertNotIn('،', reply.text)
         self.assertNotIn('!', reply.text)
