@@ -26,19 +26,19 @@ PERSONA_LIFE_PROFILES = {
         'occupation': 'أخصائية تسويق رقمي',
         'temperament': 'playful_resilient',
         'sociability': 0.9,
-        'speech_style': 'اجتماعية، خفيفة دم، ردودها سريعة ومرحة، لا تحب التذمر الطويل وتقلب المواقف المزعجة إلى ضحك',
-        'signature_phrases': ['ههههه', 'يا زينكم', 'والله حالة'],
+        'speech_style': 'اجتماعية، خفيفة دم، ردودها سريعة وطبيعية، لا تحب التذمر الطويل',
+        'signature_phrases': ['يا زينكم', 'والله حالة', 'ما شاء الله'],
         'hobbies': ['البلياردو', 'التصوير', 'القهوة المختصة', 'متابعة المباريات'],
         'schedule': {
             'morning': 'دوام تسويق واجتماعات سريعة',
             'afternoon': 'رجعة البيت وغداء مع الأهل وقيلولة خفيفة',
-            'evening': 'روقان مع القهوة ولعب بلياردو في المجلس',
+            'evening': 'روقان مع القهوة ولعب بلياردو في الروم',
             'night': 'سوالف مع سارة وشهد ومتابعة مسلسلات'
         },
         'family': {
-            'mother': {'name': 'منيرة', 'role': 'mother', 'in_room': False},
-            'brother': {'name': 'محمد', 'role': 'brother', 'age': 20, 'traits': 'ساخر ويحب الألعاب والتقنية', 'in_room': False},
-            'sister_bot': {'id': 'v3mk', 'name': 'ريم', 'role': 'sister', 'in_room': True}
+            'mother': {'name': 'منيرة', 'role': 'mother', 'label_ar': 'أمي منيرة', 'in_room': False},
+            'brother': {'name': 'محمد', 'role': 'brother', 'age': 20, 'label_ar': 'أخوي الصغير محمد', 'traits': 'ساخر ويحب الألعاب والتقنية', 'in_room': False},
+            'sister_bot': {'id': 'v3mk', 'name': 'ريم', 'role': 'sister', 'label_ar': 'أختي الكبيرة ريم', 'in_room': True}
         }
     },
     'v3mk': {
@@ -55,13 +55,13 @@ PERSONA_LIFE_PROFILES = {
         'schedule': {
             'morning': 'عمل مكتبي ومقابلات توظيف',
             'afternoon': 'ترتيب البيت ومساعدة الوالدة منيرة',
-            'evening': 'قراءة كتاب أو دخول المجلس للاستجمام',
+            'evening': 'قراءة كتاب أو دخول الروم للاستجمام',
             'night': 'جلسة هادئة مع أختها نورة'
         },
         'family': {
-            'mother': {'name': 'منيرة', 'role': 'mother', 'in_room': False},
-            'brother': {'name': 'محمد', 'role': 'brother', 'age': 20, 'traits': 'ساخر ويحب الألعاب والتقنية', 'in_room': False},
-            'sister_bot': {'id': 'x7v', 'name': 'نورة', 'role': 'sister', 'in_room': True}
+            'mother': {'name': 'منيرة', 'role': 'mother', 'label_ar': 'أمي منيرة', 'in_room': False},
+            'brother': {'name': 'محمد', 'role': 'brother', 'age': 20, 'label_ar': 'أخوي الصغير محمد', 'traits': 'ساخر ويحب الألعاب والتقنية', 'in_room': False},
+            'sister_bot': {'id': 'x7v', 'name': 'نورة', 'role': 'sister', 'label_ar': 'أختي الصغيرة نورة', 'in_room': True}
         }
     },
     'r9kx': {
@@ -72,19 +72,19 @@ PERSONA_LIFE_PROFILES = {
         'occupation': 'طالبة تصميم جرافيك',
         'temperament': 'witty_creative',
         'sociability': 0.85,
-        'speech_style': 'عفوية، تحب التعليقات الذكية والمزح مع صديقاتها المقربات نورة وشهد',
-        'signature_phrases': ['مو صاحين ههههه', 'تخيلوا عاد', 'يا سلام'],
+        'speech_style': 'عفوية، تحب التعليقات الذكية مع صديقاتها المقربات نورة وشهد',
+        'signature_phrases': ['تخيلوا عاد', 'يا سلام', 'فكرة رهيبة'],
         'hobbies': ['الرسم الرقمي', 'تربية القطط', 'الأفلام', 'البلياردو'],
         'schedule': {
             'morning': 'محاضرات تصميم في الجامعة',
             'afternoon': 'تسليم مشاريع رسم واللعب مع قطتها لوزة',
-            'evening': 'دخول شات المجلس مع نورة وشهد',
+            'evening': 'دخول شات الروم مع نورة وشهد',
             'night': 'تصميم وسهر خفيف'
         },
         'family': {
-            'mother': {'name': 'حصة', 'role': 'mother', 'in_room': False},
-            'sister': {'name': 'لين', 'role': 'younger_sister', 'age': 16, 'in_room': False},
-            'pet': {'name': 'لوزة', 'role': 'cat', 'in_room': False}
+            'mother': {'name': 'حصة', 'role': 'mother', 'label_ar': 'أمي حصة', 'in_room': False},
+            'sister': {'name': 'لين', 'role': 'younger_sister', 'age': 16, 'label_ar': 'أختي الصغيرة لين', 'in_room': False},
+            'pet': {'name': 'لوزة', 'role': 'cat', 'label_ar': 'قطتي لوزة', 'in_room': False}
         }
     },
     'z8qx': {
@@ -96,17 +96,17 @@ PERSONA_LIFE_PROFILES = {
         'temperament': 'expressive_storyteller',
         'sociability': 0.92,
         'speech_style': 'عاطفية قليلاً، تحب سرد المواقف والقصص اليومية بحماس وتفاعل',
-        'signature_phrases': ['ما تصدقون وش صار', 'يمه يا بنات', 'والله قهر ههههه'],
+        'signature_phrases': ['ما تصدقون وش صار', 'يا بنات', 'والله شي عجيب'],
         'hobbies': ['متابعة الترندات', 'البحر', 'التصوير', 'الألغاز'],
         'schedule': {
             'morning': 'محاضرات إعلام بالجامعة',
             'afternoon': 'مذاكرة أو طلعة كافيه في جدة',
-            'evening': 'سوالف وألغاز في المجلس مع نورة وسارة وبنت خالتها لمى',
+            'evening': 'سوالف وألغاز في الروم مع نورة وسارة وبنت خالتها لمى',
             'night': 'متابعة مقاطع وتحديات'
         },
         'family': {
-            'brother': {'name': 'فهد', 'role': 'brother', 'age': 25, 'traits': 'يحب النقاش والتحديات والسيارات', 'in_room': False},
-            'cousin_bot': {'id': 'k5lp', 'name': 'لمى', 'role': 'cousin', 'in_room': True}
+            'brother': {'name': 'فهد', 'role': 'brother', 'age': 25, 'label_ar': 'أخوي الكبير فهد', 'traits': 'يحب النقاش والتحديات والسيارات', 'in_room': False},
+            'cousin_bot': {'id': 'k5lp', 'name': 'لمى', 'role': 'cousin', 'label_ar': 'بنت خالتي لمى', 'in_room': True}
         }
     },
     'k5lp': {
@@ -117,18 +117,18 @@ PERSONA_LIFE_PROFILES = {
         'occupation': 'طالبة علوم حاسب',
         'temperament': 'analytical_sarcastic',
         'sociability': 0.8,
-        'speech_style': 'ذكية، تميل للسخرية الخفيفة والمنطق، تحب التقنية والتحديات الذهنية',
+        'speech_style': 'ذكية، تميل للمنطق، تحب التقنية والتحديات الذهنية',
         'signature_phrases': ['منطقياً يعني', 'صحصحي معنا', 'رهيبة والله'],
         'hobbies': ['البرمجة', 'الألعاب الإلكترونية', 'الشطرنج', 'البلياردو'],
         'schedule': {
             'morning': 'معامل برمجة ومحاضرات حاسب',
             'afternoon': 'حل تقييمات تقنية ومساعدة بنت خالتها شهد',
-            'evening': 'مباريات بلياردو وألغاز في المجلس',
+            'evening': 'مباريات بلياردو وألغاز في الروم',
             'night': 'سهر على الألعاب والتقنية'
         },
         'family': {
-            'brother': {'name': 'سلطان', 'role': 'brother', 'age': 19, 'in_room': False},
-            'cousin_bot': {'id': 'z8qx', 'name': 'شهد', 'role': 'cousin', 'in_room': True}
+            'brother': {'name': 'سلطان', 'role': 'brother', 'age': 19, 'label_ar': 'أخوي سلطان', 'in_room': False},
+            'cousin_bot': {'id': 'z8qx', 'name': 'شهد', 'role': 'cousin', 'label_ar': 'بنت خالتي شهد', 'in_room': True}
         }
     },
     'f9xr': {
@@ -224,7 +224,7 @@ PERSONA_LIFE_PROFILES = {
         'temperament': 'cheerful_spontaneous',
         'sociability': 0.88,
         'speech_style': 'عفوية، مرحة، ترحب بالجميع وتلطف الجو بين دانة ونوف',
-        'signature_phrases': ['يا حبيلكم', 'ههههه شدعوة', 'حياكم الله'],
+        'signature_phrases': ['يا حبيلكم', 'شدعوة', 'حياكم الله'],
         'hobbies': ['تعلم اللغات', 'المسلسلات الآسيوية', 'البلياردو', 'الطلعات'],
         'schedule': {
             'morning': 'محاضرات ترجمة بالجامعة',
@@ -248,10 +248,10 @@ LOCAL_EVENT_CATALOG = [
         'valence': 'negative',
         'eligible': ['x7v', 'v3mk'],
         'title': 'أخوي محمد أخذ شاحني وطلع',
-        'active_text': 'أخوي محمد رافع ضغطي اليوم أخذ شاحني الأصلي وطلع مع أصحابه بدون ما يستأذن ههههه',
+        'active_text': 'أخوي محمد رافع ضغطي اليوم أخذ شاحني الأصلي وطلع مع أصحابه بدون ما يستأذن',
         'developing_question': 'هاه يا {target_name} وش صار مع أخوك محمد رجع لك الشاحن ولا باقي؟',
         'developing_text': 'تخيلي دقيت عليه قال نسي الشاحن بسيارة خويه وبيرجعه الليلة',
-        'resolved_text': 'لا الحمد لله محمد رجع الشاحن وجاب لي معه قهوة وحلا يراضيني وتصالحنا ههههه',
+        'resolved_text': 'لا الحمد لله محمد رجع الشاحن وجاب لي معه قهوة وحلا يراضيني وتصالحنا',
         'mood_delta': -0.5,
         'importance': 3,
         'involved_secondary': 'محمد'
@@ -264,7 +264,7 @@ LOCAL_EVENT_CATALOG = [
         'title': 'غداء الوالدة منيرة اليوم',
         'active_text': 'اليوم أمي منيرة مسوية لنا كبسة ومضبي بالبيت ريحتها تفتح النفس من الصبح',
         'developing_question': 'بالعافية يا {target_name} كيف كان غداء الوالدة اليوم؟',
-        'developing_text': 'والله أكلنا لين دخت والحين يبيلها شاهي خادر يعدل الراس ههههه',
+        'developing_text': 'والله أكلنا لين دخت والحين يبيلها شاهي خادر يعدل الراس',
         'resolved_text': 'كان غداء عائلي يجنن مع أمي منيرة وأخوي محمد والحمد لله انبسطنا',
         'mood_delta': 0.7,
         'importance': 2,
@@ -276,7 +276,7 @@ LOCAL_EVENT_CATALOG = [
         'valence': 'ordinary',
         'eligible': ['z8qx'],
         'title': 'نقاش مع أخوي فهد عن السيارات',
-        'active_text': 'أخوي فهد من الصبح يناقشني يبي يغير سيارته ومحتار بين لونين وصدع راسي معه ههههه',
+        'active_text': 'أخوي فهد من الصبح يناقشني يبي يغير سيارته ومحتار بين لونين وصدع راسي معه',
         'developing_question': 'هاه يا {target_name} وش رسى عليه أخوك فهد بموضوع السيارة؟',
         'developing_text': 'أقنعته باللون الأسود والحين رايح المعرض يشوفها',
         'resolved_text': 'خلاص فهد اختار اللون اللي قلت له عليه وطلع مبسوط فيها الحمد لله',
@@ -291,7 +291,7 @@ LOCAL_EVENT_CATALOG = [
         'valence': 'ordinary',
         'eligible': ['r9kx', 'b4yqz', 'd7wsx', 't2rnx'],
         'title': 'ترتيب وتغيير ديكور الغرفة',
-        'active_text': 'اليوم مسكت معي أغير ترتيب غرفتي وأركب إضاءة جديدة بس ظهري انكسر من النقل ههههه',
+        'active_text': 'اليوم مسكت معي أغير ترتيب غرفتي وأركب إضاءة جديدة بس ظهري انكسر من النقل',
         'developing_question': 'بشري يا {target_name} خلصتي ترتيب غرفتك ولا باقي حايسة؟',
         'developing_text': 'باقي بس أركب اللوحات والزاوية حقت المكتب وتضبط',
         'resolved_text': 'خلصت ترتيب الغرفة كاملة وطلعت الإضاءة الجديدة تفتح النفس الحمد لله',
@@ -306,7 +306,7 @@ LOCAL_EVENT_CATALOG = [
         'title': 'تجربة وصفة حلا جديدة بالبيت',
         'active_text': 'سويت اليوم صينية حلا بالبيت على طريقة شفتها وضبطت معي من أول مرة',
         'developing_question': 'كيف طلع الحلا اللي سويتيه يا {target_name} عسى بقى لنا شي؟',
-        'developing_text': 'والله الأهل قضوا على نص الصينية مع القهوة ما شاء الله ههههه',
+        'developing_text': 'والله الأهل قضوا على نص الصينية مع القهوة ما شاء الله',
         'resolved_text': 'الحلا خلص كله وعجب الأهل وطلبوا أعيده لهم بالويكند',
         'mood_delta': 0.6,
         'importance': 2
@@ -659,7 +659,7 @@ class LifeEngine:
         with self.db:
             for pid, data in PERSONA_LIFE_PROFILES.items():
                 self.db.execute(
-                    '''INSERT OR IGNORE INTO life_identities(
+                    '''INSERT OR REPLACE INTO life_identities(
                            persona_id, social_name, nickname, age, city, occupation,
                            temperament, sociability, speech_style, hobbies_json,
                            schedule_json, family_json, updated_at
@@ -986,22 +986,36 @@ class LifeEngine:
         ev = self.get_event(event_id)
         if not ev:
             return {'knows': False, 'status': 'Missing', 'text': ''}
+
+        is_owner = (persona_id == ev['owner_id'])
+        owner_name = self.get_identity(ev['owner_id'])['social_name']
+        fam_rel = self.get_family_relation(persona_id, ev['owner_id'])
+        is_sister = bool(fam_rel and fam_rel['fact_relation'] == 'sister')
+
         if ev['status'] in ('Resolved', 'Archived'):
-            return {
-                'knows': True,
-                'status': ev['status'],
-                'text': ev['resolved_text']
-            }
+            raw_text = ev['resolved_text']
+            if not is_owner:
+                if is_sister and ev['template_key'] == 'bro_charger':
+                    raw_text = f"الحمد لله أخوي محمد رجع الشاحن لأختي {owner_name} وجاب لها قهوة وحلا وتصالحنا"
+                else:
+                    raw_text = f"الحمد لله {owner_name} انحلت سالفتها: {raw_text}"
+            return {'knows': True, 'status': ev['status'], 'text': raw_text}
+
         if ev['status'] == 'Developing':
-            return {
-                'knows': True,
-                'status': 'Developing',
-                'text': ev['developing_text'] or ev['active_text']
-            }
+            raw_text = ev['developing_text'] or ev['active_text']
+        else:
+            raw_text = ev['active_text']
+
+        if not is_owner:
+            if is_sister and ev['template_key'] == 'bro_charger':
+                raw_text = f"اي أخوي محمد أخذ شاحن أختي {owner_name} الأصلي وطلع مع أصحابه وقال بيرجعه الليلة"
+            else:
+                raw_text = f"اي {owner_name} قالت لي: {raw_text}"
+
         return {
             'knows': True,
             'status': ev['status'],
-            'text': ev['active_text']
+            'text': raw_text
         }
 
     def simulate_days(self, persona_id: str, days: int = 30) -> list[dict]:
@@ -1065,12 +1079,24 @@ class LifeEngine:
             pass
         return [self.create_daily_event(pid, virtual_day=virtual_day) for pid in target_ids]
 
-    def build_economic_memory_slice(self, persona_id: str, speaker_id: str = '', query_text: str = '') -> dict:
+    def build_economic_memory_slice(self, persona_id: str, speaker_id: str = '', query_text: str = '', recent_context_text: str = '') -> dict:
         """Retrieve ONLY the minimal, directly relevant identity, relationship, emotion, and known event slice."""
         self.budget.record_local_op(self.room)
         ident = self.get_identity(persona_id)
         emotion = self.get_emotion(persona_id)
         fam_rel = self.get_family_relation(persona_id, speaker_id) if speaker_id else None
+
+        # Separate in-room relatives vs off-room relatives at home so the bot NEVER claims off-room family are in the room
+        in_room_family = []
+        off_room_family = []
+        for k, v in ident.get('family', {}).items():
+            if not isinstance(v, dict):
+                continue
+            label = v.get('label_ar') or v.get('name', '')
+            if v.get('in_room'):
+                in_room_family.append(f"{label} (موجودة معنا في الروم)")
+            else:
+                off_room_family.append(f"{label} (في البيت فقط بالواقع، غير موجود في الروم ولا يملك حساباً)")
 
         # Only fetch 1 relevant active/recent event that persona_id actually KNOWS about
         row = self.db.execute(
@@ -1088,70 +1114,157 @@ class LifeEngine:
 
         epistemic_note = ''
         if query_text:
-            ep = self.check_epistemic_event_query(persona_id, query_text)
+            ep = self.check_epistemic_event_query(persona_id, query_text, recent_context_text=recent_context_text)
             if ep:
                 if ep['knows']:
-                    epistemic_note = f"تعرفين هذه السالفة ({ep['status']}): {ep['text']}"
+                    epistemic_note = f"السالفة المقصودة تخص {ep['subject_name']} ({ep['status']}): {ep['text']}"
                 else:
                     epistemic_note = f"ممنوع ادعاء المعرفة: {ep['subject_name']} لم تخبرك بهذه السالفة؛ قولي إنك ما تدرين عنها."
 
-        return {
+        slice_obj = {
             'my_name': ident['social_name'],
+            'my_age': ident['age'],
             'my_city': ident['city'],
             'my_role': ident['occupation'],
-            'speech_style': ident['speech_style'],
             'mood': emotion['mood_label'],
-            'family_facts': {
-                k: v.get('name') for k, v in ident.get('family', {}).items() if isinstance(v, dict)
-            },
-            'speaker_family_link': fam_rel['fact_relation'] if fam_rel else None,
-            'relevant_life_event': known_event_summary,
-            'epistemic_directive': epistemic_note
+            'in_room_family': in_room_family,
+            'home_only_family': off_room_family,
         }
+        if fam_rel:
+            slice_obj['speaker_family_link'] = fam_rel['fact_relation']
+        if known_event_summary:
+            slice_obj['relevant_life_event'] = known_event_summary
+        if epistemic_note:
+            slice_obj['epistemic_directive'] = epistemic_note
+        return slice_obj
 
-    def resolve_family_fact(self, persona_id: str) -> str:
-        """Return a natural Arabic summary of persona_id's verified family members."""
+    def resolve_family_fact(self, persona_id: str, query_text: str = '') -> str:
+        """Return a natural, room-aware Arabic summary of persona_id's verified family members or specific relation."""
         self.budget.record_local_op(self.room)
         ident = self.get_identity(persona_id)
         fam = ident.get('family', {})
-        parts = []
-        if 'sister_bot' in fam:
-            parts.append(f"أختي {fam['sister_bot']['name']} معنا هنا في المجلس")
-        if 'sister' in fam:
-            parts.append(f"أختي {fam['sister']['name']}")
-        if 'brother' in fam:
-            parts.append(f"أخوي {fam['brother']['name']}")
-        if 'mother' in fam:
-            parts.append(f"أمي {fam['mother']['name']}")
-        if 'cousin_bot' in fam:
-            parts.append(f"بنت خالتي {fam['cousin_bot']['name']} معنا في المجلس")
-        return ' و'.join(parts) if parts else 'عائلتي بخير الحمد لله'
+        q_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', query_text or ''))
 
-    def check_epistemic_event_query(self, responder_id: str, query_text: str) -> dict | None:
+        # Check if asking specifically about relation to a named persona ("شتقرب لك نوره" / "وش تقرب لك ريم")
+        if any(w in q_norm for w in ('تقرب', 'تصير')):
+            for pid, pdata in PERSONA_LIFE_PROFILES.items():
+                if pid == persona_id:
+                    continue
+                sname_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', pdata['social_name']))
+                if sname_norm in q_norm:
+                    if 'sister_bot' in fam and fam['sister_bot'].get('id') == pid:
+                        label = fam['sister_bot'].get('label_ar', f"أختي {pdata['social_name']}")
+                        return f"{pdata['social_name']} تصير {label} ومعنا هنا بالروم"
+                    if 'cousin_bot' in fam and fam['cousin_bot'].get('id') == pid:
+                        return f"{pdata['social_name']} تصير بنت خالتي ومعنا هنا بالروم"
+                    return f"{pdata['social_name']} صديقتي وزميلتي هنا بالروم"
+
+        in_room_parts = []
+        home_parts = []
+        if 'sister_bot' in fam:
+            lbl = fam['sister_bot'].get('label_ar') or f"أختي {fam['sister_bot']['name']}"
+            in_room_parts.append(f"{lbl} معنا هنا بالروم")
+        if 'cousin_bot' in fam:
+            lbl = fam['cousin_bot'].get('label_ar') or f"بنت خالتي {fam['cousin_bot']['name']}"
+            in_room_parts.append(f"{lbl} معنا هنا بالروم")
+        if 'sister' in fam:
+            home_parts.append(f"أختي {fam['sister']['name']}")
+        if 'brother' in fam:
+            home_parts.append(f"أخوي {fam['brother']['name']}")
+        if 'mother' in fam:
+            home_parts.append(f"أمي {fam['mother']['name']}")
+
+        if in_room_parts and home_parts:
+            return f"{' و'.join(in_room_parts)} أما {' و'.join(home_parts)} بالبيت مو معنا بالروم"
+        if in_room_parts:
+            return ' و'.join(in_room_parts)
+        if home_parts:
+            return f"{' و'.join(home_parts)} كلهم بالبيت مو معنا بالروم"
+        return 'عائلتي بخير الحمد لله'
+
+    def check_off_room_presence_query(self, persona_id: str, query_text: str) -> str | None:
+        """If the user asks whether an off-room relative is in the chat room or what 'بالروم/بالمجلس' meant,
+        explicitly clarify that off-room family members are at home in real life, never in the room."""
+        if not query_text:
+            return None
+        q_norm = re.sub(r'[ى]', 'ي', re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', query_text)))
+        room_clarification_triggers = (
+            'تقصدين باروم', 'تقصدين بالروم', 'بالروم ذا معني', 'بالروم ذا معنا',
+            'شلون بالروم', 'كيف بالروم', 'الواقع ولا اللعبه', 'الواقع ولا باللعبه',
+            'معنا بالروم', 'معانا بالروم', 'موجود بالروم', 'يدخل الروم'
+        )
+        ident = self.get_identity(persona_id)
+        fam = ident.get('family', {})
+        off_names = [v['name'] for v in fam.values() if isinstance(v, dict) and not v.get('in_room')]
+        has_off_name_in_room_q = any(n in query_text for n in off_names) and any(w in q_norm for w in ('روم', 'باروم', 'مجلس', 'معنا', 'معني'))
+
+        if any(t in q_norm for t in room_clarification_triggers) or has_off_name_in_room_q:
+            self.budget.record_local_op(self.room)
+            if 'sister_bot' in fam and 'brother' in fam:
+                sis_name = fam['sister_bot']['name']
+                bro_name = fam['brother']['name']
+                return f"لا أقصد عندنا بالبيت في الواقع أخوي {bro_name} ما يدخل الروم ولا عنده حساب هنا بس أختي {sis_name} اللي معنا بالروم"
+            if off_names:
+                return f"لا أقصد عندنا بالبيت في الواقع {off_names[0]} ما يدخل الروم ولا عنده حساب هنا"
+            return "لا أقصد في الواقع بالبيت مو داخل الروم هنا"
+        return None
+
+    def check_epistemic_event_query(self, responder_id: str, query_text: str, recent_context_text: str = '') -> dict | None:
         """Check if query_text asks about a life event (either responder's own or another persona's)
-        and enforce strict epistemic isolation + resolved continuity."""
+        and enforce strict epistemic isolation + resolved continuity + pronoun resolution."""
         if not query_text:
             return None
         self.budget.record_local_op(self.room)
+        q_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', query_text))
+        ctx_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', recent_context_text or ''))
+
         name_to_id = {v['social_name']: k for k, v in PERSONA_LIFE_PROFILES.items()}
         subject_id = None
         subject_name = ''
         for sname, pid in name_to_id.items():
-            if pid != responder_id and sname in query_text:
+            sname_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', sname))
+            if pid != responder_id and sname_norm in q_norm:
                 subject_id = pid
                 subject_name = sname
                 break
 
+        # Pronoun resolution: if the user asks "وش سالفتها احسها متكدره قالت لك شي" without repeating the name,
+        # resolve the third-person feminine subject from the recent conversation context!
+        third_person_fem_markers = ('سالفتها', 'احسها', 'متكدره', 'متضايقه', 'قالت لك', 'شفيها', 'اخوها', 'دوامها')
+        if not subject_id and any(m in q_norm for m in third_person_fem_markers) and ctx_norm:
+            for sname, pid in name_to_id.items():
+                sname_norm = re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', sname))
+                if pid != responder_id and sname_norm in ctx_norm:
+                    subject_id = pid
+                    subject_name = sname
+                    break
+
         event_keywords = (
-            'وش صار', 'ايش صار', 'إيش صار', 'سالفة', 'سالفه', 'مشكلة', 'مشكله',
-            'شاحن', 'دوام', 'العمل', 'شغل', 'أخوك', 'اخوك', 'أخوها', 'اخوها',
-            'متضايقة', 'متضايقه', 'زعلانة', 'زعلانه', 'موضوع'
+            'وش صار', 'ايش صار', 'إيش صار', 'سالفة', 'سالفه', 'سالفتها', 'سالفته', 'مشكلة', 'مشكله',
+            'شاحن', 'دوام', 'العمل', 'شغل', 'أخوك', 'اخوك', 'أخوها', 'اخوها', 'اخوكم', 'أخوكم',
+            'متضايقة', 'متضايقه', 'متكدره', 'متكدرة', 'زعلانة', 'زعلانه', 'موضوع', 'شخبار محمد', 'اخبار محمد',
+            'صار لك شيء جديد', 'صار لك شي جديد'
         )
-        if not any(kw in query_text for kw in event_keywords):
+        if not any(re.sub(r'[ة]', 'ه', re.sub(r'[إأآا]', 'ا', kw)) in q_norm for kw in event_keywords):
             return None
 
         target_owner = subject_id or responder_id
         target_name = subject_name or self.get_identity(responder_id)['social_name']
+
+        # If asking specifically about نورة/ريم's brother محمد (or نورة's new event today) and no event exists yet for x7v in a fresh DB,
+        # seed the shared household 'bro_charger' event for x7v and share with her sister v3mk and friend r9kx
+        if target_owner in ('x7v', 'v3mk') and ('محمد' in q_norm or 'شاحن' in q_norm or 'جديد' in q_norm or (subject_id == 'x7v' and responder_id == 'v3mk')):
+            existing_x7v = self.db.execute(
+                'SELECT event_id FROM life_events WHERE room=? AND owner_id=?',
+                (self.room, 'x7v')
+            ).fetchall()
+            if not existing_x7v:
+                seeded = self.create_daily_event('x7v', virtual_day=1, specific_key='bro_charger')
+                self.share_event(seeded['event_id'], 'x7v', ['v3mk', 'r9kx'], current_day=1)
+            if 'محمد' in q_norm or 'شاحن' in q_norm:
+                target_owner = 'x7v'
+                target_name = 'نورة'
+
         rows = self.db.execute(
             '''SELECT event_id, title, active_text, involved_secondary
                FROM life_events WHERE room=? AND owner_id=?

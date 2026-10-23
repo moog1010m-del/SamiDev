@@ -14,9 +14,28 @@ def safe_text(text):
     return text[:600]
 
 
+def normalize_saudi_dialect(s: str) -> str:
+    """Expand common Saudi mobile shorthand and typos into clear standard dialect forms."""
+    if not isinstance(s, str):
+        return ''
+    s = re.sub(r'\bشتقربلك\b', 'وش تقرب لك', s)
+    s = re.sub(r'\bشتقرب\b', 'وش تقرب', s)
+    s = re.sub(r'\bشتصير\b', 'وش تصير', s)
+    s = re.sub(r'\bشخبار\b', 'وش اخبار', s)
+    s = re.sub(r'\bشعلوم\b', 'وش علوم', s)
+    s = re.sub(r'\bشسالف[ةه]\b', 'وش سالفه', s)
+    s = re.sub(r'\bا?شفيها\b', 'وش فيها', s)
+    s = re.sub(r'\bا?شفيك\b', 'وش فيك', s)
+    s = re.sub(r'\bباروم\b', 'بالروم', s)
+    s = re.sub(r'بالروم\s+ذا\s+معن[ىي]', 'بالروم ذا معنا', s)
+    s = re.sub(r'\bاصتناعي\b', 'اصطناعي', s)
+    return s
+
+
 def norm_ar(s):
     if not isinstance(s, str):
         return ''
+    s = normalize_saudi_dialect(s)
     s = re.sub(r'[\u064b-\u065f\u0670]', '', s)
     s = re.sub(r'[إأآا]', 'ا', s)
     s = re.sub(r'[ة]', 'ه', s)
@@ -30,9 +49,11 @@ EMOJI_RE = re.compile(
 )
 
 
-def humanize_chat(text: str, turn_index: int = 1) -> str:
-    """Make bot output look like real Saudi mobile typing:
+def humanize_chat(text: str, turn_index: int = 1, strip_trailing_laugh: bool = False) -> str:
+    """Make bot output look like real Saudi mobile typing without distorting words:
     - Strip commas (،), exclamation marks (!), semicolons (؛), trailing periods (.)
+    - Remove awkward male/robotic vocatives ('يالطيب', 'بالغالي')
+    - Strip meaningless trailing 'ههههه' when strip_trailing_laugh is True
     - Allow at most 1 emoji ONLY once every 5 messages (turn_index % 5 == 0); strip all emojis on the other 4 turns.
     """
     if not text:
@@ -43,10 +64,18 @@ def humanize_chat(text: str, turn_index: int = 1) -> str:
     # Strip trailing periods or ellipses
     s = re.sub(r'\.{1,}\s*$', '', s)
     s = re.sub(r'\.{2,}', ' ', s)
+    # Remove awkward male-style filler vocatives
+    s = re.sub(r'\b(يا\s*الطيب|يالطيب|بالغالي|يا\s*الغالي|يالغالي)\b', '', s)
 
     allow_emoji = (turn_index % 5 == 0)
     emojis = EMOJI_RE.findall(s)
     s_clean = EMOJI_RE.sub('', s)
+    if strip_trailing_laugh:
+        # Remove meaningless trailing or leading 'هههه+' unless it's the only word
+        stripped = re.sub(r'\s+\bه{3,}\b\s*$', '', s_clean).strip()
+        stripped = re.sub(r'^\s*\bه{3,}\b\s+', '', stripped).strip()
+        if stripped:
+            s_clean = stripped
     s_clean = re.sub(r'[ \t]{2,}', ' ', s_clean).strip()
 
     if allow_emoji and emojis:
@@ -495,12 +524,13 @@ class Coordinator:
         if not active:
             return None
         exclude = set(exclude_ids or [])
+        is_human = bool(user_id and user_id not in self.identities)
 
         if text:
             text_lower = text.casefold()
             text_norm = norm_ar(text)
             words = text_norm.split()
-            # Pass 1: Direct vocative ('يا ريم', 'يا لمى') or explicit handle or sentence-initial name
+            # Pass 1: Direct vocative ('يا ريم', 'يا لمى') or explicit handle or sentence-initial name ('ريم ...')
             for p in active:
                 if p['id'] in exclude:
                     continue
@@ -511,11 +541,24 @@ class Coordinator:
                 is_vocative = any(f"يا {n}" in text_norm or (words and words[0] == n) for n in names)
                 is_handle = p['id'].casefold() in text_lower or bool(p.get('username') and p['username'].casefold() in text_lower)
                 if is_vocative or is_handle:
-                    if user_id and user_id not in self.identities:
+                    if is_human:
                         self.threads[user_id] = (p['id'], time.monotonic())
                     return p
 
-            # Pass 2: General mention (unless preceded by third-person prepositions like 'مع شهد' or 'عن شهد')
+        # Pass 2: Active Human Thread Continuity — keep the user with their current interlocutor
+        # even if they mention another bot in the third person (e.g., asking Reem: "شتقرب لك نوره")
+        if is_human and user_id in self.threads:
+            threaded_id, ts = self.threads[user_id]
+            if time.monotonic() - ts <= 180 and threaded_id not in exclude:
+                matched = next((p for p in active if p['id'] == threaded_id), None)
+                if matched:
+                    self.threads[user_id] = (matched['id'], time.monotonic())
+                    return matched
+
+        if text:
+            text_norm = norm_ar(text)
+            words = text_norm.split()
+            # Pass 3: General mention when no active thread exists (unless third-person object)
             for p in active:
                 if p['id'] in exclude:
                     continue
@@ -524,23 +567,22 @@ class Coordinator:
                 pname = norm_ar(p.get('name', ''))
                 names = [n for n in (sname, nick, pname) if n]
                 if any(
-                    n in words and not any(f"{prep} {n}" in text_norm for prep in ('مع', 'عن', 'ان', 'لأن', 'لان'))
+                    n in words and not any(f"{prep} {n}" in text_norm for prep in ('مع', 'عن', 'ان', 'لأن', 'لان', 'لك', 'سالفه'))
                     for n in names
                 ):
-                    if user_id and user_id not in self.identities:
+                    if is_human:
                         self.threads[user_id] = (p['id'], time.monotonic())
                     return p
 
-        is_human = bool(user_id and user_id not in self.identities)
-        if is_human and user_id in self.threads:
-            threaded_id, ts = self.threads[user_id]
-            if time.monotonic() - ts <= 120 and threaded_id not in exclude:
-                matched = next((p for p in active if p['id'] == threaded_id), None)
-                if matched:
-                    self.threads[user_id] = (matched['id'], time.monotonic())
-                    return matched
+        # Pass 4: If a new human joins/follows up on what the last bot speaker just said (within 90s),
+        # keep the conversation with that last bot speaker so another bot doesn't answer on her behalf!
+        if is_human and self.last_speaker_id and (time.monotonic() - self.last_sent <= 90) and self.last_speaker_id not in exclude:
+            matched = next((p for p in active if p['id'] == self.last_speaker_id), None)
+            if matched:
+                self.threads[user_id] = (matched['id'], time.monotonic())
+                return matched
 
-        if self.last_speaker_id:
+        if not is_human and self.last_speaker_id:
             exclude.add(self.last_speaker_id)
 
         candidates = [p for p in active if p['id'] not in exclude]
@@ -619,7 +661,7 @@ class Coordinator:
                 'next_stage_time': now + 6.5,
                 'solved': False
             }
-            return Reply(p1['id'], humanize_chat('بنات مين الجديدة اللي معنا بالشات ما قد سولفنا من قبل ههههه', self.turn + 1), 'social_intro')
+            return Reply(p1['id'], humanize_chat('بنات مين الجديدة اللي معنا بالشات ما قد سولفنا من قبل', self.turn + 1), 'social_intro')
 
         if self.life and (self.social_scene_index % 2 == 0):
             # 1. Check if any active friend has a follow-up question on a known event from a previous day
@@ -651,11 +693,11 @@ class Coordinator:
                 sname = self.social_name_of(speaker_prof['id'])
                 fam = self.life.get_family_relation(l1, speaker_prof['id'])
                 if fam and fam['fact_relation'] == 'sister':
-                    react = f'ههههه الله يعينك يا أختي {sname} عاد أنتِ أدرى بالوضع'
+                    react = f'الله يعينك يا أختي {sname} عاد أنتِ أدرى بالوضع'
                 elif ev['valence'] == 'positive':
                     react = f'ما شاء الله يا {sname} خبر يفتح النفس والله دوم الروقان'
                 else:
-                    react = f'ههههه يلا بسيطة يا {sname} تعالي نلعب ونغير جو بالمجلس'
+                    react = f'يلا بسيطة يا {sname} تعالي نلعب ونغير جو بالمجلس'
                 self.current_riddle = {
                     'type': 'social_scene',
                     'steps': [(l1, react, 6.5)],
@@ -1109,8 +1151,11 @@ class Coordinator:
         if not profile:
             return None
 
-        def local(value):
-            cleaned = humanize_chat(value, self.turn + 1)
+        is_humorous_msg = any(w in text for w in ('هههه', 'تخيل', 'مقلب', 'نكتة', 'نكته', 'ضحك', '😂', '🤣'))
+
+        def local(value, strip_laugh=None):
+            do_strip = (not is_humorous_msg) if strip_laugh is None else strip_laugh
+            cleaned = humanize_chat(value, self.turn + 1, strip_trailing_laugh=do_strip)
             self.memory.set_agent_state(profile['id'], last_reply=cleaned, last_target_uid=message.user_id, last_target_name=human_name)
             return Reply(profile['id'], cleaned, 'local', messages=(cleaned,))
 
@@ -1147,17 +1192,30 @@ class Coordinator:
         if any(term in text for term in ('تذكرني', 'لعبتي المفضلة', 'لعبتي المفضله')):
             preference = self.memory.preference(message.user_id)
             return local(f'أذكر إنك قلت لعبتك المفضلة {preference}' if preference else 'ما خبرتك ذكرت لي شي معين من قبل')
+        if any(term in clean_text for term in ('كم عمرك', 'عمرك كم', 'وش عمرك')):
+            age = self.life.get_identity(profile['id'])['age'] if self.life else profile.get('age', 23)
+            sname = self.social_name_of(profile['id'])
+            return local(f'أنا {sname} وعمري {age} سنة')
         if any(term in text for term in ('رصيدي', 'كم فوز', 'كم عمري', 'نتيجة', 'نتيجه', 'سعر', 'عملات')):
             return local('ما عندي وصول لمعلومة أكيدة عن هالشي شيك من المنصة')
 
         if self.life:
-            if any(w in clean_text for w in ('مين اختك', 'من اختك', 'مين اخوك', 'من اخوك', 'اسم امك', 'وش اسم امك', 'عايلتك', 'عائلتك', 'ريم اختك', 'نوره اختك', 'محمد اخوك', 'وش تقرب لك')):
-                return local(self.life.resolve_family_fact(profile['id']))
-            ep = self.life.check_epistemic_event_query(profile['id'], text)
+            off_room = self.life.check_off_room_presence_query(profile['id'], text)
+            if off_room:
+                return local(off_room)
+            if any(w in clean_text for w in ('مين اختك', 'من اختك', 'مين اخوك', 'من اخوك', 'اسم امك', 'وش اسم امك', 'عايلتك', 'عائلتك', 'ريم اختك', 'نوره اختك', 'وش تقرب لك', 'وش تصير لك', 'تقرب لك')):
+                return local(self.life.resolve_family_fact(profile['id'], text))
+            recent_rows = self.memory.context(self.room, self.identities)[-4:]
+            recent_ctx_str = ' '.join(r.get('text', '') for r in recent_rows[:-1]) if len(recent_rows) > 1 else ''
+            ep = self.life.check_epistemic_event_query(profile['id'], text, recent_context_text=recent_ctx_str)
             if ep:
                 if not ep['knows']:
                     return local(ep['text'])
-                if ep['status'] in ('Resolved', 'Archived'):
+                if (
+                    ep['status'] in ('Resolved', 'Archived')
+                    or ep['subject_id'] != profile['id']
+                    or any(w in clean_text for w in ('وش اخبار محمد', 'اخبار محمد', 'سالفته', 'سالفتها', 'قالت لك شي', 'متكدره', 'متضايقه'))
+                ):
                     return local(ep['text'])
 
         if text in ('السلام عليكم', 'سلام عليكم', 'السلام عليكم ورحمة الله', 'السلام عليكم ورحمة الله وبركاته'):
@@ -1220,17 +1278,19 @@ class Coordinator:
             'agent_state': agent_state,
             'social_context': social_context
         }
+        context = self.memory.context(self.room, self.identities)
         if self.life:
             other_bot_id = ''
             if trigger_message and trigger_message.user_id in self.identities:
                 other_bot_id = self.identities[trigger_message.user_id].get('persona_id', '')
+            recent_ctx_str = ' '.join(r.get('text', '') for r in context[-4:-1]) if len(context) > 1 else ''
             enriched_profile['life_slice'] = self.life.build_economic_memory_slice(
                 profile['id'],
                 other_bot_id,
-                trigger_message.text if trigger_message else ''
+                trigger_message.text if trigger_message else '',
+                recent_context_text=recent_ctx_str
             )
         try:
-            context = self.memory.context(self.room, self.identities)
             answer = await self.provider.generate(enriched_profile, context, preference)
         except Exception:
             return None
@@ -1238,20 +1298,24 @@ class Coordinator:
         if self.revision != before:
             return None
 
+        trig_txt = trigger_message.text if trigger_message else ''
+        is_humorous_trigger = any(w in trig_txt for w in ('هههه', 'تخيل', 'مقلب', 'نكتة', 'نكته', 'ضحك', '😂', '🤣'))
+        strip_laugh = not is_humorous_trigger
+
         text = ''
         messages_tuple = ()
         if isinstance(answer, dict):
             raw_msgs = answer.get('messages')
             if isinstance(raw_msgs, (list, tuple)) and raw_msgs:
-                messages_tuple = tuple(humanize_chat(str(m).strip(), self.turn + 1) for m in raw_msgs if str(m).strip())
+                messages_tuple = tuple(humanize_chat(str(m).strip(), self.turn + 1, strip_trailing_laugh=strip_laugh) for m in raw_msgs if str(m).strip())
             text = answer.get('text', '') or (' '.join(messages_tuple) if messages_tuple else '')
         elif isinstance(answer, (list, tuple)):
-            messages_tuple = tuple(humanize_chat(str(m).strip(), self.turn + 1) for m in answer if str(m).strip())
+            messages_tuple = tuple(humanize_chat(str(m).strip(), self.turn + 1, strip_trailing_laugh=strip_laugh) for m in answer if str(m).strip())
             text = messages_tuple[0] if messages_tuple else ''
         else:
             text = str(answer or '')
 
-        text = humanize_chat(text, self.turn + 1)
+        text = humanize_chat(text, self.turn + 1, strip_trailing_laugh=strip_laugh)
         if not text:
             return None
 

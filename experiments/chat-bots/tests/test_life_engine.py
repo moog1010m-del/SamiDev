@@ -364,6 +364,118 @@ class PlazrLifeEngineTests(unittest.IsolatedAsyncioTestCase):
         rep = await eng_disabled.respond(msg)
         self.assertIsNotNone(rep)
 
+    async def test_9_exact_screenshot_scenarios_regression(self):
+        """الاختبار 9: محاكاة المحادثات الحقيقية من لقطات الشاشة حرفياً وإثبات إصلاح جميع الثغرات الـ 8."""
+        from core import humanize_chat, norm_ar
+
+        # 0. Verify Saudi shorthand & typo normalization
+        self.assertIn('وش تقرب', norm_ar('شتقرب لك نوره'))
+        self.assertIn('وش اخبار', norm_ar('شخبار محمد اخوكم'))
+        self.assertIn('بالروم', norm_ar('بالمجلس تقصدين باروم 👀'))
+        self.assertIn('بالروم ذا معنا', norm_ar('بالروم ذا معنى ؟'))
+        self.assertIn('اصطناعي', norm_ar('انتي ذكاء اصتناعي؟'))
+
+        # 1. KSA calls نورة (x7v) and asks "شخبار محمد اخوكم" -> نورة replies about brother محمد (not family tree dump!)
+        m1 = Message('sc-1', 'u-ksa', 'نوره شخبار محمد اخوكم', 'KSA')
+        self.engine.ingest(m1)
+        r1 = await self.engine.respond(m1)
+        self.assertEqual(r1.speaker, 'x7v')
+        self.assertIn('محمد', r1.text)
+        self.assertIn('شاحن', r1.text)
+        self.assertNotIn('هههه', r1.text)
+
+        # 2. KSA asks off-room clarification: "بالمجلس تقصدين باروم 👀" and "بالروم ذا معنى ؟"
+        m2 = Message('sc-2', 'u-ksa', 'بالمجلس تقصدين باروم 👀', 'KSA')
+        self.engine.ingest(m2)
+        r2 = await self.engine.respond(m2)
+        self.assertEqual(r2.speaker, 'x7v')
+        self.assertIn('بالبيت', r2.text)
+        self.assertIn('ما يدخل الروم', r2.text)
+        self.assertNotIn('هههه', r2.text)
+
+        m3 = Message('sc-3', 'u-ksa', 'بالروم ذا معنى ؟', 'KSA')
+        self.engine.ingest(m3)
+        r3 = await self.engine.respond(m3)
+        self.assertEqual(r3.speaker, 'x7v')
+        self.assertIn('بالبيت', r3.text)
+        self.assertNotIn('هههه', r3.text)
+
+        # 3. Second human GOLD asks follow-up right after نورة spoke: "اي مكان ؟ الواقع ولا اللعبه"
+        # MUST route to x7v (نورة) who was just talking, NOT d7wsx (غادة)!
+        m4 = Message('sc-4', 'u-gold', 'اي مكان ؟ الواقع ولا اللعبه', 'GOLD')
+        self.engine.ingest(m4)
+        r4 = await self.engine.respond(m4)
+        self.assertEqual(r4.speaker, 'x7v', "Follow-up from second human should stay with x7v (نورة), not jump to d7wsx!")
+        self.assertIn('الواقع', r4.text)
+        self.assertNotIn('هههه', r4.text)
+
+        # 4. GOLD asks d7wsx directly: "انتي نوره d7wsx?" -> d7wsx (غادة) clarifies her identity without trailing ههههه
+        self.session.custom_reply_fn = lambda obj: 'لا انا غادة مو نورة ههههه يالطيب'
+        m5 = Message('sc-5', 'u-gold', 'انتي نوره d7wsx?', 'GOLD')
+        self.engine.ingest(m5)
+        r5 = await self.engine.respond(m5)
+        self.assertEqual(r5.speaker, 'd7wsx')
+        self.assertIn('غادة', r5.text)
+        self.assertNotIn('هههه', r5.text)
+        self.assertNotIn('يالطيب', r5.text)
+
+        # 5. KSA calls ريم (v3mk) then asks "شتقرب لك نوره"
+        # MUST stay with v3mk (ريم) and NOT hijack thread to x7v (نورة)!
+        self.session.custom_reply_fn = None
+        m6 = Message('sc-6', 'u-ksa', 'ريم', 'KSA')
+        self.engine.ingest(m6)
+        r6 = await self.engine.respond(m6)
+        self.assertEqual(r6.speaker, 'v3mk')
+
+        m7 = Message('sc-7', 'u-ksa', 'شتقرب لك نوره', 'KSA')
+        self.engine.ingest(m7)
+        r7 = await self.engine.respond(m7)
+        self.assertEqual(r7.speaker, 'v3mk', "Asking ريم 'شتقرب لك نوره' must be answered by ريم (v3mk), not نورة (x7v)!")
+        self.assertIn('أختي الصغيرة', r7.text)
+        self.assertNotIn('هههه', r7.text)
+
+        # 6. KSA follows up with third-person pronoun: "طيب وش سالفتها احسها متكدره قالت لك شي ؟"
+        m8 = Message('sc-8', 'u-ksa', 'طيب وش سالفتها احسها متكدره قالت لك شي ؟', 'KSA')
+        self.engine.ingest(m8)
+        r8 = await self.engine.respond(m8)
+        self.assertEqual(r8.speaker, 'v3mk')
+        self.assertIn('نورة', r8.text)
+        self.assertIn('شاحن', r8.text)
+        self.assertNotIn('هههه', r8.text)
+
+        # 7. KSA asks: "ريم، نورة قالت لي عن أخوها محمد، تعرفين وش سالفته؟"
+        m9 = Message('sc-9', 'u-ksa', 'ريم، نورة قالت لي عن أخوها محمد، تعرفين وش سالفته؟', 'KSA')
+        self.engine.ingest(m9)
+        r9 = await self.engine.respond(m9)
+        self.assertEqual(r9.speaker, 'v3mk')
+        self.assertIn('محمد', r9.text)
+        self.assertIn('شاحن', r9.text)
+
+        # 8. Fixed Age & humanize_chat check + RUDE_TERMS preserved untouched
+        m10 = Message('sc-10', 'u-ksa', 'يا نورة كم عمرك؟', 'KSA')
+        self.engine.ingest(m10)
+        r10 = await self.engine.respond(m10)
+        self.assertEqual(r10.speaker, 'x7v')
+        self.assertIn('24', r10.text)
+
+        m11 = Message('sc-11', 'u-ksa', 'يا ريم كم عمرك؟', 'KSA')
+        self.engine.ingest(m11)
+        r11 = await self.engine.respond(m11)
+        self.assertEqual(r11.speaker, 'v3mk')
+        self.assertIn('25', r11.text)
+
+        # Verify humanize_chat strips meaningless laughter & awkward fillers without distorting words
+        cleaned = humanize_chat('ايه قصدي الروم ههههه يالطيب', turn_index=2, strip_trailing_laugh=True)
+        self.assertEqual(cleaned, 'ايه قصدي الروم')
+
+        # Verify rude response system is untouched
+        m_rude = Message('sc-12', 'u-ksa', 'يا ريم كلي زق', 'KSA')
+        self.engine.ingest(m_rude)
+        r_rude = await self.engine.respond(m_rude)
+        self.assertIsNotNone(r_rude)
+        self.assertIn('تجاوز حدود الأدب', self.mem.get_social_profile('u-ksa')['attitude'])
+        self.assertIn('منزعجة وحازمة', self.mem.get_agent_state('v3mk')['mood'])
+
 
 if __name__ == '__main__':
     unittest.main()

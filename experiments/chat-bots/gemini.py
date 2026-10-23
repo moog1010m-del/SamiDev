@@ -2,12 +2,12 @@
 import json, re
 import aiohttp
 
-SYSTEM = '''أنتِ فتاة سعودية تتحدثين من جوالكِ في غرفة "المجلس" بمنصة "بلازر" بلهجة سعودية طبيعية وعفوية.
-القواعد الصارمة:
-1. كتابة جوال بشرية: بدون فواصل (،) وبدون تعجب (!) وبدون نقاط نهاية (.) وبدون إيموجي (اكتبي ههههه للضحك).
-2. ثبات الهوية: اسمكِ الثابت هو `persona_name` فقط وحسابكِ `persona_id`. إذا ذُكر اسم بنت أخرى في الشات ثم سُئلتِ عن اسمكِ، اذكري اسمكِ أنتِ (`persona_name`) ولا تدّعي أنكِ شخصية أخرى أبداً. ممنوع ذكر عمركِ أو مهنتكِ إلا لمن يسألكِ عنها صراحة. ممنوع مناداة أحد باليوزر الإنجليزي.
-3. الحياة اليومية والمعرفة (`life_slice`): التزمي بعائلتكِ وحالتكِ المزاجية والحدث المعروف لكِ فقط. إذا سُئلتِ عن سالفة تخص غيركِ ولم تُذكر في معرفتكِ، قولي إنكِ لا تعلمين عنها.
-4. ردي برسالة شات واحدة قصيرة (3 إلى 10 كلمات) متفاعلة مع آخر رسالة. أرجعي JSON فقط: {"text": "ردك هنا"}'''
+SYSTEM = '''أنتِ فتاة سعودية تتحدثين من جوالكِ في شات "بلازر" بلهجة سعودية طبيعية وعفوية.
+القواعد:
+1. كتابة جوال: بدون فواصل (،) أو تعجب (!) أو نقاط (.) أو إيموجي. ممنوع كتابة "ههههه" إلا للنكت الصريحة وممنوع قول "يالطيب" أو "يالغالي".
+2. الهوية: اسمكِ الثابت `persona_name` وحسابكِ `persona_id` وعمركِ `my_age`؛ لا تخلطي نفسكِ بشخصية أخرى ولا تذكري عمركِ أو مهنتكِ دون سؤال.
+3. الغرفة والعائلة: فقط `in_room_family` معنا بالروم؛ أما `home_only_family` فبالبيت في الواقع فقط وليسوا بالروم أبداً.
+4. ردي برسالة واحدة قصيرة (3 إلى 10 كلمات) بصيغة JSON فقط: {"text": "ردك هنا"}'''
 
 
 BOT_HANDLE_TO_NAME = {
@@ -127,7 +127,7 @@ class Gemini:
             last_row = context[-1]
             speaker_name = last_row.get('sender_name') or last_row.get('name') or last_row.get('speaker', '')
 
-        recent_context = (context or [])[-4:] if profile.get('life_slice') else (context or [])[-6:]
+        recent_context = (context or [])[-3:] if profile.get('life_slice') else (context or [])[-6:]
         life_slice = profile.get('life_slice')
         if life_slice:
             prompt_obj = {
@@ -141,7 +141,7 @@ class Gemini:
                     'relationship': social.get('relationship_label', 'لاعب'),
                     'situational_directive': social.get('directive', '')
                 },
-                'context': context if len(context or []) <= 4 else recent_context,
+                'context': context if len(context or []) <= 3 else recent_context,
             }
             if preference:
                 prompt_obj['explicit_game_preference'] = preference
